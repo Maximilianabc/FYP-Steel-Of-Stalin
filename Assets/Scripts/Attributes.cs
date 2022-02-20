@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using SteelOfStalin.Util;
 
 namespace SteelOfStalin.Attributes
 {
@@ -29,6 +31,19 @@ namespace SteelOfStalin.Attributes
             ModifierType.MULTIPLE => (double)(value == null ? Value : value * Value),
             _ => throw new NotImplementedException(),
         };
+        public double Apply(Attribute a) => Type switch
+        {
+            ModifierType.FIXED_VALUE => a.Value + Value,
+            ModifierType.PERCENTAGE => a.Value * (1 + Value / 100),
+            ModifierType.MULTIPLE => a.Value * Value,
+            _ => throw new NotImplementedException(),
+        };
+
+        public Modifier SetValue(double value)
+        {
+            Value = value;
+            return this;
+        }
 
         public object Clone() => MemberwiseClone();
     }
@@ -36,15 +51,15 @@ namespace SteelOfStalin.Attributes
     public class TerrainModifier : ICloneable
     {
         public Modifier Recon { get; set; } = new Modifier();
-        public Modifier Camouflage { get; set; } = new Modifier();
+        public Modifier Concealment { get; set; } = new Modifier();
         public Modifier Supplies { get; set; } = new Modifier();
         public Modifier Fuel { get; set; } = new Modifier();
         public Modifier Mobility { get; set; } = new Modifier();
 
         public TerrainModifier(TerrainModifier another)
-            => (Recon, Camouflage, Supplies, Fuel, Mobility) 
+            => (Recon, Concealment, Supplies, Fuel, Mobility) 
             = ((Modifier)another.Recon.Clone(), 
-               (Modifier)another.Camouflage.Clone(), 
+               (Modifier)another.Concealment.Clone(), 
                (Modifier)another.Supplies.Clone(),
                (Modifier)another.Fuel.Clone(), 
                (Modifier)another.Mobility.Clone());
@@ -61,7 +76,25 @@ namespace SteelOfStalin.Attributes
         public CubeCoordinates(int x, int y, int z) : this() => (X, Y, Z) = (x, y, z);
 
         public static int GetDistance(CubeCoordinates c1, CubeCoordinates c2)
-            => Mathf.Max(Mathf.Abs(c1.X - c2.X), Mathf.Abs(c1.Y - c2.Y), Mathf.Abs(c1.Z - c2.Z));
+            => Mathf.Max(Math.Abs(c1.X - c2.X), Math.Abs(c1.Y - c2.Y), Math.Abs(c1.Z - c2.Z));
+
+        public static double GetStraightLineDistance(CubeCoordinates c1, CubeCoordinates c2)
+        {
+            List<int> diff = new List<int>()
+            {
+                Math.Abs(c1.X - c2.X),
+                Math.Abs(c1.Y - c2.Y),
+                Math.Abs(c1.Z - c2.Z)
+            };
+            diff = diff.OrderByDescending(x => x).ToList();
+
+            // if one of the abs diff is 0, the tiles are on the same x/y/z axis
+            // else apply cosine theorem with the abs diffs except the largest one (becuz it is the tile distance, not the sides of the triangle)
+            // the angle is always 2 / 3 rad
+            return diff.Contains(0)
+                ? diff.Max()
+                : Math.Sqrt(Math.Pow(diff[1], 2) + Math.Pow(diff[2], 2) - 2 * diff[1] * diff[2] * Math.Cos(2 / 3D));
+        }
 
         /// <summary>
         /// Returns an enumerable of negibouring points with distance specified
@@ -99,6 +132,21 @@ namespace SteelOfStalin.Attributes
         }
     }
 
+    public enum PathfindingOptimization
+    {
+        LEAST_SUPPLIES_COST,
+        LEAST_FUEL_COST
+    }
+
+    [Flags]
+    public enum AutoCommands
+    {
+        NONE = 0,
+        MOVE = 1 << 0,
+        FIRE = 1 << 1,
+        RESUPPLY = 1 << 2,
+    }
+
     public class Attribute : ICloneable
     {
         public Modifier Mod { get; set; } = new Modifier();
@@ -107,7 +155,14 @@ namespace SteelOfStalin.Attributes
         public Attribute() { }
         public Attribute(double value, Modifier mod = null) => (Value, Mod) = (value, mod);
 
-        public double ApplyMod() => Mod == null || Mod == default(Modifier) ? Value : Mod.Apply(Value); 
+        public double ApplyMod() => Mod == null || Mod == default(Modifier) ? Value : Mod.Apply(Value);
+        public double ApplyDeviation() => Utilities.RandomBetweenSymmetricRange(ApplyMod());
+
+        public void PlusEquals(double value) => Value += value;
+        public void PlusEquals(Attribute attribute) => Value = ApplyMod() + attribute.ApplyMod();
+
+        public void MinusEquals(double value) => Value -= value;
+        public void MinusEquals(Attribute attribute) => Value = ApplyMod() - attribute.ApplyMod();
 
         public object Clone()
         {
@@ -115,11 +170,41 @@ namespace SteelOfStalin.Attributes
             attr.Mod = (Modifier)Mod.Clone();
             return attr;
         }
+        public override bool Equals(object obj) => base.Equals(obj);
+        public override int GetHashCode() => base.GetHashCode();
 
         public static double operator +(Attribute a, Attribute b) => a.ApplyMod() + b.ApplyMod();
         public static double operator -(Attribute a, Attribute b) => a.ApplyMod() - b.ApplyMod();
         public static double operator *(Attribute a, Attribute b) => a.ApplyMod() * b.ApplyMod();
         public static double operator /(Attribute a, Attribute b) => a.ApplyMod() / b.ApplyMod();
+        public static bool operator >(Attribute a, Attribute b) => a.ApplyMod() > b.ApplyMod();
+        public static bool operator <(Attribute a, Attribute b) => a.ApplyMod() < b.ApplyMod();
+        public static bool operator >=(Attribute a, Attribute b) => a.ApplyMod() >= b.ApplyMod();
+        public static bool operator <=(Attribute a, Attribute b) => a.ApplyMod() <= b.ApplyMod();
+        public static bool operator ==(Attribute a, Attribute b) => a.ApplyMod() == b.ApplyMod();
+        public static bool operator !=(Attribute a, Attribute b) => a.ApplyMod() != b.ApplyMod();
+
+        public static double operator +(Attribute a, double b) => a.ApplyMod() + b;
+        public static double operator -(Attribute a, double b) => a.ApplyMod() - b;
+        public static double operator *(Attribute a, double b) => a.ApplyMod() * b;
+        public static double operator /(Attribute a, double b) => a.ApplyMod() / b;
+        public static bool operator >(Attribute a, double b) => a.ApplyMod() > b;
+        public static bool operator <(Attribute a, double b) => a.ApplyMod() < b;
+        public static bool operator >=(Attribute a, double b) => a.ApplyMod() >= b;
+        public static bool operator <=(Attribute a, double b) => a.ApplyMod() <= b;
+        public static bool operator ==(Attribute a, double b) => a.ApplyMod() == b;
+        public static bool operator !=(Attribute a, double b) => a.ApplyMod() != b;
+
+        public static double operator +(double a, Attribute b) => b.ApplyMod() + a;
+        public static double operator -(double a, Attribute b) => b.ApplyMod() - a;
+        public static double operator *(double a, Attribute b) => b.ApplyMod() * a;
+        public static double operator /(double a, Attribute b) => b.ApplyMod() / a;
+        public static bool operator >(double a, Attribute b) => b.ApplyMod() > a;
+        public static bool operator <(double a, Attribute b) => b.ApplyMod() < a;
+        public static bool operator >=(double a, Attribute b) => b.ApplyMod() >= a;
+        public static bool operator <=(double a, Attribute b) => b.ApplyMod() <= a;
+        public static bool operator ==(double a, Attribute b) => b.ApplyMod() == a;
+        public static bool operator !=(double a, Attribute b) => b.ApplyMod() != a;
     }
 
     public class Resources : ICloneable
@@ -150,6 +235,41 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.Time.Clone());
 
         public object Clone() => new Resources(this);
+
+        // omit comparison for time intentionally, cuz it's meaningless (won't have insufficient "time")
+        public bool HasEnoughResources(Resources need) =>
+               Money >= need.Money
+            && Steel >= need.Steel
+            && Supplies >= need.Supplies
+            && Cartridges >= need.Cartridges
+            && Shells >= need.Shells
+            && Fuel >= need.Fuel
+            && RareMetal >= need.RareMetal
+            && Manpower >= need.Manpower
+            && Power >= need.Power;
+
+        public void Consume(Resources cost)
+        {
+            Money.MinusEquals(cost.Money);
+            Steel.MinusEquals(cost.Steel);
+            Supplies.MinusEquals(cost.Supplies);
+            Cartridges.MinusEquals(cost.Cartridges);
+            Shells.MinusEquals(cost.Shells);
+            Fuel.MinusEquals(cost.Fuel);
+            RareMetal.MinusEquals(cost.RareMetal);
+            Manpower.MinusEquals(cost.Manpower);
+        }
+        public void Produce(Resources production)
+        {
+            Money.PlusEquals(production.Money);
+            Steel.PlusEquals(production.Steel);
+            Supplies.PlusEquals(production.Supplies);
+            Cartridges.PlusEquals(production.Cartridges);
+            Shells.PlusEquals(production.Shells);
+            Fuel.PlusEquals(production.Fuel);
+            RareMetal.PlusEquals(production.RareMetal);
+            Manpower.PlusEquals(production.Manpower);
+        }
     }
 
     public class Cost : ICloneable
@@ -235,7 +355,7 @@ namespace SteelOfStalin.Attributes
         public Damage Damage { get; set; } = new Damage();
         public Accuracy Accuracy { get; set; } = new Accuracy();
         public AOE AOE { get; set; } = new AOE();
-        public Suppression Suppression { get; set; } = new Suppression();
+        public Attribute Suppression { get; set; } = new Attribute();
         public Attribute MinRange { get; set; } = new Attribute();
         public Attribute MaxRange { get; set; } = new Attribute();
         public bool IsDirectFire { get; set; }
@@ -247,7 +367,7 @@ namespace SteelOfStalin.Attributes
                (Damage)another.Damage.Clone(),
                (Accuracy)another.Accuracy.Clone(),
                (AOE)another.AOE.Clone(),
-               (Suppression)another.Suppression.Clone(),
+               (Attribute)another.Suppression.Clone(),
                (Attribute)another.MinRange.Clone(),
                (Attribute)another.MaxRange.Clone(),
                another.IsDirectFire);
@@ -354,33 +474,18 @@ namespace SteelOfStalin.Attributes
     public class Scouting : ICloneable
     {
         public Attribute Reconnaissance { get; set; } = new Attribute();
-        public Attribute Camouflage { get; set; } = new Attribute();
+        public Attribute Concealment { get; set; } = new Attribute();
         public Attribute Detection { get; set; } = new Attribute();
         public Attribute Communication { get; set; } = new Attribute();
 
         public Scouting() { }
         public Scouting(Scouting another)
-            => (Reconnaissance, Camouflage, Detection, Communication)
+            => (Reconnaissance, Concealment, Detection, Communication)
             = ((Attribute)another.Reconnaissance.Clone(),
-               (Attribute)another.Camouflage.Clone(),
+               (Attribute)another.Concealment.Clone(),
                (Attribute)another.Detection.Clone(),
                (Attribute)another.Communication.Clone());
 
         public object Clone() => new Scouting(this);
-    }
-
-    public enum PathfindingOptimization
-    {
-        LEAST_SUPPLIES_COST,
-        LEAST_FUEL_COST
-    }
-
-    [Flags]
-    public enum AutoCommands
-    {
-        NONE = 0,
-        MOVE = 1 << 0,
-        FIRE = 1 << 1,
-        RESUPPLY = 1 << 2,
     }
 }
