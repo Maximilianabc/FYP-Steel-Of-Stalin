@@ -6,13 +6,8 @@ using SteelOfStalin.Props.Tiles;
 using SteelOfStalin.Props.Units;
 using SteelOfStalin.Props.Units.Land;
 using SteelOfStalin.Util;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using static SteelOfStalin.Util.Utilities;
 
 namespace SteelOfStalin.Commands
@@ -22,8 +17,8 @@ namespace SteelOfStalin.Commands
     {
         public Hold() : base() { }
         public Hold(Unit u) : base(u) { }
-        public Hold(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Hold(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Hold(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Hold(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
@@ -44,15 +39,15 @@ namespace SteelOfStalin.Commands
 
         public Move() : base() { }
         public Move(Unit u, List<Tile> path) : base(u) => Path = path;
-        public Move(Unit u, Point src, Point dest, List<Tile> path) : base(u, src, dest) => Path = path;
-        public Move(Unit u, int srcX, int srcY, int destX, int destY, List<Tile> path) : base(u, new Point(srcX, srcY), new Point(destX, destY)) => Path = path;
+        public Move(Unit u, Coordinates src, Coordinates dest, List<Tile> path) : base(u, src, dest) => Path = path;
+        public Move(Unit u, int srcX, int srcY, int destX, int destY, List<Tile> path) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Path = path;
 
         // resolve move conflicts at moving phase
         public override void Execute()
         {
             if (Path == null || Path.Count == 0)
             {
-                LogError(this, "Path is null or empty");
+                this.LogError("Path is null or empty");
                 return;
             }
             Unit.Status |= UnitStatus.MOVED;
@@ -68,12 +63,12 @@ namespace SteelOfStalin.Commands
             Tile tile = Unit.GetLocatedTile();
             if (!tile.IsCity)
             {
-                LogError(this, "Tile is not a city");
+                this.LogError("Tile is not a city");
                 return;
             }
             if (!(Unit is Personnel))
             {
-                LogError(this, "Unit is not a personnel");
+                this.LogError("Unit is not a personnel");
                 return;
             }
 
@@ -111,33 +106,33 @@ namespace SteelOfStalin.Commands
     {
         public Merge() : base() { }
         public Merge(Unit u) : base(u) { }
-        public Merge(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Merge(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Merge(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Merge(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Submerge : Command
     {
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Surface : Command
     {
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Landing : Command
     {
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     #endregion
@@ -150,21 +145,22 @@ namespace SteelOfStalin.Commands
 
         public Fire() : base() { }
         public Fire(Unit u, Unit target, IOffensiveCustomizable weapon) : base(u) => (Target, Weapon) = (target, weapon);
-        public Fire(Unit u, Point src, Point dest, Unit target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
-        public Fire(Unit u, int srcX, int srcY, int destX, int destY, Unit target, IOffensiveCustomizable weapon) : base(u, new Point(srcX, srcY), new Point(destX, destY)) => (Target, Weapon) = (target, weapon);
+        public Fire(Unit u, Coordinates src, Coordinates dest, Unit target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
+        public Fire(Unit u, int srcX, int srcY, int destX, int destY, Unit target, IOffensiveCustomizable weapon) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, Weapon) = (target, weapon);
 
         // handle direct-fire in Firing Phase
-        // TODO add module damage and effect of module status
+        // TODO add module damage
+        // TODO FUT Impl. add effect of module status
         public override void Execute()
         {
             if (Target == null)
             {
-                LogError(this, "Target is null.");
+                this.LogError("Target is null.");
                 return;
             }
             if (Weapon == null)
             {
-                LogError(this, "Weapon is null.");
+                this.LogError("Weapon is null.");
                 return;
             }
 
@@ -173,7 +169,7 @@ namespace SteelOfStalin.Commands
             {
                 if (new System.Random().NextDouble() > Weapon.Offense.Accuracy.Normal)
                 {
-                    Log(this, $"Missed the shot against target at {Target.PrintCoOrds()}.");
+                    this.Log($"Missed the shot against target at {Target.PrintCoOrds()}.");
                     missed = true;
                 }
             }
@@ -207,14 +203,14 @@ namespace SteelOfStalin.Commands
                 {
                     if (new System.Random().NextDouble() <= Target.Defense.Evasion)
                     {
-                        Log(this, $"Target at {Target.PrintCoOrds()} evaded the attack.");
+                        this.Log($"Target at {Target.PrintCoOrds()} evaded the attack.");
                     }
                     else
                     {
                         damage_dealt = !(Weapon is Gun)
                             ? Formula.DamageAgainstPersonnel((Weapon, Target, distance)) // firearm or MG vs personnel
                             : Formula.DamageAgainstZeroResistance((Weapon, Target, distance)); // gun vs personnel
-                        Log(this, $"Inflicted {damage_dealt} damage to target at {Target.PrintCoOrds()}.");
+                        this.Log($"Inflicted {damage_dealt} damage to target at {Target.PrintCoOrds()}.");
                     }
                 }
             }
@@ -232,31 +228,31 @@ namespace SteelOfStalin.Commands
 
         public Suppress() : base() { }
         public Suppress(Unit u, Unit target, IOffensiveCustomizable weapon) : base(u) => (Target, Weapon) = (target, weapon);
-        public Suppress(Unit u, Point src, Point dest, Unit target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
-        public Suppress(Unit u, int srcX, int srcY, int destX, int destY, Unit target, IOffensiveCustomizable weapon) : base(u, new Point(srcX, srcY), new Point(destX, destY)) => (Target, Weapon) = (target, weapon);
+        public Suppress(Unit u, Coordinates src, Coordinates dest, Unit target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
+        public Suppress(Unit u, int srcX, int srcY, int destX, int destY, Unit target, IOffensiveCustomizable weapon) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, Weapon) = (target, weapon);
 
         // handle direct-fire in Firing Phase
         public override void Execute()
         {
             if (Target == null)
             {
-                LogError(this, "Target is null.");
+                this.LogError("Target is null.");
                 return;
             }
             if (Weapon == null)
             {
-                LogError(this, "Weapon is null.");
+                this.LogError("Weapon is null.");
                 return;
             }
             if (Weapon is Gun)
             {
-                LogError(this, "Cannot use a gun to suppress");
+                this.LogError("Cannot use a gun to suppress");
                 return;
             }
 
             Target.ConsecutiveSuppressedRound++;
             Target.CurrentSuppressionLevel = Formula.EffectiveSuppression((Weapon, Target));
-            Log(this, $"Raised suppression level of target at {Target.PrintCoOrds()} to {Target.CurrentSuppressionLevel}");
+            this.Log($"Raised suppression level of target at {Target.PrintCoOrds()} to {Target.CurrentSuppressionLevel}");
         }
     }
     public sealed class Sabotage : Command
@@ -266,26 +262,26 @@ namespace SteelOfStalin.Commands
 
         public Sabotage() : base() { }
         public Sabotage(Unit u, Building target, IOffensiveCustomizable weapon) : base(u) => (Target, Weapon) = (target, weapon);
-        public Sabotage(Unit u, Point src, Point dest, Building target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
-        public Sabotage(Unit u, int srcX, int srcY, int destX, int destY, Building target, IOffensiveCustomizable weapon) : base(u, new Point(srcX, srcY), new Point(destX, destY)) => (Target, Weapon) = (target, weapon);
+        public Sabotage(Unit u, Coordinates src, Coordinates dest, Building target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
+        public Sabotage(Unit u, int srcX, int srcY, int destX, int destY, Building target, IOffensiveCustomizable weapon) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, Weapon) = (target, weapon);
 
         // assume target is large enough that no units can block, no need to handle direct-fire
         public override void Execute()
         {
             if (Target == null)
             {
-                LogError(this, "Target is null.");
+                this.LogError("Target is null.");
                 return;
             }
             if (Weapon == null)
             {
-                LogError(this, "Weapon is null.");
+                this.LogError("Weapon is null.");
                 return;
             }
 
             double damage_dealt = Formula.DamageAgainstBuilding(Weapon);
             Target.Durability.MinusEquals(damage_dealt);
-            Log(this, $"Inflicted {damage_dealt} damage to target at {Target.PrintCoOrds()}.");
+            this.Log($"Inflicted {damage_dealt} damage to target at {Target.PrintCoOrds()}.");
         }
     }
     public sealed class Ambush : Command
@@ -305,38 +301,38 @@ namespace SteelOfStalin.Commands
     {
         public Aboard() : base() { }
         public Aboard(Unit u) : base(u) { }
-        public Aboard(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Aboard(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Aboard(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Aboard(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Disembark : Command
     {
         public Disembark() : base() { }
         public Disembark(Unit u) : base(u) { }
-        public Disembark(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Disembark(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Disembark(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Disembark(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Load : Command
     {
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Unload : Command
     {
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Resupply : Command
@@ -360,8 +356,8 @@ namespace SteelOfStalin.Commands
     {
         public Fortify() : base() { }
         public Fortify(Unit u) : base(u) { }
-        public Fortify(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Fortify(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Fortify(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Fortify(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
@@ -372,8 +368,8 @@ namespace SteelOfStalin.Commands
     {
         public Construct() : base() { }
         public Construct(Unit u) : base(u) { }
-        public Construct(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Construct(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Construct(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Construct(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
@@ -384,8 +380,8 @@ namespace SteelOfStalin.Commands
     {
         public Demolish() : base() { }
         public Demolish(Unit u) : base(u) { }
-        public Demolish(Unit u, Point src, Point dest) : base(u, src, dest) { }
-        public Demolish(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Point(srcX, srcY), new Point(destX, destY)) { }
+        public Demolish(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
+        public Demolish(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
@@ -407,22 +403,22 @@ namespace SteelOfStalin.Commands
         {
             if (TrainingGround == null)
             {
-                LogError(this, "Training ground is null.");
+                this.LogError("Training ground is null.");
                 return;
             }
             if (TrainingGround.TrainingQueue.Count >= TrainingGround.QueueCapacity)
             {
-                LogError(this, "Training queue is full");
+                this.LogError("Training queue is full");
                 return;
             }
             if (TrainingGround.ReadyToDeploy.Count >= TrainingGround.QueueCapacity)
             {
-                LogError(this, "Maximum number of deployable units reached.");
+                this.LogError("Maximum number of deployable units reached.");
                 return;
             }
             if (!Unit.Owner.HasEnoughResources(Unit.Cost.Base))
             {
-                LogError(this, "Not enough resources.");
+                this.LogError("Not enough resources.");
                 return;
             }
 
@@ -430,15 +426,15 @@ namespace SteelOfStalin.Commands
             Unit.TrainingTimeRemaining = Unit.Cost.Base.Time.ApplyMod() + TrainingGround.CurrentQueueTime;
 
             TrainingGround.TrainingQueue.Enqueue(Unit);
-            Log(this, "Unit enqueued");
+            this.Log("Unit enqueued");
 
             if (Map.Instance.AddUnit(Unit))
             {
-                Log(this, "Unit added to unit list.");
+                this.Log("Unit added to unit list.");
             }
             else
             {
-                LogError(this, "Failed to add unit to unit list.");
+                this.LogError("Failed to add unit to unit list.");
             }
         }
     }
@@ -448,24 +444,24 @@ namespace SteelOfStalin.Commands
 
         public Deploy() : base() { }
         public Deploy(Unit u, UnitBuilding training) : base(u) => TrainingGround = training;
-        public Deploy(Unit u, Point src, Point dest, UnitBuilding training) : base(u, src, dest) => TrainingGround = training;
-        public Deploy(Unit u, int srcX, int srcY, int destX, int destY, UnitBuilding training) : base(u, new Point(srcX, srcY), new Point(destX, destY)) => TrainingGround = training;
+        public Deploy(Unit u, Coordinates src, Coordinates dest, UnitBuilding training) : base(u, src, dest) => TrainingGround = training;
+        public Deploy(Unit u, int srcX, int srcY, int destX, int destY, UnitBuilding training) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => TrainingGround = training;
 
         public override void Execute()
         {
             if (TrainingGround == null)
             {
-                LogError(this, "Training ground is null.");
+                this.LogError("Training ground is null.");
                 return;
             }
             if (Unit.Status != UnitStatus.CAN_BE_DEPLOYED)
             {
-                LogError(this, $"Status is not CAN_BE_DEPLOYED. It is {Unit.Status} instead.");
+                this.LogError($"Status is not CAN_BE_DEPLOYED. It is {Unit.Status} instead.");
                 return;
             }
             if (Map.Instance.GetUnits(Destination).Any())
             {
-                LogError(this, $"There is/are unit(s) at the destination {Destination}.");
+                this.LogError($"There is/are unit(s) at the destination {Destination}.");
                 return;
             }
 
@@ -479,7 +475,7 @@ namespace SteelOfStalin.Commands
 
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl.
         }
     }
     #endregion

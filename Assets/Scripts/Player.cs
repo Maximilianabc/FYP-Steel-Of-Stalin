@@ -2,7 +2,6 @@ using SteelOfStalin.Props.Buildings;
 using SteelOfStalin.Props.Tiles;
 using SteelOfStalin.Props.Units;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace SteelOfStalin
 {
     public abstract class Player : ICloneable
     {
-        // TODO add country property later
+        // TODO FUT Impl. add country property
         public string Name { get; set; }
         public Color Color { get; set; }
         public Resources Resources { get; set; } = new Resources();

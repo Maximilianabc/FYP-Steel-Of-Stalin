@@ -1,43 +1,76 @@
 using SteelOfStalin.Attributes;
 using SteelOfStalin.Props.Tiles;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
+using System.Text.Json.Serialization;
+using SteelOfStalin.Props.Units.Land;
+using SteelOfStalin.Props.Buildings;
+using SteelOfStalin.Customizables;
+using static SteelOfStalin.Util.Utilities;
 using Resources = SteelOfStalin.Attributes.Resources;
 using Attribute = SteelOfStalin.Attributes.Attribute;
-using SteelOfStalin.Props.Buildings;
-using System.Text.Json.Serialization;
-using static SteelOfStalin.Util.Utilities;
-using SteelOfStalin.Props.Units.Land;
-using SteelOfStalin.Customizables;
 
 namespace SteelOfStalin.Props
 {
-    public abstract class Prop : MonoBehaviour
+    public abstract class Prop : ICloneable
     {
-        public Point CoOrds { get; set; }
+        public Coordinates CoOrds { get; set; }
         public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
+        public string MeshName { get; set; }
 
-        // TODO add ignore attributes later after deciding serialization format
-        protected AudioSource AudioOnPlaced { get; set; }
-        protected AudioSource AudioOnDestroy { get; set; }
+        public Prop() { }
+        public Prop(Prop another) => CoOrds = new Coordinates(another.CoOrds);
 
         public string PrintCoOrds() => $"({CoOrds.X},{CoOrds.Y})";
         public string PrintCubeCoOrds() => $"({CubeCoOrds.X},{CubeCoOrds.Y},{CubeCoOrds.Z})";
+        public string PrintMembers()
+        {
+            string output = "";
+            List<string> line = new List<string>() { $"{GetType().Name}\n" };
+            GetType().GetProperties().ToList().ForEach(p => line.Add($"{p.Name}\t\t:{p.GetValue(this)}\n"));
+            return string.Join(output, line);
+        }
+
+        public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GameObject.Find(MeshName));
+
+        public virtual object Clone()
+        {
+            Prop copy = (Prop)MemberwiseClone();
+            copy.CoOrds = (Coordinates)CoOrds.Clone();
+            return copy;
+        }
+    }
+
+    public class PropObject : MonoBehaviour
+    {
+        public AudioClip AudioOnPlaced { get; set; }
+        public AudioClip AudioOnClicked { get; set; }
+        public AudioClip AudioOnDestroy { get; set; }
+        public AudioClip AudioOnFire { get; set; }
+        public AudioClip AudioOnMove { get; set; }
+
         public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
 
-        protected virtual void Load() { }
-        public virtual void RemoveFromScene() => Destroy(gameObject);
+        public virtual void Start()
+        {
+            AudioSource placed = gameObject.AddComponent<AudioSource>();
+            placed.name = "Placed";
+            placed.clip = AudioOnPlaced;
 
-        public void Start()
+            if (AudioOnPlaced != null)
+            {
+                placed.Play();
+            }
+        }
+
+        public virtual void OnMouseDown()
         {
             
         }
 
-        public void OnDestroy()
+        public virtual void OnDestroy()
         {
             
         }
@@ -101,6 +134,14 @@ namespace SteelOfStalin.Props.Units
         ASSEMBLE,
         DISASSEMBLE
     }
+    [Flags]
+    public enum AutoCommands
+    {
+        NONE = 0,
+        MOVE = 1 << 0,
+        FIRE = 1 << 1,
+        RESUPPLY = 1 << 2,
+    }
 
     public abstract class Unit : Prop, ICloneable
     {
@@ -123,7 +164,7 @@ namespace SteelOfStalin.Props.Units
         public CommandAssigned CommandAssigned { get; set; } = CommandAssigned.NONE;
         public AvailableCommands AvailableCommands { get; set; } = AvailableCommands.HOLD;
         public AutoCommands AutoCommands { get; set; }
-        public Stack<Tile> AutoNavigationPath { get; set; } = new Stack<Tile>();
+        public List<Tile> AutoNavigationPath { get; set; } = new List<Tile>();
 
         public double CurrentSuppressionLevel { get; set; } = 0;
         public int ConsecutiveSuppressedRound { get; set; } = 0;
@@ -138,25 +179,32 @@ namespace SteelOfStalin.Props.Units
         public bool IsSameSubclassOf<T>(Unit another) where T : Unit => GetType().IsSubclassOf(typeof(T)) && another.GetType().IsSubclassOf(typeof(T));
         public bool IsOfSameCategory(Unit another) => IsSameSubclassOf<Ground>(another) || IsSameSubclassOf<Naval>(another) || IsSameSubclassOf<Aerial>(another);
 
-        protected AudioSource AudioOnFire { get; set; }
-        protected AudioSource AudioOnMove { get; set; }
-
         // Parameterless constructors are used for (de)serialization
         public Unit() : base() { }
-        public Unit(Player owner) => Owner = owner;
+        public Unit(Unit another) : base(another)
+            => (Owner, Cost, Maneuverability, Defense, Consumption, Carrying, Capacity, Scouting, Morale)
+            = (another.Owner, 
+                (Cost)another.Cost.Clone(), 
+                (Maneuverability)another.Maneuverability.Clone(), 
+                (Defense)another.Defense.Clone(), 
+                (Resources)another.Consumption.Clone(), 
+                (Resources)another.Carrying.Clone(), 
+                (Resources)another.Capacity.Clone(), 
+                (Scouting)another.Scouting.Clone(), 
+                (Attribute)another.Morale.Clone());
 
-        // TODO handle same type but different altitude (e.g. planes at and above airfield)
+        // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
         public virtual bool CanAccessTile(Tile t)
         {
             IEnumerable<Unit> units = Map.Instance.GetUnits(t);
             // either the tile does not have any unit on it, or none is of the same category as this unit
-            // TODO consider altitude of the units as well
+            // TODO FUT Impl. consider altitude of the units as well
             return !units.Any() || !units.Any(u => IsOfSameCategory(u));
         }
         public virtual bool CanMove() => GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod()).Any() && !IsSuppressed;
         public virtual bool CanMerge()
         {
-            // TODO
+            // TODO FUT Impl. 
             return false;
         }
         public virtual bool CanFire() => !IsSuppressed && GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w));
@@ -178,12 +226,12 @@ namespace SteelOfStalin.Props.Units
         {
             if (weapon == null)
             {
-                LogError(this, "Weapon is null.");
+                this.LogError("Weapon is null.");
                 return false;
             }
             return Carrying.HasEnoughResources(normal ? weapon.ConsumptionNormal : weapon.ConsumptionSuppress);
         }
-        // TODO should targets be able to fired upon only if they are spotted by this unit or any other units?
+
         public bool HasSpotted(Unit observee) => Owner.GetAllUnitsInSight().Contains(observee);
         public bool HasSpotted(Building building) => Owner.GetAllBuildingsInSight().Contains(building);
 
@@ -207,7 +255,7 @@ namespace SteelOfStalin.Props.Units
         {
             if (this is Personnel && opt == PathfindingOptimization.LEAST_FUEL_COST)
             {
-                LogError(this, "Only units with fuel capacity can be used with fuel cost optimization for pathfinding.");
+                this.LogError("Only units with fuel capacity can be used with fuel cost optimization for pathfinding.");
                 return new List<Tile>();
             }
 
@@ -224,7 +272,7 @@ namespace SteelOfStalin.Props.Units
                 : w => w.FuelCostDistance;
 
             active.Add(w_start);
-            while (active.Count > 0)
+            while (active.Any())
             {
                 WeightedTile w_check = active.OrderBy(sort).FirstOrDefault();
                 if (w_check == w_end
@@ -279,7 +327,7 @@ namespace SteelOfStalin.Props.Units
 
         public List<Unit> GetAvailableMergeTargets()
         {
-            // TODO
+            // TODO FUT Impl. 
             return null;
         }
         // include all enemies, be it spotted or not
@@ -298,21 +346,7 @@ namespace SteelOfStalin.Props.Units
         public double GetFuelRequired(Tile t) => t.TerrainMod.Fuel.Apply(Consumption.Fuel.ApplyMod());
         public double GetFuelRequired(List<Tile> path) => path.Select(t => GetFuelRequired(t)).Sum();
 
-        public object Clone()
-        {
-            Unit copy = (Unit)MemberwiseClone();
-            copy.Owner = Owner;
-            copy.Cost = (Cost)Cost.Clone();
-            copy.Maneuverability = (Maneuverability)Maneuverability.Clone();
-            copy.Defense = (Defense)Defense.Clone();
-            copy.Consumption = (Resources)Consumption.Clone();
-            copy.Carrying = (Resources)Carrying.Clone();
-            copy.Capacity = (Resources)Capacity.Clone();
-            copy.Scouting = (Scouting)Scouting.Clone();
-            copy.Morale = (Attribute)Morale.Clone();
-            copy.AutoNavigationPath = new Stack<Tile>(AutoNavigationPath.Reverse());
-            return copy;
-        }
+        public abstract override object Clone();
     }
 }
 
@@ -340,21 +374,18 @@ namespace SteelOfStalin.Props.Buildings
         public bool DestroyTerrainOnBuilt { get; set; } = true;
         public double ConstructionTimeRemaining { get; set; }
 
+        public Building() : base() { }
+        public Building(Building another) : base(another)
+            => (Name, Owner, Status, Level, MaxLevel, Size, Cost, Durability, Scouting, DestroyTerrainOnBuilt, ConstructionTimeRemaining)
+            = (another.Name, another.Owner, another.Status, another.Level, another.MaxLevel, another.Size, (Cost)another.Cost.Clone(), (Attribute)another.Durability.Clone(), (Scouting)another.Scouting.Clone(), another.DestroyTerrainOnBuilt, another.ConstructionTimeRemaining);
+
         public bool IsOwn(Player p) => Owner == p;
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         // public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p) /*&& !IsNeutral()*/;
 
-        public object Clone()
-        {
-            Building copy = (Building)MemberwiseClone();
-            copy.Owner = Owner;
-            copy.Cost = (Cost)Cost.Clone();
-            copy.Durability = (Attribute)Durability.Clone();
-            copy.Scouting = (Scouting)Scouting.Clone();
-            return copy;
-        }
+        public abstract override object Clone();
     }
 }
 
@@ -369,6 +400,7 @@ namespace SteelOfStalin.Props.Tiles
         JUNGLE,
         STREAM,
         RIVER,
+        OCEAN,
         SWAMP,
         DESERT,
         HILLOCK,
@@ -377,8 +409,7 @@ namespace SteelOfStalin.Props.Tiles
         ROCKS,
         SUBURB,
         CITY,
-        METROPOLIS,
-        CAPTURABLE = SUBURB | CITY | METROPOLIS
+        METROPOLIS
     }
 
     [Flags]
@@ -403,11 +434,18 @@ namespace SteelOfStalin.Props.Tiles
         public Attribute Durability { get; set; } = new Attribute();
         public Attribute Morale { get; set; } = new Attribute(250);
 
+        public Cities() : base() { }
+        public Cities(Cities another) : base(another)
+            => (Owner, Population, ConstructionRange, Production, Durability, Morale)
+            = (another.Owner, another.Population, (Attribute)another.ConstructionRange.Clone(), (Resources)another.Production.Clone(), (Attribute)another.Durability.Clone(), (Attribute)another.Morale.Clone());
+
         public bool IsOwn(Player p) => Owner == p;
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p) && !IsNeutral();
+
+        public abstract override object Clone();
     }
 
     public abstract class Tile : Prop
@@ -415,16 +453,24 @@ namespace SteelOfStalin.Props.Tiles
         public string Name { get; set; }
         public TileType Type { get; set; }
         public Accessibility Accessibility { get; set; }
-        public TerrainModifier TerrainMod { get; set; }
+        public TerrainModifier TerrainMod { get; set; } = new TerrainModifier();
         public double Obstruction { get; set; }
         public bool AllowConstruction { get; set; }
         public double Height { get; set; }
-        [JsonIgnore] public char Symbol { get; set; }
+        public char Symbol { get; set; }
 
-        public bool IsCity => TileType.CAPTURABLE.HasFlag(Type);
-        public bool HasUnit => Map.Instance.GetUnits(this).Any();
-        public bool HasBuilding => Map.Instance.GetBuildings(this).Any();
-        public bool IsOccupied => HasUnit || HasBuilding;
+        [JsonIgnore] public bool IsWater => Type == TileType.STREAM || Type == TileType.RIVER || Type == TileType.OCEAN || Type == TileType.SWAMP;
+        [JsonIgnore] public bool IsHill => Type is TileType.HILLOCK || Type is TileType.HILLS || Type is TileType.MOUNTAINS;
+        [JsonIgnore] public bool IsFlatLand => !IsWater && !IsHill && Type != TileType.BOUNDARY;
+        [JsonIgnore] public bool IsCity => Type is TileType.SUBURB || Type is TileType.CITY || Type is TileType.METROPOLIS;
+        [JsonIgnore] public bool HasUnit => Map.Instance.GetUnits(this).Any();
+        [JsonIgnore] public bool HasBuilding => Map.Instance.GetBuildings(this).Any();
+        [JsonIgnore] public bool IsOccupied => HasUnit || HasBuilding;
+
+        public Tile() : base() { }
+        public Tile(Tile another) : base(another) 
+            => (Name, Type, Accessibility, TerrainMod, Height, Symbol)
+            = (another.Name, another.Type, another.Accessibility, (TerrainModifier)another.TerrainMod.Clone(), another.Height, another.Symbol);
 
         public WeightedTile ConvertToWeightedTile(Resources consumption, PathfindingOptimization opt, Tile end, bool IsAerial, WeightedTile parent = null) => new WeightedTile()
         {
@@ -444,9 +490,10 @@ namespace SteelOfStalin.Props.Tiles
 
         public override bool Equals(object other) => this == (Tile)other;
         public override int GetHashCode() => base.GetHashCode();
+        public abstract override object Clone();
 
-        public static bool operator ==(Tile t1, Tile t2) => t1.CoOrds.X == t2.CoOrds.X && t2.CoOrds.Y == t2.CoOrds.Y;
-        public static bool operator !=(Tile t1, Tile t2) => !(t1.CoOrds.X == t2.CoOrds.X && t2.CoOrds.Y == t2.CoOrds.Y);
+        public static bool operator ==(Tile t1, Tile t2) => t1?.CoOrds.X == t2?.CoOrds.X && t2?.CoOrds.Y == t2?.CoOrds.Y;
+        public static bool operator !=(Tile t1, Tile t2) => !(t1?.CoOrds.X == t2?.CoOrds.X && t2?.CoOrds.Y == t2?.CoOrds.Y);
     }
 
     public class WeightedTile
@@ -455,12 +502,14 @@ namespace SteelOfStalin.Props.Tiles
         public CubeCoordinates CubeCoOrds { get; set; }
         public double BaseCost { get; set; }
         public double Weight { get; set; }
+        // use 2 for tile pathfinding
+        public double MaxWeight { get; set; } = 2;
         public double SuppliesCostSoFar { get; set; }
         public double FuelCostSoFar { get; set; }
         public int DistanceSoFar { get; set; }
         public int DistanceToGoal { get; set; }
-        public double SuppliesCostDistance => SuppliesCostSoFar + DistanceToGoal * BaseCost * 2;
-        public double FuelCostDistance => FuelCostSoFar + DistanceToGoal * BaseCost * 2;
+        public double SuppliesCostDistance => SuppliesCostSoFar + DistanceToGoal * BaseCost * MaxWeight;
+        public double FuelCostDistance => FuelCostSoFar + DistanceToGoal * BaseCost * MaxWeight;
 
         public override bool Equals(object obj) => this == (WeightedTile)obj;
         public override int GetHashCode() => base.GetHashCode();
@@ -469,69 +518,106 @@ namespace SteelOfStalin.Props.Tiles
         public static bool operator !=(WeightedTile w1, WeightedTile w2) => !(w1?.CubeCoOrds == w2?.CubeCoOrds);
     }
 
-
     public sealed class Boundary : Tile
     {
-
+        public Boundary() : base() { }
+        public Boundary(Boundary another) : base(another) { }
+        public override object Clone() => new Boundary(this);
     }
     public sealed class Plains : Tile
     {
-
+        public Plains() : base() { }
+        public Plains(Plains another) : base(another) { }
+        public override object Clone() => new Plains(this);
     }
     public sealed class Grassland : Tile
     {
-
+        public Grassland() : base() { }
+        public Grassland(Grassland another) : base(another) { }
+        public override object Clone() => new Grassland(this);
     }
     public sealed class Forest : Tile
     {
-
+        public Forest() : base() { }
+        public Forest(Forest another) : base(another) { }
+        public override object Clone() => new Forest(this);
     }
     public sealed class Jungle : Tile
     {
-
+        public Jungle() : base() { }
+        public Jungle(Jungle another) : base(another) { }
+        public override object Clone() => new Jungle(this);
     }
     public sealed class Stream : Tile
     {
-
+        public Stream() : base() { }
+        public Stream(Stream another) : base(another) { }
+        public override object Clone() => new Stream(this);
     }
     public sealed class River : Tile
     {
-
+        public River() : base() { }
+        public River(River another) : base(another) { }
+        public override object Clone() => new River(this);
+    }
+    public sealed class Ocean : Tile
+    {
+        public Ocean() : base() { }
+        public Ocean(Ocean another) : base(another) { }
+        public override object Clone() => new Ocean(this);
     }
     public sealed class Swamp : Tile
     {
-
+        public Swamp() : base() { }
+        public Swamp(Swamp another) : base(another) { }
+        public override object Clone() => new Swamp(this);
     }
     public sealed class Desert : Tile
     {
-
+        public Desert() : base() { }
+        public Desert(Desert another) : base(another) { }
+        public override object Clone() => new Desert(this);
     }
     public sealed class Hillock : Tile
     {
-
+        public Hillock() : base() { }
+        public Hillock(Hillock another) : base(another) { }
+        public override object Clone() => new Hillock(this);
     }
     public sealed class Hills : Tile
     {
-
+        public Hills() : base() { }
+        public Hills(Hills another) : base(another) { }
+        public override object Clone() => new Hills(this);
     }
     public sealed class Mountains : Tile
     {
-
+        public Mountains() : base() { }
+        public Mountains(Mountains another) : base(another) { }
+        public override object Clone() => new Mountains(this);
     }
     public sealed class Rocks : Tile
     {
-
+        public Rocks() : base() { }
+        public Rocks(Rocks another) : base(another) { }
+        public override object Clone() => new Rocks(this);
     }
     public sealed class Suburb : Cities
     {
-
+        public Suburb() : base() { }
+        public Suburb(Suburb another) : base(another) { }
+        public override object Clone() => new Suburb(this);
     }
     public sealed class City : Cities
     {
-
+        public City() : base() { }
+        public City(City another) : base(another) { }
+        public override object Clone() => new City(this);
     }
     public sealed class Metropolis : Cities
     {
-
+        public Metropolis() : base() { }
+        public Metropolis(Metropolis another) : base(another) { }
+        public override object Clone() => new Metropolis(this);
     }
 }

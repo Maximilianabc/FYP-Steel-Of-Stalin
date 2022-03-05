@@ -1,0 +1,37 @@
+BOUNDARY:	396 (3.96%)
+PLAINS:	2127 (21.27%)
+GRASSLAND:	1637 (16.37%)
+FOREST:	1142 (11.42%)
+JUNGLE:	407 (4.07%)
+STREAM:	16 (0.16%)
+RIVER:	0 (0%)
+OCEAN:	1451 (14.51%)
+SWAMP:	178 (1.78%)
+DESERT:	1000 (10%)
+HILLOCK:	889 (8.89%)
+HILLS:	679 (6.79%)
+MOUNTAINS:	65 (0.65%)
+ROCKS:	0 (0%)
+SUBURB:	1 (0.01%)
+CITY:	8 (0.08%)
+METROPOLIS:	4 (0.04%)
+Units: 0
+Buildings: 0
+Number of water sources: 2
+
+Height Map:
+Frequency: 3
+Octaves: 1
+Persistence: 0.8
+Exponent: 1
+Warp Strength: 0.1
+Offset:(-38402,39149)
+
+Humidity Map:
+Frequency: 3
+Octaves: 1
+Persistence: 0.8
+Exponent: 1
+Warp Strength: 0.1
+Offset:(19819,25500)
+

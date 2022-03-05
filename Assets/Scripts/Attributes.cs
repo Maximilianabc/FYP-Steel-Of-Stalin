@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using SteelOfStalin.Util;
+using SteelOfStalin.Props.Units;
 
 namespace SteelOfStalin.Attributes
 {
@@ -56,6 +55,7 @@ namespace SteelOfStalin.Attributes
         public Modifier Fuel { get; set; } = new Modifier();
         public Modifier Mobility { get; set; } = new Modifier();
 
+        public TerrainModifier() { }
         public TerrainModifier(TerrainModifier another)
             => (Recon, Concealment, Supplies, Fuel, Mobility) 
             = ((Modifier)another.Recon.Clone(), 
@@ -67,7 +67,26 @@ namespace SteelOfStalin.Attributes
         public object Clone() => new TerrainModifier(this);
     }
 
-    public struct CubeCoordinates
+    public struct Coordinates : ICloneable, IEquatable<Coordinates>
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public Coordinates(int x, int y) : this() => (X, Y) = (x, y);
+        public Coordinates(Coordinates another) : this() => (X, Y) = (another.X, another.Y);
+
+        public object Clone() => new Coordinates(this);
+        public override string ToString() => $"({X},{Y})";
+        public override bool Equals(object obj) => Equals((Coordinates)obj);
+        public bool Equals(Coordinates other) => this == other;
+        public override int GetHashCode() => (X, Y).GetHashCode();
+
+        public static bool operator ==(Coordinates c1, Coordinates c2) => c1.X == c2.X && c1.Y == c2.Y;
+        public static bool operator !=(Coordinates c1, Coordinates c2) => !(c1.X == c2.X && c1.Y == c2.Y);
+
+    }
+
+    public struct CubeCoordinates : IEquatable<CubeCoordinates>
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -101,50 +120,44 @@ namespace SteelOfStalin.Attributes
         /// </summary>
         /// <param name="distance">The distance from the cube coordinates, inclusive</param>
         /// <returns></returns>
-        public IEnumerable<Point> GetNeigbours(int distance = 1)
+        public IEnumerable<CubeCoordinates> GetNeigbours(int distance = 1)
         {
-            for (int x = 1; x <= distance; x++)
+            for (int x = -1; x <= distance; x++)
             {
-                for (int y = 1; y <= distance; y++)
+                for (int y = -1; y <= distance; y++)
                 {
-                    for (int z = 1; z <= distance; z++)
+                    for (int z = -1; z <= distance; z++)
                     {
-                        yield return (Point)new CubeCoordinates(X + x, Y + y, Z + z);
+                        yield return new CubeCoordinates(X + x, Y + y, Z + z);
                     }
                 }
             }
         }
 
-        public override bool Equals(object obj) => base.Equals(obj);
-        public override int GetHashCode() => base.GetHashCode();
+        public override string ToString() => $"({X},{Y},{Z})";
+        public override bool Equals(object obj) => Equals((CubeCoordinates)obj);
+        public bool Equals(CubeCoordinates other) => this == other;
+        public override int GetHashCode() => (X, Y, Z).GetHashCode();
 
         public static bool operator ==(CubeCoordinates c1, CubeCoordinates c2) 
             => c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z;
         public static bool operator !=(CubeCoordinates c1, CubeCoordinates c2)
             => !(c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z);
 
-        public static explicit operator Point(CubeCoordinates c) => new Point(c.X, c.Z + (c.X - c.X % 2) / 2);
-        public static explicit operator CubeCoordinates(Point p)
+        public static explicit operator Coordinates(CubeCoordinates c) => new Coordinates(c.X, c.Z + (c.X - c.X % 2) / 2);
+        public static explicit operator CubeCoordinates(Coordinates p)
         {
             int z = p.Y - (p.X - p.X % 2) / 2;
             int y = -p.X - z;
             return new CubeCoordinates(p.X, y, z);
         }
+
     }
 
     public enum PathfindingOptimization
     {
         LEAST_SUPPLIES_COST,
         LEAST_FUEL_COST
-    }
-
-    [Flags]
-    public enum AutoCommands
-    {
-        NONE = 0,
-        MOVE = 1 << 0,
-        FIRE = 1 << 1,
-        RESUPPLY = 1 << 2,
     }
 
     public class Attribute : ICloneable
@@ -453,6 +466,17 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.SplashDecay.Clone());
 
         public object Clone() => new AOE(this);
+    }
+
+    public class Payload : ICloneable
+    {
+        public List<Unit> Units { get; set; } = new List<Unit>();
+        public Resources Cargo { get; set; } = new Resources();
+
+        public Payload() { }
+        public Payload(Payload another) => (Units, Cargo) = (another.Units, (Resources)another.Cargo.Clone());
+
+        public object Clone() => new Payload(this);
     }
 
     public class LoadLimit : ICloneable

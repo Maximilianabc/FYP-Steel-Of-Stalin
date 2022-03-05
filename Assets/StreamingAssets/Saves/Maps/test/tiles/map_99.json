@@ -1,0 +1,4102 @@
+[
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 0
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -50,
+      "Z": -49
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 1
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -51,
+      "Z": -48
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 2
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -52,
+      "Z": -47
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 3
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -53,
+      "Z": -46
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 4
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -54,
+      "Z": -45
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 5
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -55,
+      "Z": -44
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 6
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -56,
+      "Z": -43
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 7
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -57,
+      "Z": -42
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 8
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -58,
+      "Z": -41
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 9
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -59,
+      "Z": -40
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 10
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -60,
+      "Z": -39
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 11
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -61,
+      "Z": -38
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 12
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -62,
+      "Z": -37
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 13
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -63,
+      "Z": -36
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 14
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -64,
+      "Z": -35
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 15
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -65,
+      "Z": -34
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 16
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -66,
+      "Z": -33
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 17
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -67,
+      "Z": -32
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 18
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -68,
+      "Z": -31
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 19
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -69,
+      "Z": -30
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 20
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -70,
+      "Z": -29
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 21
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -71,
+      "Z": -28
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 22
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -72,
+      "Z": -27
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 23
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -73,
+      "Z": -26
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 24
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -74,
+      "Z": -25
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 25
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -75,
+      "Z": -24
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 26
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -76,
+      "Z": -23
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 27
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -77,
+      "Z": -22
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 28
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -78,
+      "Z": -21
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 29
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -79,
+      "Z": -20
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 30
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -80,
+      "Z": -19
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 31
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -81,
+      "Z": -18
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 32
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -82,
+      "Z": -17
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 33
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -83,
+      "Z": -16
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 34
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -84,
+      "Z": -15
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 35
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -85,
+      "Z": -14
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 36
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -86,
+      "Z": -13
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 37
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -87,
+      "Z": -12
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 38
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -88,
+      "Z": -11
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 39
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -89,
+      "Z": -10
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 40
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -90,
+      "Z": -9
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 41
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -91,
+      "Z": -8
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 42
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -92,
+      "Z": -7
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 43
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -93,
+      "Z": -6
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 44
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -94,
+      "Z": -5
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 45
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -95,
+      "Z": -4
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 46
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -96,
+      "Z": -3
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 47
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -97,
+      "Z": -2
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 48
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -98,
+      "Z": -1
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 49
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -99,
+      "Z": 0
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 50
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -100,
+      "Z": 1
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 51
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -101,
+      "Z": 2
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 52
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -102,
+      "Z": 3
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 53
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -103,
+      "Z": 4
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 54
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -104,
+      "Z": 5
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 55
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -105,
+      "Z": 6
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 56
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -106,
+      "Z": 7
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 57
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -107,
+      "Z": 8
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 58
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -108,
+      "Z": 9
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 59
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -109,
+      "Z": 10
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 60
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -110,
+      "Z": 11
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 61
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -111,
+      "Z": 12
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 62
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -112,
+      "Z": 13
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 63
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -113,
+      "Z": 14
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 64
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -114,
+      "Z": 15
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 65
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -115,
+      "Z": 16
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 66
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -116,
+      "Z": 17
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 67
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -117,
+      "Z": 18
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 68
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -118,
+      "Z": 19
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 69
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -119,
+      "Z": 20
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 70
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -120,
+      "Z": 21
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 71
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -121,
+      "Z": 22
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 72
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -122,
+      "Z": 23
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 73
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -123,
+      "Z": 24
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 74
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -124,
+      "Z": 25
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 75
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -125,
+      "Z": 26
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 76
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -126,
+      "Z": 27
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 77
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -127,
+      "Z": 28
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 78
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -128,
+      "Z": 29
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 79
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -129,
+      "Z": 30
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 80
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -130,
+      "Z": 31
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 81
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -131,
+      "Z": 32
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 82
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -132,
+      "Z": 33
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 83
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -133,
+      "Z": 34
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 84
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -134,
+      "Z": 35
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 85
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -135,
+      "Z": 36
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 86
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -136,
+      "Z": 37
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 87
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -137,
+      "Z": 38
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 88
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -138,
+      "Z": 39
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 89
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -139,
+      "Z": 40
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 90
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -140,
+      "Z": 41
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 91
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -141,
+      "Z": 42
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 92
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -142,
+      "Z": 43
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 93
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -143,
+      "Z": 44
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 94
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -144,
+      "Z": 45
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 95
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -145,
+      "Z": 46
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 96
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -146,
+      "Z": 47
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 97
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -147,
+      "Z": 48
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 98
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -148,
+      "Z": 49
+    },
+    "MeshName": null
+  },
+  {
+    "Name": "boundary",
+    "Type": 0,
+    "Accessibility": 0,
+    "TerrainMod": {
+      "Recon": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": 2,
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": 2,
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": 2,
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1.7976931348623157E+308,
+    "Symbol": "B",
+    "CoOrds": {
+      "X": 99,
+      "Y": 99
+    },
+    "CubeCoOrds": {
+      "X": 99,
+      "Y": -149,
+      "Z": 50
+    },
+    "MeshName": null
+  }
+]

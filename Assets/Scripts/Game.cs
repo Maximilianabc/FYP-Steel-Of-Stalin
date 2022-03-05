@@ -1,7 +1,6 @@
 using SteelOfStalin.Attributes;
 using SteelOfStalin.Commands;
-using SteelOfStalin.Customizables;
-using SteelOfStalin.Customizables.Modules;
+using SteelOfStalin.DataIO;
 using SteelOfStalin.Flow;
 using SteelOfStalin.Props.Buildings;
 using SteelOfStalin.Props.Tiles;
@@ -11,15 +10,16 @@ using SteelOfStalin.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
+using System.IO;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static SteelOfStalin.Util.Utilities;
-using Attribute = SteelOfStalin.Attributes.Attribute;
-using Resources = SteelOfStalin.Attributes.Resources;
+using static SteelOfStalin.DataIO.DataUtilities;
+using Capture = SteelOfStalin.Commands.Capture;
 
 namespace SteelOfStalin
 {
@@ -30,12 +30,26 @@ namespace SteelOfStalin
         public static SceneManager SceneManager { get; set; } = new SceneManager();
         public static List<Battle> Battles { get; set; } = new List<Battle>();
         public static GameSettings Settings { get; set; } = new GameSettings();
+        public static List<GameObject> GameObjects { get; set; } = new List<GameObject>();
+        public static List<AudioClip> AudioClips { get; set; } = new List<AudioClip>();
         // TODO add achievements later on
+
+        public static UnitData UnitData { get; set; } = new UnitData();
+        public static BuildingData BuildingData { get; set; } = new BuildingData();
+        public static TileData TileData { get; set; } = new TileData();
+        public static CustomizableData CustomizableData { get; set; } = new CustomizableData();
 
         public void Start()
         {
             // TODO Load all models, sound etc. here
-            Settings.Load();
+            GameObjects = UnityEngine.Resources.LoadAll<GameObject>("Prefabs").ToList();
+            AudioClips = UnityEngine.Resources.LoadAll<AudioClip>("Audio").ToList();
+            UnitData.Load();
+            BuildingData.Load();
+            TileData.Load();
+            RandomMap map = new RandomMap(100, 100, 4);
+            map.Save();
+            // Settings = DeserializeJson<GameSettings>("settings.json");
         }
     }
 
@@ -44,15 +58,10 @@ namespace SteelOfStalin
         public bool EnableAnimations { get; set; }
         public byte VolumeMusic { get; set; }
         public byte VolumeSoundFX { get; set; }
+        private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
 
-        public void Save()
-        {
-
-        }
-        public void Load()
-        {
-
-        }
+        public void Save() => File.WriteAllText(m_settingsPath, JsonSerializer.Serialize(this, Options));
+        public GameSettings Load() => JsonSerializer.Deserialize<GameSettings>(m_settingsPath);
     }
 
     public class Battle : MonoBehaviour
@@ -64,7 +73,7 @@ namespace SteelOfStalin
         public List<Player> Players { get; set; } = new List<Player>();
         public BattleRules Rules { get; set; } = new BattleRules();
 
-        public Stack<Round> Rounds = new Stack<Round>();
+        public List<Round> Rounds = new List<Round>();
         public Round CurrentRound { get; set; }
         public int RoundNumber { get; set; } = 1;
 
@@ -75,11 +84,10 @@ namespace SteelOfStalin
         {
             Instance = this;
             Load();
-            Rules.Load();
 
             // main game logic loop
-            while (!IsEnded)
-            {
+            //while (!IsEnded)
+            //{
                 CurrentRound = new Round();
                 Players.ForEach(p => p.IsReady = false);
                 CurrentRound.ResetUnitStatus();
@@ -87,13 +95,13 @@ namespace SteelOfStalin
                 CurrentRound.CommandPrerequisitesChecking();
                 EnablePlayerInput = true;
 
-                _ = StartCoroutine(((Planning)CurrentRound.Planning).PhaseLoop(Rules.TimeForEachRound));
-
+                _ = StartCoroutine(CurrentRound.Planning.PhaseLoop(Rules.TimeForEachRound));
+                Debug.Log("End Turn");
                 EnablePlayerInput = false;
                 CurrentRound.EndPlanning();
-                Rounds.Push(CurrentRound);
+                Rounds.Add(CurrentRound);
                 RoundNumber++;
-            }
+            //}
         }
         public void Save()
         {
@@ -101,7 +109,7 @@ namespace SteelOfStalin
         }
         public void Load()
         {
-            Rules.Load();
+            Rules = DeserializeJson<BattleRules>($@"Saves\{Name}\rules");
             Map.Load();
         }
     }
@@ -123,34 +131,104 @@ namespace SteelOfStalin
         {
 
         }
-
-        public void Load()
-        {
-            // TODO
-        }
     }
 
     public class Map : ICloneable
     {
         public static Map Instance { get; private set; }
+        public string Name { get; set; } = "test";
 
-        private Tile[][] Tiles { get; set; }
-        private List<Unit> Units { get; set; }
-        private List<Building> Buildings { get; set; }
-        private int Width { get; set; }
-        private int Height { get; set; }
+        protected Tile[][] Tiles { get; set; }
+        protected List<Unit> Units { get; set; } = new List<Unit>();
+        protected List<Building> Buildings { get; set; } = new List<Building>();
+        protected int Width { get; set; }
+        protected int Height { get; set; }
 
         public Map() => Instance = this;
         public Map(int width, int height) => (Width, Height, Instance) = (width, height, this);
 
+        protected string Folder => $@"Saves\Maps\{Name}";
+        protected string TileFolder => $@"Saves\Maps\{Name}\tiles";
+
         public void Save()
         {
-
+            CreateStreamingAssetsFolder(Folder);
+            Units.SerializeJson($@"{Folder}\units");
+            Buildings.SerializeJson($@"{Folder}\buildings");
+            SaveToTxt($@"{Folder}\stats", GetStatistics());
+            SaveToPng($@"{Folder}\minimap", Visualize());
+            CreateStreamingAssetsFolder(TileFolder);
+            for (int i = 0; i < Tiles.Length; i++)
+            {
+                Tiles[i].SerializeJson($@"{TileFolder}\map_{i}");
+            }
+            Debug.Log($"Saved map {Name}");
         }
 
         public void Load()
         {
-            // TODO
+            
+        }
+
+        // get a color png for the map
+        public Texture2D Visualize()
+        {
+            Texture2D texture = new Texture2D(Width * 2, Height * 2);
+
+            int mapx = 0;
+            for (int x = 0; x < Width * 2; x += 2)
+            {
+                int mapy = 0;
+                for (int y = 0; y < Height * 2; y += 2)
+                {
+                    // TODO add options for display colors
+                    Color color = Tiles[mapx][mapy].Type switch
+                    {
+                        TileType.BOUNDARY => new Color(200 / 255F, 200 / 255F, 200 / 255F),
+                        TileType.PLAINS => new Color(217 / 255F, 181 / 255F, 28 / 255F),
+                        TileType.GRASSLAND => new Color(0 / 255F, 230 / 255F, 0 / 255F),
+                        TileType.FOREST => new Color(0 / 255F, 128 / 255F, 0 / 255F),
+                        TileType.JUNGLE => new Color(0 / 255F, 51 / 255F, 0 / 255F),
+                        TileType.STREAM => new Color(154 / 255F, 203 / 255F, 255 / 255F),
+                        TileType.RIVER => new Color(13 / 255F, 91 / 255F, 225 / 255F),
+                        TileType.OCEAN => new Color(0 / 255F, 0 / 255F, 128 / 255F),
+                        TileType.SWAMP => new Color(19 / 255F, 179 / 255F, 172 / 255F),
+                        TileType.DESERT => new Color(243 / 255F, 226 / 255F, 96 / 255F),
+                        TileType.HILLOCK => new Color(220 / 255F, 180 / 255F, 148 / 255F),
+                        TileType.HILLS => new Color(179 / 255F, 107 / 255F, 67 / 255F),
+                        TileType.MOUNTAINS => new Color(132 / 255F, 68 / 255F, 33 / 255F),
+                        TileType.ROCKS => new Color(100 / 255F, 100 / 255F, 100 / 255F),
+                        TileType.SUBURB => new Color(230 / 255F, 0 / 255F, 230 / 255F),
+                        TileType.CITY => new Color(96 / 255F, 0 / 255F, 96 / 255F),
+                        TileType.METROPOLIS => new Color(250 / 255F, 0 / 255F, 0 / 255F),
+                        _ => throw new ArgumentException("Unknown tile type")
+                    };
+                    // shift the pixels upward by 1 for odd columns
+                    texture.SetPixel(x, y + mapx % 2, color);
+                    texture.SetPixel(x + 1, y + mapx % 2, color);
+                    texture.SetPixel(x, y + 1 + mapx % 2, color);
+                    texture.SetPixel(x + 1, y + 1 + mapx % 2, color);
+
+                    mapy++;
+                }
+                mapx++;
+            }
+            texture.Apply();
+            return texture;
+        }
+
+        public virtual string GetStatistics()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string name in Enum.GetNames(typeof(TileType)))
+            {
+                int count = TileCount((TileType)Enum.Parse(typeof(TileType), name));
+                float percent = (float)Math.Round((double)count / (Width * Height) * 100, 2);
+                _ = sb.AppendLine($"{name}:\t{count} ({percent}%)");
+            }
+            _ = sb.AppendLine($"Units: {Units.Count}");
+            _ = sb.AppendLine($"Buildings: {Buildings.Count}");
+            return sb.ToString();
         }
 
         public bool AddUnit(Unit u)
@@ -168,7 +246,6 @@ namespace SteelOfStalin
             Units.Add(u);
             return true;
         }
-
         public bool RemoveUnit(Unit u)
         {
             if (u == null)
@@ -181,17 +258,30 @@ namespace SteelOfStalin
 
         public void PrintUnitList()
         {
-            Debug.Log("Current unit list:");
+            StringBuilder sb = new StringBuilder();
+            _ = sb.AppendLine("Current unit list:");
             foreach (Unit unit in Units)
             {
-                Debug.Log($"{unit.name} ({unit.CoOrds.X}, {unit.CoOrds.Y}): {unit.Status}");
+                _ = sb.AppendLine($"{unit.Name} ({unit.CoOrds.X}, {unit.CoOrds.Y}): {unit.Status}");
             }
+            Debug.Log(sb.ToString());
+        }
+        public void PrintBuildingList()
+        {
+            StringBuilder sb = new StringBuilder();
+            _ = sb.Append("Current building list:\n");
+            foreach (Building building in Buildings)
+            {
+                _ = sb.Append($"{building.Name} ({building.CoOrds.X}, {building.CoOrds.Y}): {building.Status}\n");
+            }
+            Debug.Log(sb.ToString());
         }
 
         public Tile GetTile(int x, int y) => Tiles[x][y];
-        public Tile GetTile(Point p) => Tiles[p.X][p.Y];
-        public Tile GetTile(CubeCoordinates c) => Tiles[((Point)c).X][((Point)c).Y];
-        public Tile[][] GetTiles() => Tiles;
+        public Tile GetTile(Coordinates p) => Tiles[p.X][p.Y];
+
+        public Tile GetTile(CubeCoordinates c) => Tiles[((Coordinates)c).X][((Coordinates)c).Y];
+        public IEnumerable<Tile> GetTiles() => Tiles.Flatten();
         public IEnumerable<Tile> GetTiles(TileType type) => Tiles.Flatten().Where(t => t.Type == type);
         public IEnumerable<Tile> GetTiles(Predicate<Tile> predicate) => Tiles.Flatten().Where(t => predicate(t));
 
@@ -199,27 +289,11 @@ namespace SteelOfStalin
         public IEnumerable<Cities> GetCities(Player player) => GetCities().Where(c => c.Owner == player);
         public IEnumerable<Cities> GetCities(Predicate<Cities> predicate) => GetCities().Where(c => predicate(c));
 
-        public IEnumerable<Tile> GetNeigbours(CubeCoordinates c, int distance = 1)
-        {
-            if (distance < 1)
-            {
-                throw new ArgumentException("Distance must be >= 1.");
-            }
-            for (int x = -distance; x <= distance; x++)
-            {
-                for (int y = -distance; y <= distance; y++)
-                {
-                    for (int z = -distance; z <= distance; z++)
-                    {
-                        if (c.X + x >= 0 && c.Y + y >= 0 && c.Z + z >= 0)
-                        {
-                            yield return GetTile((Point)new CubeCoordinates(c.X + x, c.Y + y, c.Z + z));
-                        }
-                    }
-                }
-            }
-            yield break;
-        }
+        public IEnumerable<Tile> GetNeigbours(CubeCoordinates c, int distance = 1) => c.GetNeigbours(distance).Where(c => 
+        { 
+            Coordinates p = (Coordinates)c;
+            return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height; 
+        }).Select(c => GetTile(c));
         public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, double distance = 1) => distance < 1
                 ? throw new ArgumentException("Distance must be >= 1.")
                 : GetNeigbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
@@ -227,7 +301,7 @@ namespace SteelOfStalin
 
         public IEnumerable<Unit> GetUnits() => Units;
         public IEnumerable<Unit> GetUnits<T>() where T : Unit => Units.Where(u => u is T);
-        public IEnumerable<Unit> GetUnits(Point p) => GetUnits(GetTile(p));
+        public IEnumerable<Unit> GetUnits(Coordinates p) => GetUnits(GetTile(p));
         public IEnumerable<Unit> GetUnits(Tile t)
         {
             if (t == null)
@@ -267,6 +341,9 @@ namespace SteelOfStalin
         public IEnumerable<Building> GetBuildings(Player player) => Buildings.Where(b => b.Owner == player);
         public IEnumerable<Building> GetBuildings(Predicate<Building> predicate) => Buildings.Where(b => predicate(b));
 
+        public int TileCount(TileType type) => Tiles.Flatten().Where(t => t.Type == type).Count();
+        public float TilePercentage(TileType type) => (float)Math.Round(TileCount(type) / (Width * Height) * 100D, 2);
+
         public object Clone()
         {
             Map copy = (Map)MemberwiseClone();
@@ -276,29 +353,493 @@ namespace SteelOfStalin
         }
     }
 
+    // TODO FUT Impl. handle irregular-shaped map generation
+    // TODO add options for variating height & humdity const., no. of river sources and no. of cities
     public class RandomMap : Map, ICloneable
     {
+        public PerlinMap HeightMap { get; set; }
+        public PerlinMap HumidityMap { get; set; }
+        public int WaterSourceNum { get; set; } = -1;
+        public int CitiesNum { get; set; } = -1;
+        private List<CubeCoordinates> m_flatLands { get; set; }
+        private List<CubeCoordinates> m_cities { get; set; } = new List<CubeCoordinates>();
+
         public RandomMap() { }
 
-        // generation of a new random map
-        public RandomMap(int width, int height) : base(width, height)
+        public RandomMap(int width, int height, int num_player) : base(width, height)
         {
+            System.Random random = new System.Random();
+            HeightMap = new PerlinMap(width, height, seed_x: random.Next(-(1 << 16), 1 << 16), seed_y: random.Next(-(1 << 16), 1 << 16));
+            HumidityMap = new PerlinMap(width, height, seed_x: random.Next(-(1 << 16), 1 << 16), seed_y: random.Next(-(1 << 16), 1 << 16));
 
+            HeightMap.Generate();
+            HumidityMap.Generate();
+
+            Tiles = new Tile[width][];
+            for (int x = 0; x < width; x++)
+            {
+                Tiles[x] = new Tile[height];
+                for (int y = 0; y < height; y++)
+                {
+                    if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
+                    {
+                        Tiles[x][y] = Game.TileData.GetNewTile(TileType.BOUNDARY);
+                        Tiles[x][y].CoOrds = new Coordinates(x, y);
+                        continue;
+                    }
+                    else if (HeightMap.Values[x][y] <= 0.25)
+                    {
+                        Tiles[x][y] = Game.TileData.GetNewTile(TileType.OCEAN);
+                    }
+                    else if (HeightMap.Values[x][y] <= 0.6)
+                    {
+                        TileType type = HumidityMap.Values[x][y] switch
+                        {
+                            _ when HeightMap.Values[x][y] < 0.4 && HumidityMap.Values[x][y] >= 0.7 => TileType.SWAMP,
+                            _ when HumidityMap.Values[x][y] >= 0.65 => TileType.JUNGLE,
+                            _ when HumidityMap.Values[x][y] >= 0.55 => TileType.FOREST,
+                            _ when HumidityMap.Values[x][y] >= 0.45 => TileType.GRASSLAND,
+                            _ when HumidityMap.Values[x][y] < 0.3 => TileType.DESERT,
+                            _ => TileType.PLAINS,
+                        };
+                        Tiles[x][y] = Game.TileData.GetNewTile(type);
+                    }
+                    else
+                    {
+                        Tiles[x][y] = HeightMap.Values[x][y] <= 0.65
+                            ? Game.TileData.GetNewTile(TileType.HILLOCK)
+                            : Game.TileData.GetNewTile(HeightMap.Values[x][y] <= 0.75 ? TileType.HILLS : TileType.MOUNTAINS);
+                    }
+                    // TODO move these back to json generation
+                    Tiles[x][y].Height = Tiles[x][y].Type switch
+                    {
+                        TileType.BOUNDARY => double.MaxValue,
+                        TileType.PLAINS => 2,
+                        TileType.GRASSLAND => 2,
+                        TileType.FOREST => 2,
+                        TileType.JUNGLE => 2,
+                        TileType.STREAM => 1,
+                        TileType.RIVER => 1,
+                        TileType.OCEAN => 1,
+                        TileType.SWAMP => 1,
+                        TileType.DESERT => 2,
+                        TileType.HILLOCK => 4,
+                        TileType.HILLS => 8,
+                        TileType.MOUNTAINS => 16,
+                        TileType.ROCKS => 4,
+                        TileType.SUBURB => 2,
+                        TileType.CITY => 2,
+                        TileType.METROPOLIS => 2,
+                        _ => throw new NotImplementedException(),
+                    };
+                    Tiles[x][y].CoOrds = new Coordinates(x, y);
+                }
+            }
+            GenerateRivers();
+            GenerateCities(num_player);
+        }
+
+        // TODO FUT Impl. Replace A* with a more advanced procedural generation algo
+        public void GenerateRivers()
+        {
+            Debug.Log("Generating rivers.");
+            List<CubeCoordinates> hills = GetTiles(t => t.IsHill).Select(t => t.CubeCoOrds).ToList();
+            if (WaterSourceNum < 0)
+            {
+                WaterSourceNum = (int)Math.Ceiling(hills.Count / 1000D);
+            }
+            if (WaterSourceNum == 0)
+            {
+                return;
+            }
+
+            List<CubeCoordinates> oceans = GetTiles(t => t.Type == TileType.OCEAN).Select(t => t.CubeCoOrds).ToList();
+            if (!oceans.Any())
+            {
+                Debug.LogWarning("No ocean in this map.");
+                return;
+            }
+
+            // get the nearest oceans to all sources
+            List<CubeCoordinates> sources = hills.OrderBy(x => Guid.NewGuid()).Take(WaterSourceNum).ToList();
+            List<CubeCoordinates> destinations = new List<CubeCoordinates>();
+            foreach (CubeCoordinates source in sources)
+            {
+                int current_distance = int.MaxValue;
+                CubeCoordinates nearest_ocean = new CubeCoordinates();
+                foreach (CubeCoordinates ocean in oceans)
+                {
+                    int distance = CubeCoordinates.GetDistance(ocean, source);
+                    if (distance < current_distance)
+                    {
+                        current_distance = distance;
+                        nearest_ocean = ocean;
+                    }
+                }
+                destinations.Add(nearest_ocean);
+            }
+
+            // path-find with height as cost from water sources to nearest oceans
+            List<Stack<CubeCoordinates>> paths = new List<Stack<CubeCoordinates>>();
+            Dictionary<CubeCoordinates, CubeCoordinates> source_destination_pairs = sources.Zip(destinations, (s, d) => new { s, d }).ToDictionary(x => x.s, x => x.d);
+            foreach(KeyValuePair<CubeCoordinates, CubeCoordinates> pair in source_destination_pairs)
+            {
+                Coordinates start_coord = (Coordinates)pair.Key;
+                Coordinates end_coord = (Coordinates)pair.Value;
+                int shortest_distance = CubeCoordinates.GetDistance(pair.Key, pair.Value);
+                WeightedTile start = new WeightedTile()
+                {
+                    CubeCoOrds = pair.Key,
+                    BaseCost = 1,
+                    Weight = Tiles[start_coord.X][start_coord.Y].Height,
+                    MaxWeight = 16,
+                    DistanceToGoal = shortest_distance
+                };
+                WeightedTile end = new WeightedTile()
+                {
+                    CubeCoOrds = pair.Value,
+                    BaseCost = 1,
+                    Weight = Tiles[end_coord.X][end_coord.Y].Height,
+                    MaxWeight = 16,
+                    DistanceToGoal = 0
+                };
+
+                Debug.Log($"Generating river from {start_coord} to {end_coord}.");
+                Stack<CubeCoordinates> path = PathFind(start, end, max_weight: 16);
+                paths.Add(path);
+            }
+
+            Debug.Log("Overwriting tiles along river path.");
+            foreach (Stack<CubeCoordinates> p in paths)
+            {
+                while (p.Count > 0)
+                {
+                    Coordinates coords = (Coordinates)p.Pop();
+                    TileType type = Tiles[coords.X][coords.Y].Type;
+                    if (type == TileType.OCEAN || type == TileType.BOUNDARY)
+                    {
+                        break;
+                    }
+                    else if (type == TileType.RIVER)
+                    {
+                        continue;
+                    }
+                    Tiles[coords.X][coords.Y] = Game.TileData.GetNewTile(type == TileType.STREAM ? TileType.RIVER : TileType.STREAM);
+                    Tiles[coords.X][coords.Y].CoOrds = new Coordinates(coords);
+                }
+            }
+        }
+
+        public void GenerateCities(int num_player, int min_sep = -1, int max_sep = -1, float suburb_ratio = 0.2F)
+        {
+            if (min_sep > max_sep)
+            {
+                Debug.LogError("Minimum separation cannot be larger than maximum separation");
+                return;
+            }
+            if (max_sep < 0)
+            {
+                max_sep = (int)Math.Max(Width, Height);
+            }
+            if (CitiesNum < 0)
+            {
+                CitiesNum = (int)Math.Ceiling(Width * Height / 2000D) + 8 - num_player;
+            }
+            if (min_sep < 0)
+            {
+                double determinant = 1 + 4 * (Width * Height / (3 * (CitiesNum + num_player)));
+                min_sep = (int)((Math.Sqrt(determinant) - 1) / 2);
+            }
+            // area of a "cell" is 3n(n+1) hex, where n is the separation, a cell can contain only 1 city
+            if (3 * min_sep * (min_sep + 1) * (CitiesNum + num_player) > Width * Height)
+            {
+                Debug.LogError("Not enough space for generating all cities. Consider lowering minimum separation of number of cities.");
+                return;
+            }
+
+            m_flatLands = Tiles.Flatten().Where(t => t.IsFlatLand).Select(t => t.CubeCoOrds).ToList();
+
+            // generate capitals first
+            PickCities(num_player, (int)Math.Max(Width, Height) / 2, max_sep);
+            PickCities(CitiesNum, min_sep, max_sep);
+
+            Debug.Log("Overwriting tiles with cities.");
+            for (int i = 0; i < num_player; i++)
+            {
+                Coordinates c = (Coordinates)m_cities[i];
+                Tiles[c.X][c.Y] = Game.TileData.GetNewTile(TileType.METROPOLIS);
+                Tiles[c.X][c.Y].CoOrds = new Coordinates(c.X, c.Y);
+            }
+            m_cities.RemoveRange(0, num_player);
+
+            int num_suburb = (int)(CitiesNum * suburb_ratio);
+            for (int i = 0; i < num_suburb; i++)
+            {
+                int index = new System.Random().Next(m_cities.Count);
+                Coordinates c = (Coordinates)m_cities[index];
+                Tiles[c.X][c.Y] = Game.TileData.GetNewTile(TileType.SUBURB);
+                Tiles[c.X][c.Y].CoOrds = new Coordinates(c.X, c.Y);
+                m_cities.RemoveAt(index);
+            }
+
+            foreach (CubeCoordinates cube in m_cities)
+            {
+                Coordinates c = (Coordinates)cube;
+                Tiles[c.X][c.Y] = Game.TileData.GetNewTile(TileType.CITY);
+                Tiles[c.X][c.Y].CoOrds = new Coordinates(c.X, c.Y);
+            }
+        }
+
+        public Stack<CubeCoordinates> PathFind(WeightedTile start, WeightedTile end, double weight = -1, double max_weight = -1)
+        {
+            Stack<CubeCoordinates> path = new Stack<CubeCoordinates>();
+            List<WeightedTile> active = new List<WeightedTile>();
+            List<WeightedTile> visited = new List<WeightedTile>();
+            active.Add(start);
+
+            int limit = Width * Height / 500;
+            while (active.Any())
+            {
+                WeightedTile check = active.OrderBy(w => w.SuppliesCostDistance).FirstOrDefault();
+                Coordinates c = (Coordinates)check.CubeCoOrds;
+                if (check == end)
+                {
+                    while (check.Parent != null)
+                    {
+                        path.Push(check.CubeCoOrds);
+                        check = check.Parent;
+                    }
+                    break;
+                }
+                visited.Add(check);
+                _ = active.Remove(check);
+
+                List<WeightedTile> neigbours = new List<WeightedTile>();
+                GetNeigbours(check.CubeCoOrds).ToList().ForEach(t => neigbours.Add(new WeightedTile()
+                {
+                    Parent = check,
+                    CubeCoOrds = t.CubeCoOrds,
+                    BaseCost = t.Height,
+                    Weight = 1,
+                    MaxWeight = max_weight < 0 ? 1 : max_weight,
+                    SuppliesCostSoFar = check.SuppliesCostSoFar + (weight < 0 ? t.Height : weight),
+                    DistanceSoFar = check.DistanceSoFar + 1,
+                    DistanceToGoal = CubeCoordinates.GetDistance(t.CubeCoOrds, end.CubeCoOrds)
+                }));
+
+                neigbours.ForEach(n =>
+                {
+                    if (!visited.Where(v => v == n).Any())
+                    {
+                        WeightedTile exist = active.Where(a => a == n).FirstOrDefault();
+                        if (exist != null && exist.SuppliesCostDistance > check.SuppliesCostDistance)
+                        {
+                            _ = active.Remove(exist);
+                        }
+                        else
+                        {
+                            active.Add(n);
+                        }
+                    }
+                });
+            }
+            return path;
+        }
+
+        public override string GetStatistics()
+        {
+            StringBuilder sb = new StringBuilder(base.GetStatistics());
+            _ = sb.AppendLine($"Number of water sources: {WaterSourceNum}\n");
+            _ = sb.AppendLine("Height Map:");
+            _ = sb.AppendLine(HeightMap.GetStatistics());
+            _ = sb.AppendLine("Humidity Map:");
+            _ = sb.AppendLine(HumidityMap.GetStatistics());
+            return sb.ToString();
+        }
+
+        private void PickCities(int num_cities, int min_sep, int max_sep)
+        {
+            Debug.Log($"Generating cities: no. of cities to generate: {num_cities}, min. separation: {min_sep}, max. separation: {max_sep}");
+            bool force_generate_without_checking = false;
+            while (num_cities > 0)
+            {
+                // if not have any cities yet, randomly pick one from available;
+                if (m_cities.Count == 0 || force_generate_without_checking)
+                {
+                    CubeCoordinates c = m_flatLands[new System.Random().Next(m_flatLands.Count)];
+                    m_cities.Add(c);
+                    _ = m_flatLands.Remove(c);
+                    force_generate_without_checking = false;
+                    num_cities--;
+                }
+                else
+                {
+                    Coordinates last = (Coordinates)m_cities.Last();
+                    // test for any cities already generated within min_sep of candidate, if true, pick another one
+                    bool has_cities_within_range = true;
+                    while (has_cities_within_range)
+                    {
+                        // pick one
+                        int rand_dist = new System.Random().Next(min_sep, max_sep);
+                        double rand_theta = new System.Random().NextDouble() * 2 * Math.PI;
+
+                        int candidate_x = (int)(last.X + rand_dist * Math.Cos(rand_theta));
+                        int candidate_y = (int)(last.Y + rand_dist * Math.Sin(rand_theta));
+                        if (candidate_x > 0 && candidate_y > 0 && candidate_x < Width && candidate_y < Height)
+                        {
+                            CubeCoordinates candidate = (CubeCoordinates)new Coordinates(candidate_x, candidate_y);
+                            if (m_flatLands.Any(s => s == candidate))
+                            {
+                                has_cities_within_range = candidate.GetNeigbours(min_sep).Intersect(m_cities).Any();
+
+                                // be it passing the test or not, it won't be suitable: if it passes, it will be turned into a city, if not then obviously not a suitable tile for any other city generation
+                                _ = m_flatLands.Remove(candidate);
+
+                                if (!has_cities_within_range)
+                                {
+                                    m_cities.Add(candidate);
+                                    num_cities--;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public class PerlinMap
+    {
+        public int Height { get; set; }
+        public int Width { get; set; }
+        // the higher the more bumpy (zoom out from the noise map)
+        public float Frequency { get; set; }
+        // the higher the more detailed
+        public byte Octaves { get; set; }
+        // how much influence should each octave has
+        public float Persistence { get; set; }
+        // the lower the flatter
+        public float Exponent { get; set; }
+        // the higher the more distorted, 0.0F (min) means no distortion
+        public float WarpStrength { get; set; }
+        // not rly a seed, but instead random offsets
+        // TODO FUT Impl. Replace Unity's Mathf.PerlinNoise with own implementation of Perlin random number
+        public int Seedx { get; set; }
+        public int Seedy { get; set; }
+
+        public float[][] Values { get; set; }
+
+        public PerlinMap() { }
+
+        // generation of a new perlin noise map
+        public PerlinMap(int width, int height, float freq = 3.0F, byte octaves = 1, float persist = 0.8F, float exp = 1.0F, float warp_strength = 0.1F, int seed_x = 0, int seed_y = 0)
+            => (Width, Height, Frequency, Octaves, Persistence, Exponent, WarpStrength, Seedx, Seedy)
+            = (width, height, freq, octaves, persist, exp, warp_strength, seed_x, seed_y);
+
+        public void Generate()
+        {
+            Values = new float[Width][];
+            for (int x = 0; x < Width; x++)
+            {
+                Values[x] = new float[Height];
+                for (int y = 0; y < Height; y++)
+                {
+                    float nx = x / (float)Width;
+                    float ny = y / (float)Height;
+                    if (WarpStrength > 0)
+                    {
+                        nx += PerlinWithParams(nx, ny) * WarpStrength;
+                        ny += PerlinWithParams(nx, ny) * WarpStrength;
+                    }
+                    Values[x][y] = PerlinWithParams(nx, ny);
+                }
+            }
+        }
+
+        // save the noise map in .txt with all values
+        public void SaveTxt(string file_name)
+        {
+            if (Values == null)
+            {
+                Debug.LogError("Value Map is not initialized. Probably not yet called the Generate method.");
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            foreach (float[] fs in Values)
+            {
+                foreach (float f in fs)
+                {
+                    _ = sb.Append($"{Math.Round(f, 3):0.000} ");
+                }
+                _ = sb.AppendLine();
+            }
+
+            float[] flat = Values.Flatten().ToArray();
+            _ = sb.AppendLine($"(0, 0.1]: {Math.Round(flat.Where(f => f <= 0.1).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.1, 0.2]: {Math.Round(flat.Where(f => 0.1 < f && f <= 0.2).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.2, 0.3]: {Math.Round(flat.Where(f => 0.2 < f && f <= 0.3).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.3, 0.4]: {Math.Round(flat.Where(f => 0.3 < f && f <= 0.4).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.4, 0.5]: {Math.Round(flat.Where(f => 0.4 < f && f <= 0.5).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.5, 0.6]: {Math.Round(flat.Where(f => 0.5 < f && f <= 0.6).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.6, 0.7]: {Math.Round(flat.Where(f => 0.6 < f && f <= 0.7).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.7, 0.8]: {Math.Round(flat.Where(f => 0.7 < f && f <= 0.8).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.8, 0.9]: {Math.Round(flat.Where(f => 0.8 < f && f <= 0.9).Count() / (float)(Width * Height) * 100, 2)}%");
+            _ = sb.AppendLine($"(0.9, 1]: {Math.Round(flat.Where(f => 0.9 < f && f <= 1).Count() / (float)(Width * Height) * 100, 2)}%");
+            File.WriteAllText($"{file_name}.txt", sb.ToString());
+        }
+
+        // save a black and white png for the noise
+        public void Visualize(string file_name)
+        {
+            Texture2D texture = new Texture2D(Width, Height);
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    float depth = Values[x][y];
+                    texture.SetPixel(x, y, new UnityEngine.Color(depth, depth, depth));
+                }
+            }
+            texture.Apply();
+            byte[] bs = texture.EncodeToPNG();
+            using FileStream fs = new FileStream($"{file_name}.png", FileMode.OpenOrCreate, FileAccess.Write);
+            fs.Write(bs, 0, bs.Length);
+            fs.Close();
+        }
+
+        public string GetStatistics() => $"Frequency: {Frequency}\nOctaves: {Octaves}\nPersistence: {Persistence}\nExponent: {Exponent}\nWarp Strength: {WarpStrength}\nOffset:({Seedx},{Seedy})\n";
+
+        private float PerlinWithParams(float nx, float ny)
+        {
+            float freq = Frequency;
+            float amp = 1;
+            float sum_amp = 0;
+            float value = 0;
+            for (byte o = 0; o < Octaves; o++)
+            {
+                float raw = Mathf.PerlinNoise(freq * nx + Seedx, freq * ny + Seedy);
+                value += raw * amp;
+                sum_amp += amp;
+                freq *= 2;
+                amp *= Persistence;
+            }
+            return (float)Math.Pow(value / sum_amp, (double)Exponent);
         }
     }
 
     public abstract class Command : ICloneable
     {
-        public Point Source { get; set; }
-        public Point Destination { get; set; }
+        public Coordinates Source { get; set; }
+        public Coordinates Destination { get; set; }
         public Unit Unit { get; set; }
         public abstract void Execute();
-        public override string ToString() => "";
+        public override string ToString() => $"[{GetType().Name}]";
 
         public Command() { }
         public Command(Unit u) => Unit = u;
-        public Command(Unit u, Point src, Point dest) => (Unit, Source, Destination) = (u, src, dest);
-        public Command(Unit u, int srcX, int srcY, int destX, int destY) => (Unit, Source, Destination) = ( u, new Point(srcX, srcY), new Point(destX, destY));
+        public Command(Unit u, Coordinates src, Coordinates dest) => (Unit, Source, Destination) = (u, src, dest);
+        public Command(Unit u, int srcX, int srcY, int destX, int destY) => (Unit, Source, Destination) = (u, new Coordinates(srcX, srcY), new Coordinates(destX, destY));
 
         public object Clone()
         {
@@ -308,10 +849,15 @@ namespace SteelOfStalin
         }
     }
 
-    public abstract class Customizable
+    public abstract class Customizable : ICloneable
     {
         public string Name { get; set; }
         public Cost Cost { get; set; } = new Cost();
+
+        public Customizable() { }
+        public Customizable(Customizable another) => (Name, Cost) = (another.Name, (Cost)another.Cost.Clone());
+
+        public abstract object Clone();
     }
 }
 
@@ -327,7 +873,7 @@ namespace SteelOfStalin.Flow
         [JsonIgnore] public List<Player> Players { get; set; }
         public List<Command> Commands { get; set; } = new List<Command>();
         public List<Phase> Phases { get; set; } = new List<Phase>();
-        public Phase Planning { get; set; } = new Planning();
+        public Planning Planning { get; set; } = new Planning();
         
         public Round() 
         {
@@ -576,7 +1122,7 @@ namespace SteelOfStalin.Flow
         //public CounterAttacking(List<Command> commands) : base(commands, typeof(Ambush)) { }
         public override void Execute()
         {
-            // TODO
+            // TODO FUT Impl. 
         }
     }
     public sealed class Spotting : Phase
@@ -698,15 +1244,15 @@ namespace SteelOfStalin.Flow
         {
             Map.Instance.GetUnits(u => u.Carrying.Supplies == 0).ToList().ForEach(u =>
             {
-                // TODO add some variations to the penalty
+                // TODO FUT Impl. add some variations to the penalty
                 u.Morale.MinusEquals(10);
                 if (u.Morale < 0)
                 {
                     u.Morale.Value = 0;
-                    // TODO add some variations to the chance
+                    // TODO FUT Impl. add some variations to the chance
                     if (new System.Random().NextDouble() < 0.1)
                     {
-                        // TODO add some chance for surrender effect: enemy can capture this unit
+                        // TODO FUT Impl. add some chance for surrender effect: enemy can capture this unit
                         u.Status = UnitStatus.DESTROYED;
                     }
                 }
@@ -714,4 +1260,3 @@ namespace SteelOfStalin.Flow
         }
     }
 }
-
