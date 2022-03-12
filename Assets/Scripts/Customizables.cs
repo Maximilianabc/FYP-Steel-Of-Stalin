@@ -1,15 +1,16 @@
 ﻿using SteelOfStalin.Attributes;
 using SteelOfStalin.Customizables.Modules;
 using SteelOfStalin.Customizables.Shells;
+using SteelOfStalin.CustomTypes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 
 namespace SteelOfStalin.Customizables
 {
+    [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
     public enum FirearmType
     {
         NONE = 0,
@@ -59,14 +60,16 @@ namespace SteelOfStalin.Customizables
             = ((Attribute)another.Integrity.Clone(), (Attribute)another.Weight.Clone(), (Attribute)another.FunctionalThreshold.Clone(), (Attribute)another.TakeDamageChance.Clone());
 
         public abstract override object Clone();
+        public virtual string GetIntegrityChangeRecord(double change) => $" {Name}:i:{change:+#.##;-#.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity}";
     }
 
-    public interface IOffensiveCustomizable
+    public interface IOffensiveCustomizable : INamedAsset
     {
         public Offense Offense { get; set; }
         public Attribute Noise { get; set; }
         public Resources ConsumptionNormal { get; set; }
         public Resources ConsumptionSuppress { get; set; }
+        public Modifier ConcealmentPenaltyMove { get; set; }
         public Modifier ConcealmentPenaltyFire { get; set; }
     }
 }
@@ -244,30 +247,41 @@ namespace SteelOfStalin.Customizables.Modules
         public Offense Offense { get; set; } = new Offense();
         public Attribute Noise { get; set; } = new Attribute();
         public Modifier ConcealmentPenaltyFire { get; set; } = new Modifier();
+        public Modifier ConcealmentPenaltyMove { get; set; } = new Modifier();
         public Resources ConsumptionNormal { get; set; } = new Resources();
         public Resources ConsumptionSuppress { get; set; } = new Resources(); // nth so far
         public List<string> CompatibleShells { get; set; } = new List<string>();
         public Shell CurrentShell { get; set; }
 
+        public CannonBreech CannonBreech { get; set; } = new CannonBreech();
+
         public Gun() : base() { }
         public Gun(Gun another) : base(another)
-            => (Offense, Noise, ConcealmentPenaltyFire, ConsumptionNormal, ConsumptionSuppress, CompatibleShells, CurrentShell)
-            = ((Offense)another.Offense.Clone(), (Attribute)another.Noise.Clone(), (Modifier)another.ConcealmentPenaltyFire.Clone(), (Resources)another.ConsumptionNormal.Clone(), (Resources)another.ConsumptionSuppress.Clone(), new List<string>(another.CompatibleShells), (Shell)another.CurrentShell.Clone());
+            => (Offense, Noise, ConcealmentPenaltyFire, ConsumptionNormal, ConsumptionSuppress, CompatibleShells, CurrentShell, CannonBreech)
+            = ((Offense)another.Offense.Clone(), 
+               (Attribute)another.Noise.Clone(), 
+               (Modifier)another.ConcealmentPenaltyFire.Clone(), 
+               (Resources)another.ConsumptionNormal.Clone(), 
+               (Resources)another.ConsumptionSuppress.Clone(), 
+                new List<string>(another.CompatibleShells), 
+               (Shell)another.CurrentShell.Clone(),
+               (CannonBreech)another.CannonBreech.Clone());
 
         public abstract override object Clone();
     }
 
-    public abstract class MountedMachineGun : Module, IOffensiveCustomizable
+    public abstract class HeavyMachineGun : Module, IOffensiveCustomizable
     {
         public Offense Offense { get; set; } = new Offense();
         public Attribute Noise { get; set; } = new Attribute();
+        public Modifier ConcealmentPenaltyMove { get; set; } = new Modifier();
         public Modifier ConcealmentPenaltyFire { get; set; } = new Modifier();
         public double AmmoWeight { get; set; }
         public Resources ConsumptionNormal { get; set; } = new Resources();
         public Resources ConsumptionSuppress { get; set; } = new Resources();
 
-        public MountedMachineGun() : base() { }
-        public MountedMachineGun(MountedMachineGun another) : base(another)
+        public HeavyMachineGun() : base() { }
+        public HeavyMachineGun(HeavyMachineGun another) : base(another)
             => (Offense, Noise, ConcealmentPenaltyFire, AmmoWeight, ConsumptionNormal, ConsumptionSuppress)
             = ((Offense)another.Offense.Clone(), (Attribute)another.Noise.Clone(), (Modifier)another.ConcealmentPenaltyFire.Clone(), another.AmmoWeight, (Resources)another.ConsumptionNormal.Clone(), (Resources)another.ConsumptionSuppress.Clone());
 
@@ -278,9 +292,12 @@ namespace SteelOfStalin.Customizables.Modules
     {
         public Attribute Horsepower { get; set; } = new Attribute();
         public Attribute FuelConsumption { get; set; } = new Attribute();
+        public Modifier ConcealmentPenaltyMove { get; set; } = new Modifier();
 
         public Engine() : base() { }
-        public Engine(Engine another) : base(another) => (Horsepower, FuelConsumption) = ((Attribute)another.Horsepower.Clone(), (Attribute)another.FuelConsumption.Clone());
+        public Engine(Engine another) : base(another)
+            => (Horsepower, FuelConsumption, ConcealmentPenaltyMove)
+            = ((Attribute)another.Horsepower.Clone(), (Attribute)another.FuelConsumption.Clone(), (Modifier)another.ConcealmentPenaltyMove.Clone());
         public override object Clone() => new Engine(this);
     }
     public class Suspension : Module
@@ -301,10 +318,10 @@ namespace SteelOfStalin.Customizables.Modules
     }
     public class Periscope : Module
     {
-        public Attribute ObservableRange { get; set; } = new Attribute();
+        public Modifier ReconBonus { get; set; } = new Modifier();
 
         public Periscope() : base() { }
-        public Periscope(Periscope another) : base(another) => ObservableRange = (Attribute)another.ObservableRange.Clone();
+        public Periscope(Periscope another) : base(another) => ReconBonus = (Modifier)another.ReconBonus.Clone();
         public override object Clone() => new Periscope(this);
     }
     public class FuelTank : Module
@@ -409,6 +426,7 @@ namespace SteelOfStalin.Customizables.Guns
         public abstract override object Clone();
     }
 
+    // TODO FUT Impl. add calibre property for all guns, remove all of the below classes
     public class C20mm : Cannon
     {
         public C20mm() { }
@@ -582,5 +600,89 @@ namespace SteelOfStalin.Customizables.Shells
         public HE() : base() { }
         public HE(HE another) : base(another) { }
         public override object Clone() => new HE(this);
+    }
+    public class APC : Shell
+    {
+        public APC() : base() { }
+        public APC(APC another) : base(another) { }
+        public override object Clone() => new APC(this);
+    }
+    public class APBC : Shell
+    {
+        public APBC() : base() { }
+        public APBC(APBC another) : base(another) { }
+        public override object Clone() => new APBC(this);
+    }
+    public class APCBC : Shell
+    {
+        public APCBC() : base() { }
+        public APCBC(APCBC another) : base(another) { }
+        public override object Clone() => new APCBC(this);
+    }
+    public class APCBC_HE : Shell
+    {
+        public APCBC_HE() : base() { }
+        public APCBC_HE(APCBC_HE another) : base(another) { }
+        public override object Clone() => new APCBC_HE(this);
+    }
+    public class APCR : Shell
+    {
+        public APCR() : base() { }
+        public APCR(APCR another) : base(another) { }
+        public override object Clone() => new APCR(this);
+    }
+    public class APCNR : Shell
+    {
+        public APCNR() : base() { }
+        public APCNR(APCNR another) : base(another) { }
+        public override object Clone() => new APCNR(this);
+    }
+    public class APDS : Shell
+    {
+        public APDS() : base() { }
+        public APDS(APDS another) : base(another) { }
+        public override object Clone() => new APDS(this);
+    }
+    public class APFSDS : Shell
+    {
+        public APFSDS() : base() { }
+        public APFSDS(APFSDS another) : base(another) { }
+        public override object Clone() => new APFSDS(this);
+    }
+    public class HESH : Shell
+    {
+        public HESH() : base() { }
+        public HESH(HESH another) : base(another) { }
+        public override object Clone() => new HESH(this);
+    }
+    public class HEAT : Shell
+    {
+        public HEAT() : base() { }
+        public HEAT(HEAT another) : base(another) { }
+        public override object Clone() => new HEAT(this);
+    }
+    public class FRAG : Shell
+    {
+        public FRAG() : base() { }
+        public FRAG(FRAG another) : base(another) { }
+        public override object Clone() => new FRAG(this);
+    }
+    public class APHE : Shell
+    {
+        public APHE() : base() { }
+        public APHE(APHE another) : base(another) { }
+        public override object Clone() => new APHE(this);
+    }
+    public class Incendiray : Shell
+    {
+        public Incendiray() : base() { }
+        public Incendiray(Incendiray another) : base(another) { }
+        public override object Clone() => new Incendiray(this);
+    }
+    public class Tracer : Shell
+    {
+        public Tracer() : base() { }
+        public Tracer(Tracer another) : base(another) { }
+        public override object Clone() => new Tracer(this);
     }
 }

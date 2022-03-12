@@ -1,12 +1,14 @@
 using SteelOfStalin.Attributes;
 using SteelOfStalin.Customizables;
 using SteelOfStalin.Customizables.Modules;
+using SteelOfStalin.CustomTypes;
+using SteelOfStalin.Props.Buildings;
 using SteelOfStalin.Props.Tiles;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using System.Text.Json.Serialization;
 using static SteelOfStalin.Util.Utilities;
+using Attribute = SteelOfStalin.Attributes.Attribute;
 
 namespace SteelOfStalin.Props.Units
 {
@@ -15,6 +17,26 @@ namespace SteelOfStalin.Props.Units
         public Ground() : base() { }
         public Ground(Ground another) : base(another) { }
         public abstract override object Clone();
+        public abstract override IEnumerable<Module> GetModules();
+
+        public override bool CanMove() => base.CanMove() && HasEnoughResourcesForMoving();
+        public virtual bool HasEnoughResourcesForMoving()
+        {
+            if (Consumption.Fuel > 0)
+            {
+                IEnumerable<Tile> neighbours = GetAccessibleNeigbours();
+                IEnumerable<(double supplies, double fuel)> consumption_pairs = neighbours.Select(n => (n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies), n.TerrainMod.Fuel.ApplyTo(Consumption.Fuel)));
+                (double supplies, double fuel) cheapest_supplies = consumption_pairs.OrderBy(c => c.supplies).First();
+                (double supplies, double fuel) cheapest_fuel = consumption_pairs.OrderBy(c => c.fuel).First();
+
+                return (Carrying.Supplies >= cheapest_supplies.supplies && Carrying.Fuel >= cheapest_supplies.fuel)
+                    || (Carrying.Supplies >= cheapest_fuel.supplies && Carrying.Fuel >= cheapest_fuel.fuel);
+            }
+            else
+            {
+                return Carrying.Supplies >= GetAccessibleNeigbours().Select(n => n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies)).OrderBy(c => c).First();
+            }
+        }
     }
 
     public abstract class Naval : Unit
@@ -22,6 +44,7 @@ namespace SteelOfStalin.Props.Units
         public Naval() : base() { }
         public Naval(Naval another) : base(another) { }
         public abstract override object Clone();
+        public abstract override IEnumerable<Module> GetModules();
     }
 
     public abstract class Aerial : Unit
@@ -29,12 +52,12 @@ namespace SteelOfStalin.Props.Units
         public Aerial() : base() { }
         public Aerial(Aerial another) : base(another) { }
         public abstract override object Clone();
+        public abstract override IEnumerable<Module> GetModules();
     }
 }
 
 namespace SteelOfStalin.Props.Units.Land
 {
-
     public abstract class Personnel : Ground
     {
         public Firearm PrimaryFirearm { get; set; }
@@ -54,7 +77,6 @@ namespace SteelOfStalin.Props.Units.Land
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PERSONNEL);
-        public override bool CanMove() => base.CanMove() && Carrying.Supplies > 0;
         public virtual bool CanCapture() => !IsSuppressed && GetLocatedTile().IsCity;
         public virtual bool CanAboard()
         {
@@ -66,16 +88,9 @@ namespace SteelOfStalin.Props.Units.Land
             // TODO FUT Impl.
             return false;
         }
-        public virtual bool CanFortify()
-        {
-            // TODO
-            return false;
-        }
-        public virtual bool CanConstruct()
-        {
-            // TODO
-            return false;
-        }
+        public virtual bool CanFortify() => GetFriendlyBuildingsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0 && b.Level < b.MaxLevel && Carrying.HasEnoughResources(b.Cost.Fortification, false));
+        public virtual bool CanConstruct() => Game.BuildingData.All.Any(b => Carrying.HasEnoughResources(b.Cost.Base, false));
+        public virtual bool CanDemolish() => GetFriendlyBuildingsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0);
         public virtual bool CanScavenge()
         {
             // TODO FUT Impl.
@@ -83,6 +98,9 @@ namespace SteelOfStalin.Props.Units.Land
         }
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { PrimaryFirearm, SecondaryFirearm };
+        public override IEnumerable<Module> GetModules() => null;
+        public override IEnumerable<Module> GetRepairableModules() => null;
+        public override Modifier GetConcealmentPenaltyMove() => SecondaryFirearm == null ? PrimaryFirearm.ConcealmentPenaltyMove : Modifier.Min(PrimaryFirearm.ConcealmentPenaltyMove, SecondaryFirearm.ConcealmentPenaltyMove);
 
         // false for secondary
         public virtual void ChangeFirearm(Firearm firearm, bool primary = true)
@@ -123,18 +141,16 @@ namespace SteelOfStalin.Props.Units.Land
         public List<string> AvailableGuns { get; set; } = new List<string>();
         public Gun Gun { get; set; }
         public Radio Radio { get; set; }
-        public CannonBreech CannonBreech { get; set; }
 
         public Artillery() : base() { }
         public Artillery(Artillery another) : base(another)
-            => (IsAssembled, AssembleTime, DefaultGun, AvailableGuns, Gun, Radio, CannonBreech)
+            => (IsAssembled, AssembleTime, DefaultGun, AvailableGuns, Gun, Radio)
             = (another.IsAssembled,
                 another.AssembleTime,
                 (string)another.DefaultGun.Clone(),
                 new List<string>(another.AvailableGuns),
                 (Gun)another.Gun.Clone(),
-                (Radio)another.Radio.Clone(),
-                (CannonBreech)another.CannonBreech.Clone());
+                (Radio)another.Radio.Clone());
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.ARTILLERY);
@@ -147,7 +163,7 @@ namespace SteelOfStalin.Props.Units.Land
             }
             return base.CanMove();
         }
-        public override bool CanFire() => base.CanFire() && IsAssembled;
+        public override bool CanFire() => IsAssembled && base.CanFire();
         public virtual bool CanAboard()
         {
             // TODO FUT Impl.
@@ -157,6 +173,8 @@ namespace SteelOfStalin.Props.Units.Land
         public virtual bool CanDisassemble() => !IsSuppressed && IsAssembled;
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun };
+        public override IEnumerable<Module> GetModules() => new List<Module>() { Gun, Radio };
+        public override Modifier GetConcealmentPenaltyMove() => Gun.ConcealmentPenaltyMove;
     }
 
     public abstract class Vehicle : Ground
@@ -164,35 +182,65 @@ namespace SteelOfStalin.Props.Units.Land
         public string DefaultMainArmament { get; set; }
         public List<string> AvailableMainArmaments { get; set; } = new List<string>();
         public List<Gun> Guns { get; set; } = new List<Gun>();
-        public List<MountedMachineGun> MountedMachineGuns { get; set; } = new List<MountedMachineGun>();
+        public List<HeavyMachineGun> HeavyMachineGuns { get; set; } = new List<HeavyMachineGun>();
         public Engine Engine { get; set; }
         public Suspension Suspension { get; set; }
         public Radio Radio { get; set; }
         public Periscope Periscope { get; set; }
         public FuelTank FuelTank { get; set; }
-        public CannonBreech CannonBreech { get; set; }
         public AmmoRack AmmoRack { get; set; }
 
         public Vehicle() : base() { }
         public Vehicle(Vehicle another) : base(another)
-            => (DefaultMainArmament, AvailableMainArmaments, Guns, MountedMachineGuns, Engine, Suspension, Radio, Periscope, FuelTank, CannonBreech, AmmoRack)
+            => (DefaultMainArmament, AvailableMainArmaments, Guns, HeavyMachineGuns, Engine, Suspension, Radio, Periscope, FuelTank, AmmoRack)
             = (another.DefaultMainArmament,
                 new List<string>(another.AvailableMainArmaments),
                 new List<Gun>(another.Guns),
-                new List<MountedMachineGun>(another.MountedMachineGuns),
+                new List<HeavyMachineGun>(another.HeavyMachineGuns),
                 (Engine)another.Engine.Clone(),
                 (Suspension)another.Suspension.Clone(),
                 (Radio)another.Radio.Clone(),
                 (Periscope)another.Periscope.Clone(),
                 (FuelTank)another.FuelTank.Clone(),
-                (CannonBreech)another.CannonBreech.Clone(),
                 (AmmoRack)another.AmmoRack.Clone());
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.VEHICLE);
-        public override bool CanMove() => base.CanMove() && Carrying.Supplies > 0 && Carrying.Fuel > 0;
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(MountedMachineGuns);
+        // TODO FUT Impl. consider malfunction chance when conrresponding modules' integrities drop below their functioning thresholds
+        public override bool CanMove() => Engine.Integrity > 0 && Suspension.Integrity > 0 && FuelTank.Integrity > 0 && base.CanMove();
+        public override bool CanFire() => ((Guns.Any(g => g.Integrity > 0 && g.CannonBreech.Integrity > 0)) || HeavyMachineGuns.Any(mg => mg.Integrity > 0)) && base.CanFire();
+        public override bool CanCommunicateWith(Prop p) => Radio.Integrity > 0 && base.CanCommunicateWith(p);
+        public override bool CanCommunicateWith(Unit communicatee) => Radio.Integrity > 0 && base.CanCommunicateWith(communicatee);
+        public override bool CanCommunicateWith(Cities cities) => Radio.Integrity > 0 && base.CanCommunicateWith(cities);
+
+        public override IEnumerable<Tile> GetReconRange() =>
+            Periscope.Integrity > 0
+                ? Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Periscope.ReconBonus.ApplyTo(Scouting.Reconnaissance.ApplyMod()))
+                : base.GetReconRange();
+
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
+        public override IEnumerable<Module> GetModules()
+        {
+            List<Module> modules = new List<Module>()
+            {
+                Engine,
+                Suspension,
+                Radio,
+                Periscope,
+                FuelTank,
+                AmmoRack
+            };
+            modules.AddRange(Guns);
+            modules.AddRange(HeavyMachineGuns);
+            return modules;
+        }
+        public override Modifier GetConcealmentPenaltyMove() => Engine.ConcealmentPenaltyMove;
+
+        public void ChangeArmaments(Module module)
+        {
+            // TODO FUT Impl.
+        }
     }
 }
 
@@ -233,15 +281,15 @@ namespace SteelOfStalin.Props.Units.Land.Personnels
     }
     public class Engineer : Personnel
     {
+        public Attribute RepairingEfficiency { get; set; }
+
         public Engineer() : base() { }
-        public Engineer(Engineer another) : base(another) { }
+        public Engineer(Engineer another) : base(another) => RepairingEfficiency = (Attribute)another.RepairingEfficiency.Clone();
         public override object Clone() => new Engineer(this);
 
-        public bool CanRepair()
-        {
-            // TODO
-            return false;
-        }
+        public bool CanRepair() => GetOwnUnitsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(u => u.GetModules() != null);
+
+        public IEnumerable<Unit> GetRepairableTargets() => GetOwnUnitsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Where(u => u.GetRepairableModules().Any());
     }
 }
 
@@ -282,12 +330,18 @@ namespace SteelOfStalin.Props.Units.Land.Artilleries
     {
         public SelfPropelled() : base() { }
         public SelfPropelled(SelfPropelled another) : base(another) { }
+
+        public override bool CanAssemble() => false;
+        public override bool CanDisassemble() => false;
         public override object Clone() => new SelfPropelled(this);
     }
     public class Railroad : Artillery
     {
         public Railroad() : base() { }
         public Railroad(Railroad another) : base(another) { }
+
+        public override bool CanAssemble() => false;
+        public override bool CanDisassemble() => false; 
         public override object Clone() => new Railroad(this);
     }
     public class CoastalGun : Artillery
@@ -309,12 +363,16 @@ namespace SteelOfStalin.Props.Units.Land.Vehicles
     }
     public class Utility : Vehicle
     {
+        public LoadLimit LoadLimit { get; set; }
+
         public Utility() : base() { }
         public Utility(Utility another) : base(another) { }
         public override object Clone() => new Utility(this);
     }
     public class Carrier : Vehicle
     {
+        public LoadLimit LoadLimit { get; set; }
+
         public Carrier() : base() { }
         public Carrier(Carrier another) : base(another) { }
         public override object Clone() => new Carrier(this);
@@ -357,11 +415,12 @@ namespace SteelOfStalin.Props.Units.Land.Vehicles
     }
     public class ArmouredTrain : Vehicle
     {
+        public LoadLimit LoadLimit { get; set; }
+
         public ArmouredTrain() : base() { }
         public ArmouredTrain(ArmouredTrain another) : base(another) { }
         public override object Clone() => new ArmouredTrain(this);
     }
-
 }
 
 namespace SteelOfStalin.Props.Units.Sea
@@ -373,12 +432,11 @@ namespace SteelOfStalin.Props.Units.Sea
         public List<string> AvailableMainArmaments { get; set; } = new List<string>();
         public List<string> AvailableSecondaryArmaments { get; set; } = new List<string>();
         public List<Gun> Guns { get; set; } = new List<Gun>();
-        public List<MountedMachineGun> MountedMachineGuns { get; set; } = new List<MountedMachineGun>();
+        public List<HeavyMachineGun> HeavyMachineGuns { get; set; } = new List<HeavyMachineGun>();
         public Engine Engine { get; set; }
         public Radio Radio { get; set; }
         public Periscope Periscope { get; set; }
         public FuelTank FuelTank { get; set; }
-        public CannonBreech CannonBreech { get; set; }
         public AmmoRack AmmoRack { get; set; }
         public Propeller Propeller { get; set; }
         public Rudder Rudder { get; set; }
@@ -387,18 +445,17 @@ namespace SteelOfStalin.Props.Units.Sea
 
         public Vessel() : base() { }
         public Vessel(Vessel another) : base(another)
-            => (DefaultMainArmaments, DefaultSecondaryArmaments, AvailableMainArmaments, AvailableSecondaryArmaments, Guns, MountedMachineGuns, Engine, Radio, Periscope, FuelTank, CannonBreech, AmmoRack, Propeller, Rudder, Radar, Altitude)
+            => (DefaultMainArmaments, DefaultSecondaryArmaments, AvailableMainArmaments, AvailableSecondaryArmaments, Guns, HeavyMachineGuns, Engine, Radio, Periscope, FuelTank, AmmoRack, Propeller, Rudder, Radar, Altitude)
             = (new List<string>(another.DefaultMainArmaments),
                 new List<string>(another.DefaultSecondaryArmaments),
                 new List<string>(another.AvailableMainArmaments),
                 new List<string>(another.AvailableSecondaryArmaments),
                 new List<Gun>(another.Guns),
-                new List<MountedMachineGun>(another.MountedMachineGuns),
+                new List<HeavyMachineGun>(another.HeavyMachineGuns),
                 (Engine)another.Engine.Clone(),
                 (Radio)another.Radio.Clone(),
                 (Periscope)another.Periscope.Clone(),
                 (FuelTank)another.FuelTank.Clone(),
-                (CannonBreech)another.CannonBreech.Clone(),
                 (AmmoRack)another.AmmoRack.Clone(),
                 (Propeller)another.Propeller.Clone(),
                 (Rudder)another.Rudder.Clone(),
@@ -409,7 +466,26 @@ namespace SteelOfStalin.Props.Units.Sea
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.VESSEL);
         public override bool CanMove() => base.CanMove() && Carrying.Supplies > 0 && Carrying.Fuel > 0;
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(MountedMachineGuns);
+        public override Modifier GetConcealmentPenaltyMove() => Engine.ConcealmentPenaltyMove;
+
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
+        public override IEnumerable<Module> GetModules()
+        {
+            List<Module> modules = new List<Module>()
+            {
+                Engine,
+                Radio,
+                Periscope,
+                FuelTank,
+                AmmoRack,
+                Propeller,
+                Rudder,
+                Radar
+            };
+            modules.AddRange(Guns);
+            modules.AddRange(HeavyMachineGuns);
+            return modules;
+        }
     }
 
     // different types of naval units here, all should inherit Vessel
@@ -460,6 +536,17 @@ namespace SteelOfStalin.Props.Units.Sea
         public Submarine() : base() { }
         public Submarine(Submarine another) : base(another) { }
         public override object Clone() => new Submarine(this);
+
+        public bool CanSurface()
+        {
+            // TODO FUT Impl.
+            return false;
+        }
+        public bool CanSubmerge()
+        {
+            // TODO FUT Impl.
+            return false;
+        }
     }
     public class EscortCarrier : Vessel
     {
@@ -479,16 +566,53 @@ namespace SteelOfStalin.Props.Units.Air
 {
     public abstract class Plane : Aerial
     {
-        public List<Gun> Guns { get; set; }
-        public List<MountedMachineGun> MountedMachineGuns { get; set; }
+        public List<string> DefaultMainArmaments { get; set; } = new List<string>();
+        public List<string> AvailableMainArmaments { get; set; } = new List<string>();
+        public List<Gun> Guns { get; set; } = new List<Gun>();
+        public List<HeavyMachineGun> HeavyMachineGuns { get; set; } = new List<HeavyMachineGun>();
+        public Engine Engine { get; set; }
+        public Radio Radio { get; set; }
+        public FuelTank FuelTank { get; set; }
+        public AmmoRack AmmoRack { get; set; }
+        public Propeller Propeller { get; set; }
+        public Rudder Rudder { get; set; }
+        public Wings Wings { get; set; }
+        public LandingGear LandingGear { get; set; }
+        public Radar Radar { get; set; }
+        public double Altitude { get; set; }
 
         public Plane() : base() { }
-        public Plane(Plane another) : base(another) => (Guns, MountedMachineGuns) = (new List<Gun>(another.Guns), new List<MountedMachineGun>(another.MountedMachineGuns));
+        public Plane(Plane another) : base(another) => (Guns, HeavyMachineGuns) = (new List<Gun>(another.Guns), new List<HeavyMachineGun>(another.HeavyMachineGuns));
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PLANE);
         public override bool CanMove() => base.CanMove() && Carrying.Supplies > 0 && Carrying.Fuel > 0;
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(MountedMachineGuns);
+        public bool CanLand()
+        {
+            // TODO FUT Impl.
+            return false;
+        }
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
+        public override IEnumerable<Module> GetModules()
+        {
+            List<Module> modules = new List<Module>()
+            {
+                Engine,
+                Radio,
+                FuelTank,
+                AmmoRack,
+                Propeller,
+                Rudder,
+                Wings,
+                LandingGear,
+                Radar
+            };
+            modules.AddRange(Guns);
+            modules.AddRange(HeavyMachineGuns);
+            return modules;
+        }
+
+        public override Modifier GetConcealmentPenaltyMove() => null; // TODO FUT. Impl.
     }
 
     // different types of aerial units here, all should inherit Plane
@@ -509,6 +633,12 @@ namespace SteelOfStalin.Props.Units.Air
         public Bomber() : base() { }
         public Bomber(Bomber another) : base(another) { }
         public override object Clone() => new Bomber(this);
+
+        public bool CanBombard()
+        {
+            // TODO FUT Impl.
+            return false;
+        }
     }
     public class TransportAircraft : Plane
     {

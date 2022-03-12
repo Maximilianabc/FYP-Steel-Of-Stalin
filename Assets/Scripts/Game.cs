@@ -1,38 +1,44 @@
 using SteelOfStalin.Attributes;
 using SteelOfStalin.Commands;
+using SteelOfStalin.Customizables;
+using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
 using SteelOfStalin.Flow;
+using SteelOfStalin.Props;
 using SteelOfStalin.Props.Buildings;
 using SteelOfStalin.Props.Tiles;
 using SteelOfStalin.Props.Units;
+using SteelOfStalin.Props.Units.Air;
 using SteelOfStalin.Props.Units.Land;
+using SteelOfStalin.Props.Units.Land.Personnels;
+using SteelOfStalin.Props.Units.Sea;
 using SteelOfStalin.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static SteelOfStalin.Util.Utilities;
 using static SteelOfStalin.DataIO.DataUtilities;
+using static SteelOfStalin.Util.Utilities;
 using Capture = SteelOfStalin.Commands.Capture;
+using Plane = SteelOfStalin.Props.Units.Air.Plane;
 
 namespace SteelOfStalin
 {
     //Contains all information of the game itself
     public class Game : MonoBehaviour
     {
-        // Handles scenes (un)loading
-        public static SceneManager SceneManager { get; set; } = new SceneManager();
+        // Handles scenes (un)loading using Unity.SceneManager directly (all of its methods are static)
         public static List<Battle> Battles { get; set; } = new List<Battle>();
         public static GameSettings Settings { get; set; } = new GameSettings();
         public static List<GameObject> GameObjects { get; set; } = new List<GameObject>();
         public static List<AudioClip> AudioClips { get; set; } = new List<AudioClip>();
-        // TODO add achievements later on
+        // TODO FUT Impl. add achievements
 
         public static UnitData UnitData { get; set; } = new UnitData();
         public static BuildingData BuildingData { get; set; } = new BuildingData();
@@ -41,14 +47,12 @@ namespace SteelOfStalin
 
         public void Start()
         {
-            // TODO Load all models, sound etc. here
             GameObjects = UnityEngine.Resources.LoadAll<GameObject>("Prefabs").ToList();
             AudioClips = UnityEngine.Resources.LoadAll<AudioClip>("Audio").ToList();
             UnitData.Load();
             BuildingData.Load();
             TileData.Load();
-            RandomMap map = new RandomMap(100, 100, 4);
-            map.Save();
+            // new Map().Load();
             // Settings = DeserializeJson<GameSettings>("settings.json");
         }
     }
@@ -56,15 +60,15 @@ namespace SteelOfStalin
     public class GameSettings
     {
         public bool EnableAnimations { get; set; }
-        public byte VolumeMusic { get; set; }
-        public byte VolumeSoundFX { get; set; }
+        public byte VolumeMusic { get; set; } = 100;
+        public byte VolumeSoundFX { get; set; } = 100;
         private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
 
         public void Save() => File.WriteAllText(m_settingsPath, JsonSerializer.Serialize(this, Options));
         public GameSettings Load() => JsonSerializer.Deserialize<GameSettings>(m_settingsPath);
     }
 
-    public class Battle : MonoBehaviour
+    public class Battle : MonoBehaviour, INamedAsset
     {
         public static Battle Instance { get; private set; }
 
@@ -72,13 +76,16 @@ namespace SteelOfStalin
         public Map Map { get; set; } = new Map();
         public List<Player> Players { get; set; } = new List<Player>();
         public BattleRules Rules { get; set; } = new BattleRules();
+        public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
 
         public List<Round> Rounds = new List<Round>();
         public Round CurrentRound { get; set; }
         public int RoundNumber { get; set; } = 1;
 
         public bool EnablePlayerInput { get; set; } = true;
-        public bool IsEnded { get; set; } = false;
+        public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
+
+        private Player m_winner { get; set; } = null;
 
         public void Start()
         {
@@ -86,26 +93,27 @@ namespace SteelOfStalin
             Load();
 
             // main game logic loop
-            //while (!IsEnded)
+            //while (m_winner == null)
             //{
-                CurrentRound = new Round();
-                Players.ForEach(p => p.IsReady = false);
-                CurrentRound.ResetUnitStatus();
-                CurrentRound.ActionPrerequisitesChecking();
-                CurrentRound.CommandPrerequisitesChecking();
-                EnablePlayerInput = true;
+            CurrentRound = new Round();
+            ActivePlayers.ToList().ForEach(p => p.IsReady = false);
+            CurrentRound.InitializeRoundStart();
+            CurrentRound.CommandPrerequisitesChecking();
+            EnablePlayerInput = true;
 
-                _ = StartCoroutine(CurrentRound.Planning.PhaseLoop(Rules.TimeForEachRound));
-                Debug.Log("End Turn");
-                EnablePlayerInput = false;
-                CurrentRound.EndPlanning();
-                Rounds.Add(CurrentRound);
-                RoundNumber++;
+            _ = StartCoroutine(CurrentRound.Planning.PhaseLoop(Rules.TimeForEachRound));
+            Debug.Log("End Turn");
+            EnablePlayerInput = false;
+            CurrentRound.EndPlanning();
+            m_winner = CurrentRound.GetWinner();
+            Rounds.Add(CurrentRound);
+            RoundNumber++;
             //}
         }
         public void Save()
         {
-
+            Rules.SerializeJson($@"Saves\{Name}\rules");
+            Players.SerializeJson($@"Saves\{Name}\players");
         }
         public void Load()
         {
@@ -117,23 +125,16 @@ namespace SteelOfStalin
     // Contains different rules of the battle, like how much time is allowed for each round etc.
     public class BattleRules
     {
-        public int TimeForEachRound { get; set; } = 120; // in seconds
+        public int TimeForEachRound { get; set; } = 120; // in seconds, -1 means unlimited
         public bool IsFogOfWar { get; set; } = true;
-        public bool DestroyedUnitsCanBeScavenged { get; set; } = false;
+        public bool RequireSignalConnection { get; set; } = true;
+        public bool DestroyedUnitsCanBeScavenged { get; set; }
         public bool AllowUniversalQueue { get; set; }
 
-        public BattleRules()
-        {
-
-        }
-
-        public void Save()
-        {
-
-        }
+        public BattleRules() { }
     }
 
-    public class Map : ICloneable
+    public class Map : ICloneable, INamedAsset
     {
         public static Map Instance { get; private set; }
         public string Name { get; set; } = "test";
@@ -157,6 +158,7 @@ namespace SteelOfStalin
             Buildings.SerializeJson($@"{Folder}\buildings");
             SaveToTxt($@"{Folder}\stats", GetStatistics());
             SaveToPng($@"{Folder}\minimap", Visualize());
+
             CreateStreamingAssetsFolder(TileFolder);
             for (int i = 0; i < Tiles.Length; i++)
             {
@@ -167,7 +169,18 @@ namespace SteelOfStalin
 
         public void Load()
         {
-            
+            Units = DeserializeJson<List<Unit>>($@"{Folder}\units");
+            Buildings = DeserializeJson<List<Building>>($@"{Folder}\buildings");
+            ReadStatistics();
+
+            Tiles = new Tile[Width][];
+            for (int i = 0; i < Width; i++)
+            {
+                // TODO handle FileIO exceptions for all IO operations
+                // TODO FUT. Impl. regenerate map files by reading the stats.txt in case any map files corrupted (e.g. edge of map is not boundary etc.)
+                Tiles[i] = DeserializeJson<List<Tile>>($@"{TileFolder}\map_{i}").ToArray();
+            }
+            Debug.Log($"Loaded map {Name}");
         }
 
         // get a color png for the map
@@ -220,6 +233,8 @@ namespace SteelOfStalin
         public virtual string GetStatistics()
         {
             StringBuilder sb = new StringBuilder();
+            _ = sb.AppendLine($"Width: {Width}");
+            _ = sb.AppendLine($"Height: {Height}");
             foreach (string name in Enum.GetNames(typeof(TileType)))
             {
                 int count = TileCount((TileType)Enum.Parse(typeof(TileType), name));
@@ -231,19 +246,41 @@ namespace SteelOfStalin
             return sb.ToString();
         }
 
+        public void ReadStatistics()
+        {
+            string[] lines = ReadTxt($@"{Folder}\stats");
+            Width = int.Parse(Regex.Match(lines[0], @"(\d+)$").Groups[1].Value);
+            Height = int.Parse(Regex.Match(lines[1], @"(\d+)$").Groups[1].Value);
+        }
+
         public bool AddUnit(Unit u)
         {
             if (u == null)
             {
-                Debug.LogWarning("Cannot add unit to map unit list: unit is null");
+                Debug.LogError("Cannot add unit to map unit list: unit is null");
                 return false;
             }
             if (Units.Contains(u))
             {
                 Debug.LogWarning($"Unit {u.Name} ({u.CoOrds.X}, {u.CoOrds.Y}) already in map unit array. Skipping operation.");
-                return false;
+                return true;
             }
             Units.Add(u);
+            return true;
+        }
+        public bool AddBuilding(Building b)
+        {
+            if (b == null)
+            {
+                Debug.LogError("Cannot add building to map building list: building is null");
+                return false;
+            }
+            if (Buildings.Contains(b))
+            {
+                Debug.LogWarning($"Building {b.Name} ({b.CoOrds.X}, {b.CoOrds.Y}) already in map unit array. Skipping operation.");
+                return true;
+            }
+            Buildings.Add(b);
             return true;
         }
         public bool RemoveUnit(Unit u)
@@ -254,6 +291,15 @@ namespace SteelOfStalin
                 return false;
             }
             return Units.Remove(u);
+        }
+        public bool RemoveBuilding(Building b)
+        {
+            if (b == null)
+            {
+                Debug.LogWarning("Cannot remove building from map unit list: building is null");
+                return false;
+            }
+            return Buildings.Remove(b);
         }
 
         public void PrintUnitList()
@@ -289,10 +335,10 @@ namespace SteelOfStalin
         public IEnumerable<Cities> GetCities(Player player) => GetCities().Where(c => c.Owner == player);
         public IEnumerable<Cities> GetCities(Predicate<Cities> predicate) => GetCities().Where(c => predicate(c));
 
-        public IEnumerable<Tile> GetNeigbours(CubeCoordinates c, int distance = 1) => c.GetNeigbours(distance).Where(c => 
-        { 
+        public IEnumerable<Tile> GetNeigbours(CubeCoordinates c, int distance = 1) => c.GetNeigbours(distance).Where(c =>
+        {
             Coordinates p = (Coordinates)c;
-            return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height; 
+            return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
         }).Select(c => GetTile(c));
         public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, double distance = 1) => distance < 1
                 ? throw new ArgumentException("Distance must be >= 1.")
@@ -300,7 +346,8 @@ namespace SteelOfStalin
         public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeigbours(c, distance).Any(t => !t.IsOccupied);
 
         public IEnumerable<Unit> GetUnits() => Units;
-        public IEnumerable<Unit> GetUnits<T>() where T : Unit => Units.Where(u => u is T);
+        public IEnumerable<Unit> GetUnits<T>() where T : Unit => Units.OfType<T>();
+        public IEnumerable<Unit> GetUnits<T>(Predicate<Unit> predicate) where T : Unit => GetUnits<T>().Where(u => predicate(u));
         public IEnumerable<Unit> GetUnits(Coordinates p) => GetUnits(GetTile(p));
         public IEnumerable<Unit> GetUnits(Tile t)
         {
@@ -313,21 +360,22 @@ namespace SteelOfStalin
             List<Unit> units = Units.Where(u => u.CoOrds.X == t.CoOrds.X && u.CoOrds.Y == t.CoOrds.Y).ToList();
             if (units.Count == 0)
             {
-                Debug.Log($"No unit found at {t.PrintCoOrds()}");
+                Debug.Log($"No unit found at {t}");
             }
-            else if (units.Count > 2 ||
-                (units.Count == 2 && ((units[0] is Ground && units[1] is Ground) || (units[0] is Naval && units[1] is Naval) || (units[0] is Aerial && units[1] is Aerial))))
+            else if (units.Count > 2 || (units.Count == 2 && units[0].IsOfSameCategory(units[1])))
             {
-                Debug.LogError($"Illegal stacking of units found at {t.PrintCoOrds()}!");
+                Debug.LogError($"Illegal stacking of units found at {t}!");
             }
             return units;
         }
-        public IEnumerable<Unit> GetUnits(UnitStatus status) => Units.Where(u => u.Status.HasFlag(status));
+        public IEnumerable<Unit> GetUnits(UnitStatus status) => Units.Where(u => (u.Status & status) != 0);
         public IEnumerable<Unit> GetUnits(Player player) => Units.Where(u => u.Owner == player);
         public IEnumerable<Unit> GetUnits(Predicate<Unit> predicate) => Units.Where(u => predicate(u));
 
         public IEnumerable<Building> GetBuildings() => Buildings;
-        public IEnumerable<Building> GetBuildings<T>() where T : Building => Buildings.Where(b => b is T);
+        public IEnumerable<Building> GetBuildings<T>() where T : Building => Buildings.OfType<T>();
+        public IEnumerable<Building> GetBuildings(Coordinates p) => GetBuildings(GetTile(p));
+        public IEnumerable<Building> GetBuildings(IEnumerable<Coordinates> coordinates) => coordinates.SelectMany(c => GetBuildings(c));
         public IEnumerable<Building> GetBuildings(Tile t)
         {
             if (t == null)
@@ -337,6 +385,7 @@ namespace SteelOfStalin
             }
             return Buildings.Where(b => b.CoOrds.X == t.CoOrds.X && b.CoOrds.Y == t.CoOrds.Y);
         }
+        public IEnumerable<Building> GetBuildings(IEnumerable<Tile> tiles) => tiles.SelectMany(t => GetBuildings(t));
         public IEnumerable<Building> GetBuildings(BuildingStatus status) => Buildings.Where(b => b.Status == status);
         public IEnumerable<Building> GetBuildings(Player player) => Buildings.Where(b => b.Owner == player);
         public IEnumerable<Building> GetBuildings(Predicate<Building> predicate) => Buildings.Where(b => predicate(b));
@@ -482,7 +531,7 @@ namespace SteelOfStalin
             // path-find with height as cost from water sources to nearest oceans
             List<Stack<CubeCoordinates>> paths = new List<Stack<CubeCoordinates>>();
             Dictionary<CubeCoordinates, CubeCoordinates> source_destination_pairs = sources.Zip(destinations, (s, d) => new { s, d }).ToDictionary(x => x.s, x => x.d);
-            foreach(KeyValuePair<CubeCoordinates, CubeCoordinates> pair in source_destination_pairs)
+            foreach (KeyValuePair<CubeCoordinates, CubeCoordinates> pair in source_destination_pairs)
             {
                 Coordinates start_coord = (Coordinates)pair.Key;
                 Coordinates end_coord = (Coordinates)pair.Value;
@@ -539,7 +588,7 @@ namespace SteelOfStalin
             }
             if (max_sep < 0)
             {
-                max_sep = (int)Math.Max(Width, Height);
+                max_sep = Math.Max(Width, Height);
             }
             if (CitiesNum < 0)
             {
@@ -547,11 +596,12 @@ namespace SteelOfStalin
             }
             if (min_sep < 0)
             {
-                double determinant = 1 + 4 * (Width * Height / (3 * (CitiesNum + num_player)));
+                double determinant = 1 + 4 * (Width * Height / (3 * (CitiesNum + num_player))) * 2;
                 min_sep = (int)((Math.Sqrt(determinant) - 1) / 2);
             }
             // area of a "cell" is 3n(n+1) hex, where n is the separation, a cell can contain only 1 city
-            if (3 * min_sep * (min_sep + 1) * (CitiesNum + num_player) > Width * Height)
+            // looks like it is very hard to reach the limit, so divide by two to allow large seperations
+            if (3 * min_sep * (min_sep + 1) * (CitiesNum + num_player) / 2 > Width * Height)
             {
                 Debug.LogError("Not enough space for generating all cities. Consider lowering minimum separation of number of cities.");
                 return;
@@ -560,15 +610,15 @@ namespace SteelOfStalin
             m_flatLands = Tiles.Flatten().Where(t => t.IsFlatLand).Select(t => t.CubeCoOrds).ToList();
 
             // generate capitals first
-            PickCities(num_player, (int)Math.Max(Width, Height) / 2, max_sep);
+            PickCities(num_player, Math.Max(Width, Height) / 2, max_sep);
             PickCities(CitiesNum, min_sep, max_sep);
 
             Debug.Log("Overwriting tiles with cities.");
             for (int i = 0; i < num_player; i++)
             {
                 Coordinates c = (Coordinates)m_cities[i];
-                Tiles[c.X][c.Y] = Game.TileData.GetNewTile(TileType.METROPOLIS);
-                Tiles[c.X][c.Y].CoOrds = new Coordinates(c.X, c.Y);
+                Tiles[c.X][c.Y] = Game.TileData.GetNewCities("metropolis");
+                Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
             }
             m_cities.RemoveRange(0, num_player);
 
@@ -577,16 +627,16 @@ namespace SteelOfStalin
             {
                 int index = new System.Random().Next(m_cities.Count);
                 Coordinates c = (Coordinates)m_cities[index];
-                Tiles[c.X][c.Y] = Game.TileData.GetNewTile(TileType.SUBURB);
-                Tiles[c.X][c.Y].CoOrds = new Coordinates(c.X, c.Y);
+                Tiles[c.X][c.Y] = Game.TileData.GetNewCities("suburb");
+                Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
                 m_cities.RemoveAt(index);
             }
 
             foreach (CubeCoordinates cube in m_cities)
             {
                 Coordinates c = (Coordinates)cube;
-                Tiles[c.X][c.Y] = Game.TileData.GetNewTile(TileType.CITY);
-                Tiles[c.X][c.Y].CoOrds = new Coordinates(c.X, c.Y);
+                Tiles[c.X][c.Y] = Game.TileData.GetNewCities("city");
+                Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
             }
         }
 
@@ -824,7 +874,7 @@ namespace SteelOfStalin
                 freq *= 2;
                 amp *= Persistence;
             }
-            return (float)Math.Pow(value / sum_amp, (double)Exponent);
+            return (float)Math.Pow(value / sum_amp, Exponent);
         }
     }
 
@@ -833,23 +883,61 @@ namespace SteelOfStalin
         public Coordinates Source { get; set; }
         public Coordinates Destination { get; set; }
         public Unit Unit { get; set; }
+        public string Name => GetType().Name;
+        public StringBuilder Recorder => new StringBuilder();
+
         public abstract void Execute();
-        public override string ToString() => $"[{GetType().Name}]";
 
         public Command() { }
         public Command(Unit u) => Unit = u;
         public Command(Unit u, Coordinates src, Coordinates dest) => (Unit, Source, Destination) = (u, src, dest);
         public Command(Unit u, int srcX, int srcY, int destX, int destY) => (Unit, Source, Destination) = (u, new Coordinates(srcX, srcY), new Coordinates(destX, destY));
 
+        public override string ToString() => Recorder.ToString();
         public object Clone()
         {
             Command copy = (Command)MemberwiseClone();
             copy.Unit = (Unit)Unit.Clone();
             return copy;
         }
+
+        protected void ConsumeSuppliesStandingStill()
+        {
+            double supplies = Unit.GetSuppliesRequired(Unit.GetLocatedTile());
+            Unit.Carrying.Supplies.MinusEquals(supplies);
+            if (Unit.Carrying.Supplies < 0)
+            {
+                Unit.Carrying.Supplies.Value = 0;
+            }
+            this.Log($"Consumed {supplies} supplies when standing still. Supplies remaining : {Unit.Carrying.Supplies}");
+            _ = Recorder.Append(Unit.GetResourcesChangeRecord("Supplies", -supplies));
+        }
+        protected void ConsumeAmmoFiring(IOffensiveCustomizable weapon, bool normal = true)
+        {
+            double cartridges = normal ? weapon.ConsumptionNormal.Cartridges.ApplyMod() : weapon.ConsumptionSuppress.Cartridges.ApplyMod();
+            double shells = normal ? weapon.ConsumptionNormal.Shells.ApplyMod() : weapon.ConsumptionSuppress.Shells.ApplyMod();
+            double fuel = normal ? weapon.ConsumptionNormal.Fuel.ApplyMod() : weapon.ConsumptionSuppress.Fuel.ApplyMod();
+
+            if (cartridges > 0)
+            {
+                Unit.Carrying.Cartridges.MinusEquals(cartridges);
+                _ = Recorder.Append(Unit.GetResourcesChangeRecord("Cartridges", -cartridges));
+            }
+            if (shells > 0)
+            {
+                Unit.Carrying.Shells.MinusEquals(shells);
+                _ = Recorder.Append(Unit.GetResourcesChangeRecord("Shells", -shells));
+            }
+            if (fuel > 0)
+            {
+                Unit.Carrying.Fuel.MinusEquals(fuel);
+                _ = Recorder.Append(Unit.GetResourcesChangeRecord("Fuel", -fuel));
+            }
+            this.Log($"Consumed {cartridges} cartridges, {shells} shells and {fuel} fuel when firing. Remaining: {Unit.Carrying.Cartridges} cartridges, {Unit.Carrying.Shells} shells and {Unit.Carrying.Fuel} fuel");
+        }
     }
 
-    public abstract class Customizable : ICloneable
+    public abstract class Customizable : ICloneable, INamedAsset
     {
         public string Name { get; set; }
         public Cost Cost { get; set; } = new Cost();
@@ -859,114 +947,147 @@ namespace SteelOfStalin
 
         public abstract object Clone();
     }
+
+    public interface INamedAsset
+    {
+        public string Name { get; set; }
+    }
 }
 
 namespace SteelOfStalin.Flow
 {
-    public class Round : ICloneable 
+    public class Round : ICloneable
     {
-        public static Round Instance { get; private set; }
-
         public int Number { get; set; }
-        public bool AreAllPlayersReady => Players.All(p => p.IsReady);
 
         [JsonIgnore] public List<Player> Players { get; set; }
         public List<Command> Commands { get; set; } = new List<Command>();
         public List<Phase> Phases { get; set; } = new List<Phase>();
         public Planning Planning { get; set; } = new Planning();
-        
-        public Round() 
+
+        public Round()
         {
             Players = Battle.Instance.Players;
             Number = Battle.Instance.RoundNumber;
-            Instance = this;
         }
 
         // Remove fired and moved flags from all units
-        public void ResetUnitStatus() => Map.Instance.GetUnits().ToList().ForEach(u => u.Status &= ~(UnitStatus.MOVED | UnitStatus.FIRED));
+        public void InitializeRoundStart() => Map.Instance.GetUnits(UnitStatus.ACTIVE).ToList().ForEach(u => 
+        { 
+            u.Status &= ~(UnitStatus.MOVED | UnitStatus.FIRED);
+            u.AvailableConstructionCommands = AvailableConstructionCommands.NONE;
+            u.AvailableFiringCommands = AvailableFiringCommands.NONE;
+            u.AvailableLogisticsCommands = AvailableLogisticsCommands.NONE;
+            u.AvailableMiscCommands = AvailableMiscCommands.NONE;
+            // all active units should be able to hold at round start
+            u.AvailableMovementCommands = AvailableMovementCommands.HOLD;
+        });
 
         public void CommandPrerequisitesChecking()
         {
-            // all units should be able to hold at round start
-            Map.Instance.GetUnits().ToList().ForEach(u => u.AvailableCommands = AvailableCommands.HOLD);
-
             List<Unit> ActiveUnits = Map.Instance.GetUnits(UnitStatus.ACTIVE).ToList();
             foreach (Unit u in ActiveUnits)
             {
+                if (u.IsConstructing || u.IsSuppressed)
+                {
+                    continue;
+                }
                 if (u.CanMove())
                 {
-                    u.AvailableCommands |= AvailableCommands.MOVE;
+                    u.AvailableMovementCommands |= AvailableMovementCommands.MOVE;
                 }
                 if (u.CanMerge())
                 {
-                    u.AvailableCommands |= AvailableCommands.MERGE;
+                    u.AvailableMovementCommands |= AvailableMovementCommands.MERGE;
                 }
                 if (u.CanFire())
                 {
-                    u.AvailableCommands |= AvailableCommands.FIRE;
+                    u.AvailableFiringCommands |= AvailableFiringCommands.FIRE;
                 }
                 if (u.CanSabotage())
                 {
-                    u.AvailableCommands |= AvailableCommands.SABOTAGE;
+                    u.AvailableFiringCommands |= AvailableFiringCommands.SABOTAGE;
                 }
                 if (u is Ground g)
                 {
                     if (g.CanSuppress())
                     {
-                        g.AvailableCommands |= AvailableCommands.SUPPRESS;
+                        g.AvailableFiringCommands |= AvailableFiringCommands.SUPPRESS;
                     }
                     if (g.CanAmbush())
                     {
-                        g.AvailableCommands |= AvailableCommands.AMBUSH;
+                        g.AvailableFiringCommands |= AvailableFiringCommands.AMBUSH;
                     }
                 }
                 if (u is Personnel p)
                 {
                     if (p.CanAboard())
                     {
-                        p.AvailableCommands |= AvailableCommands.ABOARD;
+                        p.AvailableLogisticsCommands |= AvailableLogisticsCommands.ABOARD;
                     }
                     if (p.CanCapture())
                     {
-                        p.AvailableCommands |= AvailableCommands.CAPTURE;
+                        p.AvailableMiscCommands |= AvailableMiscCommands.CAPTURE;
                     }
                     if (p.CanConstruct())
                     {
-                        p.AvailableCommands |= AvailableCommands.CONSTRUCT;
+                        p.AvailableConstructionCommands |= AvailableConstructionCommands.CONSTRUCT;
                     }
                     if (p.CanFortify())
                     {
-                        p.AvailableCommands |= AvailableCommands.FORTIFY;
+                        p.AvailableConstructionCommands |= AvailableConstructionCommands.FORTIFY;
+                    }
+                    if (p.CanDemolish())
+                    {
+                        p.AvailableConstructionCommands |= AvailableConstructionCommands.DEMOLISH;
                     }
                     if (Battle.Instance.Rules.DestroyedUnitsCanBeScavenged && p.CanScavenge())
                     {
-                        p.AvailableCommands |= AvailableCommands.SCAVENGE;
+                        p.AvailableMiscCommands |= AvailableMiscCommands.SCAVENGE;
+                    }
+                    if (p is Engineer e && e.CanRepair())
+                    {
+                        e.AvailableLogisticsCommands |= AvailableLogisticsCommands.REPAIR;
                     }
                 }
                 if (u is Artillery a)
                 {
                     if (a.CanAboard())
                     {
-                        a.AvailableCommands |= AvailableCommands.ABOARD;
+                        a.AvailableLogisticsCommands |= AvailableLogisticsCommands.ABOARD;
                     }
                     if (a.CanAssemble())
                     {
-                        a.AvailableCommands |= AvailableCommands.ASSEMBLE;
+                        a.AvailableMiscCommands |= AvailableMiscCommands.ASSEMBLE;
                     }
                     if (a.CanDisassemble())
                     {
-                        a.AvailableCommands |= AvailableCommands.DISASSEMBLE;
+                        a.AvailableMiscCommands |= AvailableMiscCommands.DISASSEMBLE;
+                    }
+                }
+                if (u is Submarine s)
+                {
+                    if (s.CanSubmerge())
+                    {
+                        s.AvailableMovementCommands |= AvailableMovementCommands.SUBMERGE;
+                    }
+                    if (s.CanSurface())
+                    {
+                        s.AvailableMovementCommands |= AvailableMovementCommands.SURFACE;
+                    }
+                }
+                if (u is Plane l)
+                {
+                    if (l.CanLand())
+                    {
+                        l.AvailableMovementCommands |= AvailableMovementCommands.LAND;
+                    }
+                    if (l is Bomber b && b.CanBombard())
+                    {
+                        b.AvailableFiringCommands |= AvailableFiringCommands.BOMBARD;
                     }
                 }
             }
-        }
-
-        public void ActionPrerequisitesChecking()
-        {
-            Map.Instance.GetBuildings().ToList().ForEach(b =>
-            {
-                // TODO
-            });
         }
 
         public void AddAutoCommands()
@@ -974,14 +1095,16 @@ namespace SteelOfStalin.Flow
             // TODO
         }
 
-        public void WinnerChecking()
+        public Player GetWinner()
         {
-            // TODO
+            // TODO FUT Impl. handle different winning conditions for different gamemodes
+            IEnumerable<Player> surviving_players = Players.Where(p => !p.IsDefeated);
+            return surviving_players.Count() == 1 ? surviving_players.First() : null;
         }
 
         public void ScreenUpdate()
         {
-            // TODO handle screen update here
+            // handle screen update here
             IEnumerable<Unit> destroyed_unit = Map.Instance.GetUnits(UnitStatus.DESTROYED);
             destroyed_unit.ToList().ForEach(u => u.RemoveFromScene());
         }
@@ -1003,20 +1126,19 @@ namespace SteelOfStalin.Flow
             });
             Phases.ForEach(p => p.Execute());
             ScreenUpdate();
-            WinnerChecking();
             Commands.Clear();
         }
 
         // output this round to JSON
         public void Record()
         {
-
+            // TODO
         }
 
         // load a round from JSON
         public void Replay()
         {
-
+            // TODO
         }
 
         public object Clone()
@@ -1032,14 +1154,33 @@ namespace SteelOfStalin.Flow
     public abstract class Phase : ICloneable
     {
         public List<Command> CommandsForThisPhase { get; set; } = new List<Command>();
-        public virtual void Execute() => CommandsForThisPhase.ForEach(c => c.Execute());
+        protected StringBuilder Recorder => new StringBuilder();
+        protected string Header => GetType().Name;
 
         // empty ctor for (de)serialization
         public Phase()
         {
-            
+
         }
         public Phase(List<Command> commands, params Type[] commandTypes) => Array.ForEach(commandTypes, t => CommandsForThisPhase.AddRange(commands.Where(c => c.GetType() == t)));
+
+        public virtual void Execute()
+        {
+            CommandsForThisPhase.ForEach(c => c.Execute());
+            RecordPhase();
+        }
+
+        private void RecordPhase()
+        {
+            foreach (Command command in CommandsForThisPhase)
+            {
+                string record = command.Recorder.ToString();
+                if (!string.IsNullOrEmpty(record))
+                {
+                    _ = Recorder.Append($"[{GetType().Name}] {record}");
+                }
+            }
+        }
 
         public object Clone()
         {
@@ -1055,7 +1196,7 @@ namespace SteelOfStalin.Flow
         public IEnumerator PhaseLoop(float wait_time)
         {
             float counter = 0;
-            while (counter < wait_time || !Round.Instance.AreAllPlayersReady)
+            while (counter < wait_time || !Battle.Instance.AreAllPlayersReady)
             {
                 yield return new WaitForSeconds(1);
                 counter += 1;
@@ -1067,8 +1208,8 @@ namespace SteelOfStalin.Flow
     public sealed class Moving : Phase
     {
         public Moving() : base() { }
-        public Moving(List<Command> commands) 
-            : base(commands, typeof(Hold), typeof(Move), typeof(Merge), typeof(Aboard), typeof(Disembark), typeof(Capture), typeof(Submerge), typeof(Surface), typeof(Landing)) { }
+        public Moving(List<Command> commands)
+            : base(commands, typeof(Hold), typeof(Move), typeof(Merge), typeof(Aboard), typeof(Disembark), typeof(Capture), typeof(Submerge), typeof(Surface), typeof(Land)) { }
 
         public override void Execute()
         {
@@ -1085,7 +1226,7 @@ namespace SteelOfStalin.Flow
         public override void Execute()
         {
             IEnumerable<Unit> units = Map.Instance.GetUnits();
-            units.Where(u => u.CurrentSuppressionLevel > 0).ToList().ForEach(u => 
+            units.Where(u => u.CurrentSuppressionLevel > 0).ToList().ForEach(u =>
             {
                 u.CurrentSuppressionLevel -= u.Defense.Suppression.Resilience.ApplyMod();
                 if (u.CurrentSuppressionLevel < 0)
@@ -1132,27 +1273,52 @@ namespace SteelOfStalin.Flow
         public override void Execute()
         {
             // TODO add LOS logic
-            Map.Instance.GetUnits().ToList().ForEach(u =>
+            Map.Instance.GetUnits(u => u.Status.HasAnyOfFlags(UnitStatus.IN_FIELD)).ToList().ForEach(u =>
             {
                 u.UnitsInSight.Clear();
                 u.BuildingsInSight.Clear();
-                u.GetHostileUnitsInReconRange().ToList().ForEach(h =>
+                if (Battle.Instance.Rules.IsFogOfWar)
                 {
-                    double st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, h.CubeCoOrds);
-                    if (Formula.VisualSpotting((u, h, st_line_distance)))
+                    Tile observer_tile = u.GetLocatedTile();
+                    double observer_recon = observer_tile.TerrainMod.Recon.ApplyTo(u.Scouting.Reconnaissance.ApplyMod());
+                    double observer_detect = u.Scouting.Detection.ApplyMod();
+
+                    u.GetHostileUnitsInReconRange().ToList().ForEach(h =>
                     {
-                        u.UnitsInSight.Add(h);
-                    }
-                });
-                u.GetHostileBuildingsInReconRange().ToList().ForEach(b =>
+                        Tile observee_tile = h.GetLocatedTile();
+                        double st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, h.CubeCoOrds);
+                        double observee_conceal = observee_tile.TerrainMod.Concealment.ApplyTo(h.Scouting.Concealment.ApplyMod());
+
+                        if (h.Status.HasFlag(UnitStatus.MOVED))
+                        {
+                            observee_conceal = h.GetConcealmentPenaltyMove().ApplyTo(observee_conceal);
+                        }
+                        if (h.Status.HasFlag(UnitStatus.FIRED))
+                        {
+                            // TODO
+                        }
+
+                        if (Formula.VisualSpotting((observer_recon, observer_detect, observee_conceal, st_line_distance)))
+                        {
+                            u.UnitsInSight.Add(h);
+                        }
+                    });
+                    u.GetHostileBuildingsInReconRange().ToList().ForEach(b =>
+                    {
+                        Tile observee_tile = b.GetLocatedTile();
+                        double st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, b.CubeCoOrds);
+                        double observee_conceal = observee_tile.TerrainMod.Concealment.ApplyTo(b.Scouting.Concealment.ApplyMod());
+                        if (Formula.VisualSpotting((observer_recon, observer_detect, observee_conceal, st_line_distance)))
+                        {
+                            u.BuildingsInSight.Add(b);
+                        }
+                    });
+                    // TODO add acousting ranging logic
+                }
+                else
                 {
-                    double st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, b.CubeCoOrds);
-                    if (Formula.VisualSpottingForBuildings((u, b, st_line_distance)))
-                    {
-                        u.BuildingsInSight.Add(b);
-                    }
-                });
-                // TODO add acousting ranging logic
+                    // TODO FUT Impl. handle non fog-of-war
+                }
             });
         }
     }
@@ -1162,7 +1328,44 @@ namespace SteelOfStalin.Flow
 
         public override void Execute()
         {
-            // TODO
+            if (!Battle.Instance.Rules.RequireSignalConnection)
+            {
+                return;
+            }
+
+            // remove DISCONNECTED flags for all units first
+            Map.Instance.GetUnits(u => u.Status.HasAnyOfFlags(UnitStatus.IN_FIELD)).ToList().ForEach(u => u.Status &= ~UnitStatus.DISCONNECTED);
+
+            foreach (Player player in Battle.Instance.ActivePlayers)
+            {
+                IEnumerable<Unit> units = player.Units;
+                IEnumerable<Cities> cities = player.Cities;
+                IEnumerable<Prop> comm_source = units.Concat<Prop>(cities);
+
+                Graph<Prop> connections = new Graph<Prop>(comm_source);
+                foreach (Prop p in comm_source)
+                {
+                    foreach (Prop q in comm_source)
+                    {
+                        if (connections.HasEdge(p, q))
+                        {
+                            continue;
+                        }
+                        if ((p is Unit u && u.CanCommunicateWith(q)) || (p is Cities c && c.CanCommunicateWith(q)))
+                        {
+                            connections.SetEdge(p, q);
+                        }
+                    }
+                }
+
+                connections.GetIsloatedVertices().ToList().ForEach(v =>
+                {
+                    if (v is Unit u)
+                    {
+                        u.Status |= UnitStatus.DISCONNECTED;
+                    }
+                });
+            }
         }
     }
     public sealed class Constructing : Phase
@@ -1172,7 +1375,33 @@ namespace SteelOfStalin.Flow
 
         public override void Execute()
         {
-            // TODO
+            Map.Instance.GetBuildings(BuildingStatus.UNDER_CONSTRUCTION).ToList().ForEach(b =>
+            {
+                b.ConstructionTimeRemaining -= 1;
+                if (b.ConstructionTimeRemaining < 0)
+                {
+                    b.ConstructionTimeRemaining = 0;
+                    b.Level += 1;
+                    b.Status = BuildingStatus.ACTIVE;
+                    b.BuilderLocation = new Coordinates(-1, -1);
+
+                    if (b.Level > 1)
+                    {
+                        // fortification complete
+                        // TODO FUT Impl. apply mod for other attributes as well
+                        b.Durability.PlusEquals(Game.BuildingData.All.Find(o => o.Name == b.Name).Durability.ApplyMod());
+                    }
+                    else
+                    {
+                        // TODO instantiate the building
+                    }
+                }
+                if (b.BuilderLocation != null && b.BuilderLocation != default)
+                {
+                    // remove the constructing flag for the builder of this building
+                    Map.Instance.GetUnits(b.BuilderLocation).Where(u => u is Personnel && u.Owner == b.Owner).ToList().ForEach(p => p.Status &= ~UnitStatus.CONSTRUCTING);
+                }
+            });
             base.Execute();
         }
     }
@@ -1203,8 +1432,7 @@ namespace SteelOfStalin.Flow
                             Unit ready = b.TrainingQueue.Dequeue();
 
                             // change its status
-                            ready.Status &= ~UnitStatus.IN_QUEUE;
-                            ready.Status |= UnitStatus.CAN_BE_DEPLOYED;
+                            ready.Status = UnitStatus.CAN_BE_DEPLOYED;
                             // add it to deploy list
                             b.ReadyToDeploy.Add(ready);
                         }
@@ -1219,7 +1447,7 @@ namespace SteelOfStalin.Flow
     public sealed class Misc : Phase
     {
         public Misc() : base() { }
-        public Misc(List<Command> commands) 
+        public Misc(List<Command> commands)
             : base(commands, typeof(Scavenge), typeof(Disassemble), typeof(Assemble)) { }
 
         public override void Execute()
@@ -1232,9 +1460,12 @@ namespace SteelOfStalin.Flow
 
         public void AddDestroyedFlags()
         {
-            // strength <= 0 or no fuel
+            // strength <= 0 or planes that have no fuel
+            // TODO FUT Impl. add crash landing success chance for planes that have no fuel
             Predicate<Unit> unit_destroyed = u => u.Defense.Strength <= 0 || (u is Aerial && u.Carrying.Fuel <= 0);
             Predicate<Building> building_destroyed = b => b.Durability <= 0;
+
+            // TODO FUT Impl. add wrecked flags if still resources carrying is not 0, change to destroyed if it is.
 
             Map.Instance.GetUnits(unit_destroyed).ToList().ForEach(u => u.Status = UnitStatus.DESTROYED);
             Map.Instance.GetBuildings(building_destroyed).ToList().ForEach(b => b.Status = BuildingStatus.DESTROYED);

@@ -1,10 +1,9 @@
 using SteelOfStalin.Attributes;
 using SteelOfStalin.Props.Tiles;
 using SteelOfStalin.Props.Units;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using System.Text.Json.Serialization;
 using Resources = SteelOfStalin.Attributes.Resources;
 
 namespace SteelOfStalin.Props.Buildings
@@ -36,9 +35,10 @@ namespace SteelOfStalin.Props.Buildings
     }
     public abstract class ProductionBuilding : Building
     {
-        public enum ProductionBuildingStatus 
-        { 
-            NONE, 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum ProductionBuildingStatus
+        {
+            NONE,
             OPERATING,
             HALTED
         }

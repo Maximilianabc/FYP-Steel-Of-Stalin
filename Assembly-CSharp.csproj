@@ -56,6 +56,7 @@
     <Compile Include="Assets\Scripts\BattleController.cs" />
     <Compile Include="Assets\Scripts\Units.cs" />
     <Compile Include="Assets\Scripts\Customizables.cs" />
+    <Compile Include="Assets\Scripts\CustomTypes.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Prop.cs" />
     <Compile Include="Assets\Scripts\Attributes.cs" />

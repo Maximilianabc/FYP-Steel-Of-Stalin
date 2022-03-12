@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SteelOfStalin
@@ -7,7 +5,8 @@ namespace SteelOfStalin
     public class MenuController : MonoBehaviour
     {
         public GameObject Game { get; set; }
-        void Start()
+
+        private void Start()
         {
             Game = Resources.Load<GameObject>(@"Prefabs\game");
             if (Game.GetComponent<Game>() == null)
@@ -17,7 +16,7 @@ namespace SteelOfStalin
             Instantiate(Game);
         }
 
-        void Update()
+        private void Update()
         {
 
         }

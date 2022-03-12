@@ -1,4004 +1,3518 @@
 [
   {
-    "Name": "boundary",
-    "Type": 0,
-    "Accessibility": 0,
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
     "TerrainMod": {
       "Recon": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 0
       },
       "Concealment": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 0
       },
       "Supplies": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 99999
       },
       "Fuel": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 99999
       },
       "Mobility": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1.7976931348623157E+308,
+    "Height": 79228162514264337593543950335,
     "Symbol": "B",
     "CoOrds": {
       "X": 18,
       "Y": 0
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -9,
-      "Z": -9
-    },
+    "Name": "boundary",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 2,
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 1
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -10,
-      "Z": -8
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 2,
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 2
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -11,
-      "Z": -7
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 2,
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 3
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -12,
-      "Z": -6
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "J",
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 4
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -13,
-      "Z": -5
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "J",
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 5
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -14,
-      "Z": -4
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "J",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 6
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -15,
-      "Z": -3
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 7
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -16,
-      "Z": -2
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 8
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -17,
-      "Z": -1
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 9
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -18,
-      "Z": 0
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 10
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -19,
-      "Z": 1
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 11
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -20,
-      "Z": 2
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 12
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -21,
-      "Z": 3
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 13
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -22,
-      "Z": 4
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 14
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -23,
-      "Z": 5
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 15
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -24,
-      "Z": 6
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 16
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -25,
-      "Z": 7
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 17
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -26,
-      "Z": 8
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 18
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -27,
-      "Z": 9
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 19
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -28,
-      "Z": 10
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 20
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -29,
-      "Z": 11
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 21
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -30,
-      "Z": 12
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 22
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -31,
-      "Z": 13
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 23
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -32,
-      "Z": 14
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 24
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -33,
-      "Z": 15
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 25
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -34,
-      "Z": 16
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 26
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -35,
-      "Z": 17
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 27
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -36,
-      "Z": 18
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
-      },
-      "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -10
       },
-      "Fuel": {
-        "Type": 1,
+      "Supplies": {
+        "Type": "PERCENTAGE",
         "Value": 10
       },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "G",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 28
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -37,
-      "Z": 19
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 29
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -38,
-      "Z": 20
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 30
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -39,
-      "Z": 21
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 31
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -40,
-      "Z": 22
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 32
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -41,
-      "Z": 23
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 33
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -42,
-      "Z": 24
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "J",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 34
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -43,
-      "Z": 25
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "J",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 35
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -44,
-      "Z": 26
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 36
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -45,
-      "Z": 27
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 37
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -46,
-      "Z": 28
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 38
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -47,
-      "Z": 29
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 39
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -48,
-      "Z": 30
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 40
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -49,
-      "Z": 31
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 41
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -50,
-      "Z": 32
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 42
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -51,
-      "Z": 33
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 43
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -52,
-      "Z": 34
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 44
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -53,
-      "Z": 35
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 45
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -54,
-      "Z": 36
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 46
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -55,
-      "Z": 37
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 47
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -56,
-      "Z": 38
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "swamp",
-    "Type": 8,
-    "Accessibility": 19,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 40
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -75
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "W",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 48
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -57,
-      "Z": 39
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "J",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 49
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -58,
-      "Z": 40
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "J",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 50
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -59,
-      "Z": 41
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "HILLS",
+    "Accessibility": "PERSONNEL | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 3
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": -20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -70
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "J",
+    "Height": 8,
+    "Symbol": "H",
     "CoOrds": {
       "X": 18,
       "Y": 51
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -60,
-      "Z": 42
-    },
+    "Name": "hills",
     "MeshName": null
   },
   {
-    "Name": "jungle",
-    "Type": 4,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": -1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 100
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 30
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -50
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "J",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 52
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -61,
-      "Z": 43
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 53
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -62,
-      "Z": 44
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "HILLOCK",
+    "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 50
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -60
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 2,
-    "Symbol": "F",
+    "Height": 4,
+    "Symbol": "I",
     "CoOrds": {
       "X": 18,
       "Y": 54
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -63,
-      "Z": 45
-    },
+    "Name": "hillock",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 20
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 55
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -64,
-      "Z": 46
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 20
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 56
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -65,
-      "Z": 47
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 20
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 57
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -66,
-      "Z": 48
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 20
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 58
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -67,
-      "Z": 49
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 20
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 59
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -68,
-      "Z": 50
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 60
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -69,
-      "Z": 51
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 61
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -70,
-      "Z": 52
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 62
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -71,
-      "Z": 53
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 63
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -72,
-      "Z": 54
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 64
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -73,
-      "Z": 55
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 65
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -74,
-      "Z": 56
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 66
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -75,
-      "Z": 57
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 67
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -76,
-      "Z": 58
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 68
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -77,
-      "Z": 59
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 69
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -78,
-      "Z": 60
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 20
+        "Type": "PERCENTAGE",
+        "Value": 10
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -30
+        "Type": "PERCENTAGE",
+        "Value": -5
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
+    "Symbol": "G",
     "CoOrds": {
       "X": 18,
       "Y": 70
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -79,
-      "Z": 61
-    },
+    "Name": "grassland",
     "MeshName": null
   },
   {
-    "Name": "forest",
-    "Type": 3,
-    "Accessibility": -9,
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 0
+        "Type": "FIXED_VALUE",
+        "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 50
+        "Type": "PERCENTAGE",
+        "Value": 25
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -20
+        "Type": "PERCENTAGE",
+        "Value": -10
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "G",
+    "CoOrds": {
+      "X": 18,
+      "Y": 71
+    },
+    "Name": "grassland",
+    "MeshName": null
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "G",
+    "CoOrds": {
+      "X": 18,
+      "Y": 72
+    },
+    "Name": "grassland",
+    "MeshName": null
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "G",
+    "CoOrds": {
+      "X": 18,
+      "Y": 73
+    },
+    "Name": "grassland",
+    "MeshName": null
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "G",
+    "CoOrds": {
+      "X": 18,
+      "Y": 74
+    },
+    "Name": "grassland",
+    "MeshName": null
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "G",
+    "CoOrds": {
+      "X": 18,
+      "Y": 75
+    },
+    "Name": "grassland",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 76
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 77
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 78
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 79
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 80
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 81
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 82
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 83
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 84
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 85
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 86
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 87
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "P",
+    "CoOrds": {
+      "X": 18,
+      "Y": 88
+    },
+    "Name": "plains",
+    "MeshName": null
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
         "Value": 20
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "F",
-    "CoOrds": {
-      "X": 18,
-      "Y": 71
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -80,
-      "Z": 62
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 72
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -81,
-      "Z": 63
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 73
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -82,
-      "Z": 64
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 74
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -83,
-      "Z": 65
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 75
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -84,
-      "Z": 66
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 76
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -85,
-      "Z": 67
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 77
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -86,
-      "Z": 68
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 78
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -87,
-      "Z": 69
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 79
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -88,
-      "Z": 70
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 80
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -89,
-      "Z": 71
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 81
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -90,
-      "Z": 72
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 82
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -91,
-      "Z": 73
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 83
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -92,
-      "Z": 74
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 84
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -93,
-      "Z": 75
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 85
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -94,
-      "Z": 76
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 86
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -95,
-      "Z": 77
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 87
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -96,
-      "Z": 78
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
-    "CoOrds": {
-      "X": 18,
-      "Y": 88
-    },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -97,
-      "Z": 79
-    },
-    "MeshName": null
-  },
-  {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
-    "TerrainMod": {
-      "Recon": {
-        "Type": 0,
-        "Value": 1
-      },
-      "Concealment": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Supplies": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Fuel": {
-        "Type": 1,
-        "Value": 0
-      },
-      "Mobility": {
-        "Type": 1,
-        "Value": -10
-      }
-    },
-    "Obstruction": 0,
-    "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 89
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -98,
-      "Z": 80
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "ocean",
-    "Type": 7,
-    "Accessibility": -8,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
+        "Type": "FIXED_VALUE",
         "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 0
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": 0
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 0
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1,
-    "Symbol": "N",
+    "Height": 2,
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 90
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -99,
-      "Z": 81
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
+        "Type": "FIXED_VALUE",
         "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 91
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -100,
-      "Z": 82
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
+        "Type": "FIXED_VALUE",
         "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 92
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -101,
-      "Z": 83
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
+        "Type": "FIXED_VALUE",
         "Value": 1
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 100
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 20
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": -30
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "D",
     "CoOrds": {
       "X": 18,
       "Y": 93
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -102,
-      "Z": 84
-    },
+    "Name": "desert",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 94
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -103,
-      "Z": 85
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 95
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -104,
-      "Z": 86
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "grassland",
-    "Type": 2,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
-        "Value": 1
+        "Type": "FIXED_VALUE",
+        "Value": 2
       },
       "Concealment": {
-        "Type": 1,
-        "Value": 25
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Supplies": {
-        "Type": 1,
-        "Value": -10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Fuel": {
-        "Type": 1,
-        "Value": 10
+        "Type": "PERCENTAGE",
+        "Value": 0
       },
       "Mobility": {
-        "Type": 1,
-        "Value": -5
+        "Type": "PERCENTAGE",
+        "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
     "Height": 2,
-    "Symbol": "G",
+    "Symbol": "P",
     "CoOrds": {
       "X": 18,
       "Y": 96
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -105,
-      "Z": 87
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "plains",
-    "Type": 1,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
+        "Type": "FIXED_VALUE",
         "Value": 2
       },
       "Concealment": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       },
       "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       }
     },
@@ -4010,36 +3524,31 @@
       "X": 18,
       "Y": 97
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -106,
-      "Z": 88
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "plains",
-    "Type": 1,
-    "Accessibility": -9,
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
     "TerrainMod": {
       "Recon": {
-        "Type": 0,
+        "Type": "FIXED_VALUE",
         "Value": 2
       },
       "Concealment": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       },
       "Supplies": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       },
       "Fuel": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       },
       "Mobility": {
-        "Type": 1,
+        "Type": "PERCENTAGE",
         "Value": 0
       }
     },
@@ -4051,52 +3560,43 @@
       "X": 18,
       "Y": 98
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -107,
-      "Z": 89
-    },
+    "Name": "plains",
     "MeshName": null
   },
   {
-    "Name": "boundary",
-    "Type": 0,
-    "Accessibility": 0,
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
     "TerrainMod": {
       "Recon": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 0
       },
       "Concealment": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 0
       },
       "Supplies": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 99999
       },
       "Fuel": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 99999
       },
       "Mobility": {
-        "Type": 2,
+        "Type": "MULTIPLE",
         "Value": 0
       }
     },
     "Obstruction": 0,
     "AllowConstruction": false,
-    "Height": 1.7976931348623157E+308,
+    "Height": 79228162514264337593543950335,
     "Symbol": "B",
     "CoOrds": {
       "X": 18,
       "Y": 99
     },
-    "CubeCoOrds": {
-      "X": 18,
-      "Y": -108,
-      "Z": 90
-    },
+    "Name": "boundary",
     "MeshName": null
   }
 ]

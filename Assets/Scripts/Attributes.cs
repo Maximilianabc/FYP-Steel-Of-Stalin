@@ -1,12 +1,15 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-using SteelOfStalin.Util;
 using SteelOfStalin.Props.Units;
+using SteelOfStalin.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using UnityEngine;
 
 namespace SteelOfStalin.Attributes
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ModifierType
     {
         FIXED_VALUE,
@@ -23,28 +26,43 @@ namespace SteelOfStalin.Attributes
         public Modifier(ModifierType type, double value) => (Type, Value) = (type, value);
         public Modifier(Modifier another) => (Type, Value) = (another.Type, another.Value);
 
-        public double Apply(double? value = null) => Type switch
+        public double ApplyTo(double? value = null) => Type switch
         {
             ModifierType.FIXED_VALUE => (double)(value == null ? Value : value + Value),
             ModifierType.PERCENTAGE => (double)(value == null ? 1 + Value / 100 : value * (1 + Value / 100)),
-            ModifierType.MULTIPLE => (double)(value == null ? Value : value * Value),
+            ModifierType.MULTIPLE => (double)(value == null ? Value : value * (1 + Value)),
             _ => throw new NotImplementedException(),
         };
-        public double Apply(Attribute a) => Type switch
+        public double ApplyTo(Attribute a) => Type switch
         {
-            ModifierType.FIXED_VALUE => a.Value + Value,
-            ModifierType.PERCENTAGE => a.Value * (1 + Value / 100),
-            ModifierType.MULTIPLE => a.Value * Value,
+            ModifierType.FIXED_VALUE => a.ApplyMod() + Value,
+            ModifierType.PERCENTAGE => a.ApplyMod() * (1 + Value / 100),
+            ModifierType.MULTIPLE => a.ApplyMod() * (1 + Value),
             _ => throw new NotImplementedException(),
         };
-
-        public Modifier SetValue(double value)
-        {
-            Value = value;
-            return this;
-        }
 
         public object Clone() => MemberwiseClone();
+        public override string ToString() => Type switch
+        {
+            ModifierType.FIXED_VALUE => Value.ToString("+#.##;-#.##"),
+            ModifierType.PERCENTAGE => $"{Value:+#.##;-#.##}%",
+            ModifierType.MULTIPLE => $"x{1 + Value}",
+            _ => "",
+        };
+
+        public static Modifier Min(params Modifier[] modifiers) =>
+            modifiers == null || modifiers.Length == 0
+                ? throw new ArgumentException("No modifiers to compare!")
+                : !modifiers.All(m => m.Type == modifiers[0].Type)
+                    ? throw new ArgumentException("Cannot compare modifiers with different types!")
+                    : modifiers.OrderBy(m => m.Value).First();
+
+        public static Modifier Max(params Modifier[] modifiers) =>
+            modifiers == null || modifiers.Length == 0
+                ? throw new ArgumentException("No modifiers to compare!")
+                : !modifiers.All(m => m.Type == modifiers[0].Type)
+                    ? throw new ArgumentException("Cannot compare modifiers with different types!")
+                    : modifiers.OrderByDescending(m => m.Value).First();
     }
 
     public class TerrainModifier : ICloneable
@@ -57,103 +75,17 @@ namespace SteelOfStalin.Attributes
 
         public TerrainModifier() { }
         public TerrainModifier(TerrainModifier another)
-            => (Recon, Concealment, Supplies, Fuel, Mobility) 
-            = ((Modifier)another.Recon.Clone(), 
-               (Modifier)another.Concealment.Clone(), 
+            => (Recon, Concealment, Supplies, Fuel, Mobility)
+            = ((Modifier)another.Recon.Clone(),
+               (Modifier)another.Concealment.Clone(),
                (Modifier)another.Supplies.Clone(),
-               (Modifier)another.Fuel.Clone(), 
+               (Modifier)another.Fuel.Clone(),
                (Modifier)another.Mobility.Clone());
 
         public object Clone() => new TerrainModifier(this);
     }
 
-    public struct Coordinates : ICloneable, IEquatable<Coordinates>
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public Coordinates(int x, int y) : this() => (X, Y) = (x, y);
-        public Coordinates(Coordinates another) : this() => (X, Y) = (another.X, another.Y);
-
-        public object Clone() => new Coordinates(this);
-        public override string ToString() => $"({X},{Y})";
-        public override bool Equals(object obj) => Equals((Coordinates)obj);
-        public bool Equals(Coordinates other) => this == other;
-        public override int GetHashCode() => (X, Y).GetHashCode();
-
-        public static bool operator ==(Coordinates c1, Coordinates c2) => c1.X == c2.X && c1.Y == c2.Y;
-        public static bool operator !=(Coordinates c1, Coordinates c2) => !(c1.X == c2.X && c1.Y == c2.Y);
-
-    }
-
-    public struct CubeCoordinates : IEquatable<CubeCoordinates>
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
-
-        public CubeCoordinates(int x, int y, int z) : this() => (X, Y, Z) = (x, y, z);
-
-        public static int GetDistance(CubeCoordinates c1, CubeCoordinates c2)
-            => Mathf.Max(Math.Abs(c1.X - c2.X), Math.Abs(c1.Y - c2.Y), Math.Abs(c1.Z - c2.Z));
-
-        public static double GetStraightLineDistance(CubeCoordinates c1, CubeCoordinates c2)
-        {
-            List<int> diff = new List<int>()
-            {
-                Math.Abs(c1.X - c2.X),
-                Math.Abs(c1.Y - c2.Y),
-                Math.Abs(c1.Z - c2.Z)
-            };
-            diff = diff.OrderByDescending(x => x).ToList();
-
-            // if one of the abs diff is 0, the tiles are on the same x/y/z axis
-            // else apply cosine theorem with the abs diffs except the largest one (becuz it is the tile distance, not the sides of the triangle)
-            // the angle is always 2 / 3 rad
-            return diff.Contains(0)
-                ? diff.Max()
-                : Math.Sqrt(Math.Pow(diff[1], 2) + Math.Pow(diff[2], 2) - 2 * diff[1] * diff[2] * Math.Cos(2 / 3D));
-        }
-
-        /// <summary>
-        /// Returns an enumerable of negibouring points with distance specified
-        /// </summary>
-        /// <param name="distance">The distance from the cube coordinates, inclusive</param>
-        /// <returns></returns>
-        public IEnumerable<CubeCoordinates> GetNeigbours(int distance = 1)
-        {
-            for (int x = -1; x <= distance; x++)
-            {
-                for (int y = -1; y <= distance; y++)
-                {
-                    for (int z = -1; z <= distance; z++)
-                    {
-                        yield return new CubeCoordinates(X + x, Y + y, Z + z);
-                    }
-                }
-            }
-        }
-
-        public override string ToString() => $"({X},{Y},{Z})";
-        public override bool Equals(object obj) => Equals((CubeCoordinates)obj);
-        public bool Equals(CubeCoordinates other) => this == other;
-        public override int GetHashCode() => (X, Y, Z).GetHashCode();
-
-        public static bool operator ==(CubeCoordinates c1, CubeCoordinates c2) 
-            => c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z;
-        public static bool operator !=(CubeCoordinates c1, CubeCoordinates c2)
-            => !(c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z);
-
-        public static explicit operator Coordinates(CubeCoordinates c) => new Coordinates(c.X, c.Z + (c.X - c.X % 2) / 2);
-        public static explicit operator CubeCoordinates(Coordinates p)
-        {
-            int z = p.Y - (p.X - p.X % 2) / 2;
-            int y = -p.X - z;
-            return new CubeCoordinates(p.X, y, z);
-        }
-
-    }
-
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PathfindingOptimization
     {
         LEAST_SUPPLIES_COST,
@@ -168,14 +100,20 @@ namespace SteelOfStalin.Attributes
         public Attribute() { }
         public Attribute(double value, Modifier mod = null) => (Value, Mod) = (value, mod);
 
-        public double ApplyMod() => Mod == null || Mod == default(Modifier) ? Value : Mod.Apply(Value);
+        public double ApplyMod() => Mod == null || Mod == default(Modifier) ? Value : Mod.ApplyTo(Value);
         public double ApplyDeviation() => Utilities.RandomBetweenSymmetricRange(ApplyMod());
 
-        public void PlusEquals(double value) => Value += value;
+        public void PlusEquals(double value) => Value = ApplyMod() + value;
         public void PlusEquals(Attribute attribute) => Value = ApplyMod() + attribute.ApplyMod();
 
-        public void MinusEquals(double value) => Value -= value;
+        public void MinusEquals(double value) => Value = ApplyMod() - value;
         public void MinusEquals(Attribute attribute) => Value = ApplyMod() - attribute.ApplyMod();
+
+        public bool TryTestEnough(Attribute test, out (double have, double discrepancy) tuple)
+        {
+            tuple = this >= test ? (0D, 0D) : (Value, test - this);
+            return this >= test;
+        }
 
         public object Clone()
         {
@@ -185,9 +123,12 @@ namespace SteelOfStalin.Attributes
         }
         public override bool Equals(object obj) => base.Equals(obj);
         public override int GetHashCode() => base.GetHashCode();
+        public override string ToString() => Mod == null || Mod == default(Modifier) ? ApplyMod().ToString() : $"{Value} ({Mod})";
 
         public static double operator +(Attribute a, Attribute b) => a.ApplyMod() + b.ApplyMod();
+        public static double operator +(Attribute b) => +b.ApplyMod();
         public static double operator -(Attribute a, Attribute b) => a.ApplyMod() - b.ApplyMod();
+        public static double operator -(Attribute b) => -b.ApplyMod();
         public static double operator *(Attribute a, Attribute b) => a.ApplyMod() * b.ApplyMod();
         public static double operator /(Attribute a, Attribute b) => a.ApplyMod() / b.ApplyMod();
         public static bool operator >(Attribute a, Attribute b) => a.ApplyMod() > b.ApplyMod();
@@ -233,6 +174,9 @@ namespace SteelOfStalin.Attributes
         public Attribute Power { get; set; } = new Attribute();
         public Attribute Time { get; set; } = new Attribute();
 
+        public IEnumerable<Attribute> All => Utilities.CombineAll(Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Time);
+        public bool IsZero => All.All(a => a.Value == 0);
+
         public Resources() { }
         public Resources(Resources another)
             => (Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Power, Time)
@@ -250,16 +194,50 @@ namespace SteelOfStalin.Attributes
         public object Clone() => new Resources(this);
 
         // omit comparison for time intentionally, cuz it's meaningless (won't have insufficient "time")
-        public bool HasEnoughResources(Resources need) =>
-               Money >= need.Money
-            && Steel >= need.Steel
-            && Supplies >= need.Supplies
-            && Cartridges >= need.Cartridges
-            && Shells >= need.Shells
-            && Fuel >= need.Fuel
-            && RareMetal >= need.RareMetal
-            && Manpower >= need.Manpower
-            && Power >= need.Power;
+        public bool HasEnoughResources(Resources need, bool print_discrepancy = true)
+        {
+            List<(string attr, double have, double discrepancy)> shortages = new List<(string attr, double have, double discrepancy)>();
+            if (!Money.TryTestEnough(need.Money, out (double have, double discrepancy) money))
+            {
+                shortages.Add((nameof(Money), money.have, money.discrepancy));
+            }
+            if (!Steel.TryTestEnough(need.Steel, out (double have, double discrepancy) steel))
+            {
+                shortages.Add((nameof(Steel), steel.have, steel.discrepancy));
+            }
+            if (!Supplies.TryTestEnough(need.Supplies, out (double have, double discrepancy) supplies))
+            {
+                shortages.Add((nameof(Supplies), supplies.have, supplies.discrepancy));
+            }
+            if (!Cartridges.TryTestEnough(need.Cartridges, out (double have, double discrepancy) cartridges))
+            {
+                shortages.Add((nameof(Cartridges), cartridges.have, cartridges.discrepancy));
+            }
+            if (!Shells.TryTestEnough(need.Shells, out (double have, double discrepancy) shells))
+            {
+                shortages.Add((nameof(Shells), shells.have, shells.discrepancy));
+            }
+            if (!Fuel.TryTestEnough(need.Fuel, out (double have, double discrepancy) fuel))
+            {
+                shortages.Add((nameof(Fuel), fuel.have, fuel.discrepancy));
+            }
+            if (!RareMetal.TryTestEnough(need.RareMetal, out (double have, double discrepancy) raremetal))
+            {
+                shortages.Add((nameof(RareMetal), raremetal.have, raremetal.discrepancy));
+            }
+            if (!Manpower.TryTestEnough(need.Manpower, out (double have, double discrepancy) manpower))
+            {
+                shortages.Add((nameof(Manpower), manpower.have, manpower.discrepancy));
+            };
+            if (print_discrepancy)
+            {
+                foreach ((string attr, double have, double discrepancy) shortage in shortages)
+                {
+                    Debug.LogWarning($"Not enough {shortage.attr}! Have: {shortage.have}, Shortage: {shortage.discrepancy}");
+                }
+            }
+            return shortages.Any();
+        }
 
         public void Consume(Resources cost)
         {
@@ -295,6 +273,8 @@ namespace SteelOfStalin.Attributes
         public Resources Maintenance { get; set; } = new Resources();
         public Resources Recycling { get; set; } = new Resources();
         public Modifier CostModifier { get; set; } = new Modifier();
+
+        public IEnumerable<Resources> All => Utilities.CombineAll(Base, Research, Repair, Fortification, Manufacture, Maintenance, Recycling);
 
         public Cost() { }
         public Cost(Cost another)
