@@ -16,8 +16,7 @@ public class ProgressBar : MonoBehaviour
     }
     private void Update()
     {
-        UpdateCurrentFill();
-        UpdateText();
+        
     }
     private void UpdateCurrentFill()
     {
@@ -26,7 +25,6 @@ public class ProgressBar : MonoBehaviour
     }
 
     private void UpdateText() {
-        return;
         text.text = $"{current}/{maximum}";    
     }
 
@@ -37,5 +35,7 @@ public class ProgressBar : MonoBehaviour
         }
         this.maximum = maximum;
         this.current = current;
+        UpdateCurrentFill();
+        UpdateText();
     }
 }
