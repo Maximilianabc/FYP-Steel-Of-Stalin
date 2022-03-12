@@ -1,39 +1,70 @@
 using SteelOfStalin.Attributes;
+using SteelOfStalin.Customizables;
+using SteelOfStalin.CustomTypes;
+using SteelOfStalin.Props.Buildings;
 using SteelOfStalin.Props.Tiles;
+using SteelOfStalin.Props.Units;
+using SteelOfStalin.Props.Units.Land;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using System.Text;
 using System.Text.Json.Serialization;
-using SteelOfStalin.Props.Units.Land;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Customizables;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using static SteelOfStalin.Util.Utilities;
-using Resources = SteelOfStalin.Attributes.Resources;
 using Attribute = SteelOfStalin.Attributes.Attribute;
+using Resources = SteelOfStalin.Attributes.Resources;
 
 namespace SteelOfStalin.Props
 {
-    public abstract class Prop : ICloneable
+    public abstract class Prop : ICloneable, IEquatable<Prop>, INamedAsset
     {
         public Coordinates CoOrds { get; set; }
         public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
+        public string Name { get; set; }
         public string MeshName { get; set; }
 
         public Prop() { }
         public Prop(Prop another) => CoOrds = new Coordinates(another.CoOrds);
 
-        public string PrintCoOrds() => $"({CoOrds.X},{CoOrds.Y})";
-        public string PrintCubeCoOrds() => $"({CubeCoOrds.X},{CubeCoOrds.Y},{CubeCoOrds.Z})";
+        // use CoOrds.ToString() and CubeCoOrds.ToString() directly for printing coords and cube coords
         public string PrintMembers()
         {
-            string output = "";
-            List<string> line = new List<string>() { $"{GetType().Name}\n" };
-            GetType().GetProperties().ToList().ForEach(p => line.Add($"{p.Name}\t\t:{p.GetValue(this)}\n"));
-            return string.Join(output, line);
+            string sep = Environment.NewLine;
+            List<string> line = new List<string>() { $"{GetType().Name}" };
+            GetType().GetProperties().ToList().ForEach(p => line.Add($"{p.Name}\t\t:{p.GetValue(this)}"));
+            return string.Join(sep, line);
         }
 
+        public virtual void AddToScene()
+        {
+            string scene = SceneManager.GetActiveScene().name;
+            // TODO add a loading scene
+            if (scene != "Battle" || scene != "Loading")
+            {
+                Debug.LogError($"Cannot add gameobject to scene: Current scene ({scene}) is not Battle or Loading.");
+                return;
+            }
+            GameObject gameObject = Game.GameObjects.Find(g => g.name == Name);
+            if (gameObject == null)
+            {
+                Debug.LogError($"Cannot find game object with name {Name}");
+                return;
+            }
+            if (gameObject.GetComponent<PropObject>() == null)
+            {
+                gameObject.AddComponent<PropObject>();
+            }
+            gameObject.name += $"_{Guid.NewGuid().ToString().Replace("-", "")}";
+            MeshName = gameObject.name;
+            //UnityEngine.Object.Instantiate
+        }
         public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GameObject.Find(MeshName));
+
+        public virtual int GetDistance(Prop prop) => CubeCoordinates.GetDistance(CubeCoOrds, prop.CubeCoOrds);
+        public virtual double GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
+        public Vector3 GetOnScreenCoordinates() => new Vector3(); // TODO
 
         public virtual object Clone()
         {
@@ -41,6 +72,8 @@ namespace SteelOfStalin.Props
             copy.CoOrds = (Coordinates)CoOrds.Clone();
             return copy;
         }
+        public bool Equals(Prop other) => !string.IsNullOrEmpty(MeshName) && MeshName == other.MeshName;
+        public override string ToString() => $"{Name} ({CoOrds})";
     }
 
     public class PropObject : MonoBehaviour
@@ -53,26 +86,29 @@ namespace SteelOfStalin.Props
 
         public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
 
+        public Coordinates GetCoordinates() => new Coordinates(); // TODO
+
         public virtual void Start()
         {
+            /*
             AudioSource placed = gameObject.AddComponent<AudioSource>();
-            placed.name = "Placed";
+            placed.name = "placed";
             placed.clip = AudioOnPlaced;
 
             if (AudioOnPlaced != null)
             {
                 placed.Play();
-            }
+            }*/
         }
 
         public virtual void OnMouseDown()
         {
-            
+
         }
 
         public virtual void OnDestroy()
         {
-            
+
         }
     }
 }
@@ -80,6 +116,7 @@ namespace SteelOfStalin.Props
 namespace SteelOfStalin.Props.Units
 {
     [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
     public enum UnitStatus
     {
         NONE = 0,
@@ -89,52 +126,113 @@ namespace SteelOfStalin.Props.Units
         MOVED = 1 << 3,
         FIRED = 1 << 4,
         SUPPRESSED = 1 << 5,
-        DISCONNECTED = 1 << 6,
-        WRECKED = 1 << 7,
-        DESTROYED = 1 << 8,
+        AMBUSHING = 1 << 6,
+        CONSTRUCTING = 1 << 7,
+        DISCONNECTED = 1 << 8,
+        WRECKED = 1 << 9,
+        DESTROYED = 1 << 10,
+        IN_FIELD = ~IN_QUEUE & ~CAN_BE_DEPLOYED & ~WRECKED & ~DESTROYED,
+        IMMOBILE = SUPPRESSED | AMBUSHING | CONSTRUCTING | DISCONNECTED,
+        ALL = ~0
     }
+
     [Flags]
-    public enum AvailableCommands
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
+
+    public enum AvailableMovementCommands
     {
         NONE = 0,
         HOLD = 1 << 0,
         MOVE = 1 << 1,
-        CAPTURE = 1 << 2,
-        ABOARD = 1 << 3,
-        DISEMBARK = 1 << 4,
-        MERGE = 1 << 5,
-        FIRE = 1 << 6,
-        SUPPRESS = 1 << 7,
-        SABOTAGE = 1 << 8,
-        AMBUSH = 1 << 9,
-        FORTIFY = 1 << 10,
-        CONSTRUCT = 1 << 11,
-        DEMOLISH = 1 << 12,
-        SCAVENGE = 1 << 13,
-        ASSEMBLE = 1 << 14,
-        DISASSEMBLE = 1 << 15
+        MERGE = 1 << 2,
+        SUBMERGE = 1 << 3,
+        SURFACE = 1 << 4,
+        LAND = 1 << 5,
+        ALL = ~0
     }
+    [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
+    public enum AvailableFiringCommands
+    {
+        NONE = 0,
+        FIRE = 1 << 0,
+        SUPPRESS = 1 << 1,
+        SABOTAGE = 1 << 2,
+        AMBUSH = 1 << 3,
+        BOMBARD = 1 << 4,
+        ALL = ~0
+    }
+    [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
+    public enum AvailableLogisticsCommands
+    {
+        NONE = 0,
+        ABOARD = 1 << 0,
+        DISEMBARK = 1 << 1,
+        LOAD = 1 << 2,
+        UNLOAD = 1 << 3,
+        RESUPPLY = 1 << 4,
+        REPAIR = 1 << 5,
+        RECONSTRUCT = 1 << 6,
+        ALL = ~0
+    }
+
+    [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
+    public enum AvailableConstructionCommands
+    {
+        NONE = 0,
+        FORTIFY = 1 << 0,
+        CONSTRUCT = 1 << 1,
+        DEMOLISH = 1 << 2,
+        ALL = ~0
+    }
+
+    [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
+    public enum AvailableMiscCommands
+    {
+        NONE = 0,
+        CAPTURE = 1 << 0,
+        SCAVENGE = 1 << 1,
+        ASSEMBLE = 1 << 2,
+        DISASSEMBLE = 1 << 3,
+        ALL = ~0
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum CommandAssigned
     {
         NONE,
         HOLD,
         MOVE,
-        CAPTURE,
-        ABOARD,
-        DISEMBARK,
         MERGE,
+        SUBMERGE,
+        SURFACE,
+        LAND,
         FIRE,
         SUPPRESS,
         SABOTAGE,
         AMBUSH,
+        BOMBARD,
+        ABOARD,
+        DISEMBARK,
+        LOAD,
+        UNLOAD,
+        RESUPPLY,
+        REPAIR,
+        RECONSTRUCT,
         FORTIFY,
         CONSTRUCT,
         DEMOLISH,
+        CAPTURE,
         SCAVENGE,
         ASSEMBLE,
-        DISASSEMBLE
+        DISASSEMBLE,
     }
+
     [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
     public enum AutoCommands
     {
         NONE = 0,
@@ -143,11 +241,12 @@ namespace SteelOfStalin.Props.Units
         RESUPPLY = 1 << 2,
     }
 
-    public abstract class Unit : Prop, ICloneable
+    [JsonConverter(typeof(PropConverter<Unit>))]
+    public abstract class Unit : Prop, ICloneable, IEquatable<Unit>
     {
         public UnitStatus Status { get; set; }
-        public string Name { get; set; }
         [JsonIgnore] public Player Owner { get; set; }
+        public string OwnerName { get; set; }
         public Cost Cost { get; set; } = new Cost();
         public Maneuverability Maneuverability { get; set; } = new Maneuverability();
         public Defense Defense { get; set; } = new Defense();
@@ -162,15 +261,20 @@ namespace SteelOfStalin.Props.Units
         public List<Building> BuildingsInSight { get; set; } = new List<Building>();
 
         public CommandAssigned CommandAssigned { get; set; } = CommandAssigned.NONE;
-        public AvailableCommands AvailableCommands { get; set; } = AvailableCommands.HOLD;
-        public AutoCommands AutoCommands { get; set; }
+        public AvailableMovementCommands AvailableMovementCommands { get; set; } = AvailableMovementCommands.HOLD;
+        public AvailableFiringCommands AvailableFiringCommands { get; set; } = AvailableFiringCommands.NONE;
+        public AvailableLogisticsCommands AvailableLogisticsCommands { get; set; } = AvailableLogisticsCommands.NONE;
+        public AvailableConstructionCommands AvailableConstructionCommands { get; set; } = AvailableConstructionCommands.NONE;
+        public AvailableMiscCommands AvailableMiscCommands { get; set; } = AvailableMiscCommands.NONE;
+        public AutoCommands AutoCommands { get; set; } = AutoCommands.NONE;
         public List<Tile> AutoNavigationPath { get; set; } = new List<Tile>();
 
         public double CurrentSuppressionLevel { get; set; } = 0;
         public int ConsecutiveSuppressedRound { get; set; } = 0;
-        public double TrainingTimeRemaining { get; set; }
+        public double TrainingTimeRemaining { get; set; } = 0;
 
         public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
+        public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
         public bool IsOwn(Player p) => Owner == p;
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
@@ -179,18 +283,21 @@ namespace SteelOfStalin.Props.Units
         public bool IsSameSubclassOf<T>(Unit another) where T : Unit => GetType().IsSubclassOf(typeof(T)) && another.GetType().IsSubclassOf(typeof(T));
         public bool IsOfSameCategory(Unit another) => IsSameSubclassOf<Ground>(another) || IsSameSubclassOf<Naval>(another) || IsSameSubclassOf<Aerial>(another);
 
+        // used for spotting phase only, reset to null at round start, need not to be saved (serialized)
+        [JsonIgnore] public IOffensiveCustomizable WeaponFired { get; set; }
+
         // Parameterless constructors are used for (de)serialization
         public Unit() : base() { }
         public Unit(Unit another) : base(another)
             => (Owner, Cost, Maneuverability, Defense, Consumption, Carrying, Capacity, Scouting, Morale)
-            = (another.Owner, 
-                (Cost)another.Cost.Clone(), 
-                (Maneuverability)another.Maneuverability.Clone(), 
-                (Defense)another.Defense.Clone(), 
-                (Resources)another.Consumption.Clone(), 
-                (Resources)another.Carrying.Clone(), 
-                (Resources)another.Capacity.Clone(), 
-                (Scouting)another.Scouting.Clone(), 
+            = (another.Owner,
+                (Cost)another.Cost.Clone(),
+                (Maneuverability)another.Maneuverability.Clone(),
+                (Defense)another.Defense.Clone(),
+                (Resources)another.Consumption.Clone(),
+                (Resources)another.Carrying.Clone(),
+                (Resources)another.Capacity.Clone(),
+                (Scouting)another.Scouting.Clone(),
                 (Attribute)another.Morale.Clone());
 
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
@@ -201,21 +308,20 @@ namespace SteelOfStalin.Props.Units
             // TODO FUT Impl. consider altitude of the units as well
             return !units.Any() || !units.Any(u => IsOfSameCategory(u));
         }
-        public virtual bool CanMove() => GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod()).Any() && !IsSuppressed;
+        public virtual bool CanMove() => GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod()).Any();
         public virtual bool CanMerge()
         {
             // TODO FUT Impl. 
             return false;
         }
-        public virtual bool CanFire() => !IsSuppressed && GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w));
-        public virtual bool CanSabotage() => !IsSuppressed && GetWeapons().Any(w => HasHostileBuildingsInFiringRange(w) && HasEnoughAmmo(w));
+        public virtual bool CanFire() => GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w));
+        public virtual bool CanSabotage() => GetWeapons().Any(w => HasHostileBuildingsInFiringRange(w) && HasEnoughAmmo(w));
         // can be fired upon = can be suppressed
-        public virtual bool CanSuppress() => !IsSuppressed && GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w, false));
-        public virtual bool CanAmbush()
-        {
-            // TODO
-            return false;
-        }
+        public virtual bool CanSuppress() => GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w, false));
+        public virtual bool CanAmbush() => !Status.HasFlag(UnitStatus.AMBUSHING) && GetWeapons().Any(w => HasEnoughAmmo(w));
+        public virtual bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
+        public virtual bool CanCommunicateWith(Unit communicatee) => this != communicatee && GetStraightLineDistance(communicatee) <= Scouting.Communication + communicatee.Scouting.Communication;
+        public virtual bool CanCommunicateWith(Cities cities) => GetStraightLineDistance(cities) <= Scouting.Communication + cities.Communication;
 
         // has any tile in range that has hostile units
         public bool HasHostileUnitsInFiringRange(IOffensiveCustomizable weapon) => GetFiringRange(weapon).Where(t => t.HasUnit).Any(t => Map.Instance.GetUnits(t).Any(u => !u.IsFriendly(Owner) && HasSpotted(u)));
@@ -235,7 +341,7 @@ namespace SteelOfStalin.Props.Units
         public bool HasSpotted(Unit observee) => Owner.GetAllUnitsInSight().Contains(observee);
         public bool HasSpotted(Building building) => Owner.GetAllBuildingsInSight().Contains(building);
 
-        public IEnumerable<Tile> GetAccessibleNeigbours(int distance = 1) 
+        public IEnumerable<Tile> GetAccessibleNeigbours(int distance = 1)
             => Map.Instance.GetNeigbours(CubeCoOrds, distance).Where(n => CanAccessTile(n) && GetPath(GetLocatedTile(), n).Any());
         public IEnumerable<Tile> GetAccessibleNeigbours(CubeCoordinates c, int distance = 1)
             => Map.Instance.GetNeigbours(c, distance).Where(n => CanAccessTile(n) && GetPath(Map.Instance.GetTile(c), n).Any());
@@ -249,7 +355,7 @@ namespace SteelOfStalin.Props.Units
             }
             return range;
         }
-        public IEnumerable<Tile> GetReconRange() => Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Scouting.Reconnaissance.ApplyMod());
+        public virtual IEnumerable<Tile> GetReconRange() => Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Scouting.Reconnaissance.ApplyMod());
 
         public IEnumerable<Tile> GetPath(Tile start, Tile end, PathfindingOptimization opt = PathfindingOptimization.LEAST_SUPPLIES_COST)
         {
@@ -324,55 +430,130 @@ namespace SteelOfStalin.Props.Units
         }
 
         public abstract IEnumerable<IOffensiveCustomizable> GetWeapons();
+        public abstract IEnumerable<Module> GetModules();
+        public virtual IEnumerable<Module> GetRepairableModules() => GetModules().Where(m => m.Integrity < Game.CustomizableData.Modules[m.Name].Integrity);
+        public abstract Modifier GetConcealmentPenaltyMove();
 
         public List<Unit> GetAvailableMergeTargets()
         {
             // TODO FUT Impl. 
             return null;
         }
-        // include all enemies, be it spotted or not
-        public IEnumerable<Unit> GetHostileUnitsInRange(IEnumerable<Tile> range) => range.Where(t => t.HasUnit).SelectMany(t => Map.Instance.GetUnits(t)).Where(u => !u.IsFriendly(Owner));
-        public IEnumerable<Building> GetHostileBuildingsInRange(IEnumerable<Tile> range) => range.Where(t => t.HasBuilding).SelectMany(t => Map.Instance.GetBuildings(t)).Where(b => !b.IsFriendly(Owner));
 
+        public IEnumerable<Unit> GetUnitsInRange(IEnumerable<Tile> range) => range.Where(t => t.HasUnit).SelectMany(t => Map.Instance.GetUnits(t));
+        public IEnumerable<Building> GetBuildingsInRange(IEnumerable<Tile> range) => range.Where(t => t.HasBuilding).SelectMany(t => Map.Instance.GetBuildings(t));
+
+        // TODO FUT. Impl. read game rules to decide whether targets of serveral commands can be ally units (e.g. help allies repair, re-capture allies cities)
+        public IEnumerable<Unit> GetOwnUnitsInRange(IEnumerable<Tile> range) => GetUnitsInRange(range).Where(u => u.IsOwn(Owner));
+        public IEnumerable<Building> GetOwnBuildingsInRange(IEnumerable<Tile> range) => GetBuildingsInRange(range).Where(b => b.IsOwn(Owner));
+
+        public IEnumerable<Unit> GetFriendlyUnitsInRange(IEnumerable<Tile> range) => GetUnitsInRange(range).Where(u => u.IsFriendly(Owner));
+        public IEnumerable<Building> GetFriendlyBuildingsInRange(IEnumerable<Tile> range) => GetBuildingsInRange(range).Where(b => b.IsFriendly(Owner));
+
+        // include all enemies, be it spotted or not
+        public IEnumerable<Unit> GetHostileUnitsInRange(IEnumerable<Tile> range) => GetUnitsInRange(range).Where(u => !u.IsFriendly(Owner));
+        public IEnumerable<Building> GetHostileBuildingsInRange(IEnumerable<Tile> range) => GetBuildingsInRange(range).Where(b => !b.IsFriendly(Owner));
+
+        // use these for selection of fire/sabotage/suppress targets in UI
         public IEnumerable<Unit> GetHostileUnitsInFiringRange(IOffensiveCustomizable weapon) => GetHostileUnitsInRange(GetFiringRange(weapon)).Where(u => HasSpotted(u));
         public IEnumerable<Building> GetHostileBuildingsInFiringRange(IOffensiveCustomizable weapon) => GetHostileBuildingsInRange(GetFiringRange(weapon)).Where(b => HasSpotted(b));
         public IEnumerable<Cities> GetHostileCitiesInRange(IOffensiveCustomizable weapon) => Map.Instance.GetCities(c => c.IsHostile(Owner) && GetFiringRange(weapon).Contains<Tile>(c));
-        public IEnumerable<Unit> GetHostileUnitsInReconRange() => GetHostileUnitsInRange(Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Scouting.Reconnaissance.ApplyMod()));
-        public IEnumerable<Building> GetHostileBuildingsInReconRange() => GetHostileBuildingsInRange(Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Scouting.Reconnaissance.ApplyMod()));
+
+        public IEnumerable<Unit> GetHostileUnitsInReconRange() => GetHostileUnitsInRange(GetReconRange());
+        public IEnumerable<Building> GetHostileBuildingsInReconRange() => GetHostileBuildingsInRange(GetReconRange());
 
         public Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
-        public double GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.Apply(Consumption.Supplies.ApplyMod());
-        public double GetSuppliesRequired(List<Tile> path) => path.Select(t => GetSuppliesRequired(t)).Sum();
-        public double GetFuelRequired(Tile t) => t.TerrainMod.Fuel.Apply(Consumption.Fuel.ApplyMod());
-        public double GetFuelRequired(List<Tile> path) => path.Select(t => GetFuelRequired(t)).Sum();
+        public double GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.ApplyTo(Consumption.Supplies.ApplyMod());
+        public double GetSuppliesRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
+        public double GetFuelRequired(Tile t) => t.TerrainMod.Fuel.ApplyTo(Consumption.Fuel.ApplyMod());
+        public double GetFuelRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
+
+        public string GetResourcesChangeRecord(string res, double change) => res switch
+        {
+            "Money" => $" m:{change:+#.##;-#.##}=>{Carrying.Money}/{Capacity.Money} ",
+            "Steel'" => $" t:{change:+#.##;-#.##}=>{Carrying.Steel}/{Capacity.Steel} ",
+            "Supplies" => $" s:{change:+#.##;-#.##}=>{Carrying.Supplies}/{Capacity.Supplies} ",
+            "Cartridges" => $" c:{change:+#.##;-#.##}=>{Carrying.Cartridges}/{Capacity.Cartridges} ",
+            "Shells" => $" h:{change:+#.##;-#.##}=>{Carrying.Shells}/{Capacity.Shells} ",
+            "Fuel" => $" f:{change:+#.##;-#.##}=>{Carrying.Fuel}/{Capacity.Fuel} ",
+            "RareMetal" => $" r:{change:+#.##;-#.##}=>{Carrying.RareMetal}/{Capacity.RareMetal} ",
+            _ => throw new ArgumentException($"Unknown resources symbol {res}")
+        };
+        public string GetResourcesChangeRecord(Resources consume)
+        {
+            if (consume.IsZero)
+            {
+                return "";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            if (consume.Money > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("Money", -consume.Money));
+            }
+            if (consume.Steel > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("Steel", -consume.Steel));
+            }
+            if (consume.Supplies > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("Supplies", -consume.Supplies));
+            }
+            if (consume.Cartridges > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("Cartridges", -consume.Cartridges));
+            }
+            if (consume.Shells > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("Shells", -consume.Shells));
+            }
+            if (consume.Fuel > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("Fuel", -consume.Fuel));
+            }
+            if (consume.RareMetal > 0)
+            {
+                _ = sb.Append(GetResourcesChangeRecord("RareMetal", -consume.RareMetal));
+            }
+            return sb.ToString();
+        }
+        public string GetStrengthChangeRecord(double change) => $" hp:{change:+#.##;-#.##}=>{Defense.Strength}/{Game.UnitData[Name].Defense.Strength} ";
+        public string GetSuppressionChangeRecord(double change) => $" sup:{change:+#.####;-#.####}=>{CurrentSuppressionLevel:#.####} ";
 
         public abstract override object Clone();
+        public bool Equals(Unit other) => base.Equals(other);
     }
 }
 
 namespace SteelOfStalin.Props.Buildings
 {
-    public enum BuildingStatus 
-    { 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum BuildingStatus
+    {
         NONE,
-        UNDER_CONSTRUCTION, 
+        UNDER_CONSTRUCTION,
         ACTIVE,
         DESTROYED
     }
 
+    // TODO FUT Impl. add toggle for accessibility to allies of buildings (e.g. allow ally planes land on own airfield etc.)
+    [JsonConverter(typeof(PropConverter<Building>))]
     public abstract class Building : Prop, ICloneable
     {
-        public string Name { get; set; }
         [JsonIgnore] public Player Owner { get; set; }
+        public string OwnerName { get; set; }
+        public Coordinates BuilderLocation { get; set; }
         public BuildingStatus Status { get; set; } = BuildingStatus.NONE;
-        public double Level { get; set; }
-        public double MaxLevel { get; set; }
+        public byte Level { get; set; }
+        public byte MaxLevel { get; set; }
         public double Size { get; set; }
         public Cost Cost { get; set; } = new Cost();
         public Attribute Durability { get; set; } = new Attribute();
         public Scouting Scouting { get; set; } = new Scouting();
         public bool DestroyTerrainOnBuilt { get; set; } = true;
         public double ConstructionTimeRemaining { get; set; }
+
+        public bool IsFortifying => Status == BuildingStatus.UNDER_CONSTRUCTION && Level > 0;
 
         public Building() : base() { }
         public Building(Building another) : base(another)
@@ -383,7 +564,13 @@ namespace SteelOfStalin.Props.Buildings
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         // public bool IsNeutral() => Owner == null;
-        public bool IsHostile(Player p) => !IsFriendly(p) /*&& !IsNeutral()*/;
+        public bool IsHostile(Player p) => !IsFriendly(p); /*&& !IsNeutral();*/
+
+        public bool CanBeFortified() => Level < MaxLevel && Status == BuildingStatus.ACTIVE;
+        public bool CanBeDemolished() => Level > 0 && Status == BuildingStatus.ACTIVE;
+
+        public Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
+        public string GetDurabilityChangeRecord(double change) => $" d:{change:+#.##;-#.##}=>{Durability} ";
 
         public abstract override object Clone();
     }
@@ -391,6 +578,7 @@ namespace SteelOfStalin.Props.Buildings
 
 namespace SteelOfStalin.Props.Tiles
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TileType
     {
         BOUNDARY,
@@ -413,6 +601,7 @@ namespace SteelOfStalin.Props.Tiles
     }
 
     [Flags]
+    [JsonConverter(typeof(StringEnumFlagConverterFactory))]
     public enum Accessibility
     {
         NONE = 0,
@@ -427,12 +616,15 @@ namespace SteelOfStalin.Props.Tiles
 
     public abstract class Cities : Tile
     {
-        public Player Owner { get; set; }
+        [JsonIgnore] public Player Owner { get; set; }
+        public string OwnerName { get; set; }
         public double Population { get; set; }
         public Attribute ConstructionRange { get; set; } = new Attribute();
+        public Attribute Communication { get; set; } = new Attribute();
         public Resources Production { get; set; } = new Resources();
         public Attribute Durability { get; set; } = new Attribute();
-        public Attribute Morale { get; set; } = new Attribute(250);
+        public Attribute Morale { get; set; } = new Attribute();
+        public bool IsDestroyed => Durability <= 0;
 
         public Cities() : base() { }
         public Cities(Cities another) : base(another)
@@ -445,12 +637,18 @@ namespace SteelOfStalin.Props.Tiles
         public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p) && !IsNeutral();
 
+        public bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
+        public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
+        public bool CanCommunicateWith(Cities c) => this != c && GetStraightLineDistance(c) <= Communication + c.Communication;
+
+        public string GetMoraleChangeRecord(double change) => $" m:{change:+#.##,-#.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale} ";
+
         public abstract override object Clone();
     }
 
+    [JsonConverter(typeof(PropConverter<Tile>))]
     public abstract class Tile : Prop
     {
-        public string Name { get; set; }
         public TileType Type { get; set; }
         public Accessibility Accessibility { get; set; }
         public TerrainModifier TerrainMod { get; set; } = new TerrainModifier();
@@ -459,16 +657,16 @@ namespace SteelOfStalin.Props.Tiles
         public double Height { get; set; }
         public char Symbol { get; set; }
 
-        [JsonIgnore] public bool IsWater => Type == TileType.STREAM || Type == TileType.RIVER || Type == TileType.OCEAN || Type == TileType.SWAMP;
-        [JsonIgnore] public bool IsHill => Type is TileType.HILLOCK || Type is TileType.HILLS || Type is TileType.MOUNTAINS;
-        [JsonIgnore] public bool IsFlatLand => !IsWater && !IsHill && Type != TileType.BOUNDARY;
-        [JsonIgnore] public bool IsCity => Type is TileType.SUBURB || Type is TileType.CITY || Type is TileType.METROPOLIS;
-        [JsonIgnore] public bool HasUnit => Map.Instance.GetUnits(this).Any();
-        [JsonIgnore] public bool HasBuilding => Map.Instance.GetBuildings(this).Any();
-        [JsonIgnore] public bool IsOccupied => HasUnit || HasBuilding;
+        public bool IsWater => Type == TileType.STREAM || Type == TileType.RIVER || Type == TileType.OCEAN || Type == TileType.SWAMP;
+        public bool IsHill => Type is TileType.HILLOCK || Type is TileType.HILLS || Type is TileType.MOUNTAINS;
+        public bool IsFlatLand => !IsWater && !IsHill && Type != TileType.BOUNDARY;
+        public bool IsCity => Type is TileType.SUBURB || Type is TileType.CITY || Type is TileType.METROPOLIS;
+        public bool HasUnit => Map.Instance.GetUnits(this).Any();
+        public bool HasBuilding => Map.Instance.GetBuildings(this).Any();
+        public bool IsOccupied => HasUnit || HasBuilding;
 
         public Tile() : base() { }
-        public Tile(Tile another) : base(another) 
+        public Tile(Tile another) : base(another)
             => (Name, Type, Accessibility, TerrainMod, Height, Symbol)
             = (another.Name, another.Type, another.Accessibility, (TerrainModifier)another.TerrainMod.Clone(), another.Height, another.Symbol);
 
@@ -477,13 +675,13 @@ namespace SteelOfStalin.Props.Tiles
             Parent = parent,
             CubeCoOrds = CubeCoOrds,
             BaseCost = opt == PathfindingOptimization.LEAST_SUPPLIES_COST ? consumption.Supplies.ApplyMod() : consumption.Fuel.ApplyMod(),
-            Weight = IsAerial 
-                        ? 1 
-                        : opt == PathfindingOptimization.LEAST_SUPPLIES_COST 
-                            ? TerrainMod.Supplies.Apply() 
-                            : TerrainMod.Fuel.Apply(),
-            SuppliesCostSoFar = (parent == null ? 0 : parent.SuppliesCostSoFar) + TerrainMod.Supplies.Apply(consumption.Supplies.ApplyMod()),
-            FuelCostSoFar = (parent == null ? 0 : parent.FuelCostSoFar) + TerrainMod.Fuel.Apply(consumption.Fuel.ApplyMod()),
+            Weight = IsAerial
+                        ? 1
+                        : opt == PathfindingOptimization.LEAST_SUPPLIES_COST
+                            ? TerrainMod.Supplies.ApplyTo()
+                            : TerrainMod.Fuel.ApplyTo(),
+            SuppliesCostSoFar = (parent == null ? 0 : parent.SuppliesCostSoFar) + TerrainMod.Supplies.ApplyTo(consumption.Supplies.ApplyMod()),
+            FuelCostSoFar = (parent == null ? 0 : parent.FuelCostSoFar) + TerrainMod.Fuel.ApplyTo(consumption.Fuel.ApplyMod()),
             DistanceSoFar = parent == null ? 0 : parent.DistanceSoFar + 1,
             DistanceToGoal = CubeCoordinates.GetDistance(CubeCoOrds, end.CubeCoOrds)
         };
