@@ -20,6 +20,7 @@ namespace SteelOfStalin
         public IEnumerable<Building> Buildings => Map.Instance.GetBuildings(this);
         public IEnumerable<Cities> Cities => Map.Instance.GetCities(this);
         public List<Player> Allies { get; set; } = new List<Player>();
+        public List<Command> Commands { get; set; } = new List<Command>();
 
         public bool IsReady { get; set; } = false;
         public bool IsDefeated => !Cities.Any(c => c.Durability > 0);
