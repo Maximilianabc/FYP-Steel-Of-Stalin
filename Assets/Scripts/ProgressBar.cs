@@ -9,11 +9,7 @@ public class ProgressBar : MonoBehaviour
     public int maximum;
     public int current;
     public Image fill;
-    private TMPro.TMP_Text text;
-    private void Awake()
-    {
-        text = transform.Find("Text").GetComponent<TMPro.TMP_Text>();
-    }
+    public TMPro.TMP_Text text;
     private void Update()
     {
         UpdateCurrentFill();
@@ -26,7 +22,6 @@ public class ProgressBar : MonoBehaviour
     }
 
     private void UpdateText() {
-        return;
         text.text = $"{current}/{maximum}";    
     }
 
