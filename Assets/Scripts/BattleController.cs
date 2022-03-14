@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SteelOfStalin
@@ -14,7 +13,9 @@ namespace SteelOfStalin
             {
                 Battle.AddComponent<Battle>();
             }
-            Instantiate(Battle);
+            GameObject battleInstance = Instantiate(Battle);
+            battleInstance.name = "battle";
+            Destroy(gameObject);
         }
 
         private void Update()
