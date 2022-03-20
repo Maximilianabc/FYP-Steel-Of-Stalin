@@ -16,7 +16,6 @@
   "Periscope": null,
   "FuelTank": null,
   "AmmoRack": null,
-  "Name": "medium_tank",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -879,6 +878,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "medium_tank",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

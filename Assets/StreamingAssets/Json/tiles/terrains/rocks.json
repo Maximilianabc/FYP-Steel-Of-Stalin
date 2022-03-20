@@ -1,0 +1,36 @@
+{
+  "Type": "ROCKS",
+  "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 2
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": -10
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 10
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 50
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -40
+    }
+  },
+  "Obstruction": 0.6,
+  "AllowConstruction": false,
+  "Height": 2,
+  "Symbol": "O",
+  "Name": "rocks",
+  "MeshName": null,
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

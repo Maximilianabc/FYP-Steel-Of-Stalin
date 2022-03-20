@@ -1,0 +1,36 @@
+{
+  "Type": "MOUNTAINS",
+  "Accessibility": "PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 4
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": -30
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 30
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 150
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -80
+    }
+  },
+  "Obstruction": 1,
+  "AllowConstruction": false,
+  "Height": 4,
+  "Symbol": "M",
+  "Name": "mountains",
+  "MeshName": null,
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

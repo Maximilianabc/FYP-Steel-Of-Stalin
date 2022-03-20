@@ -1,16 +1,16 @@
 using SteelOfStalin.Attributes;
-using SteelOfStalin.Customizables;
-using SteelOfStalin.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.CustomTypes;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 
-namespace SteelOfStalin.Props.Units
+namespace SteelOfStalin.Assets.Props.Units
 {
     public abstract class Ground : Unit
     {
@@ -56,7 +56,7 @@ namespace SteelOfStalin.Props.Units
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land
+namespace SteelOfStalin.Assets.Props.Units.Land
 {
     public abstract class Personnel : Ground
     {
@@ -244,7 +244,7 @@ namespace SteelOfStalin.Props.Units.Land
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land.Personnels
+namespace SteelOfStalin.Assets.Props.Units.Land.Personnels
 {
     // different types of personnel units here, all should inherit Personnel
     public class Militia : Personnel
@@ -293,7 +293,7 @@ namespace SteelOfStalin.Props.Units.Land.Personnels
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land.Artilleries
+namespace SteelOfStalin.Assets.Props.Units.Land.Artilleries
 {
     // different types of artilleries units here, all should inherit Artillery
     public class Portable : Artillery
@@ -352,7 +352,7 @@ namespace SteelOfStalin.Props.Units.Land.Artilleries
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land.Vehicles
+namespace SteelOfStalin.Assets.Props.Units.Land.Vehicles
 {
     // different types of vehicles units here, all should inherit Vehicle
     public class MotorisedInfantry : Vehicle
@@ -423,7 +423,7 @@ namespace SteelOfStalin.Props.Units.Land.Vehicles
     }
 }
 
-namespace SteelOfStalin.Props.Units.Sea
+namespace SteelOfStalin.Assets.Props.Units.Sea
 {
     public abstract class Vessel : Naval
     {
@@ -562,7 +562,7 @@ namespace SteelOfStalin.Props.Units.Sea
     }
 }
 
-namespace SteelOfStalin.Props.Units.Air
+namespace SteelOfStalin.Assets.Props.Units.Air
 {
     public abstract class Plane : Aerial
     {

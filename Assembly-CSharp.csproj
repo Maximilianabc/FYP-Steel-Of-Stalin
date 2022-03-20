@@ -69,12 +69,18 @@
     <Compile Include="Assets\Scripts\Buildings.cs" />
     <Compile Include="Assets\Scripts\Tooltip.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
+    <Compile Include="Assets\Scripts\Assets.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\engines\dummy.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\periscopes\dummy.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\wings\dummy.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\radios\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\sonars\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\StreamingAssets\Json\units\vessels\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
@@ -87,13 +93,21 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\ammo_racks\dummy.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\propellers\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\fuel_tanks\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\suspensions\dummy.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\landing_gears\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\rudders\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\radars\dummy.txt" />
+    <None Include="Assets\StreamingAssets\Json\customizables\modules\torpedo_tubes\dummy.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
   </ItemGroup>
   <ItemGroup>

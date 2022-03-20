@@ -198,7 +198,6 @@
       }
     }
   },
-  "Name": "bunker",
   "OwnerName": null,
   "BuilderLocation": {
     "X": 0,
@@ -757,6 +756,7 @@
   },
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
+  "Name": "bunker",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

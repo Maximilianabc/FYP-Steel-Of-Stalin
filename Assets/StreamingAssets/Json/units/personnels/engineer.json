@@ -23,7 +23,6 @@
       "Value": 0
     }
   },
-  "Name": "engineer",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -886,6 +885,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "engineer",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

@@ -1,0 +1,36 @@
+{
+  "Type": "BOUNDARY",
+  "Accessibility": "NONE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "MULTIPLE",
+      "Value": 0
+    },
+    "Concealment": {
+      "Type": "MULTIPLE",
+      "Value": 0
+    },
+    "Supplies": {
+      "Type": "MULTIPLE",
+      "Value": 99999
+    },
+    "Fuel": {
+      "Type": "MULTIPLE",
+      "Value": 99999
+    },
+    "Mobility": {
+      "Type": "MULTIPLE",
+      "Value": 0
+    }
+  },
+  "Obstruction": 79228162514264337593543950335,
+  "AllowConstruction": false,
+  "Height": 79228162514264337593543950335,
+  "Symbol": "B",
+  "Name": "boundary",
+  "MeshName": null,
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

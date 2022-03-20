@@ -198,7 +198,6 @@
       }
     }
   },
-  "Name": "minefield",
   "OwnerName": null,
   "BuilderLocation": {
     "X": 0,
@@ -757,6 +756,7 @@
   },
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
+  "Name": "minefield",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

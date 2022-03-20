@@ -1,12 +1,12 @@
 using SteelOfStalin.Attributes;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Resources = SteelOfStalin.Attributes.Resources;
 
-namespace SteelOfStalin.Props.Buildings
+namespace SteelOfStalin.Assets.Props.Buildings
 {
     public abstract class UnitBuilding : Building
     {
@@ -78,7 +78,7 @@ namespace SteelOfStalin.Props.Buildings
     }
 }
 
-namespace SteelOfStalin.Props.Buildings.Units
+namespace SteelOfStalin.Assets.Props.Buildings.Units
 {
     public sealed class Barracks : UnitBuilding
     {
@@ -106,7 +106,7 @@ namespace SteelOfStalin.Props.Buildings.Units
     }
 }
 
-namespace SteelOfStalin.Props.Buildings.Productions
+namespace SteelOfStalin.Assets.Props.Buildings.Productions
 {
     public sealed class Foundry : ProductionBuilding
     {
@@ -148,7 +148,7 @@ namespace SteelOfStalin.Props.Buildings.Productions
     }
 }
 
-namespace SteelOfStalin.Props.Buildings.Infrastructures
+namespace SteelOfStalin.Assets.Props.Buildings.Infrastructures
 {
     public sealed class Road : Infrastructure
     {
@@ -182,7 +182,7 @@ namespace SteelOfStalin.Props.Buildings.Infrastructures
     }
 }
 
-namespace SteelOfStalin.Props.Buildings.Transmissions
+namespace SteelOfStalin.Assets.Props.Buildings.Transmissions
 {
     public sealed class Watchtower : TransmissionBuilding
     {
@@ -210,7 +210,7 @@ namespace SteelOfStalin.Props.Buildings.Transmissions
     }
 }
 
-namespace SteelOfStalin.Props.Buildings.Defensives
+namespace SteelOfStalin.Assets.Props.Buildings.Defensives
 {
     public sealed class Trench : DefensiveBuilding
     {

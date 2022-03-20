@@ -1,0 +1,36 @@
+{
+  "Type": "RIVER",
+  "Accessibility": "VESSEL | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 1
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -10
+    }
+  },
+  "Obstruction": 0,
+  "AllowConstruction": false,
+  "Height": -2,
+  "Symbol": "R",
+  "Name": "river",
+  "MeshName": null,
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}
