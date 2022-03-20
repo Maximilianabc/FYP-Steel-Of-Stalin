@@ -1,14 +1,14 @@
 ﻿using SteelOfStalin.Attributes;
-using SteelOfStalin.Customizables;
-using SteelOfStalin.Customizables.Guns;
-using SteelOfStalin.Customizables.Modules;
-using SteelOfStalin.Customizables.Shells;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Customizables.Modules.Guns;
+using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Shells;
 using SteelOfStalin.Flow;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
-using SteelOfStalin.Props.Units.Land;
-using SteelOfStalin.Props.Units.Sea;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Props.Units.Land;
+using SteelOfStalin.Assets.Props.Units.Sea;
 using SteelOfStalin.Util;
 using System;
 using System.Collections;
@@ -22,8 +22,11 @@ using UnityEngine;
 using static SteelOfStalin.Util.Utilities;
 using static SteelOfStalin.DataIO.DataUtilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
-using Plane = SteelOfStalin.Props.Units.Air.Plane;
+using Plane = SteelOfStalin.Assets.Props.Units.Air.Plane;
 using SteelOfStalin.CustomTypes;
+using SteelOfStalin.Assets;
+using System.Reflection;
+using Module = SteelOfStalin.Assets.Customizables.Module;
 
 namespace SteelOfStalin.Util
 {
@@ -151,7 +154,20 @@ namespace SteelOfStalin.DataIO
         public abstract void Load();
         public abstract IEnumerable<T> All { get; }
         public T this[string name] => All.Find(a => a.Name == name);
-        protected FileInfo[] GetJsonFiles(string path) => new DirectoryInfo(path).GetFiles("*.json");
+        protected FileInfo[] GetJsonFiles(string path) => new DirectoryInfo(path).GetFiles("*.json", SearchOption.AllDirectories);
+        protected void PrintEmptyListNames()
+        {
+            IEnumerable<PropertyInfo> lists = GetType().GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(List<>));
+            foreach (PropertyInfo info in lists)
+            {
+                object list = GetType().InvokeMember(info.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty, null, this, null);
+                int count = (int)list.GetType().GetProperty("Count").GetValue(list);
+                if (count == 0)
+                {
+                    Debug.LogWarning($"{info.Name} is empty");
+                }
+            }
+        }
     }
 
     public sealed class UnitData : Data<Unit>
@@ -165,51 +181,40 @@ namespace SteelOfStalin.DataIO
 
         public override IEnumerable<Unit> All => Utilities.CombineAll<Unit>(Personnels, Artilleries, Vehicles, Vessels, Planes);
 
+        public Unit GetNewUnit(string name) => (Unit)All.Find(u => u.Name == name).Clone();
+
         public override void Load()
         {
-            string[] subfolders = new string[] { "personnels", "artilleries", "vehicles", "vessels", "planes" };
-            foreach (string subfolder in subfolders)
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
-                string subfolder_path = $@"{JsonFolderPath}\{subfolder}";
-                string sub_type = subfolder == "planes" ? "Aerial" : subfolder == "vessels" ? "Sea" : "Land";
-                string base_type_name = $"SteelOfStalin.Props.Units.{sub_type}.{ToPascalCase(subfolder)}";
-                foreach (FileInfo file in GetJsonFiles(subfolder_path))
+                string json = File.ReadAllText(f.FullName);
+                Unit u = JsonSerializer.Deserialize<Unit>(json, Options);
+                if (u is Personnel p)
                 {
-                    string proper_type_name = $"{base_type_name}.{ToPascalCase(Path.GetFileNameWithoutExtension(file.Name))}";
-                    Type type = Type.GetType(proper_type_name);
-                    if (type == null)
-                    {
-                        Debug.LogError($"No type is with proper name {proper_type_name}");
-                        continue;
-                    }
-                    string json = File.ReadAllText($@"{subfolder_path}\{file.Name}");
-                    object o = JsonSerializer.Deserialize<Unit>(json, Options);
-                    if (o is Personnel p)
-                    {
-                        Personnels.Add(p);
-                    }
-                    else if (o is Artillery a)
-                    {
-                        Artilleries.Add(a);
-                    }
-                    else if (o is Vehicle v)
-                    {
-                        Vehicles.Add(v);
-                    }
-                    else if (o is Vessel e)
-                    {
-                        Vessels.Add(e);
-                    }
-                    else if (o is Plane l)
-                    {
-                        Planes.Add(l);
-                    }
-                    else
-                    {
-                        Debug.LogError($"Unknown unit type {o.GetType().Name}");
-                    }
+                    Personnels.Add(p);
+                }
+                else if (u is Artillery a)
+                {
+                    Artilleries.Add(a);
+                }
+                else if (u is Vehicle v)
+                {
+                    Vehicles.Add(v);
+                }
+                else if (u is Vessel e)
+                {
+                    Vessels.Add(e);
+                }
+                else if (u is Plane l)
+                {
+                    Planes.Add(l);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown unit type {u.GetType().Name}");
                 }
             }
+            PrintEmptyListNames();
             Debug.Log("All units data loaded.");
         }
     }
@@ -225,52 +230,48 @@ namespace SteelOfStalin.DataIO
 
         public override IEnumerable<Building> All => Utilities.CombineAll<Building>(Units, Resources, Infrastructures, Transmissions, Defensives);
 
+        public Building GetNewBuilding(string name) => (Building)All.Find(b => b.Name == name).Clone();
+
         public override void Load()
         {
-            string[] subfolders = new string[] { "productions", "units", "infrastructures", "defensives", "transmissions" };
-            foreach (string subfolder in subfolders)
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
-                string subfolder_path = $@"{JsonFolderPath}\{subfolder}";
-                string base_type_name = $"SteelOfStalin.Props.Buildings.{ToPascalCase(subfolder)}";
-                foreach (FileInfo file in GetJsonFiles(subfolder_path))
+                string json = File.ReadAllText(f.FullName);
+                object b = JsonSerializer.Deserialize<Building>(json, Options);
+                if (b is UnitBuilding u)
                 {
-                    string proper_type_name = $"{base_type_name}.{ToPascalCase(Path.GetFileNameWithoutExtension(file.Name))}";
-                    Type type = Type.GetType(proper_type_name);
-                    if (type == null)
-                    {
-                        Debug.LogError($"No type is with proper name {proper_type_name}");
-                        return;
-                    }
-                    string json = File.ReadAllText($@"{subfolder_path}\{file.Name}");
-                    object o = JsonSerializer.Deserialize(json, type, Options);
-                    if (o is UnitBuilding u)
-                    {
-                        Units.Add(u);
-                    }
-                    else if (o is ProductionBuilding r)
-                    {
-                        Resources.Add(r);
-                    }
-                    else if (o is Infrastructure i)
-                    {
-                        Infrastructures.Add(i);
-                    }
-                    else if (o is TransmissionBuilding t)
-                    {
-                        Transmissions.Add(t);
-                    }
-                    else if (o is DefensiveBuilding d)
-                    {
-                        Defensives.Add(d);
-                    }
+                    Units.Add(u);
+                }
+                else if (b is ProductionBuilding r)
+                {
+                    Resources.Add(r);
+                }
+                else if (b is Infrastructure i)
+                {
+                    Infrastructures.Add(i);
+                }
+                else if (b is TransmissionBuilding t)
+                {
+                    Transmissions.Add(t);
+                }
+                else if (b is DefensiveBuilding d)
+                {
+                    Defensives.Add(d);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown building type {b.GetType().Name}");
                 }
             }
+            PrintEmptyListNames();
             Debug.Log("All buildings data loaded.");
         }
     }
 
     public sealed class TileData : Data<Tile>
     {
+        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\tiles";
+
         public List<Tile> Terrains { get; set; } = new List<Tile>();
         public List<Cities> Cities { get; set; } = new List<Cities>();
 
@@ -282,32 +283,74 @@ namespace SteelOfStalin.DataIO
 
         public override void Load()
         {
-            Terrains = DeserializeJsonWithAbstractType<Tile>(@"Json\tile", "Name", "SteelOfStalin.Props.Tiles").ToList();
-            Cities = DeserializeJsonWithAbstractType<Cities>(@"Json\cities", "Name", "SteelOfStalin.Props.Tiles").ToList();
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
+            {
+                string json = File.ReadAllText(f.FullName);
+                object t = JsonSerializer.Deserialize<Tile>(json, Options);
+                if (t.GetType().IsSubclassOf(typeof(Cities)))
+                {
+                    Cities.Add((Cities)t);
+                }
+                else if (t is Tile tile)
+                {
+                    Terrains.Add(tile);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown tile type {t.GetType().Name}");
+                }
+            }
+            PrintEmptyListNames();
             Debug.Log("All tiles data loaded.");
         }
     }
 
     public sealed class CustomizableData : Data<Customizable>
     {
+        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\customizables";
         public List<Firearm> Firearms { get; set; } = new List<Firearm>();
         public ModuleData Modules { get; set; } = new ModuleData();
         public List<Shell> Shells { get; set; } = new List<Shell>();
 
         public override IEnumerable<Customizable> All => Utilities.CombineAll<Customizable>(Firearms, Modules.All, Shells);
 
+        public Customizable GetNewCustomizable(string name) => (Customizable)All.Find(c => c.Name == name).Clone();
         public Firearm GetNewFirearm(string name) => (Firearm)Firearms.Find(f => f.Name == name).Clone();
         public Module GetNewModule(string name) => (Module)Modules.All.Find(m => m.Name == name).Clone();
         public Shell GetNewShell(string name) => (Shell)Shells.Find(s => s.Name == name).Clone();
 
         public override void Load()
         {
-
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
+            {
+                string json = File.ReadAllText(f.FullName); 
+                Customizable c = JsonSerializer.Deserialize<Customizable>(json, Options);
+                if (c is Module m)
+                {
+                    Modules.Add(m);
+                }
+                else if (c is Firearm fire)
+                {
+                    Firearms.Add(fire);
+                }
+                else if (c is Shell s)
+                {
+                    Shells.Add(s);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown customizable type {c.GetType().Name}");
+                }
+            }
+            PrintEmptyListNames();
+            Debug.Log("All customizables data loaded.");
         }
     }
 
     public sealed class ModuleData : Data<Module>
     {
+        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\customizables\modules";
+
         public GunData Guns { get; set; } = new GunData();
         public List<HeavyMachineGun> HeavyMachineGuns { get; set; } = new List<HeavyMachineGun>();
         public List<Engine> Engines { get; set; } = new List<Engine>();
@@ -330,6 +373,74 @@ namespace SteelOfStalin.DataIO
         {
             
         }
+
+        public void Add(Module m)
+        {
+            if (m is Gun g)
+            {
+                Guns.Add(g);
+            }
+            else if (m is HeavyMachineGun h)
+            {
+                HeavyMachineGuns.Add(h);
+            }
+            else if (m is Engine e)
+            {
+                Engines.Add(e);
+            }
+            else if (m is Suspension s)
+            {
+                Suspensions.Add(s);
+            }
+            else if (m is Radio r)
+            {
+                Radios.Add(r);
+            }
+            else if (m is Periscope p)
+            {
+                Periscopes.Add(p);
+            }
+            else if (m is FuelTank f)
+            {
+                FuelTanks.Add(f);
+            }
+            else if (m is AmmoRack a)
+            {
+                AmmoRacks.Add(a);
+            }
+            else if (m is TorpedoTubes t)
+            {
+                TorpedoTubes.Add(t);
+            }
+            else if (m is Sonar so)
+            {
+                Sonars.Add(so);
+            }
+            else if (m is Propeller pr)
+            {
+                Propellers.Add(pr);
+            }
+            else if (m is Rudder ru)
+            {
+                Rudders.Add(ru);
+            }
+            else if (m is Wings w)
+            {
+                Wings.Add(w);
+            }
+            else if (m is LandingGear l)
+            {
+                LandingGears.Add(l);
+            }
+            else if (m is Radar ra)
+            {
+                Radars.Add(ra);
+            }
+            else
+            {
+                Debug.LogError($"Unknown module type {m.GetType().Name}");
+            }
+        }
     }
 
     public sealed class GunData : Data<Gun>
@@ -343,6 +454,26 @@ namespace SteelOfStalin.DataIO
         public override void Load()
         {
             
+        }
+
+        public void Add(Gun g)
+        {
+            if (g is Cannon c)
+            {
+                Cannons.Add(c);
+            }
+            else if (g is Howitzer h)
+            {
+                Howitzers.Add(h);
+            }
+            else if (g is AutoCannon a)
+            {
+                AutoCannons.Add(a);
+            }
+            else
+            {
+                Debug.LogError($"Unknown gun type {g.GetType().Name}");
+            }
         }
     }
 

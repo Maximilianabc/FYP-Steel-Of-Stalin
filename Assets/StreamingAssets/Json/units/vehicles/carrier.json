@@ -104,7 +104,6 @@
   "Periscope": null,
   "FuelTank": null,
   "AmmoRack": null,
-  "Name": "carrier",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -967,6 +966,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "carrier",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

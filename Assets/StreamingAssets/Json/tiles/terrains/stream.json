@@ -1,0 +1,36 @@
+{
+  "Type": "STREAM",
+  "Accessibility": "VESSEL | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -20
+    }
+  },
+  "Obstruction": 0,
+  "AllowConstruction": false,
+  "Height": -1,
+  "Symbol": "S",
+  "Name": "stream",
+  "MeshName": null,
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

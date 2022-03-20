@@ -1,6 +1,6 @@
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;

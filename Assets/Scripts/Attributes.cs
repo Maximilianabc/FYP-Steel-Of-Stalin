@@ -1,4 +1,4 @@
-using SteelOfStalin.Props.Units;
+using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Util;
 using System;
 using System.Collections.Generic;

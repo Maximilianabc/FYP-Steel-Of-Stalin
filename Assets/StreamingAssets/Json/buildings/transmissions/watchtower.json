@@ -6,7 +6,6 @@
       "Value": 0.5
     }
   },
-  "Name": "watchtower",
   "OwnerName": null,
   "BuilderLocation": {
     "X": 0,
@@ -565,6 +564,7 @@
   },
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
+  "Name": "watchtower",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

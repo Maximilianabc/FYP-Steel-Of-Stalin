@@ -10,7 +10,6 @@
   ],
   "Gun": null,
   "Radio": null,
-  "Name": "anti_tank",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -873,6 +872,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "anti_tank",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

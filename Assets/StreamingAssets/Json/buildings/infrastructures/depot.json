@@ -1,5 +1,4 @@
 {
-  "Name": "depot",
   "OwnerName": null,
   "BuilderLocation": {
     "X": 0,
@@ -558,6 +557,7 @@
   },
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
+  "Name": "depot",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

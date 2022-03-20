@@ -13,7 +13,6 @@
   "Periscope": null,
   "FuelTank": null,
   "AmmoRack": null,
-  "Name": "assault_gun",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -876,6 +875,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "assault_gun",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

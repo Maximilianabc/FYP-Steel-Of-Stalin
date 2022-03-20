@@ -12,7 +12,6 @@
   ],
   "Gun": null,
   "Radio": null,
-  "Name": "heavy_support",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -875,6 +874,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "heavy_support",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

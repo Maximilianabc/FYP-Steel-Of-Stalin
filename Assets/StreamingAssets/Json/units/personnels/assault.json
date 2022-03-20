@@ -19,7 +19,6 @@
       "Value": 0
     }
   },
-  "Name": "assault",
   "OwnerName": null,
   "Status": "NONE",
   "Cost": {
@@ -882,6 +881,7 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
+  "Name": "assault",
   "MeshName": null,
   "CoOrds": {
     "X": 0,

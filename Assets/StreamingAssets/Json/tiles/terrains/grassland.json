@@ -1,0 +1,36 @@
+{
+  "Type": "GRASSLAND",
+  "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 1
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": 25
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": -10
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 10
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -5
+    }
+  },
+  "Obstruction": 0.1,
+  "AllowConstruction": true,
+  "Height": 1,
+  "Symbol": "G",
+  "Name": "grassland",
+  "MeshName": null,
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

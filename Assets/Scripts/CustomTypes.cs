@@ -1,7 +1,8 @@
-﻿using SteelOfStalin.Props;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
+﻿using SteelOfStalin.Assets;
+using SteelOfStalin.Assets.Props;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Util;
 using System;
 using System.Collections;
@@ -165,12 +166,12 @@ namespace SteelOfStalin.CustomTypes
         public IEnumerable<T> GetIsloatedVertices() => GetVerticesWithNoInput().Intersect(GetVerticesWithNoOutput());
     }
 
-    public class PropListConverterFactory : JsonConverterFactory
+    public class AssetListConverterFactory : JsonConverterFactory
     {
         public override bool CanConvert(Type typeToConvert)
             => typeToConvert.IsGenericType
             && typeToConvert.GetGenericTypeDefinition() == typeof(List<>)
-            && typeToConvert.GetGenericArguments()[0].IsSubclassOf(typeof(Prop));
+            && typeToConvert.GetGenericArguments()[0].IsSubclassOf(typeof(INamedAsset));
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
             (JsonConverter)Activator.CreateInstance(
@@ -181,15 +182,15 @@ namespace SteelOfStalin.CustomTypes
                 culture: null);
     }
 
-    public class PropListConverter<T> : JsonConverter<List<T>> where T : Prop
+    public class AssetListConverter<T> : JsonConverter<List<T>> where T : INamedAsset
     {
         private readonly Type m_propType;
-        private readonly PropConverter<T> m_propConverter;
+        private readonly AssetConverter<T> m_propConverter;
 
-        public PropListConverter()
+        public AssetListConverter()
         {
             m_propType = typeof(T);
-            m_propConverter = new PropConverter<T>();
+            m_propConverter = new AssetConverter<T>();
         }
 
         public override List<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -222,16 +223,16 @@ namespace SteelOfStalin.CustomTypes
         }
     }
 
-    public class PropConverter<T> : JsonConverter<T> where T : Prop
+    public class AssetConverter<T> : JsonConverter<T> where T : INamedAsset
     {
         private readonly IEnumerable<Type> m_Types;
 
-        public PropConverter()
+        public AssetConverter()
         {
-            m_Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => !string.IsNullOrEmpty(t.Namespace) && t.Namespace.StartsWith($"SteelOfStalin.Props.{typeof(T).Name}s"));
+            m_Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => !string.IsNullOrEmpty(t.Namespace) && t.FullName.StartsWith(typeof(T).Namespace));
             if (!m_Types.Any())
             {
-                throw new Exception($"No type name contains {typeof(T).Name}s");
+                throw new Exception($"No type name starting with {typeof(T).Namespace}");
             }
         }
 
@@ -280,14 +281,16 @@ namespace SteelOfStalin.CustomTypes
                 if (property.Value != null)
                 {
                     PropertyInfo info = child_type.GetProperty(property.Key);
-                    if (info != null)
-                    {
-                        info.SetValue(t, ((JsonElement)property.Value).Deserialize(info.PropertyType, options));
-                    }
-                    else
+                    if (info == null)
                     {
                         throw new JsonException($"There is no properties with name {property.Key} in type {child_type.Name}");
                     }
+                    else if (info.GetSetMethod() == null)
+                    {
+                        Debug.LogWarning($"The property {info.Name} is readonly");
+                        continue;
+                    }
+                    info.SetValue(t, ((JsonElement)property.Value).Deserialize(info.PropertyType, options));
                 }
             }
             return t;

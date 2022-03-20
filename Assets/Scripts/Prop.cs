@@ -1,10 +1,11 @@
 using SteelOfStalin.Attributes;
-using SteelOfStalin.Customizables;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.CustomTypes;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
-using SteelOfStalin.Props.Units.Land;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Props.Units.Land;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 using Resources = SteelOfStalin.Attributes.Resources;
 
-namespace SteelOfStalin.Props
+namespace SteelOfStalin.Assets.Props
 {
     public abstract class Prop : ICloneable, IEquatable<Prop>, INamedAsset
     {
@@ -60,11 +61,12 @@ namespace SteelOfStalin.Props
             MeshName = gameObject.name;
             //UnityEngine.Object.Instantiate
         }
-        public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GameObject.Find(MeshName));
+        public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GetObjectOnScene());
+        public virtual GameObject GetObjectOnScene() => GameObject.Find(MeshName);
 
         public virtual int GetDistance(Prop prop) => CubeCoordinates.GetDistance(CubeCoOrds, prop.CubeCoOrds);
         public virtual double GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
-        public Vector3 GetOnScreenCoordinates() => new Vector3(); // TODO
+        public Vector3 GetOnScreenCoordinates() => GetObjectOnScene().transform.position;
 
         public virtual object Clone()
         {
@@ -86,7 +88,7 @@ namespace SteelOfStalin.Props
 
         public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
 
-        public Coordinates GetCoordinates() => new Coordinates(); // TODO
+        public Coordinates GetCoordinates() => Map.Instance.GetProp(gameObject).CoOrds;
 
         public virtual void Start()
         {
@@ -113,7 +115,7 @@ namespace SteelOfStalin.Props
     }
 }
 
-namespace SteelOfStalin.Props.Units
+namespace SteelOfStalin.Assets.Props.Units
 {
     [Flags]
     [JsonConverter(typeof(StringEnumFlagConverterFactory))]
@@ -138,7 +140,6 @@ namespace SteelOfStalin.Props.Units
 
     [Flags]
     [JsonConverter(typeof(StringEnumFlagConverterFactory))]
-
     public enum AvailableMovementCommands
     {
         NONE = 0,
@@ -150,6 +151,7 @@ namespace SteelOfStalin.Props.Units
         LAND = 1 << 5,
         ALL = ~0
     }
+
     [Flags]
     [JsonConverter(typeof(StringEnumFlagConverterFactory))]
     public enum AvailableFiringCommands
@@ -162,6 +164,7 @@ namespace SteelOfStalin.Props.Units
         BOMBARD = 1 << 4,
         ALL = ~0
     }
+
     [Flags]
     [JsonConverter(typeof(StringEnumFlagConverterFactory))]
     public enum AvailableLogisticsCommands
@@ -241,7 +244,7 @@ namespace SteelOfStalin.Props.Units
         RESUPPLY = 1 << 2,
     }
 
-    [JsonConverter(typeof(PropConverter<Unit>))]
+    [JsonConverter(typeof(AssetConverter<Unit>))]
     public abstract class Unit : Prop, ICloneable, IEquatable<Unit>
     {
         public UnitStatus Status { get; set; }
@@ -431,6 +434,7 @@ namespace SteelOfStalin.Props.Units
 
         public abstract IEnumerable<IOffensiveCustomizable> GetWeapons();
         public abstract IEnumerable<Module> GetModules();
+        public IEnumerable<T> GetModules<T>() where T : Module => GetModules()?.OfType<T>();
         public virtual IEnumerable<Module> GetRepairableModules() => GetModules().Where(m => m.Integrity < Game.CustomizableData.Modules[m.Name].Integrity);
         public abstract Modifier GetConcealmentPenaltyMove();
 
@@ -525,7 +529,7 @@ namespace SteelOfStalin.Props.Units
     }
 }
 
-namespace SteelOfStalin.Props.Buildings
+namespace SteelOfStalin.Assets.Props.Buildings
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum BuildingStatus
@@ -537,7 +541,7 @@ namespace SteelOfStalin.Props.Buildings
     }
 
     // TODO FUT Impl. add toggle for accessibility to allies of buildings (e.g. allow ally planes land on own airfield etc.)
-    [JsonConverter(typeof(PropConverter<Building>))]
+    [JsonConverter(typeof(AssetConverter<Building>))]
     public abstract class Building : Prop, ICloneable
     {
         [JsonIgnore] public Player Owner { get; set; }
@@ -576,7 +580,7 @@ namespace SteelOfStalin.Props.Buildings
     }
 }
 
-namespace SteelOfStalin.Props.Tiles
+namespace SteelOfStalin.Assets.Props.Tiles
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TileType
@@ -646,7 +650,7 @@ namespace SteelOfStalin.Props.Tiles
         public abstract override object Clone();
     }
 
-    [JsonConverter(typeof(PropConverter<Tile>))]
+    [JsonConverter(typeof(AssetConverter<Tile>))]
     public abstract class Tile : Prop
     {
         public TileType Type { get; set; }
