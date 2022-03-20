@@ -28,6 +28,11 @@ public class UIUtil : MonoBehaviour
     //Only for testing 
     public void testfunction() {
         DontDestroyOnLoad(transform.parent.gameObject);
+        //SteelOfStalin.Battle battleInstance=GameObject.Find("battle").GetComponent<SteelOfStalin.Battle>();
+        //battleInstance.Map.AddUnit(new SteelOfStalin.Props.Units.Land.Personnels.Infantry());
+        //Debug.Log(battleInstance.Map.GetUnits().ToString());
+        Debug.Log(SteelOfStalin.Battle.Instance != null);
+        
     }
     public void testfunction2() { 
         
