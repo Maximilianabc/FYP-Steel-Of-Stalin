@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{D8DE209A-782F-D18C-2937-D12756B6B870}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -57,19 +58,23 @@
     <Compile Include="Assets\Scripts\Units.cs" />
     <Compile Include="Assets\Scripts\Customizables.cs" />
     <Compile Include="Assets\Scripts\CustomTypes.cs" />
-    <Compile Include="Assets\Scripts\Resize.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Prop.cs" />
     <Compile Include="Assets\Scripts\Attributes.cs" />
     <Compile Include="Assets\Scripts\Command.cs" />
-    <Compile Include="Assets\Scripts\ProgressBar.cs" />
     <Compile Include="Assets\Scripts\Util.cs" />
-    <Compile Include="Assets\Scripts\UnitPanel.cs" />
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\Buildings.cs" />
-    <Compile Include="Assets\Scripts\Tooltip.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\Assets.cs" />
+	<Compile Include="Assets\UI\Scripts\FullscreenToggle.cs" />
+	<Compile Include="Assets\UI\Scripts\ProgressBar.cs" />
+	<Compile Include="Assets\UI\Scripts\Resize.cs" />
+	<Compile Include="Assets\UI\Scripts\ResolutionDropdown.cs" />
+	<Compile Include="Assets\UI\Scripts\Tooltip.cs" />
+	<Compile Include="Assets\UI\Scripts\UIUtil.cs" />
+	<Compile Include="Assets\UI\Scripts\UnitPanel.cs" />
+	<Compile Include="Assets\UI\Scripts\VolumeSlider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
