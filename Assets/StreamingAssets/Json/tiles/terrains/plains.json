@@ -28,7 +28,7 @@
   "Height": 1,
   "Symbol": "P",
   "Name": "plains",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

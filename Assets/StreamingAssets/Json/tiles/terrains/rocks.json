@@ -28,7 +28,7 @@
   "Height": 2,
   "Symbol": "O",
   "Name": "rocks",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

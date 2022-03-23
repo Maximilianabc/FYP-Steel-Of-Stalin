@@ -6,7 +6,7 @@
       "Value": 0.5
     }
   },
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -565,7 +565,7 @@
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
   "Name": "radar_tower",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

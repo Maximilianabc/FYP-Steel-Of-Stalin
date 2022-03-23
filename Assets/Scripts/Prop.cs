@@ -16,27 +16,22 @@ using UnityEngine.SceneManagement;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 using Resources = SteelOfStalin.Attributes.Resources;
+using SteelOfStalin.Util;
 
 namespace SteelOfStalin.Assets.Props
 {
     public abstract class Prop : ICloneable, IEquatable<Prop>, INamedAsset
     {
-        public Coordinates CoOrds { get; set; }
-        public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
         public string Name { get; set; }
         public string MeshName { get; set; }
+        public Coordinates CoOrds { get; set; }
+        public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
 
         public Prop() { }
-        public Prop(Prop another) => CoOrds = new Coordinates(another.CoOrds);
+        public Prop(Prop another) => (Name, MeshName, CoOrds) = (another.Name, another.MeshName, new Coordinates(another.CoOrds));
 
         // use CoOrds.ToString() and CubeCoOrds.ToString() directly for printing coords and cube coords
-        public string PrintMembers()
-        {
-            string sep = Environment.NewLine;
-            List<string> line = new List<string>() { $"{GetType().Name}" };
-            GetType().GetProperties().ToList().ForEach(p => line.Add($"{p.Name}\t\t:{p.GetValue(this)}"));
-            return string.Join(sep, line);
-        }
+        public string PrintMembers() => Utilities.PrintMembers(this);
 
         public virtual void AddToScene()
         {
@@ -65,7 +60,7 @@ namespace SteelOfStalin.Assets.Props
         public virtual GameObject GetObjectOnScene() => GameObject.Find(MeshName);
 
         public virtual int GetDistance(Prop prop) => CubeCoordinates.GetDistance(CubeCoOrds, prop.CubeCoOrds);
-        public virtual double GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
+        public virtual decimal GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
         public Vector3 GetOnScreenCoordinates() => GetObjectOnScene().transform.position;
 
         public virtual object Clone()
@@ -74,7 +69,7 @@ namespace SteelOfStalin.Assets.Props
             copy.CoOrds = (Coordinates)CoOrds.Clone();
             return copy;
         }
-        public bool Equals(Prop other) => !string.IsNullOrEmpty(MeshName) && MeshName == other.MeshName;
+        public virtual bool Equals(Prop other) => !string.IsNullOrEmpty(MeshName) && MeshName == other.MeshName;
         public override string ToString() => $"{Name} ({CoOrds})";
     }
 
@@ -272,9 +267,9 @@ namespace SteelOfStalin.Assets.Props.Units
         public AutoCommands AutoCommands { get; set; } = AutoCommands.NONE;
         public List<Tile> AutoNavigationPath { get; set; } = new List<Tile>();
 
-        public double CurrentSuppressionLevel { get; set; } = 0;
+        public decimal CurrentSuppressionLevel { get; set; } = 0;
         public int ConsecutiveSuppressedRound { get; set; } = 0;
-        public double TrainingTimeRemaining { get; set; } = 0;
+        public decimal TrainingTimeRemaining { get; set; } = 0;
 
         public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
         public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
@@ -292,16 +287,34 @@ namespace SteelOfStalin.Assets.Props.Units
         // Parameterless constructors are used for (de)serialization
         public Unit() : base() { }
         public Unit(Unit another) : base(another)
-            => (Owner, Cost, Maneuverability, Defense, Consumption, Carrying, Capacity, Scouting, Morale)
+            => (Owner, OwnerName, Status, Cost, Maneuverability, Defense, Consumption, Carrying, Capacity, Scouting, Morale, UnitsInSight, UnitsUnknown, BuildingsInSight, 
+                CommandAssigned, AvailableMovementCommands, AvailableFiringCommands, AvailableLogisticsCommands, AvailableConstructionCommands, AvailableMiscCommands, AutoCommands, 
+                AutoNavigationPath, CurrentSuppressionLevel, ConsecutiveSuppressedRound, TrainingTimeRemaining)
             = (another.Owner,
-                (Cost)another.Cost.Clone(),
-                (Maneuverability)another.Maneuverability.Clone(),
-                (Defense)another.Defense.Clone(),
-                (Resources)another.Consumption.Clone(),
-                (Resources)another.Carrying.Clone(),
-                (Resources)another.Capacity.Clone(),
-                (Scouting)another.Scouting.Clone(),
-                (Attribute)another.Morale.Clone());
+               another.OwnerName,
+               another.Status,
+               (Cost)another.Cost.Clone(),
+               (Maneuverability)another.Maneuverability.Clone(),
+               (Defense)another.Defense.Clone(),
+               (Resources)another.Consumption.Clone(),
+               (Resources)another.Carrying.Clone(),
+               (Resources)another.Capacity.Clone(),
+               (Scouting)another.Scouting.Clone(),
+               (Attribute)another.Morale.Clone(),
+                new List<Unit>(another.UnitsInSight),
+                new List<Unit>(another.UnitsUnknown),
+                new List<Building>(another.BuildingsInSight),
+                another.CommandAssigned,
+                another.AvailableMovementCommands,
+                another.AvailableFiringCommands,
+                another.AvailableLogisticsCommands,
+                another.AvailableConstructionCommands,
+                another.AvailableMiscCommands,
+                another.AutoCommands,
+                new List<Tile>(another.AutoNavigationPath),
+                another.CurrentSuppressionLevel,
+                another.ConsecutiveSuppressedRound,
+                another.TrainingTimeRemaining);
 
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
         public virtual bool CanAccessTile(Tile t)
@@ -375,9 +388,9 @@ namespace SteelOfStalin.Assets.Props.Units
             List<WeightedTile> active = new List<WeightedTile>();
             List<WeightedTile> visited = new List<WeightedTile>();
             List<Tile> path = new List<Tile>();
-            Func<WeightedTile, double> sort =
+            Func<WeightedTile, decimal> sort =
                 opt == PathfindingOptimization.LEAST_SUPPLIES_COST
-                ? new Func<WeightedTile, double>(w => w.SuppliesCostDistance)
+                ? new Func<WeightedTile, decimal>(w => w.SuppliesCostDistance)
                 : w => w.FuelCostDistance;
 
             active.Add(w_start);
@@ -467,20 +480,20 @@ namespace SteelOfStalin.Assets.Props.Units
         public IEnumerable<Building> GetHostileBuildingsInReconRange() => GetHostileBuildingsInRange(GetReconRange());
 
         public Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
-        public double GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.ApplyTo(Consumption.Supplies.ApplyMod());
-        public double GetSuppliesRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
-        public double GetFuelRequired(Tile t) => t.TerrainMod.Fuel.ApplyTo(Consumption.Fuel.ApplyMod());
-        public double GetFuelRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
+        public decimal GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.ApplyTo(Consumption.Supplies.ApplyMod());
+        public decimal GetSuppliesRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
+        public decimal GetFuelRequired(Tile t) => t.TerrainMod.Fuel.ApplyTo(Consumption.Fuel.ApplyMod());
+        public decimal GetFuelRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
 
-        public string GetResourcesChangeRecord(string res, double change) => res switch
+        public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
-            "Money" => $" m:{change:+#.##;-#.##}=>{Carrying.Money}/{Capacity.Money} ",
-            "Steel'" => $" t:{change:+#.##;-#.##}=>{Carrying.Steel}/{Capacity.Steel} ",
-            "Supplies" => $" s:{change:+#.##;-#.##}=>{Carrying.Supplies}/{Capacity.Supplies} ",
-            "Cartridges" => $" c:{change:+#.##;-#.##}=>{Carrying.Cartridges}/{Capacity.Cartridges} ",
-            "Shells" => $" h:{change:+#.##;-#.##}=>{Carrying.Shells}/{Capacity.Shells} ",
-            "Fuel" => $" f:{change:+#.##;-#.##}=>{Carrying.Fuel}/{Capacity.Fuel} ",
-            "RareMetal" => $" r:{change:+#.##;-#.##}=>{Carrying.RareMetal}/{Capacity.RareMetal} ",
+            "Money" => $" m:{change:+0.##;-0.##}=>{Carrying.Money}/{Capacity.Money} ",
+            "Steel'" => $" t:{change:+0.##;-0.##}=>{Carrying.Steel}/{Capacity.Steel} ",
+            "Supplies" => $" s:{change:+0.##;-0.##}=>{Carrying.Supplies}/{Capacity.Supplies} ",
+            "Cartridges" => $" c:{change:+0.##;-0.##}=>{Carrying.Cartridges}/{Capacity.Cartridges} ",
+            "Shells" => $" h:{change:+0.##;-0.##}=>{Carrying.Shells}/{Capacity.Shells} ",
+            "Fuel" => $" f:{change:+0.##;-0.##}=>{Carrying.Fuel}/{Capacity.Fuel} ",
+            "RareMetal" => $" r:{change:+0.##;-0.##}=>{Carrying.RareMetal}/{Capacity.RareMetal} ",
             _ => throw new ArgumentException($"Unknown resources symbol {res}")
         };
         public string GetResourcesChangeRecord(Resources consume)
@@ -521,8 +534,8 @@ namespace SteelOfStalin.Assets.Props.Units
             }
             return sb.ToString();
         }
-        public string GetStrengthChangeRecord(double change) => $" hp:{change:+#.##;-#.##}=>{Defense.Strength}/{Game.UnitData[Name].Defense.Strength} ";
-        public string GetSuppressionChangeRecord(double change) => $" sup:{change:+#.####;-#.####}=>{CurrentSuppressionLevel:#.####} ";
+        public string GetStrengthChangeRecord(decimal change) => $" hp:{change:+0.##;-0.##}=>{Defense.Strength}/{Game.UnitData[Name].Defense.Strength} ";
+        public string GetSuppressionChangeRecord(decimal change) => $" sup:{change:+0.####;-0.####}=>{CurrentSuppressionLevel:0.####} ";
 
         public abstract override object Clone();
         public bool Equals(Unit other) => base.Equals(other);
@@ -550,19 +563,29 @@ namespace SteelOfStalin.Assets.Props.Buildings
         public BuildingStatus Status { get; set; } = BuildingStatus.NONE;
         public byte Level { get; set; }
         public byte MaxLevel { get; set; }
-        public double Size { get; set; }
+        public decimal Size { get; set; }
         public Cost Cost { get; set; } = new Cost();
         public Attribute Durability { get; set; } = new Attribute();
         public Scouting Scouting { get; set; } = new Scouting();
         public bool DestroyTerrainOnBuilt { get; set; } = true;
-        public double ConstructionTimeRemaining { get; set; }
+        public decimal ConstructionTimeRemaining { get; set; }
 
         public bool IsFortifying => Status == BuildingStatus.UNDER_CONSTRUCTION && Level > 0;
 
         public Building() : base() { }
         public Building(Building another) : base(another)
-            => (Name, Owner, Status, Level, MaxLevel, Size, Cost, Durability, Scouting, DestroyTerrainOnBuilt, ConstructionTimeRemaining)
-            = (another.Name, another.Owner, another.Status, another.Level, another.MaxLevel, another.Size, (Cost)another.Cost.Clone(), (Attribute)another.Durability.Clone(), (Scouting)another.Scouting.Clone(), another.DestroyTerrainOnBuilt, another.ConstructionTimeRemaining);
+            => (Owner, OwnerName, Status, Level, MaxLevel, Size, Cost, Durability, Scouting, DestroyTerrainOnBuilt, ConstructionTimeRemaining)
+            = (another.Owner, 
+               another.OwnerName, 
+               another.Status, 
+               another.Level, 
+               another.MaxLevel, 
+               another.Size, 
+               (Cost)another.Cost.Clone(), 
+               (Attribute)another.Durability.Clone(), 
+               (Scouting)another.Scouting.Clone(), 
+               another.DestroyTerrainOnBuilt, 
+               another.ConstructionTimeRemaining);
 
         public bool IsOwn(Player p) => Owner == p;
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
@@ -574,7 +597,7 @@ namespace SteelOfStalin.Assets.Props.Buildings
         public bool CanBeDemolished() => Level > 0 && Status == BuildingStatus.ACTIVE;
 
         public Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
-        public string GetDurabilityChangeRecord(double change) => $" d:{change:+#.##;-#.##}=>{Durability} ";
+        public string GetDurabilityChangeRecord(decimal change) => $" d:{change:+0.##;-0.##}=>{Durability} ";
 
         public abstract override object Clone();
     }
@@ -622,18 +645,26 @@ namespace SteelOfStalin.Assets.Props.Tiles
     {
         [JsonIgnore] public Player Owner { get; set; }
         public string OwnerName { get; set; }
-        public double Population { get; set; }
+        public decimal Population { get; set; }
         public Attribute ConstructionRange { get; set; } = new Attribute();
         public Attribute Communication { get; set; } = new Attribute();
         public Resources Production { get; set; } = new Resources();
         public Attribute Durability { get; set; } = new Attribute();
         public Attribute Morale { get; set; } = new Attribute();
+
         public bool IsDestroyed => Durability <= 0;
 
         public Cities() : base() { }
         public Cities(Cities another) : base(another)
-            => (Owner, Population, ConstructionRange, Production, Durability, Morale)
-            = (another.Owner, another.Population, (Attribute)another.ConstructionRange.Clone(), (Resources)another.Production.Clone(), (Attribute)another.Durability.Clone(), (Attribute)another.Morale.Clone());
+            => (Owner, OwnerName, Population, ConstructionRange, Communication, Production, Durability, Morale)
+            = (another.Owner, 
+               another.OwnerName, 
+               another.Population, 
+               (Attribute)another.ConstructionRange.Clone(), 
+               (Attribute)another.Communication,
+               (Resources)another.Production.Clone(), 
+               (Attribute)another.Durability.Clone(), 
+               (Attribute)another.Morale.Clone());
 
         public bool IsOwn(Player p) => Owner == p;
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
@@ -645,7 +676,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
         public bool CanCommunicateWith(Cities c) => this != c && GetStraightLineDistance(c) <= Communication + c.Communication;
 
-        public string GetMoraleChangeRecord(double change) => $" m:{change:+#.##,-#.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale} ";
+        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##,-0.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale} ";
 
         public abstract override object Clone();
     }
@@ -656,9 +687,9 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public TileType Type { get; set; }
         public Accessibility Accessibility { get; set; }
         public TerrainModifier TerrainMod { get; set; } = new TerrainModifier();
-        public double Obstruction { get; set; }
+        public decimal Obstruction { get; set; }
         public bool AllowConstruction { get; set; }
-        public double Height { get; set; }
+        public decimal Height { get; set; }
         public char Symbol { get; set; }
 
         public bool IsWater => Type == TileType.STREAM || Type == TileType.RIVER || Type == TileType.OCEAN || Type == TileType.SWAMP;
@@ -671,8 +702,14 @@ namespace SteelOfStalin.Assets.Props.Tiles
 
         public Tile() : base() { }
         public Tile(Tile another) : base(another)
-            => (Name, Type, Accessibility, TerrainMod, Height, Symbol)
-            = (another.Name, another.Type, another.Accessibility, (TerrainModifier)another.TerrainMod.Clone(), another.Height, another.Symbol);
+            => (Type, Accessibility, TerrainMod, Obstruction, AllowConstruction, Height, Symbol)
+            = (another.Type, 
+               another.Accessibility, 
+               (TerrainModifier)another.TerrainMod.Clone(),
+               another.Obstruction, 
+               another.AllowConstruction, 
+               another.Height, 
+               another.Symbol);
 
         public WeightedTile ConvertToWeightedTile(Resources consumption, PathfindingOptimization opt, Tile end, bool IsAerial, WeightedTile parent = null) => new WeightedTile()
         {
@@ -702,16 +739,16 @@ namespace SteelOfStalin.Assets.Props.Tiles
     {
         public WeightedTile Parent { get; set; }
         public CubeCoordinates CubeCoOrds { get; set; }
-        public double BaseCost { get; set; }
-        public double Weight { get; set; }
+        public decimal BaseCost { get; set; }
+        public decimal Weight { get; set; }
         // use 2 for tile pathfinding
-        public double MaxWeight { get; set; } = 2;
-        public double SuppliesCostSoFar { get; set; }
-        public double FuelCostSoFar { get; set; }
+        public decimal MaxWeight { get; set; } = 2;
+        public decimal SuppliesCostSoFar { get; set; }
+        public decimal FuelCostSoFar { get; set; }
         public int DistanceSoFar { get; set; }
         public int DistanceToGoal { get; set; }
-        public double SuppliesCostDistance => SuppliesCostSoFar + DistanceToGoal * BaseCost * MaxWeight;
-        public double FuelCostDistance => FuelCostSoFar + DistanceToGoal * BaseCost * MaxWeight;
+        public decimal SuppliesCostDistance => SuppliesCostSoFar + DistanceToGoal * BaseCost * MaxWeight;
+        public decimal FuelCostDistance => FuelCostSoFar + DistanceToGoal * BaseCost * MaxWeight;
 
         public override bool Equals(object obj) => this == (WeightedTile)obj;
         public override int GetHashCode() => base.GetHashCode();

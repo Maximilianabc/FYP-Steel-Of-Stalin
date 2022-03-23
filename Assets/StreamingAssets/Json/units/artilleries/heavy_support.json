@@ -12,7 +12,7 @@
   ],
   "Gun": null,
   "Radio": null,
-  "OwnerName": null,
+  "OwnerName": "",
   "Status": "NONE",
   "Cost": {
     "Base": {
@@ -875,7 +875,7 @@
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
   "Name": "heavy_support",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0
