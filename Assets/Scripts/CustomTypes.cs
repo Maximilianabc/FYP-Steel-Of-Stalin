@@ -45,7 +45,7 @@ namespace SteelOfStalin.CustomTypes
         public static int GetDistance(CubeCoordinates c1, CubeCoordinates c2)
             => Mathf.Max(Math.Abs(c1.X - c2.X), Math.Abs(c1.Y - c2.Y), Math.Abs(c1.Z - c2.Z));
 
-        public static double GetStraightLineDistance(CubeCoordinates c1, CubeCoordinates c2)
+        public static decimal GetStraightLineDistance(CubeCoordinates c1, CubeCoordinates c2)
         {
             List<int> diff = new List<int>()
             {
@@ -60,7 +60,7 @@ namespace SteelOfStalin.CustomTypes
             // the angle is always 2 / 3 rad
             return diff.Contains(0)
                 ? diff.Max()
-                : Math.Sqrt(Math.Pow(diff[1], 2) + Math.Pow(diff[2], 2) - 2 * diff[1] * diff[2] * Math.Cos(2 / 3D));
+                : (decimal)Math.Sqrt(Math.Pow(diff[1], 2) + Math.Pow(diff[2], 2) - 2 * diff[1] * diff[2] * Math.Cos(2 / 3D));
         }
 
         /// <summary>

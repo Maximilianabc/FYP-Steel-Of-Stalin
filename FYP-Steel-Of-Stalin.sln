@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLogic", "GameLogic.csproj", "{1997C6E3-D9F1-A5A4-3895-B8D61F4E9382}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{D8DE209A-782F-D18C-2937-D12756B6B870}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.RenderPipelines.HighDefinition.Config.Runtime", "Unity.RenderPipelines.HighDefinition.Config.Runtime.csproj", "{E8A1E3F5-AD02-2C08-D3F7-8CF4180EA82B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests.csproj", "{497B1B1B-53B0-BA10-FAE7-F13EA7071B07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +15,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1997C6E3-D9F1-A5A4-3895-B8D61F4E9382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1997C6E3-D9F1-A5A4-3895-B8D61F4E9382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1997C6E3-D9F1-A5A4-3895-B8D61F4E9382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1997C6E3-D9F1-A5A4-3895-B8D61F4E9382}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8DE209A-782F-D18C-2937-D12756B6B870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8DE209A-782F-D18C-2937-D12756B6B870}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8DE209A-782F-D18C-2937-D12756B6B870}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -19,6 +27,10 @@ Global
 		{E8A1E3F5-AD02-2C08-D3F7-8CF4180EA82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8A1E3F5-AD02-2C08-D3F7-8CF4180EA82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8A1E3F5-AD02-2C08-D3F7-8CF4180EA82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497B1B1B-53B0-BA10-FAE7-F13EA7071B07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497B1B1B-53B0-BA10-FAE7-F13EA7071B07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497B1B1B-53B0-BA10-FAE7-F13EA7071B07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497B1B1B-53B0-BA10-FAE7-F13EA7071B07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

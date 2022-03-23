@@ -24,7 +24,7 @@ namespace SteelOfStalin.Assets.Customizables
     {
         public FirearmType FirearmType { get; set; }
         public Offense Offense { get; set; } = new Offense();
-        public double AmmoWeight { get; set; }
+        public decimal AmmoWeight { get; set; }
         public Resources ConsumptionNormal { get; set; } = new Resources();
         public Resources ConsumptionSuppress { get; set; } = new Resources();
         public Attribute Noise { get; set; } = new Attribute();
@@ -62,7 +62,7 @@ namespace SteelOfStalin.Assets.Customizables
             = ((Attribute)another.Integrity.Clone(), (Attribute)another.Weight.Clone(), (Attribute)another.FunctionalThreshold.Clone(), (Attribute)another.TakeDamageChance.Clone());
 
         public abstract override object Clone();
-        public virtual string GetIntegrityChangeRecord(double change) => $" {Name}:i:{change:+#.##;-#.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity}";
+        public virtual string GetIntegrityChangeRecord(decimal change) => $" {Name}:i:{change:+0.##;-0.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity}";
     }
 
     public interface IOffensiveCustomizable : INamedAsset
@@ -256,7 +256,7 @@ namespace SteelOfStalin.Assets.Customizables.Modules
         public List<string> CompatibleShells { get; set; } = new List<string>();
         public Shell CurrentShell { get; set; }
 
-        public CannonBreech CannonBreech { get; set; } = new CannonBreech();
+        public CannonBreech CannonBreech { get; set; }
 
         public Gun() : base() { }
         public Gun(Gun another) : base(another)
@@ -267,8 +267,8 @@ namespace SteelOfStalin.Assets.Customizables.Modules
                (Resources)another.ConsumptionNormal.Clone(), 
                (Resources)another.ConsumptionSuppress.Clone(), 
                 new List<string>(another.CompatibleShells), 
-               (Shell)another.CurrentShell.Clone(),
-               (CannonBreech)another.CannonBreech.Clone());
+               (Shell)another.CurrentShell?.Clone(),
+               (CannonBreech)another.CannonBreech?.Clone());
 
         public abstract override object Clone();
     }
@@ -279,14 +279,20 @@ namespace SteelOfStalin.Assets.Customizables.Modules
         public Attribute Noise { get; set; } = new Attribute();
         public Modifier ConcealmentPenaltyMove { get; set; } = new Modifier();
         public Modifier ConcealmentPenaltyFire { get; set; } = new Modifier();
-        public double AmmoWeight { get; set; }
+        public decimal AmmoWeight { get; set; }
         public Resources ConsumptionNormal { get; set; } = new Resources();
         public Resources ConsumptionSuppress { get; set; } = new Resources();
 
         public HeavyMachineGun() : base() { }
         public HeavyMachineGun(HeavyMachineGun another) : base(another)
-            => (Offense, Noise, ConcealmentPenaltyFire, AmmoWeight, ConsumptionNormal, ConsumptionSuppress)
-            = ((Offense)another.Offense.Clone(), (Attribute)another.Noise.Clone(), (Modifier)another.ConcealmentPenaltyFire.Clone(), another.AmmoWeight, (Resources)another.ConsumptionNormal.Clone(), (Resources)another.ConsumptionSuppress.Clone());
+            => (Offense, Noise, ConcealmentPenaltyMove, ConcealmentPenaltyFire, AmmoWeight, ConsumptionNormal, ConsumptionSuppress)
+            = ((Offense)another.Offense.Clone(), 
+               (Attribute)another.Noise.Clone(), 
+               (Modifier)another.ConcealmentPenaltyMove.Clone(),
+               (Modifier)another.ConcealmentPenaltyFire.Clone(), 
+               another.AmmoWeight, 
+               (Resources)another.ConsumptionNormal.Clone(), 
+               (Resources)another.ConsumptionSuppress.Clone());
         public override object Clone() => new HeavyMachineGun(this);
     }
 

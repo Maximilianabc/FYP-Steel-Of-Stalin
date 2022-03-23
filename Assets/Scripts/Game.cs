@@ -240,7 +240,7 @@ namespace SteelOfStalin
             foreach (string name in Enum.GetNames(typeof(TileType)))
             {
                 int count = TileCount((TileType)Enum.Parse(typeof(TileType), name));
-                float percent = (float)Math.Round((double)count / (Width * Height) * 100, 2);
+                float percent = (float)Math.Round((decimal)count / (Width * Height) * 100, 2);
                 _ = sb.AppendLine($"{name}:\t{count} ({percent}%)");
             }
             _ = sb.AppendLine($"Units: {Units.Count}");
@@ -343,7 +343,7 @@ namespace SteelOfStalin
             Coordinates p = (Coordinates)c;
             return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
         }).Select(c => GetTile(c));
-        public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, double distance = 1) => distance < 1
+        public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, decimal distance = 1) => distance < 1
                 ? throw new ArgumentException("Distance must be >= 1.")
                 : GetNeigbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
         public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeigbours(c, distance).Any(t => !t.IsOccupied);
@@ -465,7 +465,7 @@ namespace SteelOfStalin
                     // TODO move these back to json generation
                     Tiles[x][y].Height = Tiles[x][y].Type switch
                     {
-                        TileType.BOUNDARY => double.MaxValue,
+                        TileType.BOUNDARY => decimal.MaxValue,
                         TileType.PLAINS => 2,
                         TileType.GRASSLAND => 2,
                         TileType.FOREST => 2,
@@ -643,7 +643,7 @@ namespace SteelOfStalin
             }
         }
 
-        public Stack<CubeCoordinates> PathFind(WeightedTile start, WeightedTile end, double weight = -1, double max_weight = -1)
+        public Stack<CubeCoordinates> PathFind(WeightedTile start, WeightedTile end, decimal weight = -1, decimal max_weight = -1)
         {
             Stack<CubeCoordinates> path = new Stack<CubeCoordinates>();
             List<WeightedTile> active = new List<WeightedTile>();
@@ -906,7 +906,7 @@ namespace SteelOfStalin
 
         protected void ConsumeSuppliesStandingStill()
         {
-            double supplies = Unit.GetSuppliesRequired(Unit.GetLocatedTile());
+            decimal supplies = Unit.GetSuppliesRequired(Unit.GetLocatedTile());
             Unit.Carrying.Supplies.MinusEquals(supplies);
             if (Unit.Carrying.Supplies < 0)
             {
@@ -917,9 +917,9 @@ namespace SteelOfStalin
         }
         protected void ConsumeAmmoFiring(IOffensiveCustomizable weapon, bool normal = true)
         {
-            double cartridges = normal ? weapon.ConsumptionNormal.Cartridges.ApplyMod() : weapon.ConsumptionSuppress.Cartridges.ApplyMod();
-            double shells = normal ? weapon.ConsumptionNormal.Shells.ApplyMod() : weapon.ConsumptionSuppress.Shells.ApplyMod();
-            double fuel = normal ? weapon.ConsumptionNormal.Fuel.ApplyMod() : weapon.ConsumptionSuppress.Fuel.ApplyMod();
+            decimal cartridges = normal ? weapon.ConsumptionNormal.Cartridges.ApplyMod() : weapon.ConsumptionSuppress.Cartridges.ApplyMod();
+            decimal shells = normal ? weapon.ConsumptionNormal.Shells.ApplyMod() : weapon.ConsumptionSuppress.Shells.ApplyMod();
+            decimal fuel = normal ? weapon.ConsumptionNormal.Fuel.ApplyMod() : weapon.ConsumptionSuppress.Fuel.ApplyMod();
 
             if (cartridges > 0)
             {
@@ -1267,14 +1267,14 @@ namespace SteelOfStalin.Flow
                 if (Battle.Instance.Rules.IsFogOfWar)
                 {
                     Tile observer_tile = u.GetLocatedTile();
-                    double observer_recon = observer_tile.TerrainMod.Recon.ApplyTo(u.Scouting.Reconnaissance.ApplyMod());
-                    double observer_detect = u.Scouting.Detection.ApplyMod();
+                    decimal observer_recon = observer_tile.TerrainMod.Recon.ApplyTo(u.Scouting.Reconnaissance.ApplyMod());
+                    decimal observer_detect = u.Scouting.Detection.ApplyMod();
 
                     u.GetHostileUnitsInReconRange().ToList().ForEach(h =>
                     {
                         Tile observee_tile = h.GetLocatedTile();
-                        double st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, h.CubeCoOrds);
-                        double observee_conceal = observee_tile.TerrainMod.Concealment.ApplyTo(h.Scouting.Concealment.ApplyMod());
+                        decimal st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, h.CubeCoOrds);
+                        decimal observee_conceal = observee_tile.TerrainMod.Concealment.ApplyTo(h.Scouting.Concealment.ApplyMod());
 
                         if (h.Status.HasFlag(UnitStatus.MOVED))
                         {
@@ -1293,8 +1293,8 @@ namespace SteelOfStalin.Flow
                     u.GetHostileBuildingsInReconRange().ToList().ForEach(b =>
                     {
                         Tile observee_tile = b.GetLocatedTile();
-                        double st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, b.CubeCoOrds);
-                        double observee_conceal = observee_tile.TerrainMod.Concealment.ApplyTo(b.Scouting.Concealment.ApplyMod());
+                        decimal st_line_distance = CubeCoordinates.GetStraightLineDistance(u.CubeCoOrds, b.CubeCoOrds);
+                        decimal observee_conceal = observee_tile.TerrainMod.Concealment.ApplyTo(b.Scouting.Concealment.ApplyMod());
                         if (Formula.VisualSpotting((observer_recon, observer_detect, observee_conceal, st_line_distance)))
                         {
                             u.BuildingsInSight.Add(b);

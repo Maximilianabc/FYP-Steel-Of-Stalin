@@ -10,7 +10,7 @@
   ],
   "Gun": null,
   "Radio": null,
-  "OwnerName": null,
+  "OwnerName": "",
   "Status": "NONE",
   "Cost": {
     "Base": {
@@ -873,7 +873,7 @@
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
   "Name": "portable",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

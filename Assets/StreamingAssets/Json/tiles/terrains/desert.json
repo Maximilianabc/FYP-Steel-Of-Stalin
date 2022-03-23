@@ -28,7 +28,7 @@
   "Height": 1,
   "Symbol": "D",
   "Name": "desert",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

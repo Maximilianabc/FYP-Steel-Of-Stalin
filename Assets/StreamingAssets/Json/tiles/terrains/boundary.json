@@ -28,7 +28,7 @@
   "Height": 79228162514264337593543950335,
   "Symbol": "B",
   "Name": "boundary",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

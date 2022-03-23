@@ -15,7 +15,7 @@
       "Value": 0.25
     }
   },
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -574,7 +574,7 @@
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
   "Name": "barracks",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

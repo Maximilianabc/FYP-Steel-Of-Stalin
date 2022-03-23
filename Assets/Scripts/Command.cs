@@ -65,7 +65,7 @@ namespace SteelOfStalin.Commands
 
             if (Unit is Aerial)
             {
-                double fuel = Unit.Consumption.Fuel.ApplyMod();
+                decimal fuel = Unit.Consumption.Fuel.ApplyMod();
                 Unit.Carrying.Fuel.MinusEquals(fuel);
                 _ = Recorder.Append(Unit.GetResourcesChangeRecord("Fuel", -fuel));
             }
@@ -97,8 +97,8 @@ namespace SteelOfStalin.Commands
 
             _ = Recorder.Append(Unit.ToString());
 
-            double supplies = Unit.GetSuppliesRequired(Path);
-            double fuel = Unit.GetFuelRequired(Path);
+            decimal supplies = Unit.GetSuppliesRequired(Path);
+            decimal fuel = Unit.GetFuelRequired(Path);
             if (supplies > 0)
             {
                 Unit.Carrying.Supplies.MinusEquals(supplies);
@@ -202,7 +202,7 @@ namespace SteelOfStalin.Commands
 
             if (Weapon is Gun)
             {
-                if (new System.Random().NextDouble() > Weapon.Offense.Accuracy.Normal)
+                if ((decimal)new System.Random().NextDouble() > Weapon.Offense.Accuracy.Normal)
                 {
                     this.Log($"Missed the shot against target {Target}.");
                     _ = Recorder.AppendLine(" M");
@@ -210,8 +210,8 @@ namespace SteelOfStalin.Commands
                 }
             }
 
-            double damage_dealt = 0;
-            double distance = CubeCoordinates.GetStraightLineDistance(Unit.CubeCoOrds, Target.CubeCoOrds);
+            decimal damage_dealt = 0;
+            decimal distance = CubeCoordinates.GetStraightLineDistance(Unit.CubeCoOrds, Target.CubeCoOrds);
 
             if (!(Target is Personnel))
             {
@@ -235,7 +235,7 @@ namespace SteelOfStalin.Commands
             }
             else
             {
-                if (new System.Random().NextDouble() <= Target.Defense.Evasion)
+                if ((decimal)new System.Random().NextDouble() <= Target.Defense.Evasion)
                 {
                     this.Log($"Target {Target} evaded the attack.");
                     _ = Recorder.AppendLine(" E");
@@ -301,8 +301,8 @@ namespace SteelOfStalin.Commands
             _ = Recorder.Append($" !! {Target}");
 
             Target.ConsecutiveSuppressedRound++;
-            double sup = Formula.EffectiveSuppression((Weapon, Target));
-            double change = sup - Target.CurrentSuppressionLevel;
+            decimal sup = Formula.EffectiveSuppression((Weapon, Target));
+            decimal change = sup - Target.CurrentSuppressionLevel;
             if (change > 0)
             {
                 Target.CurrentSuppressionLevel = sup;
@@ -347,7 +347,7 @@ namespace SteelOfStalin.Commands
             Unit.Status |= UnitStatus.FIRED;
             _ = Recorder.Append($"^ {Target}");
 
-            double damage_dealt = Formula.DamageAgainstBuilding(Weapon);
+            decimal damage_dealt = Formula.DamageAgainstBuilding(Weapon);
             if (damage_dealt > 0)
             {
                 Target.Durability.MinusEquals(damage_dealt);
@@ -498,7 +498,7 @@ namespace SteelOfStalin.Commands
             if (Unit is Engineer e)
             {
                 Attribute integrity_cap = Game.CustomizableData.Modules[RepairingTarget.Name].Integrity;
-                double repairing_amount = integrity_cap * e.RepairingEfficiency;
+                decimal repairing_amount = integrity_cap * e.RepairingEfficiency;
                 if (repairing_amount > 0)
                 {
                     _ = Recorder.Append(Unit.ToString());
@@ -862,7 +862,7 @@ namespace SteelOfStalin.Commands
 
             Personnel p = (Personnel)Unit;
             Cities c = (Cities)tile;
-            double morale = p.CaptureEfficiency.ApplyMod();
+            decimal morale = p.CaptureEfficiency.ApplyMod();
 
             if (c.IsFriendly(Unit.Owner))
             {
