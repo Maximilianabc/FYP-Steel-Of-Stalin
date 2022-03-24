@@ -23,7 +23,7 @@ public class UnitPanel : MonoBehaviour
     void Start()
     {
         
-        Unit u = Game.UnitData.GetNewUnit("infantry");
+        Unit u = Game.UnitData.GetNew("infantry");
         //SetUnit(u);
         GameObject strength = menu.transform.Find("Strength").gameObject;
         Debug.Log(u.Name);
