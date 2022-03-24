@@ -69,8 +69,8 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         public Personnel() : base() { }
         public Personnel(Personnel another)
             => (PrimaryFirearm, SecondaryFirearm, DefaultPrimary, AvailableFirearms, CaptureEfficiency)
-            = ((Firearm)another.PrimaryFirearm.Clone(),
-                (Firearm)another.SecondaryFirearm.Clone(),
+            = ((Firearm)another.PrimaryFirearm?.Clone(),
+                (Firearm)another.SecondaryFirearm?.Clone(),
                 (string)another.DefaultPrimary.Clone(),
                 new List<string>(another.AvailableFirearms),
                 (Attribute)another.CaptureEfficiency.Clone());

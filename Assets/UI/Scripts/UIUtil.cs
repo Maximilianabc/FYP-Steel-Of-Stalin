@@ -31,7 +31,7 @@ public class UIUtil : MonoBehaviour
         //SteelOfStalin.Battle battleInstance=GameObject.Find("battle").GetComponent<SteelOfStalin.Battle>();
         //battleInstance.Map.AddUnit(new SteelOfStalin.Props.Units.Land.Personnels.Infantry());
         //Debug.Log(battleInstance.Map.GetUnits().ToString());
-        Debug.Log(SteelOfStalin.Battle.Instance != null);
+        //Debug.Log(SteelOfStalin.Battle.Instance != null);
         
     }
     public void testfunction2() { 
