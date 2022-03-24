@@ -28,7 +28,7 @@
   "Height": 3,
   "Symbol": "H",
   "Name": "hills",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

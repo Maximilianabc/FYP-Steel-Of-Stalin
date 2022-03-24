@@ -72,7 +72,7 @@
       }
     }
   },
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -631,7 +631,7 @@
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
   "Name": "industries",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

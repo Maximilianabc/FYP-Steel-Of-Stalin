@@ -28,7 +28,7 @@
   "Height": -2,
   "Symbol": "N",
   "Name": "ocean",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

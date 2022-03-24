@@ -28,7 +28,7 @@
   "Height": -1,
   "Symbol": "S",
   "Name": "stream",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

@@ -28,7 +28,7 @@
   "Height": -2,
   "Symbol": "R",
   "Name": "river",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

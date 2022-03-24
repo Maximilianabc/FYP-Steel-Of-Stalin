@@ -1,5 +1,5 @@
 {
-  "OwnerName": null,
+  "OwnerName": "",
   "Population": 1000,
   "ConstructionRange": {
     "Value": 1,
@@ -130,7 +130,7 @@
   "Height": 1,
   "Symbol": "U",
   "Name": "suburb",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

@@ -28,7 +28,7 @@
   "Height": 4,
   "Symbol": "M",
   "Name": "mountains",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

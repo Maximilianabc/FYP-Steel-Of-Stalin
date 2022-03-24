@@ -1,5 +1,5 @@
 {
-  "OwnerName": null,
+  "OwnerName": "",
   "Population": 5000,
   "ConstructionRange": {
     "Value": 2,
@@ -130,7 +130,7 @@
   "Height": 1,
   "Symbol": "E",
   "Name": "metropolis",
-  "MeshName": null,
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0
