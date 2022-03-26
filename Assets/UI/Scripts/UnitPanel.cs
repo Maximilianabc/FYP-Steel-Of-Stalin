@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using SteelOfStalin.Props.Units;
+using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Customizables;
 
 namespace SteelOfStalin
 {
@@ -41,9 +42,9 @@ namespace SteelOfStalin
             foreach (Transform child in modules.transform) {
                 if(child.gameObject.name!= "Text_ModulesIntegrity") Destroy(child.gameObject);
             }
-            List<Customizables.Module> unitModules=u.GetModules().ToList();
+            List<Module> unitModules=u.GetModules().ToList();
             modules.SetActive(unitModules.Count != 0);
-            foreach (Customizables.Module module in unitModules) {
+            foreach (Module module in unitModules) {
                 GameObject instance=Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
                 instance.name = module.Name;
                 instance.transform.SetParent(modules.transform);
@@ -87,9 +88,9 @@ namespace SteelOfStalin
             {
                 if (child.gameObject.name != "Text_Weapons"||child.gameObject.name!="WeaponsHeading") Destroy(child.gameObject);
             }
-            List<Customizables.IOffensiveCustomizable> unitWeapons = u.GetWeapons().ToList();
+            List<IOffensiveCustomizable> unitWeapons = u.GetWeapons().ToList();
             weapons.SetActive(unitWeapons.Count != 0);
-            foreach (Customizables.IOffensiveCustomizable weapon in unitWeapons)
+            foreach (IOffensiveCustomizable weapon in unitWeapons)
             {
                 GameObject instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
                 instance.name = weapon.Name;
@@ -127,7 +128,7 @@ namespace SteelOfStalin
 
         }
 
-        private void SetCustomizable(Customizable c) {
+        private void SetCustomizable(Assets.Customizable c) {
             if (currentUnit == null) return;
         }
 
