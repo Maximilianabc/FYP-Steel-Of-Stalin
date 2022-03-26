@@ -20,6 +20,7 @@ namespace SteelOfStalin
         public IEnumerable<Building> Buildings => Map.Instance.GetBuildings(this);
         public IEnumerable<Cities> Cities => Map.Instance.GetCities(this);
         public List<Player> Allies { get; set; } = new List<Player>();
+        // public List<Command> Commands => Round.Instance.Commands(this);
 
         public bool IsReady { get; set; } = false;
         public bool IsDefeated => !Cities.Any(c => c.Durability > 0);
@@ -101,6 +102,53 @@ namespace SteelOfStalin
     public class AIPlayer : Player
     {
         // AI algo goes here
+        //make flag true
+        void train(){
+            //get buidling
+            var cityavailable = Map.Instance.GetCities((Player)null);
+            var numberowned = Buildings.Count();
+            if(Buildings.ElementAt(0).IsFriendly(this)){
+                //check required resource
+                //check enemy units types
+                //train units
+            }
+
+        }
+        void supplyunits(){
+            //check available units
+            foreach(var unit in Units){
+                //get unit capacity
+                var capa = unit.Capacity.Fuel.Value;
+                //if capacity not full
+
+                //check if unit near owned cities
+                //add supply to units
+
+            }
+
+
+        }
+
+        void movetocities(){
+            //get non-occupied city coor
+            var n = Map.Instance.GetCities((Player)null);
+            var coor = n.ElementAt(0).CubeCoOrds;
+            //get the city morale
+            //assign number of units to city according to the morale
+
+            //get available unit to the new city
+            foreach(var unit in Units){
+                if(unit.CanMove()){
+                    //move units to city
+                    Units.ElementAt(0).GetFuelRequired(coor);
+
+                    
+
+                }
+            }       
+        }
+
+
     }
 
     public class HumanPlayer : Player
