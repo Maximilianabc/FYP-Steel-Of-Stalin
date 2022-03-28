@@ -130,9 +130,9 @@ namespace SteelOfStalin
                 //if capacity not full, assign supply to units
 
                 //check if unit near owned cities
-                    if(unit.GetBuildingsInRange()){
+                    // if(unit.GetBuildingsInRange()){
 
-                    }
+                    // }
                 //add supply to units
 
             }
@@ -143,23 +143,19 @@ namespace SteelOfStalin
 
             //get a non occupied cities   
             var neut = Map.Instance.GetCities(c => c.IsNeutral());
+            //get nearest city from base
             var nearest = neut.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
-            var min = 100;
-            var which = 0;
-            var x = Cities.Where(x => x is Cities);
-            for(var i = 0; i < x.Count(); i++){
-                if(x.ElementAt(i).IsNeutral()){
-                    //get nearest city to first base 
-                    var c = x.ElementAt(i).GetDistance(Cities.ElementAt(0));
-                    if(c < min){
-                        min = c;
-                        which = i;
-                    }
-                }
-            }
+            //get avaiable units
+            var avaunits = Units.Where(c => c.CanMove()).First();
+            var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
+            Commands.add(new Move(avaunits, pathtocity));
 
-            //get the city morale // no need morale
-            var citymorale = x.ElementAt(which);
+
+
+            // var unitpath = Units.ElementAt(0).GetPath(Units.ElementAt(0).GetLocatedTile(), Map.Instance.GetTile(nearest));
+
+            // var x = Cities.Where(x => x is Cities);
+
             //assign number of units to city according to the morale // a single unit is fine
             //Buildings.OfType<UnitBuilding>();
 
