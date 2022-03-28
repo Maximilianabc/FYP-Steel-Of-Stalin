@@ -132,26 +132,25 @@ namespace SteelOfStalin
                 //if capacity not full, assign supply to units
 
                 //check if unit near owned cities
-                    if(unit.GetOwnBuildingsInRange(5)){
+                    // if(unit.GetOwnBuildingsInRange(5)){
                         
-                    }
+                    // }
                 //add supply to units
 
             }
-
-
         }
 
         void movetonewcities(){
-
             //get a non occupied cities
+            var neut = Map.Instance.GetCities(c => c.IsNeutral());
             var min = 100;
             var which = 0;
             var x = Cities.Where(x => x is Cities);
             for(var i = 0; i < x.Count(); i++){
                 if(x.ElementAt(i).IsNeutral()){
                     //get nearest city to first base 
-                    var c = x.ElementAt(i).GetDistance(Cities.ElementAt(0));
+                    var firstbase = Cities.First(c => c is Metropolis);
+                    var c = x.ElementAt(i).GetDistance(firstbase);
                     if(c < min){
                         min = c;
                         which = i;
@@ -168,8 +167,7 @@ namespace SteelOfStalin
                     //move units to city
                     // Units.ElementAt(0).GetFuelRequired(coor);
 
-                    
-
+                
                 }
             }       
         }
@@ -193,8 +191,6 @@ namespace SteelOfStalin
             }
             //check the required resources
             //build
-
-
 
         }
 
