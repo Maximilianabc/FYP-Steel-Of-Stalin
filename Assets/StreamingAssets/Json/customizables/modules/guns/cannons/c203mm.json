@@ -305,8 +305,8 @@
     }
   },
   "CompatibleShells": [
-    "AP",
-    "HE"
+    "ap",
+    "he"
   ],
   "CurrentShell": null,
   "CannonBreech": {

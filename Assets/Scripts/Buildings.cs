@@ -14,7 +14,8 @@ namespace SteelOfStalin.Assets.Props.Buildings
         public Queue<Unit> TrainingQueue { get; set; } = new Queue<Unit>();
         public List<Unit> ReadyToDeploy { get; set; } = new List<Unit>();
         public Attribute DeployRange { get; set; } = new Attribute(1);
-        public decimal CurrentQueueTime => TrainingQueue.LastOrDefault()?.TrainingTimeRemaining ?? 0;
+
+        [JsonIgnore] public decimal CurrentQueueTime => TrainingQueue.LastOrDefault()?.TrainingTimeRemaining ?? 0;
 
         public UnitBuilding() : base() { }
         public UnitBuilding(UnitBuilding another) : base(another)

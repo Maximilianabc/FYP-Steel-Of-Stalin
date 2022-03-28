@@ -16,6 +16,17 @@ using UnityEngine;
 
 namespace SteelOfStalin.CustomTypes
 {
+    public enum Direction
+    {
+        NONE,
+        W,
+        E,
+        D,
+        S,
+        A,
+        Q
+    }
+
     public struct Coordinates : ICloneable, IEquatable<Coordinates>
     {
         public int X { get; set; }
@@ -39,6 +50,18 @@ namespace SteelOfStalin.CustomTypes
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }
+        public bool IsValid => X + Y + Z == 0;
+
+        public static Dictionary<Direction, (int X, int Y, int Z)> DirectionOffsets => new Dictionary<Direction, (int X, int Y, int Z)>()
+        {
+            [Direction.NONE] = (0, 0, 0),
+            [Direction.W] = (0, -1, 1),
+            [Direction.E] = (1, -1, 0),
+            [Direction.D] = (1, 0, -1),
+            [Direction.S] = (0, 1, -1),
+            [Direction.A] = (-1, 1, 0),
+            [Direction.Q] = (-1, 0, 1)
+        };
 
         public CubeCoordinates(int x, int y, int z) : this() => (X, Y, Z) = (x, y, z);
 
@@ -68,29 +91,61 @@ namespace SteelOfStalin.CustomTypes
         /// </summary>
         /// <param name="distance">The distance from the cube coordinates, inclusive</param>
         /// <returns></returns>
-        public IEnumerable<CubeCoordinates> GetNeigbours(int distance = 1)
+        public IEnumerable<CubeCoordinates> GetNeigbours(int distance = 1, bool include_self = false)
         {
-            for (int x = -1; x <= distance; x++)
+            if (include_self)
             {
-                for (int y = -1; y <= distance; y++)
+                yield return new CubeCoordinates(X, Y, Z);
+            }
+            if (distance == 1)
+            {
+                foreach ((int X, int Y, int Z) offset in DirectionOffsets.Values)
                 {
-                    for (int z = -1; z <= distance; z++)
+                    if (!(offset.X == 0 && offset.Y == 0 && offset.Z == 0))
                     {
-                        yield return new CubeCoordinates(X + x, Y + y, Z + z);
+                        yield return new CubeCoordinates(X + offset.X, Y + offset.Y, Z + offset.Z);
+                    }
+                }
+                yield break;
+            }
+            for (int x = -distance; x <= distance; x++)
+            {
+                for (int y = -distance; y <= distance; y++)
+                {
+                    for (int z = -distance; z <= distance; z++)
+                    {
+                        if (!(x == 0 && y == 0 && z == 0) && x + y + z == 0)
+                        {
+                            yield return new CubeCoordinates(X + x, Y + y, Z + z);
+                        }
                     }
                 }
             }
+
         }
+        public Direction GetDirectionTo(CubeCoordinates c)
+        {
+            if (GetDistance(this, c) > 1)
+            {
+                throw new ArgumentException("GetDirection can only be used with direct neighbours or the same tile");
+            }
+
+            (int x, int y, int z) diff = c - this;
+            return !DirectionOffsets.ContainsValue(diff)
+                ? throw new Exception($"Unknown coordinate difference: {diff.x}, {diff.y}, {diff.z}")
+                : DirectionOffsets.First(d => d.Value == diff).Key;
+        }
+        public CubeCoordinates OffsetTo(Direction direction) => this + DirectionOffsets[direction];
 
         public override string ToString() => $"({X},{Y},{Z})";
         public override bool Equals(object obj) => Equals((CubeCoordinates)obj);
         public bool Equals(CubeCoordinates other) => this == other;
         public override int GetHashCode() => (X, Y, Z).GetHashCode();
 
-        public static bool operator ==(CubeCoordinates c1, CubeCoordinates c2)
-            => c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z;
-        public static bool operator !=(CubeCoordinates c1, CubeCoordinates c2)
-            => !(c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z);
+        public static CubeCoordinates operator +(CubeCoordinates c, (int X, int Y, int Z) offset) => new CubeCoordinates(c.X + offset.X, c.Y + offset.Y, c.Z + offset.Z);
+        public static (int X, int Y, int Z) operator -(CubeCoordinates c1, CubeCoordinates c2) => (c1.X - c2.X, c1.Y - c2.Y, c1.Z - c2.Z);
+        public static bool operator ==(CubeCoordinates c1, CubeCoordinates c2) => c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z;
+        public static bool operator !=(CubeCoordinates c1, CubeCoordinates c2) => !(c1.X == c2.X && c1.Y == c2.Y && c1.Z == c2.Z);
 
         public static explicit operator Coordinates(CubeCoordinates c) => new Coordinates(c.X, c.Z + (c.X - c.X % 2) / 2);
         public static explicit operator CubeCoordinates(Coordinates p)
@@ -99,6 +154,19 @@ namespace SteelOfStalin.CustomTypes
             int y = -p.X - z;
             return new CubeCoordinates(p.X, y, z);
         }
+    }
+
+    public struct SerializableColor
+    {
+        public byte R { get; set; }
+        public byte G { get; set; }
+        public byte B { get; set; }
+        public byte A { get; set; }
+
+        public SerializableColor(byte r, byte g, byte b, byte a) : this() => (R, G, B, A) = (r, g, b, a);
+
+        public static explicit operator SerializableColor(Color color) => new SerializableColor((byte)(color.r * 255), (byte)(color.g * 255), (byte)(color.b * 255), (byte)(color.a * 255));
+        public static explicit operator Color(SerializableColor color) => new Color(color.R / 255F, color.G / 255F, color.B / 255F, color.A / 255F);
     }
 
     public class Graph<T>
@@ -217,10 +285,7 @@ namespace SteelOfStalin.CustomTypes
             return prop_list;
         }
 
-        public override void Write(Utf8JsonWriter writer, List<T> value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        public override void Write(Utf8JsonWriter writer, List<T> value, JsonSerializerOptions options) => JsonSerializer.Serialize(writer, value, options);
     }
 
     public class AssetConverter<T> : JsonConverter<T> where T : INamedAsset
@@ -268,7 +333,7 @@ namespace SteelOfStalin.CustomTypes
                 throw new JsonException("There is no property with name \"Name\"");
             }
 
-            string child_type_name = Utilities.ToPascalCase(Regex.Replace(prop_properties[prop_name].ToString(), @"_[a-f0-9]{32}", ""));
+            string child_type_name = Utilities.ToPascal(Regex.Replace(prop_properties[prop_name].ToString(), @"_[a-f0-9]{32}", ""));
             Type child_type = m_Types.Find(t => t.Name == child_type_name);
             if (child_type == null)
             {
@@ -298,7 +363,24 @@ namespace SteelOfStalin.CustomTypes
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            writer.WriteStartObject();
+            IEnumerable<PropertyInfo> serializing_info = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetSetMethod() != null && p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null);
+
+            foreach (PropertyInfo info in serializing_info)
+            {
+                writer.WritePropertyName(info.Name);
+                object val = info.GetValue(value);
+                if (val == null)
+                {
+                    Debug.Log($"{info.Name} is null");
+                    writer.WriteNullValue();
+                }
+                else
+                {
+                    JsonSerializer.Serialize(writer, val, val.GetType(), options);
+                }
+            }
+            writer.WriteEndObject();
         }
     }
 
