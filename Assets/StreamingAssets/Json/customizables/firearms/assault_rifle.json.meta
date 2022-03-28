@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/InitTestScene637836487889805013.unity.meta
+guid: f856070bd4719a74381849d604c02e9a
+=======
 guid: 6ef0b05f45aea4941983c45ab1f0428c
+>>>>>>> master:Assets/StreamingAssets/Json/customizables/firearms/assault_rifle.json.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

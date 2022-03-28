@@ -20,7 +20,7 @@ namespace SteelOfStalin
         public IEnumerable<Building> Buildings => Map.Instance.GetBuildings(this);
         public IEnumerable<Cities> Cities => Map.Instance.GetCities(this);
         public List<Player> Allies { get; set; } = new List<Player>();
-        // public List<Command> Commands => Round.Instance.Commands(this);
+        public List<Command> Commands { get; set; } = new List<Command>();
 
         public bool IsReady { get; set; } = false;
         public bool IsDefeated => !Cities.Any(c => c.Durability > 0);
@@ -102,115 +102,6 @@ namespace SteelOfStalin
     public class AIPlayer : Player
     {
         // AI algo goes here
-        //make flag true
-        void train(){
-            //get buidling
-            var numberowned = Buildings.Count();
-            var y = Buildings.Where(unitbuild => unitbuild is UnitBuilding);
-            if(y.Any()){
-                //check training queue/slot
-                var number = y.Count();
-                var building = y.Cast<UnitBuilding>();
-                foreach(var x in building){
-                    if(x.CanTrain()){
-                        //cheack required resources
-                        //     //check enemy units types
-                        //     //train units
-                               
-
-                    }
-                }
-                             
-            }
-
-        }
-        void supplyunits(){
-            //check available units
-            foreach(var unit in Units){
-                //get unit capacity
-                var capa = unit.Capacity.Fuel.Value;
-                //if capacity not full, assign supply to units
-
-                //check if unit near owned cities
-                    // if(unit.GetOwnBuildingsInRange(5)){
-                        
-                    // }
-                //add supply to units
-
-            }
-        }
-
-        void movetonewcities(){
-            //get a non occupied cities
-            var neut = Map.Instance.GetCities(c => c.IsNeutral());
-            var min = 100;
-            var which = 0;
-            var x = Cities.Where(x => x is Cities);
-            for(var i = 0; i < x.Count(); i++){
-                if(x.ElementAt(i).IsNeutral()){
-                    //get nearest city to first base 
-                    var firstbase = Cities.First(c => c is Metropolis);
-                    var c = x.ElementAt(i).GetDistance(firstbase);
-                    if(c < min){
-                        min = c;
-                        which = i;
-                    }
-                }
-            }
-            //get the city morale
-            var citymorale = x.ElementAt(which);
-            //assign number of units to city according to the morale
-
-            //get available/moveable unit to the new city
-            foreach(var unit in Units){
-                if(unit.CanMove()){
-                    //move units to city
-                    // Units.ElementAt(0).GetFuelRequired(coor);
-
-                
-                }
-            }       
-        }
-
-        //build building 
-        void buildbuilding(){
-            //get cities owned
-            var x = Cities;
-
-            var y = Buildings;
-            //check if there any building/unit building
-            if(!y.Any()){
-                //build unit building
-            }
-            //for each cities, check not owned building
-            for(var i = 0; i<x.Count(); i++){
-                //if no building, build unit building
-                
-
-
-            }
-            //check the required resources
-            //build
-
-        }
-
-
-
-
-        //if enemies spotted
-        void autoattack(){
-            //if enemies spotted in range
-            //calculate
-
-
-
-        }
-
-
-
-        
-
-
     }
 
     public class HumanPlayer : Player
