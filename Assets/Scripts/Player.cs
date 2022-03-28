@@ -105,12 +105,22 @@ namespace SteelOfStalin
         //make flag true
         void train(){
             //get buidling
-            var cityavailable = Map.Instance.GetCities((Player)null);
             var numberowned = Buildings.Count();
-            if(Buildings.ElementAt(0).IsFriendly(this)){
-                //check required resource
-                //check enemy units types
-                //train units
+            var y = Buildings.Where(unitbuild => unitbuild is UnitBuilding);
+            if(y.Any()){
+                //check training queue/slot
+                var number = y.Count();
+                var building = y.Cast<UnitBuilding>();
+                foreach(var x in building){
+                    if(x.CanTrain()){
+                        //cheack required resources
+                        //     //check enemy units types
+                        //     //train units
+                               
+
+                    }
+                }
+                             
             }
 
         }
@@ -119,9 +129,12 @@ namespace SteelOfStalin
             foreach(var unit in Units){
                 //get unit capacity
                 var capa = unit.Capacity.Fuel.Value;
-                //if capacity not full
+                //if capacity not full, assign supply to units
 
                 //check if unit near owned cities
+                    if(unit.GetOwnBuildingsInRange(5)){
+                        
+                    }
                 //add supply to units
 
             }
@@ -129,24 +142,77 @@ namespace SteelOfStalin
 
         }
 
-        void movetocities(){
-            //get non-occupied city coor
-            var n = Map.Instance.GetCities((Player)null);
-            var coor = n.ElementAt(0).CubeCoOrds;
+        void movetonewcities(){
+
+            //get a non occupied cities
+            var min = 100;
+            var which = 0;
+            var x = Cities.Where(x => x is Cities);
+            for(var i = 0; i < x.Count(); i++){
+                if(x.ElementAt(i).IsNeutral()){
+                    //get nearest city to first base 
+                    var c = x.ElementAt(i).GetDistance(Cities.ElementAt(0));
+                    if(c < min){
+                        min = c;
+                        which = i;
+                    }
+                }
+            }
             //get the city morale
+            var citymorale = x.ElementAt(which);
             //assign number of units to city according to the morale
 
-            //get available unit to the new city
+            //get available/moveable unit to the new city
             foreach(var unit in Units){
                 if(unit.CanMove()){
                     //move units to city
-                    Units.ElementAt(0).GetFuelRequired(coor);
+                    // Units.ElementAt(0).GetFuelRequired(coor);
 
                     
 
                 }
             }       
         }
+
+        //build building 
+        void buildbuilding(){
+            //get cities owned
+            var x = Cities;
+
+            var y = Buildings;
+            //check if there any building/unit building
+            if(!y.Any()){
+                //build unit building
+            }
+            //for each cities, check not owned building
+            for(var i = 0; i<x.Count(); i++){
+                //if no building, build unit building
+                
+
+
+            }
+            //check the required resources
+            //build
+
+
+
+        }
+
+
+
+
+        //if enemies spotted
+        void autoattack(){
+            //if enemies spotted in range
+            //calculate
+
+
+
+        }
+
+
+
+        
 
 
     }
