@@ -1,0 +1,36 @@
+{
+  "Type": "HILLS",
+  "Accessibility": "PERSONNEL | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 3
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": -20
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 20
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 100
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -70
+    }
+  },
+  "Obstruction": 0.9,
+  "AllowConstruction": false,
+  "Height": 3,
+  "Symbol": "H",
+  "Name": "hills",
+  "MeshName": "",
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

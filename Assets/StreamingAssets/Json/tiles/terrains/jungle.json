@@ -1,0 +1,36 @@
+{
+  "Type": "JUNGLE",
+  "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": -1
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": 100
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": -30
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 30
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -50
+    }
+  },
+  "Obstruction": 0.5,
+  "AllowConstruction": false,
+  "Height": 1,
+  "Symbol": "J",
+  "Name": "jungle",
+  "MeshName": "",
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

@@ -7,7 +7,6 @@
     }
   },
   "TrainingQueue": [],
-  "CurrentQueueTime": 0,
   "ReadyToDeploy": [],
   "DeployRange": {
     "Value": 1,
@@ -16,8 +15,7 @@
       "Value": 0.25
     }
   },
-  "Name": "airfield",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -575,7 +573,8 @@
   },
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "airfield",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

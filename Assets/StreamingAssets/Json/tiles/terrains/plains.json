@@ -1,0 +1,36 @@
+{
+  "Type": "PLAINS",
+  "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 2
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": 0
+    }
+  },
+  "Obstruction": 0,
+  "AllowConstruction": true,
+  "Height": 1,
+  "Symbol": "P",
+  "Name": "plains",
+  "MeshName": "",
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

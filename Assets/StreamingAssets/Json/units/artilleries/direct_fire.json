@@ -12,8 +12,7 @@
   ],
   "Gun": null,
   "Radio": null,
-  "Name": "direct_fire",
-  "OwnerName": null,
+  "OwnerName": "",
   "Status": "NONE",
   "Cost": {
     "Base": {
@@ -875,7 +874,8 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "direct_fire",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

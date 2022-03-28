@@ -12,8 +12,7 @@
   ],
   "Gun": null,
   "Radio": null,
-  "Name": "coastal_gun",
-  "OwnerName": null,
+  "OwnerName": "",
   "Status": "NONE",
   "Cost": {
     "Base": {
@@ -875,7 +874,8 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "coastal_gun",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

@@ -1,20 +1,23 @@
 ﻿using SteelOfStalin.Attributes;
-using SteelOfStalin.Customizables;
-using SteelOfStalin.Customizables.Guns;
-using SteelOfStalin.Customizables.Modules;
-using SteelOfStalin.Customizables.Shells;
+using SteelOfStalin.Assets;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Customizables.Modules.Guns;
+using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Shells;
+using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Flow;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
-using SteelOfStalin.Props.Units.Land;
-using SteelOfStalin.Props.Units.Sea;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Props.Units.Land;
+using SteelOfStalin.Assets.Props.Units.Sea;
 using SteelOfStalin.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -22,8 +25,8 @@ using UnityEngine;
 using static SteelOfStalin.Util.Utilities;
 using static SteelOfStalin.DataIO.DataUtilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
-using Plane = SteelOfStalin.Props.Units.Air.Plane;
-using SteelOfStalin.CustomTypes;
+using Plane = SteelOfStalin.Assets.Props.Units.Air.Plane;
+using Module = SteelOfStalin.Assets.Customizables.Module;
 
 namespace SteelOfStalin.Util
 {
@@ -69,89 +72,156 @@ namespace SteelOfStalin.Util
 
         public static bool HasAnyOfFlags<T>(this T @enum, T group) where T : Enum => (Convert.ToInt64(@enum) & Convert.ToInt64(group)) != 0;
 
-        public static double RandomBetweenSymmetricRange(double range) => range * (new System.Random().NextDouble() * 2 - 1);
+        public static Func<T, bool> AndAll<T>(this Func<T, bool>[] predicates) => (t) =>
+        {
+            foreach (Func<T, bool> predicate in predicates)
+            {
+                if (!predicate(t))
+                {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        public static bool IsNonInteger(this Type type) => type.IsPrimitive && (type == typeof(decimal) || type == typeof(decimal) || type == typeof(float));
+
+        public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(new System.Random().NextDouble() * 2 - 1);
         public static string ToPascalCase(string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
+        public static string PrintMembers(object invoke_target)
+        {
+            if (invoke_target == null)
+            {
+                return "null";
+            }
+
+            IEnumerable<Type> attributes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.Namespace != null && t.Namespace.Contains("SteelOfStalin.Attributes"));
+            Type type = invoke_target.GetType();
+            string sep = Environment.NewLine;
+            List<string> line = new List<string>() { type.Name };
+
+            // skip members with index (like list, array etc.) for now, think of a way to deal with them later
+            type.GetProperties().Where(p => p.GetIndexParameters().Length == 0).ToList().ForEach(p =>
+            {
+                object p_val = p.GetValue(invoke_target);
+                if (p.PropertyType.IsPrimitive || p.PropertyType.IsEnum)
+                {
+                    line.Add($"{p.Name}\t\t:{p_val}");
+                }
+                else if (attributes.Contains(p.PropertyType))
+                {
+                    line.Add($"{p.Name}: " + (p_val != null ? PrintMembers(p_val) : "null"));
+                }
+            });
+            return string.Join(sep, line);
+        }
     }
 
     public static class Formula
     {
-        public static Func<(IOffensiveCustomizable weapon, double distance), double> DamageDropoff => (input) =>
+        public static Func<(IOffensiveCustomizable weapon, decimal distance), decimal> DamageDropoff => (input) =>
         {
-            double d = input.weapon.Offense.Damage.Dropoff.ApplyMod();
-            double r = 1 + 0.6 / Math.Pow(input.weapon.Offense.MaxRange.ApplyMod(), 2);
-            return 1.4 / Math.PI * (Math.Acos(d * r * input.distance - 1) - d * r * Math.Sqrt(-input.distance * (input.distance - 2 / (d * r))));
+            decimal d = input.weapon.Offense.Damage.Dropoff.ApplyMod();
+            decimal r = 1 + 0.6M / MathExtension.Pow(input.weapon.Offense.MaxRange.ApplyMod(), 2);
+            return 1.4M / MathExtension.PI * (MathExtension.Acos(d * r * input.distance - 1) - d * r * MathExtension.Sqrt(-input.distance * (input.distance - 2 / (d * r))));
         };
-        public static Func<(Attribute soft, Attribute hard, double multiplier, Attribute hardness), double> DamageWithHardness => (input) =>
+        public static Func<(Attribute soft, Attribute hard, decimal multiplier, Attribute hardness), decimal> DamageWithHardness => (input) =>
         {
-            double soft_damage = input.soft * input.multiplier * (1 - input.hardness);
-            double hard_damage = input.hard * input.multiplier * input.hardness;
+            decimal soft_damage = input.soft * input.multiplier * (1 - input.hardness);
+            decimal hard_damage = input.hard * input.multiplier * input.hardness;
             return soft_damage + hard_damage;
         };
-        public static Func<(IOffensiveCustomizable weapon, Unit defender, double distance), double> DamageAgainstPersonnel => (input) =>
+        public static Func<(IOffensiveCustomizable weapon, Unit defender, decimal distance), decimal> DamageAgainstPersonnel => (input) =>
         {
             Accuracy accuracy = input.weapon.Offense.Accuracy;
             Damage damage = input.weapon.Offense.Damage;
             Defense defense = input.defender.Defense;
 
-            double final_accuracy = accuracy.Normal.ApplyMod() + accuracy.Deviation.ApplyDeviation();
-            double dropoff = input.weapon is Gun ? 1 : DamageDropoff((input.weapon, input.distance));
-            double damage_multiplier = (1 + damage.Deviation.ApplyDeviation()) * (1 - defense.Evasion) * dropoff;
+            decimal final_accuracy = accuracy.Normal.ApplyMod() + accuracy.Deviation.ApplyDeviation();
+            decimal dropoff = input.weapon is Gun ? 1 : DamageDropoff((input.weapon, input.distance));
+            decimal damage_multiplier = (1 + damage.Deviation.ApplyDeviation()) * (1 - defense.Evasion) * dropoff;
             return DamageWithHardness((damage.Soft, damage.Hard, damage_multiplier, defense.Hardness));
         };
-        public static Func<(IOffensiveCustomizable weapon, Unit defender, double distance), double> DamageAgainstZeroResistance => (input) =>
+        public static Func<(IOffensiveCustomizable weapon, Unit defender, decimal distance), decimal> DamageAgainstZeroResistance => (input) =>
         {
             Damage damage = input.weapon.Offense.Damage;
             Defense defense = input.defender.Defense;
 
-            double dropoff = input.weapon is Gun ? 1 : DamageDropoff((input.weapon, input.distance));
-            double damage_multiplier = 0.25 * (1 + damage.Deviation.ApplyDeviation()) * dropoff;
+            decimal dropoff = input.weapon is Gun ? 1 : DamageDropoff((input.weapon, input.distance));
+            decimal damage_multiplier = 0.25M * (1 + damage.Deviation.ApplyDeviation()) * dropoff;
             return DamageWithHardness((damage.Soft, damage.Hard, damage_multiplier, defense.Hardness));
         };
-        public static Func<(IOffensiveCustomizable weapon, Unit defender), double> EffectiveSuppression => (input) =>
+        public static Func<(IOffensiveCustomizable weapon, Unit defender), decimal> EffectiveSuppression => (input) =>
         {
             Offense offense = input.weapon.Offense;
             Defense defense = input.defender.Defense;
 
-            double final_accuracy = offense.Accuracy.Suppress.ApplyMod() + offense.Accuracy.Deviation.ApplyDeviation();
-            double suppress = offense.Suppression.ApplyMod() * final_accuracy;
+            decimal final_accuracy = offense.Accuracy.Suppress.ApplyMod() + offense.Accuracy.Deviation.ApplyDeviation();
+            decimal suppress = offense.Suppression.ApplyMod() * final_accuracy;
             int round = input.defender.ConsecutiveSuppressedRound;
-            double determinant = -round * (round - 2 / suppress);
+            decimal determinant = -round * (round - 2 / suppress);
 
-            return determinant > 0 ? 1.1 * (1 - 1 / Math.PI * (Math.Acos(suppress * round - 1) - suppress * Math.Sqrt(determinant))) : 1.1;
+            return determinant > 0 ? 1.1M * (1 - 1 / MathExtension.PI * MathExtension.Acos((suppress * round - 1) - suppress * MathExtension.Sqrt(determinant))) : 1.1M;
         };
-        public static Func<IOffensiveCustomizable, double> DamageAgainstBuilding => (weapon) => weapon.Offense.Damage.Destruction * weapon.Offense.Damage.Deviation.ApplyDeviation();
-        public static Func<(double observer_recon, double observer_detect, double observee_conceal, double distance), bool> VisualSpotting => (input) =>
+        public static Func<IOffensiveCustomizable, decimal> DamageAgainstBuilding => (weapon) => weapon.Offense.Damage.Destruction * weapon.Offense.Damage.Deviation.ApplyDeviation();
+        public static Func<(decimal observer_recon, decimal observer_detect, decimal observee_conceal, decimal distance), bool> VisualSpotting => (input) =>
         {
-            if (input.distance > input.observer_recon || input.observer_recon <= 0.5)
+            if (input.distance > input.observer_recon || input.observer_recon <= 0.5M)
             {
                 return false;
             }
-            double determinant = 2 * input.observer_recon / input.distance - 1;
+            decimal determinant = 2 * input.observer_recon / input.distance - 1;
             if (determinant <= 0)
             {
                 return false;
             }
-            double detection_at_range = input.observer_detect / Math.Log(2 * input.observer_recon - 1) * Math.Log(determinant);
+            decimal detection_at_range = (decimal)(input.observer_detect / MathExtension.Log(2 * input.observer_recon - 1) * MathExtension.Log(determinant));
             return detection_at_range > input.observee_conceal;
         };
-        public static Func<(Unit observer, Unit observee, double distance), bool> AcousticRanging => (input) =>
+        public static Func<(Unit observer, Unit observee, decimal distance), bool> AcousticRanging => (input) =>
         {
             // TODO
             return false;
         };
     }
+
+    public static class MathExtension
+    {
+        public const decimal PI = (decimal)Math.PI;
+        public static decimal Pow(decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
+        public static decimal Log(decimal d) => (decimal)Math.Log((double)d);
+        public static decimal Sqrt(decimal d) => (decimal)Math.Sqrt((double)d);
+        public static decimal Acos(decimal d) => (decimal)Math.Acos((double)d);
+    }
 }
 
 namespace SteelOfStalin.DataIO
 {
-    public abstract class Data<T> where T : INamedAsset
+    public abstract class Data<T> where T : INamedAsset, ICloneable
     {
         protected virtual string JsonFolderPath => $@"{ExternalFilePath}\Json";
 
         public abstract void Load();
         public abstract IEnumerable<T> All { get; }
+        public virtual IEnumerable<T> FYPImplement => All;
+
         public T this[string name] => All.Find(a => a.Name == name);
-        protected FileInfo[] GetJsonFiles(string path) => new DirectoryInfo(path).GetFiles("*.json");
+        public T GetNew(string name) => (T)All.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
+
+        protected FileInfo[] GetJsonFiles(string path) => new DirectoryInfo(path).GetFiles("*.json", SearchOption.AllDirectories);
+        protected void PrintEmptyListNames()
+        {
+            IEnumerable<PropertyInfo> lists = GetType().GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(List<>));
+            foreach (PropertyInfo info in lists)
+            {
+                object list = GetType().InvokeMember(info.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty, null, this, null);
+                int count = (int)list.GetType().GetProperty("Count").GetValue(list);
+                if (count == 0)
+                {
+                    Debug.LogWarning($"{info.Name} is empty");
+                }
+            }
+        }
     }
 
     public sealed class UnitData : Data<Unit>
@@ -163,53 +233,63 @@ namespace SteelOfStalin.DataIO
         public List<Vessel> Vessels { get; set; } = new List<Vessel>();
         public List<Plane> Planes { get; set; } = new List<Plane>();
 
-        public override IEnumerable<Unit> All => Utilities.CombineAll<Unit>(Personnels, Artilleries, Vehicles, Vessels, Planes);
+        public override IEnumerable<Unit> All => CombineAll<Unit>(Personnels, Artilleries, Vehicles, Vessels, Planes);
+        public override IEnumerable<Unit> FYPImplement => new List<Unit>()
+        {
+            GetNew("militia"),
+            GetNew("infantry"),
+            GetNew("assault"),
+            GetNew("engineer"),
+            GetNew("mountain"),
+            GetNew("support"),
+            GetNew("portable"),
+            GetNew("direct_fire"),
+            GetNew("anti_tank"),
+            GetNew("heavy_support"),
+            GetNew("self_propelled"),
+            GetNew("motorised_infantry"),
+            GetNew("utility"),
+            GetNew("carrier"),
+            GetNew("armoured_car"),
+            GetNew("tank_destroyer"),
+            GetNew("assault_gun"),
+            GetNew("light_tank"),
+            GetNew("medium_tank"),
+            GetNew("heavy_tank")
+        };
 
         public override void Load()
         {
-            string[] subfolders = new string[] { "personnels", "artilleries", "vehicles", "vessels", "planes" };
-            foreach (string subfolder in subfolders)
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
-                string subfolder_path = $@"{JsonFolderPath}\{subfolder}";
-                string sub_type = subfolder == "planes" ? "Aerial" : subfolder == "vessels" ? "Sea" : "Land";
-                string base_type_name = $"SteelOfStalin.Props.Units.{sub_type}.{ToPascalCase(subfolder)}";
-                foreach (FileInfo file in GetJsonFiles(subfolder_path))
+                string json = File.ReadAllText(f.FullName);
+                Unit u = JsonSerializer.Deserialize<Unit>(json, Options);
+                if (u is Personnel p)
                 {
-                    string proper_type_name = $"{base_type_name}.{ToPascalCase(Path.GetFileNameWithoutExtension(file.Name))}";
-                    Type type = Type.GetType(proper_type_name);
-                    if (type == null)
-                    {
-                        Debug.LogError($"No type is with proper name {proper_type_name}");
-                        continue;
-                    }
-                    string json = File.ReadAllText($@"{subfolder_path}\{file.Name}");
-                    object o = JsonSerializer.Deserialize<Unit>(json, Options);
-                    if (o is Personnel p)
-                    {
-                        Personnels.Add(p);
-                    }
-                    else if (o is Artillery a)
-                    {
-                        Artilleries.Add(a);
-                    }
-                    else if (o is Vehicle v)
-                    {
-                        Vehicles.Add(v);
-                    }
-                    else if (o is Vessel e)
-                    {
-                        Vessels.Add(e);
-                    }
-                    else if (o is Plane l)
-                    {
-                        Planes.Add(l);
-                    }
-                    else
-                    {
-                        Debug.LogError($"Unknown unit type {o.GetType().Name}");
-                    }
+                    Personnels.Add(p);
+                }
+                else if (u is Artillery a)
+                {
+                    Artilleries.Add(a);
+                }
+                else if (u is Vehicle v)
+                {
+                    Vehicles.Add(v);
+                }
+                else if (u is Vessel e)
+                {
+                    Vessels.Add(e);
+                }
+                else if (u is Plane l)
+                {
+                    Planes.Add(l);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown unit type {u.GetType().Name}");
                 }
             }
+            PrintEmptyListNames();
             Debug.Log("All units data loaded.");
         }
     }
@@ -223,91 +303,126 @@ namespace SteelOfStalin.DataIO
         public List<TransmissionBuilding> Transmissions { get; set; } = new List<TransmissionBuilding>();
         public List<DefensiveBuilding> Defensives { get; set; } = new List<DefensiveBuilding>();
 
-        public override IEnumerable<Building> All => Utilities.CombineAll<Building>(Units, Resources, Infrastructures, Transmissions, Defensives);
+        public override IEnumerable<Building> All => CombineAll<Building>(Units, Resources, Infrastructures, Transmissions, Defensives);
 
         public override void Load()
         {
-            string[] subfolders = new string[] { "productions", "units", "infrastructures", "defensives", "transmissions" };
-            foreach (string subfolder in subfolders)
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
-                string subfolder_path = $@"{JsonFolderPath}\{subfolder}";
-                string base_type_name = $"SteelOfStalin.Props.Buildings.{ToPascalCase(subfolder)}";
-                foreach (FileInfo file in GetJsonFiles(subfolder_path))
+                string json = File.ReadAllText(f.FullName);
+                object b = JsonSerializer.Deserialize<Building>(json, Options);
+                if (b is UnitBuilding u)
                 {
-                    string proper_type_name = $"{base_type_name}.{ToPascalCase(Path.GetFileNameWithoutExtension(file.Name))}";
-                    Type type = Type.GetType(proper_type_name);
-                    if (type == null)
-                    {
-                        Debug.LogError($"No type is with proper name {proper_type_name}");
-                        return;
-                    }
-                    string json = File.ReadAllText($@"{subfolder_path}\{file.Name}");
-                    object o = JsonSerializer.Deserialize(json, type, Options);
-                    if (o is UnitBuilding u)
-                    {
-                        Units.Add(u);
-                    }
-                    else if (o is ProductionBuilding r)
-                    {
-                        Resources.Add(r);
-                    }
-                    else if (o is Infrastructure i)
-                    {
-                        Infrastructures.Add(i);
-                    }
-                    else if (o is TransmissionBuilding t)
-                    {
-                        Transmissions.Add(t);
-                    }
-                    else if (o is DefensiveBuilding d)
-                    {
-                        Defensives.Add(d);
-                    }
+                    Units.Add(u);
+                }
+                else if (b is ProductionBuilding r)
+                {
+                    Resources.Add(r);
+                }
+                else if (b is Infrastructure i)
+                {
+                    Infrastructures.Add(i);
+                }
+                else if (b is TransmissionBuilding t)
+                {
+                    Transmissions.Add(t);
+                }
+                else if (b is DefensiveBuilding d)
+                {
+                    Defensives.Add(d);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown building type {b.GetType().Name}");
                 }
             }
+            PrintEmptyListNames();
             Debug.Log("All buildings data loaded.");
         }
     }
 
     public sealed class TileData : Data<Tile>
     {
+        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\tiles";
+
         public List<Tile> Terrains { get; set; } = new List<Tile>();
         public List<Cities> Cities { get; set; } = new List<Cities>();
 
-        public override IEnumerable<Tile> All => Utilities.CombineAll<Tile>(Terrains, Cities);
+        public override IEnumerable<Tile> All => CombineAll<Tile>(Terrains, Cities);
 
-        public Tile GetNewTile(string name) => (Tile)Terrains.Find(t => t.Name == name).Clone();
-        public Tile GetNewTile(TileType type) => (Tile)Terrains.Find(t => t.Type == type).Clone();
-        public Cities GetNewCities(string name) => (Cities)Cities.Find(c => c.Name == name).Clone();
+        public Tile GetNewTile(TileType type) => (Tile)Terrains.Find(t => t.Type == type)?.Clone() ?? throw new ArgumentException($"There is no tiles with type {type}");
+        public Cities GetNewCities(string name) => (Cities)Cities.Find(c => c.Name == name)?.Clone() ?? throw new ArgumentException($"There is no cities named {name}");
 
         public override void Load()
         {
-            Terrains = DeserializeJsonWithAbstractType<Tile>(@"Json\tile", "Name", "SteelOfStalin.Props.Tiles").ToList();
-            Cities = DeserializeJsonWithAbstractType<Cities>(@"Json\cities", "Name", "SteelOfStalin.Props.Tiles").ToList();
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
+            {
+                string json = File.ReadAllText(f.FullName);
+                object t = JsonSerializer.Deserialize<Tile>(json, Options);
+                if (t.GetType().IsSubclassOf(typeof(Cities)))
+                {
+                    Cities.Add((Cities)t);
+                }
+                else if (t is Tile tile)
+                {
+                    Terrains.Add(tile);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown tile type {t.GetType().Name}");
+                }
+            }
+            PrintEmptyListNames();
             Debug.Log("All tiles data loaded.");
         }
     }
 
     public sealed class CustomizableData : Data<Customizable>
     {
+        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\customizables";
         public List<Firearm> Firearms { get; set; } = new List<Firearm>();
         public ModuleData Modules { get; set; } = new ModuleData();
         public List<Shell> Shells { get; set; } = new List<Shell>();
 
-        public override IEnumerable<Customizable> All => Utilities.CombineAll<Customizable>(Firearms, Modules.All, Shells);
+        public override IEnumerable<Customizable> All => CombineAll<Customizable>(Firearms, Modules.All, Shells);
 
-        public Firearm GetNewFirearm(string name) => (Firearm)Firearms.Find(f => f.Name == name).Clone();
-        public Module GetNewModule(string name) => (Module)Modules.All.Find(m => m.Name == name).Clone();
-        public Shell GetNewShell(string name) => (Shell)Shells.Find(s => s.Name == name).Clone();
+        public Firearm GetNewFirearm(string name) => (Firearm)Firearms.Find(f => f.Name == name)?.Clone() ?? throw new ArgumentException($"There is no firearms named {name}");
+        public Module GetNewModule(string name) => (Module)Modules.All.Find(m => m.Name == name)?.Clone() ?? throw new ArgumentException($"There is no modules named {name}");
+        public Shell GetNewShell(string name) => (Shell)Shells.Find(s => s.Name == name)?.Clone() ?? throw new ArgumentException($"There is no shells named {name}");
 
         public override void Load()
         {
-
+            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
+            {
+                string json = File.ReadAllText(f.FullName); 
+                Customizable c = JsonSerializer.Deserialize<Customizable>(json, Options);
+                if (c is Module m)
+                {
+                    Modules.Add(m);
+                }
+                else if (c is Firearm fire)
+                {
+                    Firearms.Add(fire);
+                }
+                else if (c is Shell s)
+                {
+                    Shells.Add(s);
+                }
+                else
+                {
+                    Debug.LogError($"Unknown customizable type {c.GetType().Name}");
+                }
+            }
+            PrintEmptyListNames();
+            Modules.Load();
+            Debug.Log("All customizables data loaded.");
         }
     }
 
     public sealed class ModuleData : Data<Module>
     {
+        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\customizables\modules";
+
         public GunData Guns { get; set; } = new GunData();
         public List<HeavyMachineGun> HeavyMachineGuns { get; set; } = new List<HeavyMachineGun>();
         public List<Engine> Engines { get; set; } = new List<Engine>();
@@ -324,11 +439,80 @@ namespace SteelOfStalin.DataIO
         public List<LandingGear> LandingGears { get; set; } = new List<LandingGear>();
         public List<Radar> Radars { get; set; } = new List<Radar>();
 
-        public override IEnumerable<Module> All => Utilities.CombineAll<Module>(Guns.All, HeavyMachineGuns, Engines, Suspensions, Radios, Periscopes, FuelTanks, AmmoRacks, TorpedoTubes, Sonars, Propellers, Rudders, Wings, LandingGears, Radars);
+        public override IEnumerable<Module> All => CombineAll<Module>(Guns.All, HeavyMachineGuns, Engines, Suspensions, Radios, Periscopes, FuelTanks, AmmoRacks, TorpedoTubes, Sonars, Propellers, Rudders, Wings, LandingGears, Radars);
 
         public override void Load()
         {
-            
+            PrintEmptyListNames();
+            Guns.Load();
+        }
+
+        public void Add(Module m)
+        {
+            if (m is Gun g)
+            {
+                Guns.Add(g);
+            }
+            else if (m is HeavyMachineGun h)
+            {
+                HeavyMachineGuns.Add(h);
+            }
+            else if (m is Engine e)
+            {
+                Engines.Add(e);
+            }
+            else if (m is Suspension s)
+            {
+                Suspensions.Add(s);
+            }
+            else if (m is Radio r)
+            {
+                Radios.Add(r);
+            }
+            else if (m is Periscope p)
+            {
+                Periscopes.Add(p);
+            }
+            else if (m is FuelTank f)
+            {
+                FuelTanks.Add(f);
+            }
+            else if (m is AmmoRack a)
+            {
+                AmmoRacks.Add(a);
+            }
+            else if (m is TorpedoTubes t)
+            {
+                TorpedoTubes.Add(t);
+            }
+            else if (m is Sonar so)
+            {
+                Sonars.Add(so);
+            }
+            else if (m is Propeller pr)
+            {
+                Propellers.Add(pr);
+            }
+            else if (m is Rudder ru)
+            {
+                Rudders.Add(ru);
+            }
+            else if (m is Wings w)
+            {
+                Wings.Add(w);
+            }
+            else if (m is LandingGear l)
+            {
+                LandingGears.Add(l);
+            }
+            else if (m is Radar ra)
+            {
+                Radars.Add(ra);
+            }
+            else
+            {
+                Debug.LogError($"Unknown module type {m.GetType().Name}");
+            }
         }
     }
 
@@ -338,11 +522,28 @@ namespace SteelOfStalin.DataIO
         public List<Howitzer> Howitzers { get; set; } = new List<Howitzer>();
         public List<AutoCannon> AutoCannons { get; set; } = new List<AutoCannon>();
 
-        public override IEnumerable<Gun> All => Utilities.CombineAll<Gun>(Cannons, Howitzers, AutoCannons);
+        public override IEnumerable<Gun> All => CombineAll<Gun>(Cannons, Howitzers, AutoCannons);
 
-        public override void Load()
+        public override void Load() => PrintEmptyListNames();
+
+        public void Add(Gun g)
         {
-            
+            if (g is Cannon c)
+            {
+                Cannons.Add(c);
+            }
+            else if (g is Howitzer h)
+            {
+                Howitzers.Add(h);
+            }
+            else if (g is AutoCannon a)
+            {
+                AutoCannons.Add(a);
+            }
+            else
+            {
+                Debug.LogError($"Unknown gun type {g.GetType().Name}");
+            }
         }
     }
 
@@ -352,7 +553,7 @@ namespace SteelOfStalin.DataIO
         {
             WriteIndented = true,
             IgnoreReadOnlyProperties = true,
-            Converters = { new RoundingJsonConverter() }
+            // Converters = { new RoundingJsonConverter() }
         };
         public static string ExternalFilePath => ConvertToWindowsPath(Application.streamingAssetsPath);
 

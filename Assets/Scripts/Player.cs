@@ -1,6 +1,6 @@
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
-using SteelOfStalin.Props.Units;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,15 +35,15 @@ namespace SteelOfStalin
         public void ProduceResources() => Cities.Where(c => !c.IsDestroyed).ToList().ForEach(c => Resources.Produce(c.Production));
         public void ConsumeResources(Resources cost) => Resources.Consume(cost);
         public bool HasEnoughResources(Resources need) => Resources.HasEnoughResources(need);
-        public string GetResourcesChangeRecord(string res, double change) => res switch
+        public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
-            "Money" => $" m:{change:+#.##;-#.##}=>{Resources.Money} ",
-            "Steel'" => $" t:{change:+#.##;-#.##}=>{Resources.Steel} ",
-            "Supplies" => $" s:{change:+#.##;-#.##}=>{Resources.Supplies} ",
-            "Cartridges" => $" c:{change:+#.##;-#.##}=>{Resources.Cartridges} ",
-            "Shells" => $" h:{change:+#.##;-#.##}=>{Resources.Shells} ",
-            "Fuel" => $" f:{change:+#.##;-#.##}=>{Resources.Fuel} ",
-            "RareMetal" => $" r:{change:+#.##;-#.##}=>{Resources.RareMetal} ",
+            "Money" => $" m:{change:+0.##;-0.##}=>{Resources.Money} ",
+            "Steel'" => $" t:{change:+0.##;-0.##}=>{Resources.Steel} ",
+            "Supplies" => $" s:{change:+0.##;-0.##}=>{Resources.Supplies} ",
+            "Cartridges" => $" c:{change:+0.##;-0.##}=>{Resources.Cartridges} ",
+            "Shells" => $" h:{change:+0.##;-0.##}=>{Resources.Shells} ",
+            "Fuel" => $" f:{change:+0.##;-0.##}=>{Resources.Fuel} ",
+            "RareMetal" => $" r:{change:+0.##;-0.##}=>{Resources.RareMetal} ",
             _ => throw new ArgumentException($"Unknown resources symbol {res}")
         };
         public string GetResourcesChangeRecord(Resources consume)

@@ -1,16 +1,16 @@
 using SteelOfStalin.Attributes;
-using SteelOfStalin.Customizables;
-using SteelOfStalin.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.CustomTypes;
-using SteelOfStalin.Props.Buildings;
-using SteelOfStalin.Props.Tiles;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 
-namespace SteelOfStalin.Props.Units
+namespace SteelOfStalin.Assets.Props.Units
 {
     public abstract class Ground : Unit
     {
@@ -25,9 +25,9 @@ namespace SteelOfStalin.Props.Units
             if (Consumption.Fuel > 0)
             {
                 IEnumerable<Tile> neighbours = GetAccessibleNeigbours();
-                IEnumerable<(double supplies, double fuel)> consumption_pairs = neighbours.Select(n => (n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies), n.TerrainMod.Fuel.ApplyTo(Consumption.Fuel)));
-                (double supplies, double fuel) cheapest_supplies = consumption_pairs.OrderBy(c => c.supplies).First();
-                (double supplies, double fuel) cheapest_fuel = consumption_pairs.OrderBy(c => c.fuel).First();
+                IEnumerable<(decimal supplies, decimal fuel)> consumption_pairs = neighbours.Select(n => (n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies), n.TerrainMod.Fuel.ApplyTo(Consumption.Fuel)));
+                (decimal supplies, decimal fuel) cheapest_supplies = consumption_pairs.OrderBy(c => c.supplies).First();
+                (decimal supplies, decimal fuel) cheapest_fuel = consumption_pairs.OrderBy(c => c.fuel).First();
 
                 return (Carrying.Supplies >= cheapest_supplies.supplies && Carrying.Fuel >= cheapest_supplies.fuel)
                     || (Carrying.Supplies >= cheapest_fuel.supplies && Carrying.Fuel >= cheapest_fuel.fuel);
@@ -56,7 +56,7 @@ namespace SteelOfStalin.Props.Units
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land
+namespace SteelOfStalin.Assets.Props.Units.Land
 {
     public abstract class Personnel : Ground
     {
@@ -67,13 +67,13 @@ namespace SteelOfStalin.Props.Units.Land
         public Attribute CaptureEfficiency { get; set; } = new Attribute();
 
         public Personnel() : base() { }
-        public Personnel(Personnel another)
+        public Personnel(Personnel another) : base(another)
             => (PrimaryFirearm, SecondaryFirearm, DefaultPrimary, AvailableFirearms, CaptureEfficiency)
-            = ((Firearm)another.PrimaryFirearm.Clone(),
-                (Firearm)another.SecondaryFirearm.Clone(),
-                (string)another.DefaultPrimary.Clone(),
-                new List<string>(another.AvailableFirearms),
-                (Attribute)another.CaptureEfficiency.Clone());
+            = ((Firearm)another.PrimaryFirearm?.Clone(),
+               (Firearm)another.SecondaryFirearm?.Clone(),
+               another.DefaultPrimary,
+               new List<string>(another.AvailableFirearms),
+               (Attribute)another.CaptureEfficiency?.Clone());
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PERSONNEL);
@@ -136,7 +136,7 @@ namespace SteelOfStalin.Props.Units.Land
     public abstract class Artillery : Ground
     {
         public bool IsAssembled { get; set; } = false;
-        public double AssembleTime { get; set; }
+        public decimal AssembleTime { get; set; }
         public string DefaultGun { get; set; }
         public List<string> AvailableGuns { get; set; } = new List<string>();
         public Gun Gun { get; set; }
@@ -146,11 +146,11 @@ namespace SteelOfStalin.Props.Units.Land
         public Artillery(Artillery another) : base(another)
             => (IsAssembled, AssembleTime, DefaultGun, AvailableGuns, Gun, Radio)
             = (another.IsAssembled,
-                another.AssembleTime,
-                (string)another.DefaultGun.Clone(),
-                new List<string>(another.AvailableGuns),
-                (Gun)another.Gun.Clone(),
-                (Radio)another.Radio.Clone());
+               another.AssembleTime,
+               another.DefaultGun,
+               new List<string>(another.AvailableGuns),
+               (Gun)another.Gun?.Clone(),
+               (Radio)another.Radio?.Clone());
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.ARTILLERY);
@@ -197,12 +197,12 @@ namespace SteelOfStalin.Props.Units.Land
                 new List<string>(another.AvailableMainArmaments),
                 new List<Gun>(another.Guns),
                 new List<HeavyMachineGun>(another.HeavyMachineGuns),
-                (Engine)another.Engine.Clone(),
-                (Suspension)another.Suspension.Clone(),
-                (Radio)another.Radio.Clone(),
-                (Periscope)another.Periscope.Clone(),
-                (FuelTank)another.FuelTank.Clone(),
-                (AmmoRack)another.AmmoRack.Clone());
+                (Engine)another.Engine?.Clone(),
+                (Suspension)another.Suspension?.Clone(),
+                (Radio)another.Radio?.Clone(),
+                (Periscope)another.Periscope?.Clone(),
+                (FuelTank)another.FuelTank?.Clone(),
+                (AmmoRack)another.AmmoRack?.Clone());
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.VEHICLE);
@@ -244,7 +244,7 @@ namespace SteelOfStalin.Props.Units.Land
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land.Personnels
+namespace SteelOfStalin.Assets.Props.Units.Land.Personnels
 {
     // different types of personnel units here, all should inherit Personnel
     public class Militia : Personnel
@@ -284,7 +284,7 @@ namespace SteelOfStalin.Props.Units.Land.Personnels
         public Attribute RepairingEfficiency { get; set; }
 
         public Engineer() : base() { }
-        public Engineer(Engineer another) : base(another) => RepairingEfficiency = (Attribute)another.RepairingEfficiency.Clone();
+        public Engineer(Engineer another) : base(another) => RepairingEfficiency = (Attribute)another.RepairingEfficiency?.Clone();
         public override object Clone() => new Engineer(this);
 
         public bool CanRepair() => GetOwnUnitsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(u => u.GetModules() != null);
@@ -293,7 +293,7 @@ namespace SteelOfStalin.Props.Units.Land.Personnels
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land.Artilleries
+namespace SteelOfStalin.Assets.Props.Units.Land.Artilleries
 {
     // different types of artilleries units here, all should inherit Artillery
     public class Portable : Artillery
@@ -352,7 +352,7 @@ namespace SteelOfStalin.Props.Units.Land.Artilleries
     }
 }
 
-namespace SteelOfStalin.Props.Units.Land.Vehicles
+namespace SteelOfStalin.Assets.Props.Units.Land.Vehicles
 {
     // different types of vehicles units here, all should inherit Vehicle
     public class MotorisedInfantry : Vehicle
@@ -366,7 +366,7 @@ namespace SteelOfStalin.Props.Units.Land.Vehicles
         public LoadLimit LoadLimit { get; set; }
 
         public Utility() : base() { }
-        public Utility(Utility another) : base(another) { }
+        public Utility(Utility another) : base(another) => LoadLimit = (LoadLimit)another.LoadLimit.Clone();
         public override object Clone() => new Utility(this);
     }
     public class Carrier : Vehicle
@@ -374,7 +374,7 @@ namespace SteelOfStalin.Props.Units.Land.Vehicles
         public LoadLimit LoadLimit { get; set; }
 
         public Carrier() : base() { }
-        public Carrier(Carrier another) : base(another) { }
+        public Carrier(Carrier another) : base(another) => LoadLimit = (LoadLimit)another.LoadLimit.Clone();
         public override object Clone() => new Carrier(this);
     }
     public class ArmouredCar : Vehicle
@@ -418,12 +418,12 @@ namespace SteelOfStalin.Props.Units.Land.Vehicles
         public LoadLimit LoadLimit { get; set; }
 
         public ArmouredTrain() : base() { }
-        public ArmouredTrain(ArmouredTrain another) : base(another) { }
+        public ArmouredTrain(ArmouredTrain another) : base(another) => LoadLimit = (LoadLimit)another.LoadLimit.Clone();
         public override object Clone() => new ArmouredTrain(this);
     }
 }
 
-namespace SteelOfStalin.Props.Units.Sea
+namespace SteelOfStalin.Assets.Props.Units.Sea
 {
     public abstract class Vessel : Naval
     {
@@ -441,7 +441,7 @@ namespace SteelOfStalin.Props.Units.Sea
         public Propeller Propeller { get; set; }
         public Rudder Rudder { get; set; }
         public Radar Radar { get; set; }
-        public double Altitude { get; set; }
+        public decimal Altitude { get; set; }
 
         public Vessel() : base() { }
         public Vessel(Vessel another) : base(another)
@@ -452,14 +452,14 @@ namespace SteelOfStalin.Props.Units.Sea
                 new List<string>(another.AvailableSecondaryArmaments),
                 new List<Gun>(another.Guns),
                 new List<HeavyMachineGun>(another.HeavyMachineGuns),
-                (Engine)another.Engine.Clone(),
-                (Radio)another.Radio.Clone(),
-                (Periscope)another.Periscope.Clone(),
-                (FuelTank)another.FuelTank.Clone(),
-                (AmmoRack)another.AmmoRack.Clone(),
-                (Propeller)another.Propeller.Clone(),
-                (Rudder)another.Rudder.Clone(),
-                (Radar)another.Radar.Clone(),
+                (Engine)another.Engine?.Clone(),
+                (Radio)another.Radio?.Clone(),
+                (Periscope)another.Periscope?.Clone(),
+                (FuelTank)another.FuelTank?.Clone(),
+                (AmmoRack)another.AmmoRack?.Clone(),
+                (Propeller)another.Propeller?.Clone(),
+                (Rudder)another.Rudder?.Clone(),
+                (Radar)another.Radar?.Clone(),
                 another.Altitude);
 
         public abstract override object Clone();
@@ -562,7 +562,7 @@ namespace SteelOfStalin.Props.Units.Sea
     }
 }
 
-namespace SteelOfStalin.Props.Units.Air
+namespace SteelOfStalin.Assets.Props.Units.Air
 {
     public abstract class Plane : Aerial
     {
@@ -579,10 +579,22 @@ namespace SteelOfStalin.Props.Units.Air
         public Wings Wings { get; set; }
         public LandingGear LandingGear { get; set; }
         public Radar Radar { get; set; }
-        public double Altitude { get; set; }
+        public decimal Altitude { get; set; }
 
         public Plane() : base() { }
-        public Plane(Plane another) : base(another) => (Guns, HeavyMachineGuns) = (new List<Gun>(another.Guns), new List<HeavyMachineGun>(another.HeavyMachineGuns));
+        public Plane(Plane another) : base(another) 
+            => (Guns, HeavyMachineGuns, Engine, Radio, FuelTank, AmmoRack, Propeller, Rudder, Wings, LandingGear, Radar) 
+            = (new List<Gun>(another.Guns),
+               new List<HeavyMachineGun>(another.HeavyMachineGuns),
+               (Engine)another.Engine?.Clone(),
+               (Radio)another.Radio?.Clone(),
+               (FuelTank)another.FuelTank?.Clone(),
+               (AmmoRack)another.AmmoRack?.Clone(),
+               (Propeller)another.Propeller?.Clone(),
+               (Rudder)another.Rudder?.Clone(),
+               (Wings)another.Wings?.Clone(),
+               (LandingGear)another.LandingGear?.Clone(),
+               (Radar)another.Radar?.Clone());
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PLANE);

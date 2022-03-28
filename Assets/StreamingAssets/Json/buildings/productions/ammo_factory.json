@@ -1,4 +1,5 @@
 {
+  "ProduceCartridges": true,
   "ProductionStatus": 0,
   "Production": {
     "Money": {
@@ -72,8 +73,7 @@
       }
     }
   },
-  "Name": "ammo_factory",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -631,7 +631,8 @@
   },
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "ammo_factory",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

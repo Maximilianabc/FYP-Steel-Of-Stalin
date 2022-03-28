@@ -1,0 +1,36 @@
+{
+  "Type": "SWAMP",
+  "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": 40
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 50
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 100
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -75
+    }
+  },
+  "Obstruction": 0,
+  "AllowConstruction": false,
+  "Height": 0,
+  "Symbol": "W",
+  "Name": "swamp",
+  "MeshName": "",
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

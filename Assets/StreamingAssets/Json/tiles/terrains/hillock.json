@@ -1,0 +1,36 @@
+{
+  "Type": "HILLOCK",
+  "Accessibility": "PERSONNEL | ARTILLERY | PLANE",
+  "TerrainMod": {
+    "Recon": {
+      "Type": "FIXED_VALUE",
+      "Value": 2
+    },
+    "Concealment": {
+      "Type": "PERCENTAGE",
+      "Value": -10
+    },
+    "Supplies": {
+      "Type": "PERCENTAGE",
+      "Value": 10
+    },
+    "Fuel": {
+      "Type": "PERCENTAGE",
+      "Value": 50
+    },
+    "Mobility": {
+      "Type": "PERCENTAGE",
+      "Value": -60
+    }
+  },
+  "Obstruction": 0.75,
+  "AllowConstruction": false,
+  "Height": 2,
+  "Symbol": "I",
+  "Name": "hillock",
+  "MeshName": "",
+  "CoOrds": {
+    "X": 0,
+    "Y": 0
+  }
+}

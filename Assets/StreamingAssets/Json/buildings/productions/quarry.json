@@ -72,8 +72,7 @@
       }
     }
   },
-  "Name": "quarry",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -631,7 +630,8 @@
   },
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "quarry",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

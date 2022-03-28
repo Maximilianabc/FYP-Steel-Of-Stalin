@@ -1,6 +1,5 @@
 {
-  "Name": "bridge",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -558,7 +557,8 @@
   },
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "bridge",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

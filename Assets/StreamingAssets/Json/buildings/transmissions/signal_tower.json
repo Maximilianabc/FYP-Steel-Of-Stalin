@@ -6,8 +6,7 @@
       "Value": 0.5
     }
   },
-  "Name": "signal_tower",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -565,7 +564,8 @@
   },
   "DestroyTerrainOnBuilt": false,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "signal_tower",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

@@ -7,7 +7,6 @@
     }
   },
   "TrainingQueue": [],
-  "CurrentQueueTime": 0,
   "ReadyToDeploy": [],
   "DeployRange": {
     "Value": 1,
@@ -16,8 +15,7 @@
       "Value": 0.25
     }
   },
-  "Name": "barracks",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -575,7 +573,8 @@
   },
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "barracks",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

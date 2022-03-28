@@ -1,4 +1,4 @@
-using SteelOfStalin.Props.Units;
+using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Util;
 using System;
 using System.Collections.Generic;
@@ -20,20 +20,20 @@ namespace SteelOfStalin.Attributes
     public class Modifier : ICloneable
     {
         public ModifierType Type { get; set; }
-        public double Value { get; set; }
+        public decimal Value { get; set; }
 
         public Modifier() { }
-        public Modifier(ModifierType type, double value) => (Type, Value) = (type, value);
+        public Modifier(ModifierType type, decimal value) => (Type, Value) = (type, value);
         public Modifier(Modifier another) => (Type, Value) = (another.Type, another.Value);
 
-        public double ApplyTo(double? value = null) => Type switch
+        public decimal ApplyTo(decimal? value = null) => Type switch
         {
-            ModifierType.FIXED_VALUE => (double)(value == null ? Value : value + Value),
-            ModifierType.PERCENTAGE => (double)(value == null ? 1 + Value / 100 : value * (1 + Value / 100)),
-            ModifierType.MULTIPLE => (double)(value == null ? Value : value * (1 + Value)),
+            ModifierType.FIXED_VALUE => (decimal)(value == null ? Value : value + Value),
+            ModifierType.PERCENTAGE => (decimal)(value == null ? 1 + Value / 100 : value * (1 + Value / 100)),
+            ModifierType.MULTIPLE => (decimal)(value == null ? Value : value * (1 + Value)),
             _ => throw new NotImplementedException(),
         };
-        public double ApplyTo(Attribute a) => Type switch
+        public decimal ApplyTo(Attribute a) => Type switch
         {
             ModifierType.FIXED_VALUE => a.ApplyMod() + Value,
             ModifierType.PERCENTAGE => a.ApplyMod() * (1 + Value / 100),
@@ -44,25 +44,30 @@ namespace SteelOfStalin.Attributes
         public object Clone() => MemberwiseClone();
         public override string ToString() => Type switch
         {
-            ModifierType.FIXED_VALUE => Value.ToString("+#.##;-#.##"),
-            ModifierType.PERCENTAGE => $"{Value:+#.##;-#.##}%",
+            ModifierType.FIXED_VALUE => Value.ToString("+0.##;-0.##"),
+            ModifierType.PERCENTAGE => $"{Value:+0.##;-0.##}%",
             ModifierType.MULTIPLE => $"x{1 + Value}",
             _ => "",
         };
+        public override bool Equals(object obj) => this == (Modifier)obj;
+        public override int GetHashCode() => (Type, Value).GetHashCode();
 
         public static Modifier Min(params Modifier[] modifiers) =>
-            modifiers == null || modifiers.Length == 0
+            (modifiers == null || modifiers.Length == 0)
                 ? throw new ArgumentException("No modifiers to compare!")
                 : !modifiers.All(m => m.Type == modifiers[0].Type)
                     ? throw new ArgumentException("Cannot compare modifiers with different types!")
                     : modifiers.OrderBy(m => m.Value).First();
 
         public static Modifier Max(params Modifier[] modifiers) =>
-            modifiers == null || modifiers.Length == 0
+            (modifiers == null || modifiers.Length == 0)
                 ? throw new ArgumentException("No modifiers to compare!")
                 : !modifiers.All(m => m.Type == modifiers[0].Type)
                     ? throw new ArgumentException("Cannot compare modifiers with different types!")
                     : modifiers.OrderByDescending(m => m.Value).First();
+
+        public static bool operator ==(Modifier a, Modifier b) => a?.Type == b?.Type && a?.Value == b?.Value;
+        public static bool operator !=(Modifier a, Modifier b) => !(a?.Type == b?.Type && a?.Value == b?.Value);
     }
 
     public class TerrainModifier : ICloneable
@@ -83,6 +88,21 @@ namespace SteelOfStalin.Attributes
                (Modifier)another.Mobility.Clone());
 
         public object Clone() => new TerrainModifier(this);
+        public override bool Equals(object obj) => this == (TerrainModifier)obj;
+        public override int GetHashCode() => (Recon, Concealment, Supplies, Fuel, Mobility).GetHashCode();
+
+        public static bool operator ==(TerrainModifier a, TerrainModifier b) 
+            => a.Recon == b.Recon 
+            && a.Concealment == b.Concealment 
+            && a.Supplies == b.Supplies 
+            && a.Fuel == b.Fuel 
+            && a.Mobility == b.Mobility;
+        public static bool operator !=(TerrainModifier a, TerrainModifier b)
+            => !(a.Recon == b.Recon 
+            && a.Concealment == b.Concealment 
+            && a.Supplies == b.Supplies 
+            && a.Fuel == b.Fuel 
+            && a.Mobility == b.Mobility);
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -95,23 +115,23 @@ namespace SteelOfStalin.Attributes
     public class Attribute : ICloneable
     {
         public Modifier Mod { get; set; } = new Modifier();
-        public double Value { get; set; }
+        public decimal Value { get; set; }
 
         public Attribute() { }
-        public Attribute(double value, Modifier mod = null) => (Value, Mod) = (value, mod);
+        public Attribute(decimal value, Modifier mod = null) => (Value, Mod) = (value, mod);
 
-        public double ApplyMod() => Mod == null || Mod == default(Modifier) ? Value : Mod.ApplyTo(Value);
-        public double ApplyDeviation() => Utilities.RandomBetweenSymmetricRange(ApplyMod());
+        public decimal ApplyMod() => (Mod == null || Mod == default(Modifier)) ? Value : Mod.ApplyTo(Value);
+        public decimal ApplyDeviation() => Utilities.RandomBetweenSymmetricRange(ApplyMod());
 
-        public void PlusEquals(double value) => Value = ApplyMod() + value;
+        public void PlusEquals(decimal value) => Value = ApplyMod() + value;
         public void PlusEquals(Attribute attribute) => Value = ApplyMod() + attribute.ApplyMod();
 
-        public void MinusEquals(double value) => Value = ApplyMod() - value;
+        public void MinusEquals(decimal value) => Value = ApplyMod() - value;
         public void MinusEquals(Attribute attribute) => Value = ApplyMod() - attribute.ApplyMod();
 
-        public bool TryTestEnough(Attribute test, out (double have, double discrepancy) tuple)
+        public bool TryTestEnough(Attribute test, out (decimal have, decimal discrepancy) tuple)
         {
-            tuple = this >= test ? (0D, 0D) : (Value, test - this);
+            tuple = this >= test ? (0M, 0M) : (Value, test - this);
             return this >= test;
         }
 
@@ -121,44 +141,44 @@ namespace SteelOfStalin.Attributes
             attr.Mod = (Modifier)Mod.Clone();
             return attr;
         }
-        public override bool Equals(object obj) => base.Equals(obj);
-        public override int GetHashCode() => base.GetHashCode();
-        public override string ToString() => Mod == null || Mod == default(Modifier) ? ApplyMod().ToString() : $"{Value} ({Mod})";
+        public override bool Equals(object obj) => this == (Attribute)obj;
+        public override int GetHashCode() => (Mod, Value).GetHashCode();
+        public override string ToString() => (Mod == null || Mod == default(Modifier)) ? ApplyMod().ToString() : $"{Value} ({Mod})";
 
-        public static double operator +(Attribute a, Attribute b) => a.ApplyMod() + b.ApplyMod();
-        public static double operator +(Attribute b) => +b.ApplyMod();
-        public static double operator -(Attribute a, Attribute b) => a.ApplyMod() - b.ApplyMod();
-        public static double operator -(Attribute b) => -b.ApplyMod();
-        public static double operator *(Attribute a, Attribute b) => a.ApplyMod() * b.ApplyMod();
-        public static double operator /(Attribute a, Attribute b) => a.ApplyMod() / b.ApplyMod();
+        public static decimal operator +(Attribute a, Attribute b) => a.ApplyMod() + b.ApplyMod();
+        public static decimal operator +(Attribute b) => +b.ApplyMod();
+        public static decimal operator -(Attribute a, Attribute b) => a.ApplyMod() - b.ApplyMod();
+        public static decimal operator -(Attribute b) => -b.ApplyMod();
+        public static decimal operator *(Attribute a, Attribute b) => a.ApplyMod() * b.ApplyMod();
+        public static decimal operator /(Attribute a, Attribute b) => a.ApplyMod() / b.ApplyMod();
         public static bool operator >(Attribute a, Attribute b) => a.ApplyMod() > b.ApplyMod();
         public static bool operator <(Attribute a, Attribute b) => a.ApplyMod() < b.ApplyMod();
         public static bool operator >=(Attribute a, Attribute b) => a.ApplyMod() >= b.ApplyMod();
         public static bool operator <=(Attribute a, Attribute b) => a.ApplyMod() <= b.ApplyMod();
-        public static bool operator ==(Attribute a, Attribute b) => a.ApplyMod() == b.ApplyMod();
-        public static bool operator !=(Attribute a, Attribute b) => a.ApplyMod() != b.ApplyMod();
+        public static bool operator ==(Attribute a, Attribute b) => a?.Mod == b?.Mod && a?.Value == b?.Value;
+        public static bool operator !=(Attribute a, Attribute b) => !(a?.Mod == b?.Mod && a?.Value == b?.Value);
 
-        public static double operator +(Attribute a, double b) => a.ApplyMod() + b;
-        public static double operator -(Attribute a, double b) => a.ApplyMod() - b;
-        public static double operator *(Attribute a, double b) => a.ApplyMod() * b;
-        public static double operator /(Attribute a, double b) => a.ApplyMod() / b;
-        public static bool operator >(Attribute a, double b) => a.ApplyMod() > b;
-        public static bool operator <(Attribute a, double b) => a.ApplyMod() < b;
-        public static bool operator >=(Attribute a, double b) => a.ApplyMod() >= b;
-        public static bool operator <=(Attribute a, double b) => a.ApplyMod() <= b;
-        public static bool operator ==(Attribute a, double b) => a.ApplyMod() == b;
-        public static bool operator !=(Attribute a, double b) => a.ApplyMod() != b;
+        public static decimal operator +(Attribute a, decimal b) => a.ApplyMod() + b;
+        public static decimal operator -(Attribute a, decimal b) => a.ApplyMod() - b;
+        public static decimal operator *(Attribute a, decimal b) => a.ApplyMod() * b;
+        public static decimal operator /(Attribute a, decimal b) => a.ApplyMod() / b;
+        public static bool operator >(Attribute a, decimal b) => a.ApplyMod() > b;
+        public static bool operator <(Attribute a, decimal b) => a.ApplyMod() < b;
+        public static bool operator >=(Attribute a, decimal b) => a.ApplyMod() >= b;
+        public static bool operator <=(Attribute a, decimal b) => a.ApplyMod() <= b;
+        public static bool operator ==(Attribute a, decimal b) => a.ApplyMod() == b;
+        public static bool operator !=(Attribute a, decimal b) => a.ApplyMod() != b;
 
-        public static double operator +(double a, Attribute b) => b.ApplyMod() + a;
-        public static double operator -(double a, Attribute b) => b.ApplyMod() - a;
-        public static double operator *(double a, Attribute b) => b.ApplyMod() * a;
-        public static double operator /(double a, Attribute b) => b.ApplyMod() / a;
-        public static bool operator >(double a, Attribute b) => b.ApplyMod() > a;
-        public static bool operator <(double a, Attribute b) => b.ApplyMod() < a;
-        public static bool operator >=(double a, Attribute b) => b.ApplyMod() >= a;
-        public static bool operator <=(double a, Attribute b) => b.ApplyMod() <= a;
-        public static bool operator ==(double a, Attribute b) => b.ApplyMod() == a;
-        public static bool operator !=(double a, Attribute b) => b.ApplyMod() != a;
+        public static decimal operator +(decimal a, Attribute b) => b.ApplyMod() + a;
+        public static decimal operator -(decimal a, Attribute b) => b.ApplyMod() - a;
+        public static decimal operator *(decimal a, Attribute b) => b.ApplyMod() * a;
+        public static decimal operator /(decimal a, Attribute b) => b.ApplyMod() / a;
+        public static bool operator >(decimal a, Attribute b) => b.ApplyMod() > a;
+        public static bool operator <(decimal a, Attribute b) => b.ApplyMod() < a;
+        public static bool operator >=(decimal a, Attribute b) => b.ApplyMod() >= a;
+        public static bool operator <=(decimal a, Attribute b) => b.ApplyMod() <= a;
+        public static bool operator ==(decimal a, Attribute b) => b.ApplyMod() == a;
+        public static bool operator !=(decimal a, Attribute b) => b.ApplyMod() != a;
     }
 
     public class Resources : ICloneable
@@ -192,46 +212,48 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.Time.Clone());
 
         public object Clone() => new Resources(this);
+        public override bool Equals(object obj) => this == (Resources)obj;
+        public override int GetHashCode() => (Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Power, Time).GetHashCode();
 
         // omit comparison for time intentionally, cuz it's meaningless (won't have insufficient "time")
         public bool HasEnoughResources(Resources need, bool print_discrepancy = true)
         {
-            List<(string attr, double have, double discrepancy)> shortages = new List<(string attr, double have, double discrepancy)>();
-            if (!Money.TryTestEnough(need.Money, out (double have, double discrepancy) money))
+            List<(string attr, decimal have, decimal discrepancy)> shortages = new List<(string attr, decimal have, decimal discrepancy)>();
+            if (!Money.TryTestEnough(need.Money, out (decimal have, decimal discrepancy) money))
             {
                 shortages.Add((nameof(Money), money.have, money.discrepancy));
             }
-            if (!Steel.TryTestEnough(need.Steel, out (double have, double discrepancy) steel))
+            if (!Steel.TryTestEnough(need.Steel, out (decimal have, decimal discrepancy) steel))
             {
                 shortages.Add((nameof(Steel), steel.have, steel.discrepancy));
             }
-            if (!Supplies.TryTestEnough(need.Supplies, out (double have, double discrepancy) supplies))
+            if (!Supplies.TryTestEnough(need.Supplies, out (decimal have, decimal discrepancy) supplies))
             {
                 shortages.Add((nameof(Supplies), supplies.have, supplies.discrepancy));
             }
-            if (!Cartridges.TryTestEnough(need.Cartridges, out (double have, double discrepancy) cartridges))
+            if (!Cartridges.TryTestEnough(need.Cartridges, out (decimal have, decimal discrepancy) cartridges))
             {
                 shortages.Add((nameof(Cartridges), cartridges.have, cartridges.discrepancy));
             }
-            if (!Shells.TryTestEnough(need.Shells, out (double have, double discrepancy) shells))
+            if (!Shells.TryTestEnough(need.Shells, out (decimal have, decimal discrepancy) shells))
             {
                 shortages.Add((nameof(Shells), shells.have, shells.discrepancy));
             }
-            if (!Fuel.TryTestEnough(need.Fuel, out (double have, double discrepancy) fuel))
+            if (!Fuel.TryTestEnough(need.Fuel, out (decimal have, decimal discrepancy) fuel))
             {
                 shortages.Add((nameof(Fuel), fuel.have, fuel.discrepancy));
             }
-            if (!RareMetal.TryTestEnough(need.RareMetal, out (double have, double discrepancy) raremetal))
+            if (!RareMetal.TryTestEnough(need.RareMetal, out (decimal have, decimal discrepancy) raremetal))
             {
                 shortages.Add((nameof(RareMetal), raremetal.have, raremetal.discrepancy));
             }
-            if (!Manpower.TryTestEnough(need.Manpower, out (double have, double discrepancy) manpower))
+            if (!Manpower.TryTestEnough(need.Manpower, out (decimal have, decimal discrepancy) manpower))
             {
                 shortages.Add((nameof(Manpower), manpower.have, manpower.discrepancy));
             };
             if (print_discrepancy)
             {
-                foreach ((string attr, double have, double discrepancy) shortage in shortages)
+                foreach ((string attr, decimal have, decimal discrepancy) shortage in shortages)
                 {
                     Debug.LogWarning($"Not enough {shortage.attr}! Have: {shortage.have}, Shortage: {shortage.discrepancy}");
                 }
@@ -261,6 +283,29 @@ namespace SteelOfStalin.Attributes
             RareMetal.PlusEquals(production.RareMetal);
             Manpower.PlusEquals(production.Manpower);
         }
+
+        public static bool operator ==(Resources a, Resources b)
+            => a?.Money == b?.Money 
+            && a?.Steel == b?.Steel 
+            && a?.Supplies == b?.Supplies 
+            && a?.Cartridges == b?.Cartridges 
+            && a?.Shells == b?.Shells 
+            && a?.Fuel == b?.Fuel 
+            && a?.RareMetal == b?.RareMetal 
+            && a?.Manpower == b?.Manpower 
+            && a?.Power == b?.Power 
+            && a?.Time == b?.Time;
+        public static bool operator !=(Resources a, Resources b)
+            => !(a?.Money == b?.Money
+            && a?.Steel == b?.Steel
+            && a?.Supplies == b?.Supplies
+            && a?.Cartridges == b?.Cartridges
+            && a?.Shells == b?.Shells
+            && a?.Fuel == b?.Fuel
+            && a?.RareMetal == b?.RareMetal
+            && a?.Manpower == b?.Manpower
+            && a?.Power == b?.Power
+            && a?.Time == b?.Time);
     }
 
     public class Cost : ICloneable
@@ -278,16 +323,38 @@ namespace SteelOfStalin.Attributes
 
         public Cost() { }
         public Cost(Cost another)
-            => (Base, Research, Repair, Fortification, Manufacture, Maintenance, CostModifier)
+            => (Base, Research, Repair, Fortification, Manufacture, Maintenance, Recycling, CostModifier)
             = ((Resources)another.Base.Clone(),
                (Resources)another.Research.Clone(),
                (Resources)another.Repair.Clone(),
                (Resources)another.Fortification.Clone(),
                (Resources)another.Manufacture.Clone(),
+               (Resources)another.Maintenance.Clone(),
                (Resources)another.Recycling.Clone(),
                (Modifier)another.CostModifier.Clone());
 
         public object Clone() => new Cost(this);
+        public override bool Equals(object obj) => this == (Cost)obj;
+        public override int GetHashCode() => (Base, Research, Repair, Fortification, Manufacture, Maintenance, Recycling, CostModifier).GetHashCode();
+
+        public static bool operator ==(Cost a, Cost b)
+            => a.Base == b.Base 
+            && a.Research == b.Research 
+            && a.Repair == b.Repair 
+            && a.Fortification == b.Fortification 
+            && a.Manufacture == b.Manufacture 
+            && a.Maintenance == b.Maintenance 
+            && a.Recycling == b.Recycling 
+            && a.CostModifier == b.CostModifier;
+        public static bool operator !=(Cost a, Cost b)
+            => !(a.Base == b.Base
+            && a.Research == b.Research
+            && a.Repair == b.Repair
+            && a.Fortification == b.Fortification
+            && a.Manufacture == b.Manufacture
+            && a.Maintenance == b.Maintenance
+            && a.Recycling == b.Recycling
+            && a.CostModifier == b.CostModifier);
     }
 
     public class Maneuverability : ICloneable
@@ -306,6 +373,19 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.Weight.Clone());
 
         public object Clone() => new Maneuverability(this);
+        public override bool Equals(object obj) => this == (Maneuverability)obj;
+        public override int GetHashCode() => (Speed, Mobility, Size, Weight).GetHashCode();
+
+        public static bool operator ==(Maneuverability a, Maneuverability b)
+            => a.Speed == b.Speed
+            && a.Mobility == b.Mobility
+            && a.Size == b.Size
+            && a.Weight == b.Weight;
+        public static bool operator !=(Maneuverability a, Maneuverability b)
+            => !(a.Speed == b.Speed
+            && a.Mobility == b.Mobility
+            && a.Size == b.Size
+            && a.Weight == b.Weight);
     }
 
     public class Defense : ICloneable
@@ -328,6 +408,23 @@ namespace SteelOfStalin.Attributes
                (Suppression)another.Suppression.Clone());
 
         public object Clone() => new Defense(this);
+        public override bool Equals(object obj) => this == (Defense)obj;
+        public override int GetHashCode() => (Strength, Resistance, Evasion, Hardness, Integrity, Suppression).GetHashCode();
+
+        public static bool operator ==(Defense a, Defense b) 
+            => a.Strength == b.Strength 
+            && a.Resistance == b.Resistance 
+            && a.Evasion == b.Evasion 
+            && a.Hardness == b.Hardness 
+            && a.Integrity == b.Integrity 
+            && a.Suppression == b.Suppression;
+        public static bool operator !=(Defense a, Defense b)
+            => !(a.Strength == b.Strength
+            && a.Resistance == b.Resistance
+            && a.Evasion == b.Evasion
+            && a.Hardness == b.Hardness
+            && a.Integrity == b.Integrity
+            && a.Suppression == b.Suppression);
     }
 
     public class Suppression : ICloneable
@@ -340,9 +437,14 @@ namespace SteelOfStalin.Attributes
             => (Threshold, Resilience) = ((Attribute)another.Threshold.Clone(), (Attribute)another.Resilience.Clone());
 
         public object Clone() => new Suppression(this);
+        public override bool Equals(object obj) => this == (Suppression)obj;
+        public override int GetHashCode() => (Threshold, Resilience).GetHashCode();
+
+        public static bool operator ==(Suppression a, Suppression b) => a.Threshold == b.Threshold && a.Resilience == b.Resilience;
+        public static bool operator !=(Suppression a, Suppression b) => !(a.Threshold == b.Threshold && a.Resilience == b.Resilience);
     }
 
-    public class Offense : ICloneable
+    public class Offense : ICloneable, IEquatable<Offense>
     {
         public Handling Handling { get; set; } = new Handling();
         public Damage Damage { get; set; } = new Damage();
@@ -366,6 +468,28 @@ namespace SteelOfStalin.Attributes
                another.IsDirectFire);
 
         public object Clone() => new Offense(this);
+        public bool Equals(Offense other) => this == other;
+        public override bool Equals(object obj) => this == (Offense)obj;
+        public override int GetHashCode() => (Handling, Damage, Accuracy, AOE, Suppression, MinRange, MaxRange, IsDirectFire).GetHashCode();
+
+        public static bool operator ==(Offense a, Offense b) 
+            => a.Handling == b.Handling 
+            && a.Damage == b.Damage 
+            && a.Accuracy == b.Accuracy 
+            && a.AOE == b.AOE 
+            && a.Suppression == b.Suppression 
+            && a.MinRange == b.MinRange 
+            && a.MaxRange == b.MaxRange 
+            && a.IsDirectFire == b.IsDirectFire;
+        public static bool operator !=(Offense a, Offense b) 
+            => !(a.Handling == b.Handling
+            && a.Damage == b.Damage
+            && a.Accuracy == b.Accuracy
+            && a.AOE == b.AOE
+            && a.Suppression == b.Suppression
+            && a.MinRange == b.MinRange
+            && a.MaxRange == b.MaxRange
+            && a.IsDirectFire == b.IsDirectFire);
     }
 
     public class Damage : ICloneable
@@ -378,12 +502,6 @@ namespace SteelOfStalin.Attributes
         public Attribute Penetration { get; set; } = new Attribute();
 
         public Damage() { }
-        public Damage(double soft, double hard, double destruction, double deviation, double dropoff)
-            => (Soft.Value, Hard.Value, Destruction.Value, Deviation.Value, Dropoff.Value)
-            = (soft, hard, destruction, deviation, dropoff);
-        public Damage(double soft, double hard, double destruction, double deviation, double dropoff, double penetration)
-            => (Soft.Value, Hard.Value, Destruction.Value, Deviation.Value, Dropoff.Value, Penetration.Value)
-            = (soft, hard, destruction, deviation, dropoff, penetration);
         public Damage(Damage another)
             => (Soft, Hard, Destruction, Deviation, Dropoff, Penetration)
             = ((Attribute)another.Soft.Clone(),
@@ -394,6 +512,23 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.Penetration.Clone());
 
         public object Clone() => new Damage(this);
+        public override bool Equals(object obj) => this == (Damage)obj;
+        public override int GetHashCode() => (Soft, Hard, Destruction, Deviation, Dropoff, Penetration).GetHashCode();
+
+        public static bool operator ==(Damage a, Damage b)
+            => a.Soft == b.Soft
+            && a.Hard == b.Hard
+            && a.Destruction == b.Destruction
+            && a.Deviation == b.Deviation
+            && a.Dropoff == b.Dropoff
+            && a.Penetration == b.Penetration;
+        public static bool operator !=(Damage a, Damage b)
+            => !(a.Soft == b.Soft
+            && a.Hard == b.Hard
+            && a.Destruction == b.Destruction
+            && a.Deviation == b.Deviation
+            && a.Dropoff == b.Dropoff
+            && a.Penetration == b.Penetration);
     }
 
     public class Handling : ICloneable
@@ -403,21 +538,40 @@ namespace SteelOfStalin.Attributes
         public Attribute Reload { get; set; } = new Attribute();
         public Attribute Aim { get; set; } = new Attribute();
         public Attribute Salvo { get; set; } = new Attribute();
-        public double ROF { get; set; }
-        public double ROFSuppress { get; set; }
+        public decimal ROF { get; set; }
+        public decimal ROFSuppress { get; set; }
 
         public Handling() { }
         public Handling(Handling another)
             => (Cyclic, Clip, Reload, Aim, Salvo, ROF, ROFSuppress)
             = ((Attribute)another.Cyclic.Clone(),
-               (Attribute)another.Cyclic.Clone(),
-               (Attribute)another.Cyclic.Clone(),
-               (Attribute)another.Cyclic.Clone(),
-               (Attribute)another.Cyclic.Clone(),
+               (Attribute)another.Clip.Clone(),
+               (Attribute)another.Reload.Clone(),
+               (Attribute)another.Aim.Clone(),
+               (Attribute)another.Salvo.Clone(),
                another.ROF,
                another.ROFSuppress);
 
         public object Clone() => new Handling(this);
+        public override bool Equals(object obj) => this == (Handling)obj;
+        public override int GetHashCode() => (Cyclic, Clip, Reload, Aim, Salvo, ROF, ROFSuppress).GetHashCode();
+
+        public static bool operator ==(Handling a, Handling b)
+            => a.Cyclic == b.Cyclic
+            && a.Clip == b.Clip
+            && a.Reload == b.Reload
+            && a.Aim == b.Aim
+            && a.Salvo == b.Salvo
+            && a.ROF == b.ROF
+            && a.ROFSuppress == b.ROFSuppress;
+        public static bool operator !=(Handling a, Handling b)
+            => !(a.Cyclic == b.Cyclic
+            && a.Clip == b.Clip
+            && a.Reload == b.Reload
+            && a.Aim == b.Aim
+            && a.Salvo == b.Salvo
+            && a.ROF == b.ROF
+            && a.ROFSuppress == b.ROFSuppress);
     }
 
     public class Accuracy : ICloneable
@@ -432,6 +586,17 @@ namespace SteelOfStalin.Attributes
             = ((Attribute)another.Normal.Clone(), (Attribute)another.Suppress.Clone(), (Attribute)another.Deviation.Clone());
 
         public object Clone() => new Accuracy(this);
+        public override bool Equals(object obj) => this == (Accuracy)obj;
+        public override int GetHashCode() => (Normal, Suppress, Deviation).GetHashCode();
+
+        public static bool operator ==(Accuracy a, Accuracy b)
+            => a.Normal == b.Normal
+            && a.Suppress == b.Suppress
+            && a.Deviation == b.Deviation;
+        public static bool operator !=(Accuracy a, Accuracy b)
+            => !(a.Normal == b.Normal
+            && a.Suppress == b.Suppress
+            && a.Deviation == b.Deviation);
     }
 
     public class AOE : ICloneable
@@ -446,6 +611,11 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.SplashDecay.Clone());
 
         public object Clone() => new AOE(this);
+        public override bool Equals(object obj) => this == (AOE)obj;
+        public override int GetHashCode() => (BlastRadius, SplashDecay).GetHashCode();
+
+        public static bool operator ==(AOE a, AOE b) => a.BlastRadius == b.BlastRadius && a.SplashDecay == b.SplashDecay;
+        public static bool operator !=(AOE a, AOE b) => !(a.BlastRadius == b.BlastRadius && a.SplashDecay == b.SplashDecay);
     }
 
     public class Payload : ICloneable
@@ -454,9 +624,14 @@ namespace SteelOfStalin.Attributes
         public Resources Cargo { get; set; } = new Resources();
 
         public Payload() { }
-        public Payload(Payload another) => (Units, Cargo) = (another.Units, (Resources)another.Cargo.Clone());
+        public Payload(Payload another) => (Units, Cargo) = (new List<Unit>(another.Units), (Resources)another.Cargo.Clone());
 
         public object Clone() => new Payload(this);
+        public override bool Equals(object obj) => this == (Payload)obj;
+        public override int GetHashCode() => (Units, Cargo).GetHashCode();
+
+        public static bool operator ==(Payload a, Payload b) => a.Units.All(b.Units.Contains) && a.Units.Count == b.Units.Count && a.Cargo == b.Cargo;
+        public static bool operator !=(Payload a, Payload b) => !(a.Units.All(b.Units.Contains) && a.Units.Count == b.Units.Count && a.Cargo == b.Cargo);
     }
 
     public class LoadLimit : ICloneable
@@ -473,6 +648,17 @@ namespace SteelOfStalin.Attributes
                (Resources)another.CargoCapacity.Clone());
 
         public object Clone() => new LoadLimit(this);
+        public override bool Equals(object obj) => this == (LoadLimit)obj;
+        public override int GetHashCode() => (Size, Weight, CargoCapacity).GetHashCode();
+
+        public static bool operator ==(LoadLimit a, LoadLimit b)
+            => a.Size == b.Size
+            && a.Weight == b.Weight
+            && a.CargoCapacity == b.CargoCapacity;
+        public static bool operator !=(LoadLimit a, LoadLimit b)
+            => !(a.Size == b.Size
+            && a.Weight == b.Weight
+            && a.CargoCapacity == b.CargoCapacity);
     }
 
     public class Scouting : ICloneable
@@ -491,5 +677,18 @@ namespace SteelOfStalin.Attributes
                (Attribute)another.Communication.Clone());
 
         public object Clone() => new Scouting(this);
+        public override bool Equals(object obj) => this == (Scouting)obj;
+        public override int GetHashCode() => (Reconnaissance, Concealment, Detection, Communication).GetHashCode();
+
+        public static bool operator ==(Scouting a, Scouting b)
+            => a.Reconnaissance == b.Reconnaissance
+            && a.Concealment == b.Concealment
+            && a.Detection == b.Detection
+            && a.Communication == b.Communication;
+        public static bool operator !=(Scouting a, Scouting b)
+            => !(a.Reconnaissance == b.Reconnaissance
+            && a.Concealment == b.Concealment
+            && a.Detection == b.Detection
+            && a.Communication == b.Communication);
     }
 }

@@ -13,7 +13,10 @@ namespace SteelOfStalin
             {
                 Game.AddComponent<Game>();
             }
-            Instantiate(Game);
+            GameObject gameInstance=Instantiate(Game);
+            gameInstance.name = "game";
+            DontDestroyOnLoad(gameInstance);
+            Destroy(gameObject);
         }
 
         private void Update()

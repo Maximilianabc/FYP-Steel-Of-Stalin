@@ -317,6 +317,13 @@ Texture2D:
   m_Width: 0
   m_Height: 0
   m_CompleteImageSize: 0
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+  m_MipsStripped: 0
+>>>>>>> 0e1905b6c2e7d13ad193bdeb79b3f94626dfd66b
+>>>>>>> Stashed changes
   m_TextureFormat: 1
   m_MipCount: 1
   m_IsReadable: 1
@@ -335,6 +342,13 @@ Texture2D:
     m_WrapW: 0
   m_LightmapFormat: 0
   m_ColorSpace: 0
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+  m_PlatformBlob: 
+>>>>>>> 0e1905b6c2e7d13ad193bdeb79b3f94626dfd66b
+>>>>>>> Stashed changes
   image data: 0
   _typelessdata: 
   m_StreamData:

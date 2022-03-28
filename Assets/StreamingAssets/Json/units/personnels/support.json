@@ -18,8 +18,7 @@
       "Value": 0
     }
   },
-  "Name": "support",
-  "OwnerName": null,
+  "OwnerName": "",
   "Status": "NONE",
   "Cost": {
     "Base": {
@@ -881,7 +880,8 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "support",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

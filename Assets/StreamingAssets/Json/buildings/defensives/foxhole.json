@@ -198,8 +198,7 @@
       }
     }
   },
-  "Name": "foxhole",
-  "OwnerName": null,
+  "OwnerName": "",
   "BuilderLocation": {
     "X": 0,
     "Y": 0
@@ -757,7 +756,8 @@
   },
   "DestroyTerrainOnBuilt": true,
   "ConstructionTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "foxhole",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0

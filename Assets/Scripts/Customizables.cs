@@ -1,13 +1,13 @@
 ﻿using SteelOfStalin.Attributes;
-using SteelOfStalin.Customizables.Modules;
-using SteelOfStalin.Customizables.Shells;
+using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Shells;
 using SteelOfStalin.CustomTypes;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 
-namespace SteelOfStalin.Customizables
+namespace SteelOfStalin.Assets.Customizables
 {
     [Flags]
     [JsonConverter(typeof(StringEnumFlagConverterFactory))]
@@ -19,11 +19,12 @@ namespace SteelOfStalin.Customizables
         BOTH = PRIMARY | SECONDARY
     }
 
+    [JsonConverter(typeof(AssetConverter<Firearm>))]
     public abstract class Firearm : Customizable, IOffensiveCustomizable
     {
         public FirearmType FirearmType { get; set; }
         public Offense Offense { get; set; } = new Offense();
-        public double AmmoWeight { get; set; }
+        public decimal AmmoWeight { get; set; }
         public Resources ConsumptionNormal { get; set; } = new Resources();
         public Resources ConsumptionSuppress { get; set; } = new Resources();
         public Attribute Noise { get; set; } = new Attribute();
@@ -47,6 +48,7 @@ namespace SteelOfStalin.Customizables
         public abstract override object Clone();
     }
 
+    [JsonConverter(typeof(AssetConverter<Module>))]
     public abstract class Module : Customizable
     {
         public Attribute Integrity { get; set; } = new Attribute();
@@ -60,7 +62,7 @@ namespace SteelOfStalin.Customizables
             = ((Attribute)another.Integrity.Clone(), (Attribute)another.Weight.Clone(), (Attribute)another.FunctionalThreshold.Clone(), (Attribute)another.TakeDamageChance.Clone());
 
         public abstract override object Clone();
-        public virtual string GetIntegrityChangeRecord(double change) => $" {Name}:i:{change:+#.##;-#.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity}";
+        public virtual string GetIntegrityChangeRecord(decimal change) => $" {Name}:i:{change:+0.##;-0.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity}";
     }
 
     public interface IOffensiveCustomizable : INamedAsset
@@ -74,7 +76,7 @@ namespace SteelOfStalin.Customizables
     }
 }
 
-namespace SteelOfStalin.Customizables.Firearms
+namespace SteelOfStalin.Assets.Customizables.Firearms
 {
     public class Pistol : Firearm
     {
@@ -240,8 +242,9 @@ namespace SteelOfStalin.Customizables.Firearms
     }
 }
 
-namespace SteelOfStalin.Customizables.Modules
+namespace SteelOfStalin.Assets.Customizables.Modules
 {
+    [JsonConverter(typeof(AssetConverter<Gun>))]
     public abstract class Gun : Module, IOffensiveCustomizable
     {
         public Offense Offense { get; set; } = new Offense();
@@ -253,7 +256,7 @@ namespace SteelOfStalin.Customizables.Modules
         public List<string> CompatibleShells { get; set; } = new List<string>();
         public Shell CurrentShell { get; set; }
 
-        public CannonBreech CannonBreech { get; set; } = new CannonBreech();
+        public CannonBreech CannonBreech { get; set; }
 
         public Gun() : base() { }
         public Gun(Gun another) : base(another)
@@ -264,28 +267,33 @@ namespace SteelOfStalin.Customizables.Modules
                (Resources)another.ConsumptionNormal.Clone(), 
                (Resources)another.ConsumptionSuppress.Clone(), 
                 new List<string>(another.CompatibleShells), 
-               (Shell)another.CurrentShell.Clone(),
-               (CannonBreech)another.CannonBreech.Clone());
+               (Shell)another.CurrentShell?.Clone(),
+               (CannonBreech)another.CannonBreech?.Clone());
 
         public abstract override object Clone();
     }
 
-    public abstract class HeavyMachineGun : Module, IOffensiveCustomizable
+    public class HeavyMachineGun : Module, IOffensiveCustomizable
     {
         public Offense Offense { get; set; } = new Offense();
         public Attribute Noise { get; set; } = new Attribute();
         public Modifier ConcealmentPenaltyMove { get; set; } = new Modifier();
         public Modifier ConcealmentPenaltyFire { get; set; } = new Modifier();
-        public double AmmoWeight { get; set; }
+        public decimal AmmoWeight { get; set; }
         public Resources ConsumptionNormal { get; set; } = new Resources();
         public Resources ConsumptionSuppress { get; set; } = new Resources();
 
         public HeavyMachineGun() : base() { }
         public HeavyMachineGun(HeavyMachineGun another) : base(another)
-            => (Offense, Noise, ConcealmentPenaltyFire, AmmoWeight, ConsumptionNormal, ConsumptionSuppress)
-            = ((Offense)another.Offense.Clone(), (Attribute)another.Noise.Clone(), (Modifier)another.ConcealmentPenaltyFire.Clone(), another.AmmoWeight, (Resources)another.ConsumptionNormal.Clone(), (Resources)another.ConsumptionSuppress.Clone());
-
-        public abstract override object Clone();
+            => (Offense, Noise, ConcealmentPenaltyMove, ConcealmentPenaltyFire, AmmoWeight, ConsumptionNormal, ConsumptionSuppress)
+            = ((Offense)another.Offense.Clone(), 
+               (Attribute)another.Noise.Clone(), 
+               (Modifier)another.ConcealmentPenaltyMove.Clone(),
+               (Modifier)another.ConcealmentPenaltyFire.Clone(), 
+               another.AmmoWeight, 
+               (Resources)another.ConsumptionNormal.Clone(), 
+               (Resources)another.ConsumptionSuppress.Clone());
+        public override object Clone() => new HeavyMachineGun(this);
     }
 
     public class Engine : Module
@@ -405,7 +413,7 @@ namespace SteelOfStalin.Customizables.Modules
     }
 }
 
-namespace SteelOfStalin.Customizables.Guns
+namespace SteelOfStalin.Assets.Customizables.Modules.Guns
 {
     public abstract class Cannon : Gun
     {
@@ -541,34 +549,35 @@ namespace SteelOfStalin.Customizables.Guns
         public H280mm(H280mm another) : base(another) { }
         public override object Clone() => new H280mm(this);
     }
-    public class AC20mm : AutoCannon
+    public class Ac20mm : AutoCannon
     {
-        public AC20mm() { }
-        public AC20mm(AC20mm another) : base(another) { }
-        public override object Clone() => new AC20mm(this);
+        public Ac20mm() { }
+        public Ac20mm(Ac20mm another) : base(another) { }
+        public override object Clone() => new Ac20mm(this);
     }
-    public class AC30mm : AutoCannon
+    public class Ac30mm : AutoCannon
     {
-        public AC30mm() { }
-        public AC30mm(AC30mm another) : base(another) { }
-        public override object Clone() => new AC30mm(this);
+        public Ac30mm() { }
+        public Ac30mm(Ac30mm another) : base(another) { }
+        public override object Clone() => new Ac30mm(this);
     }
-    public class AC40mm : AutoCannon
+    public class Ac40mm : AutoCannon
     {
-        public AC40mm() { }
-        public AC40mm(AC40mm another) : base(another) { }
-        public override object Clone() => new AC40mm(this);
+        public Ac40mm() { }
+        public Ac40mm(Ac40mm another) : base(another) { }
+        public override object Clone() => new Ac40mm(this);
     }
-    public class AC57mm : AutoCannon
+    public class Ac57mm : AutoCannon
     {
-        public AC57mm() { }
-        public AC57mm(AC57mm another) : base(another) { }
-        public override object Clone() => new AC57mm(this);
+        public Ac57mm() { }
+        public Ac57mm(Ac57mm another) : base(another) { }
+        public override object Clone() => new Ac57mm(this);
     }
 }
 
-namespace SteelOfStalin.Customizables.Shells
+namespace SteelOfStalin.Assets.Customizables.Shells
 {
+    [JsonConverter(typeof(AssetConverter<Shell>))]
     public abstract class Shell : Customizable
     {
         public Modifier PenetrationCoefficient { get; set; } = new Modifier();
@@ -589,89 +598,89 @@ namespace SteelOfStalin.Customizables.Shells
         public abstract override object Clone();
     }
 
-    public class AP : Shell
+    public class Ap : Shell
     {
-        public AP() : base() { }
-        public AP(AP another) : base(another) { }
-        public override object Clone() => new AP(this);
+        public Ap() : base() { }
+        public Ap(Ap another) : base(another) { }
+        public override object Clone() => new Ap(this);
     }
-    public class HE : Shell
+    public class He : Shell
     {
-        public HE() : base() { }
-        public HE(HE another) : base(another) { }
-        public override object Clone() => new HE(this);
+        public He() : base() { }
+        public He(He another) : base(another) { }
+        public override object Clone() => new He(this);
     }
-    public class APC : Shell
+    public class Apc : Shell
     {
-        public APC() : base() { }
-        public APC(APC another) : base(another) { }
-        public override object Clone() => new APC(this);
+        public Apc() : base() { }
+        public Apc(Apc another) : base(another) { }
+        public override object Clone() => new Apc(this);
     }
-    public class APBC : Shell
+    public class Apbc : Shell
     {
-        public APBC() : base() { }
-        public APBC(APBC another) : base(another) { }
-        public override object Clone() => new APBC(this);
+        public Apbc() : base() { }
+        public Apbc(Apbc another) : base(another) { }
+        public override object Clone() => new Apbc(this);
     }
-    public class APCBC : Shell
+    public class Apcbc : Shell
     {
-        public APCBC() : base() { }
-        public APCBC(APCBC another) : base(another) { }
-        public override object Clone() => new APCBC(this);
+        public Apcbc() : base() { }
+        public Apcbc(Apcbc another) : base(another) { }
+        public override object Clone() => new Apcbc(this);
     }
-    public class APCBC_HE : Shell
+    public class Apcbc_he : Shell
     {
-        public APCBC_HE() : base() { }
-        public APCBC_HE(APCBC_HE another) : base(another) { }
-        public override object Clone() => new APCBC_HE(this);
+        public Apcbc_he() : base() { }
+        public Apcbc_he(Apcbc_he another) : base(another) { }
+        public override object Clone() => new Apcbc_he(this);
     }
-    public class APCR : Shell
+    public class Apcr : Shell
     {
-        public APCR() : base() { }
-        public APCR(APCR another) : base(another) { }
-        public override object Clone() => new APCR(this);
+        public Apcr() : base() { }
+        public Apcr(Apcr another) : base(another) { }
+        public override object Clone() => new Apcr(this);
     }
-    public class APCNR : Shell
+    public class Apcnr : Shell
     {
-        public APCNR() : base() { }
-        public APCNR(APCNR another) : base(another) { }
-        public override object Clone() => new APCNR(this);
+        public Apcnr() : base() { }
+        public Apcnr(Apcnr another) : base(another) { }
+        public override object Clone() => new Apcnr(this);
     }
-    public class APDS : Shell
+    public class Apds : Shell
     {
-        public APDS() : base() { }
-        public APDS(APDS another) : base(another) { }
-        public override object Clone() => new APDS(this);
+        public Apds() : base() { }
+        public Apds(Apds another) : base(another) { }
+        public override object Clone() => new Apds(this);
     }
-    public class APFSDS : Shell
+    public class Apfsds : Shell
     {
-        public APFSDS() : base() { }
-        public APFSDS(APFSDS another) : base(another) { }
-        public override object Clone() => new APFSDS(this);
+        public Apfsds() : base() { }
+        public Apfsds(Apfsds another) : base(another) { }
+        public override object Clone() => new Apfsds(this);
     }
-    public class HESH : Shell
+    public class Hesh : Shell
     {
-        public HESH() : base() { }
-        public HESH(HESH another) : base(another) { }
-        public override object Clone() => new HESH(this);
+        public Hesh() : base() { }
+        public Hesh(Hesh another) : base(another) { }
+        public override object Clone() => new Hesh(this);
     }
-    public class HEAT : Shell
+    public class Heat : Shell
     {
-        public HEAT() : base() { }
-        public HEAT(HEAT another) : base(another) { }
-        public override object Clone() => new HEAT(this);
+        public Heat() : base() { }
+        public Heat(Heat another) : base(another) { }
+        public override object Clone() => new Heat(this);
     }
-    public class FRAG : Shell
+    public class Frag : Shell
     {
-        public FRAG() : base() { }
-        public FRAG(FRAG another) : base(another) { }
-        public override object Clone() => new FRAG(this);
+        public Frag() : base() { }
+        public Frag(Frag another) : base(another) { }
+        public override object Clone() => new Frag(this);
     }
-    public class APHE : Shell
+    public class Aphe : Shell
     {
-        public APHE() : base() { }
-        public APHE(APHE another) : base(another) { }
-        public override object Clone() => new APHE(this);
+        public Aphe() : base() { }
+        public Aphe(Aphe another) : base(another) { }
+        public override object Clone() => new Aphe(this);
     }
     public class Incendiray : Shell
     {

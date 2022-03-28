@@ -104,8 +104,7 @@
   "Periscope": null,
   "FuelTank": null,
   "AmmoRack": null,
-  "Name": "armoured_train",
-  "OwnerName": null,
+  "OwnerName": "",
   "Status": "NONE",
   "Cost": {
     "Base": {
@@ -967,7 +966,8 @@
   "CurrentSuppressionLevel": 0,
   "ConsecutiveSuppressedRound": 0,
   "TrainingTimeRemaining": 0,
-  "MeshName": null,
+  "Name": "armoured_train",
+  "MeshName": "",
   "CoOrds": {
     "X": 0,
     "Y": 0
