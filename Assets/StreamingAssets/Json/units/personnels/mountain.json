@@ -1,18 +1,18 @@
 {
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
-  "DefaultPrimary": "Carbine",
+  "DefaultPrimary": "carbine",
   "AvailableFirearms": [
-    "Carbine",
-    "Rifle",
-    "SemiAutoRifle",
-    "SemiAutoCarbine",
-    "ScopedRifle",
-    "BattleRifle",
-    "AutomaticRifle",
-    "LightMachinegun",
-    "Mortar",
-    "MountainGun"
+    "carbine",
+    "rifle",
+    "semi_auto_rifle",
+    "semi_auto_carbine",
+    "scoped_rifle",
+    "battle_rifle",
+    "automatic_rifle",
+    "light_machinegun",
+    "mortar",
+    "mountain_gun"
   ],
   "CaptureEfficiency": {
     "Value": 30,

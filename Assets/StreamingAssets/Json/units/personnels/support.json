@@ -1,15 +1,15 @@
 {
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
-  "DefaultPrimary": "RocketLauncher",
+  "DefaultPrimary": "rocket_launcher",
   "AvailableFirearms": [
-    "RocketLauncher",
-    "GrenadeLauncher",
-    "Mortar",
-    "InfantryGun",
-    "RecoillessRifle",
-    "AutomaticGrenadeLauncher",
-    "MultipleRocketLauncher"
+    "rocket_launcher",
+    "grenade_launcher",
+    "mortar",
+    "infantry_gun",
+    "recoilless_rifle",
+    "automatic_grenade_launcher",
+    "multiple_rocket_launcher"
   ],
   "CaptureEfficiency": {
     "Value": 40,

@@ -1,0 +1,3602 @@
+[
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 0
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 1
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 2
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 3
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 4
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 5
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 6
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 7
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 8
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 9
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 10
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 11
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 12
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 13
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 14
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 15
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 16
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 17
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 18
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 19
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 20
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 21
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 22
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 23
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 24
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 25
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 26
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 27
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 28
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 29
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 30
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 31
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 32
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 33
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 34
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 35
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 36
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 37
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 38
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 39
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 40
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 41
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 42
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 43
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 44
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 45
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 46
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 47
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 48
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 49
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 50
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 51
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 52
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 53
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 54
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 55
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 56
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 57
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 58
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 59
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 60
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 61
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 62
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 63
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 64
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 65
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 66
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 67
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 68
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 69
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 70
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 71
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 72
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 73
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 74
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 75
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 76
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 77
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 78
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 79
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 80
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 81
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 82
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 83
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 84
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 85
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 86
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 87
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 88
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 89
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 90
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 91
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 92
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 93
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 94
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 95
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 96
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 97
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 98
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 99,
+      "Y": 99
+    }
+  }
+]

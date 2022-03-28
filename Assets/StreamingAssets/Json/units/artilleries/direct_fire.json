@@ -1,14 +1,14 @@
 {
   "IsAssembled": false,
   "AssembleTime": 1,
-  "DefaultGun": "C50mm",
+  "DefaultGun": "c50mm",
   "AvailableGuns": [
-    "C37mm",
-    "C50mm",
-    "C88mm",
-    "C128mm",
-    "C152mm",
-    "C203mm"
+    "c37mm",
+    "c50mm",
+    "c88mm",
+    "c128mm",
+    "c152mm",
+    "c203mm"
   ],
   "Gun": null,
   "Radio": null,

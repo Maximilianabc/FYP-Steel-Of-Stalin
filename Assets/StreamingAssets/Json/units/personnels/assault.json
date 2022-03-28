@@ -1,16 +1,16 @@
 {
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
-  "DefaultPrimary": "Carbine",
+  "DefaultPrimary": "carbine",
   "AvailableFirearms": [
-    "Carbine",
-    "Submachinegun",
-    "Shotgun",
-    "SemiAutoCarbine",
-    "AssaultRifle",
-    "AutomaticRifle",
-    "Grenade",
-    "Flamethrower"
+    "carbine",
+    "submachinegun",
+    "shotgun",
+    "semi_auto_carbine",
+    "assault_rifle",
+    "automatic_rifle",
+    "grenade",
+    "flamethrower"
   ],
   "CaptureEfficiency": {
     "Value": 50,
