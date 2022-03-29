@@ -1,6 +1,7 @@
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,9 +149,9 @@ namespace SteelOfStalin
             //get avaiable units
             var avaunits = Units.Where(c => c.CanMove()).First();
             var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
-            Commands.add(new Move(avaunits, pathtocity));
-
-
+            // var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), Map.Instance.GetTile(nearest));
+            Commands.Add(new Move(avaunits, pathtocity));
+            // Commands.Add(new Move(avaunits, pathtocity));
 
             // var unitpath = Units.ElementAt(0).GetPath(Units.ElementAt(0).GetLocatedTile(), Map.Instance.GetTile(nearest));
 
