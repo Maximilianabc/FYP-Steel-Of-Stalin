@@ -1,0 +1,7 @@
+{
+  "TimeForEachRound": 10,
+  "IsFogOfWar": true,
+  "RequireSignalConnection": true,
+  "DestroyedUnitsCanBeScavenged": false,
+  "AllowUniversalQueue": false
+}

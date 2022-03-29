@@ -1,19 +1,20 @@
+using SteelOfStalin.Assets.Props;
 using UnityEngine;
 
 namespace SteelOfStalin
 {
     public class BattleController : MonoBehaviour
     {
-        public GameObject Battle { get; set; }
-
         private void Start()
         {
-            Battle = Resources.Load<GameObject>(@"Prefabs\battle");
-            if (Battle.GetComponent<Battle>() == null)
-            {
-                Battle.AddComponent<Battle>();
-            }
+            Game.LoadAllAssets(); // TODO remove it later, testing purpose only
+            GameObject Battle = Game.GameObjects.Find(g => g.name == "battle");
+
             GameObject battleInstance = Instantiate(Battle);
+            if (battleInstance.GetComponent<Battle>() == null)
+            {
+                battleInstance.AddComponent<Battle>();
+            }
             battleInstance.name = "battle";
             Destroy(gameObject);
         }

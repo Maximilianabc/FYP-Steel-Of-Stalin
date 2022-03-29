@@ -87,14 +87,14 @@
       }
     }
   },
-  "DefaultMainArmament": "AC30mm",
+  "DefaultMainArmament": "ac30mm",
   "AvailableMainArmaments": [
-    "C20mm",
-    "C37mm",
-    "AC20mm",
-    "AC30mm",
-    "AC40mm",
-    "AC57mm"
+    "c20mm",
+    "c37mm",
+    "ac20mm",
+    "ac30mm",
+    "ac40mm",
+    "ac57mm"
   ],
   "Guns": [],
   "HeavyMachineGuns": [],

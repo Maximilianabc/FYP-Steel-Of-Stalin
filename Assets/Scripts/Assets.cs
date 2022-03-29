@@ -26,4 +26,13 @@ namespace SteelOfStalin.Assets
     {
         public string Name { get; set; }
     }
+
+    public interface IOwnableAsset
+    {
+        public Player Owner { get; set; }
+        public string OwnerName { get; set; }
+
+        public void SetOwner(Player owner);
+        public void SetOwnerFromName();
+    }
 }
