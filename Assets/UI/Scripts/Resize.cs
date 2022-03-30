@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Resize : MonoBehaviour
 {
@@ -22,7 +23,6 @@ public class Resize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
     public void DoResize() {
         if (objectToBeResized == null || parentOfContent == null) {
@@ -66,5 +66,6 @@ public class Resize : MonoBehaviour
         }
 
         objectToBeResized.GetComponent<RectTransform>().sizeDelta = resultVector;
+        LayoutRebuilder.MarkLayoutForRebuild(objectToBeResized.GetComponent<RectTransform>());
     }
 }

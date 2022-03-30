@@ -8,7 +8,7 @@ using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.Assets;
-
+using SteelOfStalin.Assets.Props.Units.Land;
 
 public class UnitPanel : MonoBehaviour
 {
@@ -24,13 +24,19 @@ public class UnitPanel : MonoBehaviour
     {
         
         Unit u = Game.UnitData.GetNew("infantry");
-        //SetUnit(u);
-        GameObject strength = menu.transform.Find("Strength").gameObject;
-        Debug.Log(u.Name);
-        Debug.Log(u.Defense.Strength.Value);
-        //int a = Mathf.RoundToInt((float)Game.UnitData[u.Name].Defense.Strength.Value);
-        //int b = Mathf.RoundToInt((float)u.Defense.Strength.Value);
-        
+        SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry infantry = u as SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry;
+        infantry.PrimaryFirearm = Game.CustomizableData["rifle"].Clone() as Firearm;
+        infantry.SecondaryFirearm = Game.CustomizableData["rifle"].Clone() as Firearm;
+        //Debug.Log(Mathf.RoundToInt((float)infantry.PrimaryFirearm.Offense.Damage.Soft.Value).ToString());
+        //SetUnit(infantry);
+        //menu.transform.Find("Modules").gameObject.GetComponent<Resize>().DoResize();
+        //menu.transform.Find("Carrying").gameObject.GetComponent<Resize>().DoResize();
+        //menu.transform.Find("Weapons").gameObject.GetComponent<Resize>().DoResize();
+        //GetComponent<Resize>().DoResize();
+
+
+
+
     }
 
     // Update is called once per frame
@@ -41,6 +47,7 @@ public class UnitPanel : MonoBehaviour
 
     private void SetUnit(Unit u) {
         if (menu == null) return;
+        GameObject instance;
         currentUnit = u;
         GameObject unitTitle = menu.transform.Find("Text_UnitTitle").gameObject;
         unitTitle.GetComponent<TMPro.TMP_Text>().text = u.Name;
@@ -52,69 +59,78 @@ public class UnitPanel : MonoBehaviour
         foreach (Transform child in modules.transform) {
             if(child.gameObject.name!= "Text_ModulesIntegrity") Destroy(child.gameObject);
         }
-        List<Module> unitModules=u.GetModules().ToList();
-        modules.SetActive(unitModules.Count != 0);
-        foreach (Module module in unitModules) {
-            GameObject instance=Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-            instance.name = module.Name;
-            instance.transform.SetParent(modules.transform);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = module.Name;
-            instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)Game.CustomizableData.Modules[module.Name].Integrity.Value), Mathf.RoundToInt((float)module.Integrity.Value));
-        }
+        List<Module> unitModules;
+        if (u.GetModules() == null) { unitModules = null; }
+        else { unitModules = u.GetModules().ToList(); }
+        modules.SetActive(unitModules != null && unitModules.Count != 0);
+        if (unitModules != null) {
+            foreach (Module module in unitModules)
+            {
+                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+                instance.name = module.Name;
+                instance.transform.SetParent(modules.transform);
+                instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = module.Name;
+                instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)Game.CustomizableData.Modules[module.Name].Integrity.Value), Mathf.RoundToInt((float)module.Integrity.Value));
+            }
+        }      
         modules.GetComponent<Resize>().DoResize();
 
         GameObject carrying = menu.transform.Find("Carrying").gameObject;
-        foreach (Transform child in modules.transform)
+        foreach (Transform child in carrying.transform)
         {
             if (child.gameObject.name != "Text_Carrying") Destroy(child.gameObject);
         }
-            
-        {
-            //Supplies
-            GameObject instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-            instance.transform.SetParent(carrying.transform);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Supplies";
-            instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Supplies.Value), Mathf.RoundToInt((float)u.Carrying.Supplies.Value));
-            //Catridges
-            instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-            instance.transform.SetParent(carrying.transform);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Catridges";
-            instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Cartridges.Value), Mathf.RoundToInt((float)u.Carrying.Cartridges.Value));
-            //Shells
-            instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-            instance.transform.SetParent(carrying.transform);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Shells";
-            instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Shells.Value), Mathf.RoundToInt((float)u.Carrying.Shells.Value));
-            //Fuel
-            instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-            instance.transform.SetParent(carrying.transform);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Fuel";
-            instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Fuel.Value), Mathf.RoundToInt((float)u.Carrying.Fuel.Value));
-            carrying.GetComponent<Resize>().DoResize();
-        }
+        //Supplies
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+        instance.transform.SetParent(carrying.transform);
+        instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Supplies";
+        instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Supplies.Value), Mathf.RoundToInt((float)u.Carrying.Supplies.Value));
+        //Catridges
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+        instance.transform.SetParent(carrying.transform);
+        instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Catridges";
+        instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Cartridges.Value), Mathf.RoundToInt((float)u.Carrying.Cartridges.Value));
+        //Shells
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+        instance.transform.SetParent(carrying.transform);
+        instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Shells";
+        instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Shells.Value), Mathf.RoundToInt((float)u.Carrying.Shells.Value));
+        //Fuel
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+        instance.transform.SetParent(carrying.transform);
+        instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Fuel";
+        instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Fuel.Value), Mathf.RoundToInt((float)u.Carrying.Fuel.Value));
+        carrying.GetComponent<Resize>().DoResize();
+        
 
         GameObject weapons = menu.transform.Find("Weapons").gameObject;
         foreach (Transform child in weapons.transform)
         {
-            if (child.gameObject.name != "Text_Weapons"||child.gameObject.name!="WeaponsHeading") Destroy(child.gameObject);
+            if (child.gameObject.name != "Text_Weapons"&&child.gameObject.name!="WeaponsHeading") Destroy(child.gameObject);
         }
-        List<IOffensiveCustomizable> unitWeapons = u.GetWeapons().ToList();
-        weapons.SetActive(unitWeapons.Count != 0);
-        foreach (IOffensiveCustomizable weapon in unitWeapons)
-        {
-            GameObject instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-            instance.name = weapon.Name;
-            instance.transform.SetParent(weapons.transform);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = weapon.Name;
-            instance.transform.Find("Soft").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Soft.Value).ToString();
-            instance.transform.Find("Hard").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Hard.Value).ToString();
-            instance.transform.Find("Destruct.").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Destruction.Value).ToString();
-        }
+        List<IOffensiveCustomizable> unitWeapons;
+        if (u.GetWeapons() == null) { unitWeapons = null; }
+        else { unitWeapons = u.GetWeapons().ToList(); }
+        weapons.SetActive(unitWeapons!=null&&unitWeapons.Count != 0);
+        if (unitWeapons != null) {
+            foreach (IOffensiveCustomizable weapon in unitWeapons)
+            {
+                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelWeapon"));
+                instance.name = weapon.Name;
+                instance.transform.SetParent(weapons.transform);
+                instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = weapon.Name;
+                instance.transform.Find("Soft").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Soft.Value).ToString();
+                instance.transform.Find("Hard").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Hard.Value).ToString();
+                instance.transform.Find("Destruct.").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Destruction.Value).ToString();
+            }
+        }       
         weapons.GetComponent<Resize>().DoResize();
 
         GameObject shellType = menu.transform.Find("ShellType").gameObject;
-        List<Gun> unitGuns = u.GetModules<Gun>().ToList();
-        shellType.SetActive(unitGuns.Count != 0);
+        List<Gun> unitGuns;
+        if (u.GetModules<Gun>() == null) {unitGuns = null;} 
+        else { unitGuns = u.GetModules<Gun>().ToList();}
+        shellType.SetActive(unitGuns != null && unitGuns.Count != 0);
 
 
 
