@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
+using System;
 
 namespace SteelOfStalin.Assets.Props.Units
 {
@@ -17,6 +18,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Ground() : base() { }
         public Ground(Ground another) : base(another) { }
         public abstract override object Clone();
+        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
         public abstract override IEnumerable<Module> GetModules();
 
         public override bool CanMove() => base.CanMove() && HasEnoughResourcesForMoving();
@@ -44,6 +46,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Naval() : base() { }
         public Naval(Naval another) : base(another) { }
         public abstract override object Clone();
+        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
         public abstract override IEnumerable<Module> GetModules();
     }
 
@@ -52,6 +55,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Aerial() : base() { }
         public Aerial(Aerial another) : base(another) { }
         public abstract override object Clone();
+        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
         public abstract override IEnumerable<Module> GetModules();
     }
 }
@@ -75,6 +79,26 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                new List<string>(another.AvailableFirearms),
                (Attribute)another.CaptureEfficiency?.Clone());
 
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        {
+            if (!weapons.Any())
+            {
+                this.LogError("weapons is empty");
+                return;
+            }
+            if (!weapons.All(w => w is Firearm))
+            {
+                this.LogError("Cannot assign non-firearm weapons to personnels");
+                return;
+            }
+
+            ChangeFirearm((Firearm)weapons.First());
+            if (weapons.Count() > 1)
+            {
+                ChangeFirearm((Firearm)weapons.ElementAt(1), false);
+            }
+        }
+
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PERSONNEL);
         public virtual bool CanCapture() => !IsSuppressed && GetLocatedTile().IsCity;
@@ -88,9 +112,9 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             // TODO FUT Impl.
             return false;
         }
-        public virtual bool CanFortify() => GetFriendlyBuildingsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0 && b.Level < b.MaxLevel && Carrying.HasEnoughResources(b.Cost.Fortification, false));
+        public virtual bool CanFortify() => GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0 && b.Level < b.MaxLevel && Carrying.HasEnoughResources(b.Cost.Fortification, false));
         public virtual bool CanConstruct() => Game.BuildingData.All.Any(b => Carrying.HasEnoughResources(b.Cost.Base, false));
-        public virtual bool CanDemolish() => GetFriendlyBuildingsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0);
+        public virtual bool CanDemolish() => GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0);
         public virtual bool CanScavenge()
         {
             // TODO FUT Impl.
@@ -98,8 +122,8 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         }
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { PrimaryFirearm, SecondaryFirearm };
-        public override IEnumerable<Module> GetModules() => null;
-        public override IEnumerable<Module> GetRepairableModules() => null;
+        public override IEnumerable<Module> GetModules() => Enumerable.Empty<Module>();
+        public override IEnumerable<Module> GetRepairableModules() => Enumerable.Empty<Module>();
         public override Modifier GetConcealmentPenaltyMove() => SecondaryFirearm == null ? PrimaryFirearm.ConcealmentPenaltyMove : Modifier.Min(PrimaryFirearm.ConcealmentPenaltyMove, SecondaryFirearm.ConcealmentPenaltyMove);
 
         // false for secondary
@@ -152,6 +176,21 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                (Gun)another.Gun?.Clone(),
                (Radio)another.Radio?.Clone());
 
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        {
+            if (!weapons.Any())
+            {
+                this.LogError("weapons is empty");
+                return;
+            }
+            if (!(weapons.First() is Gun))
+            {
+                this.LogError("Only guns can be assigned to artilleries");
+                return;
+            }
+            ChangeGun((Gun)weapons.First());
+        }
+
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.ARTILLERY);
         public override bool CanMove()
@@ -175,6 +214,21 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun };
         public override IEnumerable<Module> GetModules() => new List<Module>() { Gun, Radio };
         public override Modifier GetConcealmentPenaltyMove() => Gun.ConcealmentPenaltyMove;
+
+        public virtual void ChangeGun(Gun gun)
+        {
+            if (gun == null)
+            {
+                this.LogError("gun is null.");
+                return;
+            }
+            if (!AvailableGuns.Contains(gun.Name))
+            {
+                this.LogError($"Gun {gun.Name} is not available for unit {Name}.");
+                return;
+            }
+            Gun = gun;
+        }
     }
 
     public abstract class Vehicle : Ground
@@ -203,6 +257,29 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 (Periscope)another.Periscope?.Clone(),
                 (FuelTank)another.FuelTank?.Clone(),
                 (AmmoRack)another.AmmoRack?.Clone());
+
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        {
+            if (!weapons.Any())
+            {
+                this.LogError("weapons is empty");
+                return;
+            }
+            if (!weapons.All(w => w is Gun || w is HeavyMachineGun))
+            {
+                this.LogError("Only guns and heavy machine guns can be assigned to vehicles");
+                return;
+            }
+
+            // TODO FUT. Impl. limit the number of guns and machine guns for each vehicles
+            if (!weapons.OfType<Gun>().All(g => AvailableMainArmaments.Contains(g.Name)))
+            {
+                this.LogError($"At least of the guns is not available for unit {Name}");
+                return;
+            }
+            Guns = new List<Gun>(weapons.OfType<Gun>());
+            HeavyMachineGuns = new List<HeavyMachineGun>(weapons.OfType<HeavyMachineGun>());
+        }
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.VEHICLE);
@@ -287,9 +364,9 @@ namespace SteelOfStalin.Assets.Props.Units.Land.Personnels
         public Engineer(Engineer another) : base(another) => RepairingEfficiency = (Attribute)another.RepairingEfficiency?.Clone();
         public override object Clone() => new Engineer(this);
 
-        public bool CanRepair() => GetOwnUnitsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Any(u => u.GetModules() != null);
+        public bool CanRepair() => GetOwnUnitsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(u => u.GetModules() != null);
 
-        public IEnumerable<Unit> GetRepairableTargets() => GetOwnUnitsInRange(Map.Instance.GetNeigbours(CubeCoOrds)).Where(u => u.GetRepairableModules().Any());
+        public IEnumerable<Unit> GetRepairableTargets() => GetOwnUnitsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Where(u => u.GetRepairableModules().Any());
     }
 }
 
@@ -462,6 +539,11 @@ namespace SteelOfStalin.Assets.Props.Units.Sea
                 (Radar)another.Radar?.Clone(),
                 another.Altitude);
 
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        {
+            // TODO FUT. Impl.
+        }
+
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.VESSEL);
         public override bool CanMove() => base.CanMove() && Carrying.Supplies > 0 && Carrying.Fuel > 0;
@@ -595,6 +677,11 @@ namespace SteelOfStalin.Assets.Props.Units.Air
                (Wings)another.Wings?.Clone(),
                (LandingGear)another.LandingGear?.Clone(),
                (Radar)another.Radar?.Clone());
+
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        {
+            // TODO FUT. Impl.
+        }
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PLANE);

@@ -1,9 +1,9 @@
 {
-  "DefaultMainArmament": "H155mm",
+  "DefaultMainArmament": "h155mm",
   "AvailableMainArmaments": [
-    "H122mm",
-    "H155mm",
-    "H203mm"
+    "h122mm",
+    "h155mm",
+    "h203mm"
   ],
   "Guns": [],
   "HeavyMachineGuns": [],

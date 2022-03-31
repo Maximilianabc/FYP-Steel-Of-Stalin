@@ -1,9 +1,9 @@
 {
-  "DefaultMainArmament": "C37mm",
+  "DefaultMainArmament": "c37mm",
   "AvailableMainArmaments": [
-    "C20mm",
-    "C37mm",
-    "AC20mm"
+    "c20mm",
+    "c37mm",
+    "ac20mm"
   ],
   "Guns": [],
   "HeavyMachineGuns": [],

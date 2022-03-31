@@ -27,21 +27,26 @@ using static SteelOfStalin.DataIO.DataUtilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 using Plane = SteelOfStalin.Assets.Props.Units.Air.Plane;
 using Module = SteelOfStalin.Assets.Customizables.Module;
+using SteelOfStalin.Assets.Props.Units.Land.Personnels;
+using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
+using SteelOfStalin.Assets.Props.Units.Land.Vehicles;
+using SteelOfStalin.Assets.Props.Buildings.Units;
+using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 
 namespace SteelOfStalin.Util
 {
     public static class Utilities
     {
         public static void Log(this Command command, string @event) => Debug.Log($"{command.Unit} has the following event when executing the command {command.Name}: {@event}");
-
+        public static void LogWarning(this INamedAsset asset, string reason, [CallerMemberName] string method_name = "") => Debug.LogWarning($"Warning while executing method {method_name} for {asset}: {reason}");
         public static void LogError(this Command command, string reason, string explanation = "") => Debug.LogError($"Failed to execute command {command.Name} for unit at {command.Unit}: {reason} {explanation}");
-        public static void LogError(this Unit unit, string reason, [CallerMemberName] string method_name = "") => Debug.LogError($"Failed to execute method {method_name} for {unit}: {reason}");
+        public static void LogError(this INamedAsset asset, string reason, [CallerMemberName] string method_name = "") => Debug.LogError($"Failed to execute method {method_name} for {asset}: {reason}");
         public static void LogError(this Phase phase, string reason) => Debug.LogError($"Error when executing phases {phase.GetType().Name}: {reason}");
 
         public static IEnumerable<T> Flatten<T>(this T[][] ts) => ts.SelectMany(t => t);
         public static IEnumerable<T> CombineAll<T>(params IEnumerable<T>[] sources) => sources.SelectMany(t => t);
         public static IEnumerable<T> CombineAll<T>(params T[] sources) => sources;
-        public static T Find<T>(this IEnumerable<T> source, Predicate<T> match) => source.Where(t => match(t)).FirstOrDefault();
+        public static T Find<T>(this IEnumerable<T> source, Predicate<T> predicate) => source.Where(t => predicate(t)).FirstOrDefault();
         public static T[][] Transpose<T>(this T[][] ts)
         {
             T[][] transposed = new T[ts[0].Length][];
@@ -86,8 +91,11 @@ namespace SteelOfStalin.Util
 
         public static bool IsNonInteger(this Type type) => type.IsPrimitive && (type == typeof(decimal) || type == typeof(decimal) || type == typeof(float));
 
+        public static T CloneNew<T>(this List<T> list, string name) where T : ICloneable, INamedAsset => (T)list.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
+
         public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(new System.Random().NextDouble() * 2 - 1);
-        public static string ToPascalCase(string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
+        public static string ToPascal(this string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
+        public static string ToSnake(this string input) => Regex.Replace(input, @"(?<!^)([A-Z][a-z]+)", "_$1").ToLower();
         public static string PrintMembers(object invoke_target)
         {
             if (invoke_target == null)
@@ -122,8 +130,8 @@ namespace SteelOfStalin.Util
         public static Func<(IOffensiveCustomizable weapon, decimal distance), decimal> DamageDropoff => (input) =>
         {
             decimal d = input.weapon.Offense.Damage.Dropoff.ApplyMod();
-            decimal r = 1 + 0.6M / MathExtension.Pow(input.weapon.Offense.MaxRange.ApplyMod(), 2);
-            return 1.4M / MathExtension.PI * (MathExtension.Acos(d * r * input.distance - 1) - d * r * MathExtension.Sqrt(-input.distance * (input.distance - 2 / (d * r))));
+            decimal r = 1 + 0.6M / Mathm.Pow(input.weapon.Offense.MaxRange.ApplyMod(), 2);
+            return 1.4M / Mathm.PI * (Mathm.Acos(d * r * input.distance - 1) - d * r * Mathm.Sqrt(-input.distance * (input.distance - 2 / (d * r))));
         };
         public static Func<(Attribute soft, Attribute hard, decimal multiplier, Attribute hardness), decimal> DamageWithHardness => (input) =>
         {
@@ -161,7 +169,7 @@ namespace SteelOfStalin.Util
             int round = input.defender.ConsecutiveSuppressedRound;
             decimal determinant = -round * (round - 2 / suppress);
 
-            return determinant > 0 ? 1.1M * (1 - 1 / MathExtension.PI * MathExtension.Acos((suppress * round - 1) - suppress * MathExtension.Sqrt(determinant))) : 1.1M;
+            return determinant > 0 ? 1.1M * (1 - 1 / Mathm.PI * Mathm.Acos((suppress * round - 1) - suppress * Mathm.Sqrt(determinant))) : 1.1M;
         };
         public static Func<IOffensiveCustomizable, decimal> DamageAgainstBuilding => (weapon) => weapon.Offense.Damage.Destruction * weapon.Offense.Damage.Deviation.ApplyDeviation();
         public static Func<(decimal observer_recon, decimal observer_detect, decimal observee_conceal, decimal distance), bool> VisualSpotting => (input) =>
@@ -175,7 +183,7 @@ namespace SteelOfStalin.Util
             {
                 return false;
             }
-            decimal detection_at_range = (decimal)(input.observer_detect / MathExtension.Log(2 * input.observer_recon - 1) * MathExtension.Log(determinant));
+            decimal detection_at_range = (decimal)(input.observer_detect / Mathm.Log(2 * input.observer_recon - 1) * Mathm.Log(determinant));
             return detection_at_range > input.observee_conceal;
         };
         public static Func<(Unit observer, Unit observee, decimal distance), bool> AcousticRanging => (input) =>
@@ -185,7 +193,7 @@ namespace SteelOfStalin.Util
         };
     }
 
-    public static class MathExtension
+    public static class Mathm
     {
         public const decimal PI = (decimal)Math.PI;
         public static decimal Pow(decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
@@ -201,12 +209,14 @@ namespace SteelOfStalin.DataIO
     {
         protected virtual string JsonFolderPath => $@"{ExternalFilePath}\Json";
 
-        public abstract void Load();
-        public abstract IEnumerable<T> All { get; }
-        public virtual IEnumerable<T> FYPImplement => All;
-
         public T this[string name] => All.Find(a => a.Name == name);
         public T GetNew(string name) => (T)All.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
+        public U GetNew<U>() where U : T => (U)All.OfType<U>().FirstOrDefault()?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with type {typeof(U).Name.ToSnake()}");
+
+        public abstract void Load();
+        public abstract IEnumerable<T> All { get; }
+        public abstract T GetNew<U>(string name) where U : INamedAsset;
+        public virtual IEnumerable<T> FYPImplement => All;
 
         protected FileInfo[] GetJsonFiles(string path) => new DirectoryInfo(path).GetFiles("*.json", SearchOption.AllDirectories);
         protected void PrintEmptyListNames()
@@ -236,26 +246,36 @@ namespace SteelOfStalin.DataIO
         public override IEnumerable<Unit> All => CombineAll<Unit>(Personnels, Artilleries, Vehicles, Vessels, Planes);
         public override IEnumerable<Unit> FYPImplement => new List<Unit>()
         {
-            GetNew("militia"),
-            GetNew("infantry"),
-            GetNew("assault"),
-            GetNew("engineer"),
-            GetNew("mountain"),
-            GetNew("support"),
-            GetNew("portable"),
-            GetNew("direct_fire"),
-            GetNew("anti_tank"),
-            GetNew("heavy_support"),
-            GetNew("self_propelled"),
-            GetNew("motorised_infantry"),
-            GetNew("utility"),
-            GetNew("carrier"),
-            GetNew("armoured_car"),
-            GetNew("tank_destroyer"),
-            GetNew("assault_gun"),
-            GetNew("light_tank"),
-            GetNew("medium_tank"),
-            GetNew("heavy_tank")
+            GetNew<Militia>(),
+            GetNew<Infantry>(),
+            GetNew<Assault>(),
+            GetNew<Engineer>(),
+            GetNew<Mountain>(),
+            GetNew<Support>(),
+            GetNew<Portable>(),
+            GetNew<DirectFire>(),
+            GetNew<AntiTank>(),
+            GetNew<HeavySupport>(),
+            GetNew<SelfPropelled>(),
+            GetNew<MotorisedInfantry>(),
+            GetNew<Utility>(),
+            GetNew<Carrier>(),
+            GetNew<ArmouredCar>(),
+            GetNew<TankDestroyer>(),
+            GetNew<AssaultGun>(),
+            GetNew<LightTank>(),
+            GetNew<MediumTank>(),
+            GetNew<HeavyTank>()
+        };
+
+        public override Unit GetNew<U>(string name) => typeof(U) switch
+        {
+            _ when typeof(U) == typeof(Personnel) || typeof(U).IsSubclassOf(typeof(Personnel)) => Personnels.CloneNew(name),
+            _ when typeof(U) == typeof(Artillery) || typeof(U).IsSubclassOf(typeof(Artillery)) => Artilleries.CloneNew(name),
+            _ when typeof(U) == typeof(Vehicle) || typeof(U).IsSubclassOf(typeof(Vehicle)) => Vehicles.CloneNew(name),
+            _ when typeof(U) == typeof(Vessel) || typeof(U).IsSubclassOf(typeof(Vessel)) => Vessels.CloneNew(name),
+            _ when typeof(U) == typeof(Plane) || typeof(U).IsSubclassOf(typeof(Plane)) => Planes.CloneNew(name),
+            _ => throw new ArgumentException($"There is no {typeof(U).Name.ToLower()} in type Unit")
         };
 
         public override void Load()
@@ -298,12 +318,29 @@ namespace SteelOfStalin.DataIO
     {
         protected override string JsonFolderPath => $@"{base.JsonFolderPath}\buildings";
         public List<UnitBuilding> Units { get; set; } = new List<UnitBuilding>();
-        public List<ProductionBuilding> Resources { get; set; } = new List<ProductionBuilding>();
+        public List<ProductionBuilding> Productions { get; set; } = new List<ProductionBuilding>();
         public List<Infrastructure> Infrastructures { get; set; } = new List<Infrastructure>();
         public List<TransmissionBuilding> Transmissions { get; set; } = new List<TransmissionBuilding>();
         public List<DefensiveBuilding> Defensives { get; set; } = new List<DefensiveBuilding>();
 
-        public override IEnumerable<Building> All => CombineAll<Building>(Units, Resources, Infrastructures, Transmissions, Defensives);
+        public override IEnumerable<Building> All => CombineAll<Building>(Units, Productions, Infrastructures, Transmissions, Defensives);
+        public override IEnumerable<Building> FYPImplement => new List<Building>()
+        {
+            GetNew<Barracks>(),
+            GetNew<Arsenal>(),
+            GetNew<Outpost>(),
+            GetNew<Bridge>(),
+        };
+
+        public override Building GetNew<U>(string name) => typeof(U) switch 
+        { 
+            _ when typeof(U) == typeof(UnitBuilding) || typeof(U).IsSubclassOf(typeof(UnitBuilding)) => Units.CloneNew(name),
+            _ when typeof(U) == typeof(ProductionBuilding) || typeof(U).IsSubclassOf(typeof(ProductionBuilding)) => Productions.CloneNew(name),
+            _ when typeof(U) == typeof(Infrastructure) || typeof(U).IsSubclassOf(typeof(Infrastructure)) => Infrastructures.CloneNew(name),
+            _ when typeof(U) == typeof(TransmissionBuilding) || typeof(U).IsSubclassOf(typeof(TransmissionBuilding)) => Transmissions.CloneNew(name),
+            _ when typeof(U) == typeof(DefensiveBuilding) || typeof(U).IsSubclassOf(typeof(DefensiveBuilding)) => Defensives.CloneNew(name),
+            _ => throw new ArgumentException($"There is no sub-type {typeof(U).Name.ToLower()} in type Building")
+        };
 
         public override void Load()
         {
@@ -317,7 +354,7 @@ namespace SteelOfStalin.DataIO
                 }
                 else if (b is ProductionBuilding r)
                 {
-                    Resources.Add(r);
+                    Productions.Add(r);
                 }
                 else if (b is Infrastructure i)
                 {
@@ -350,8 +387,13 @@ namespace SteelOfStalin.DataIO
 
         public override IEnumerable<Tile> All => CombineAll<Tile>(Terrains, Cities);
 
-        public Tile GetNewTile(TileType type) => (Tile)Terrains.Find(t => t.Type == type)?.Clone() ?? throw new ArgumentException($"There is no tiles with type {type}");
-        public Cities GetNewCities(string name) => (Cities)Cities.Find(c => c.Name == name)?.Clone() ?? throw new ArgumentException($"There is no cities named {name}");
+        public Tile GetNew(TileType type) => (Tile)Terrains.Find(t => t.Type == type)?.Clone() ?? throw new ArgumentException($"There is no tiles with type {type}");
+
+        public override Tile GetNew<U>(string name) => typeof(U) switch
+        {
+            _ when typeof(U) == typeof(Cities) || typeof(U).IsSubclassOf(typeof(Cities)) => Cities.CloneNew(name),
+            _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Tile")
+        };
 
         public override void Load()
         {
@@ -389,6 +431,15 @@ namespace SteelOfStalin.DataIO
         public Firearm GetNewFirearm(string name) => (Firearm)Firearms.Find(f => f.Name == name)?.Clone() ?? throw new ArgumentException($"There is no firearms named {name}");
         public Module GetNewModule(string name) => (Module)Modules.All.Find(m => m.Name == name)?.Clone() ?? throw new ArgumentException($"There is no modules named {name}");
         public Shell GetNewShell(string name) => (Shell)Shells.Find(s => s.Name == name)?.Clone() ?? throw new ArgumentException($"There is no shells named {name}");
+
+        public override Customizable GetNew<U>(string name) => typeof(U) switch
+        {
+            _ when typeof(U).IsSubclassOf(typeof(Module)) => Modules.GetNew<U>(name),
+            _ when typeof(U) == typeof(Module) => Modules.GetNew(name),
+            _ when typeof(U) == typeof(Firearm) || typeof(U).IsSubclassOf(typeof(Firearm)) => Firearms.CloneNew(name),
+            _ when typeof(U) == typeof(Shell) || typeof(U).IsSubclassOf(typeof(Shell)) => Shells.CloneNew(name),
+            _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Customizable")
+        };
 
         public override void Load()
         {
@@ -440,6 +491,27 @@ namespace SteelOfStalin.DataIO
         public List<Radar> Radars { get; set; } = new List<Radar>();
 
         public override IEnumerable<Module> All => CombineAll<Module>(Guns.All, HeavyMachineGuns, Engines, Suspensions, Radios, Periscopes, FuelTanks, AmmoRacks, TorpedoTubes, Sonars, Propellers, Rudders, Wings, LandingGears, Radars);
+
+        public override Module GetNew<U>(string name) => typeof(U) switch
+        {
+            _ when typeof(U).IsSubclassOf(typeof(Gun)) => Guns.GetNew<U>(name),
+            _ when typeof(U) == typeof(Gun) => Guns.GetNew(name),
+            _ when typeof(U) == typeof(HeavyMachineGun) || typeof(U).IsSubclassOf(typeof(HeavyMachineGun)) => HeavyMachineGuns.CloneNew(name),
+            _ when typeof(U) == typeof(Engine) || typeof(U).IsSubclassOf(typeof(Engine)) => Engines.CloneNew(name),
+            _ when typeof(U) == typeof(Suspension) || typeof(U).IsSubclassOf(typeof(Suspension)) => Suspensions.CloneNew(name),
+            _ when typeof(U) == typeof(Radio) || typeof(U).IsSubclassOf(typeof(Radio)) => Radios.CloneNew(name),
+            _ when typeof(U) == typeof(Periscope) || typeof(U).IsSubclassOf(typeof(Periscope)) => Periscopes.CloneNew(name),
+            _ when typeof(U) == typeof(FuelTank) || typeof(U).IsSubclassOf(typeof(FuelTank)) => FuelTanks.CloneNew(name),
+            _ when typeof(U) == typeof(AmmoRack) || typeof(U).IsSubclassOf(typeof(AmmoRack)) => AmmoRacks.CloneNew(name),
+            _ when typeof(U) == typeof(TorpedoTubes) || typeof(U).IsSubclassOf(typeof(TorpedoTubes)) => TorpedoTubes.CloneNew(name),
+            _ when typeof(U) == typeof(Sonar) || typeof(U).IsSubclassOf(typeof(Sonar)) => Sonars.CloneNew(name),
+            _ when typeof(U) == typeof(Propeller) || typeof(U).IsSubclassOf(typeof(Propeller)) => Propellers.CloneNew(name),
+            _ when typeof(U) == typeof(Rudder) || typeof(U).IsSubclassOf(typeof(Rudder)) => Rudders.CloneNew(name),
+            _ when typeof(U) == typeof(Wings) || typeof(U).IsSubclassOf(typeof(Wings)) => Wings.CloneNew(name),
+            _ when typeof(U) == typeof(LandingGear) || typeof(U).IsSubclassOf(typeof(LandingGear)) => LandingGears.CloneNew(name),
+            _ when typeof(U) == typeof(Radar) || typeof(U).IsSubclassOf(typeof(Radar)) => Radars.CloneNew(name),
+            _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Module")
+        };
 
         public override void Load()
         {
@@ -524,6 +596,14 @@ namespace SteelOfStalin.DataIO
 
         public override IEnumerable<Gun> All => CombineAll<Gun>(Cannons, Howitzers, AutoCannons);
 
+        public override Gun GetNew<U>(string name) => typeof(U) switch
+        {
+            _ when typeof(U) == typeof(Cannon) || typeof(U).IsSubclassOf(typeof(Cannon)) => Cannons.CloneNew(name),
+            _ when typeof(U) == typeof(Howitzer) || typeof(U).IsSubclassOf(typeof(Howitzer)) => Howitzers.CloneNew(name),
+            _ when typeof(U) == typeof(AutoCannon) || typeof(U).IsSubclassOf(typeof(AutoCannon)) => AutoCannons.CloneNew(name),
+            _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Gun")
+        };
+
         public override void Load() => PrintEmptyListNames();
 
         public void Add(Gun g)
@@ -553,6 +633,7 @@ namespace SteelOfStalin.DataIO
         {
             WriteIndented = true,
             IgnoreReadOnlyProperties = true,
+            IgnoreReadOnlyFields = true,
             // Converters = { new RoundingJsonConverter() }
         };
         public static string ExternalFilePath => ConvertToWindowsPath(Application.streamingAssetsPath);
@@ -577,7 +658,7 @@ namespace SteelOfStalin.DataIO
                             if (js.TryGetProperty(identifier_property_name, out JsonElement name))
                             {
                                 string tile_name = name.GetString();
-                                string proper_type_name = $"{base_type_name}.{ToPascalCase(tile_name)}";
+                                string proper_type_name = $"{base_type_name}.{tile_name.ToPascal()}";
                                 Type tile_type = Type.GetType(proper_type_name);
                                 yield return (T)js.Deserialize(tile_type, Options);
                             }
@@ -605,5 +686,7 @@ namespace SteelOfStalin.DataIO
             fs.Write(bs, 0, bs.Length);
             fs.Close();
         }
+
+        public static bool StreamingAssetExists(string path) => File.Exists($@"{ExternalFilePath}\{path}");
     }
 }

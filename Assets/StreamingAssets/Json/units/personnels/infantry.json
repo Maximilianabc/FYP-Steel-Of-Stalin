@@ -1,17 +1,17 @@
 {
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
-  "DefaultPrimary": "Rifle",
+  "DefaultPrimary": "rifle",
   "AvailableFirearms": [
-    "Rifle",
-    "SemiAutoRifle",
-    "BattleRifle",
-    "AssaultRifle",
-    "ScopedRifle",
-    "AutomaticRifle",
-    "LightMachinegun",
-    "Grenade",
-    "RifleGrenade"
+    "rifle",
+    "semi_auto_rifle",
+    "battle_rifle",
+    "assault_rifle",
+    "scoped_rifle",
+    "automatic_rifle",
+    "light_machinegun",
+    "grenade",
+    "rifle_grenade"
   ],
   "CaptureEfficiency": {
     "Value": 40,

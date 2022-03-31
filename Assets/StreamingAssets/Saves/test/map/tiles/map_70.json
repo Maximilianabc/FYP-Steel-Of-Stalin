@@ -1,0 +1,3602 @@
+[
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 0
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 1
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 2
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 3
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 4
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 5
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 6
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 7
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 8
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 9
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 10
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 11
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 12
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 13
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 14
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 15
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 16
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 17
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 18
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 19
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 20
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 21
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 22
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 23
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 24
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 25
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 26
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 27
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 28
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 29
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 30
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 31
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 32
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 33
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 34
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 35
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 36
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 37
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 38
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 39
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 40
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 41
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 42
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 43
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 44
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 45
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 46
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 47
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 48
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 49
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 50
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 51
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 52
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 53
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 54
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 55
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 56
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 57
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 58
+    }
+  },
+  {
+    "Type": "DESERT",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 100
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.2,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "D",
+    "Name": "desert",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 59
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 60
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 61
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 62
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 63
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 64
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 65
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 66
+    }
+  },
+  {
+    "Type": "PLAINS",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 2
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "P",
+    "Name": "plains",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 67
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 68
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 69
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 70
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 71
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 72
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 73
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 74
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 75
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 76
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 77
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 78
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 79
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 80
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 81
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 82
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 83
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 84
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 85
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 86
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 87
+    }
+  },
+  {
+    "Type": "OCEAN",
+    "Accessibility": "VESSEL | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 0
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      }
+    },
+    "Obstruction": 0,
+    "AllowConstruction": false,
+    "Height": 1,
+    "Symbol": "N",
+    "Name": "ocean",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 88
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 89
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 90
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 91
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 92
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 93
+    }
+  },
+  {
+    "Type": "GRASSLAND",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 1
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 25
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -10
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 10
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -5
+      }
+    },
+    "Obstruction": 0.1,
+    "AllowConstruction": true,
+    "Height": 2,
+    "Symbol": "G",
+    "Name": "grassland",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 94
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 95
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 96
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 97
+    }
+  },
+  {
+    "Type": "FOREST",
+    "Accessibility": "PERSONNEL | ARTILLERY | VEHICLE | PLANE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "FIXED_VALUE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "PERCENTAGE",
+        "Value": 50
+      },
+      "Supplies": {
+        "Type": "PERCENTAGE",
+        "Value": -20
+      },
+      "Fuel": {
+        "Type": "PERCENTAGE",
+        "Value": 20
+      },
+      "Mobility": {
+        "Type": "PERCENTAGE",
+        "Value": -30
+      }
+    },
+    "Obstruction": 0.3,
+    "AllowConstruction": false,
+    "Height": 2,
+    "Symbol": "F",
+    "Name": "forest",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 98
+    }
+  },
+  {
+    "Type": "BOUNDARY",
+    "Accessibility": "NONE",
+    "TerrainMod": {
+      "Recon": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Concealment": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      },
+      "Supplies": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Fuel": {
+        "Type": "MULTIPLE",
+        "Value": 99999
+      },
+      "Mobility": {
+        "Type": "MULTIPLE",
+        "Value": 0
+      }
+    },
+    "Obstruction": 79228162514264337593543950335,
+    "AllowConstruction": false,
+    "Height": 79228162514264337593543950335,
+    "Symbol": "B",
+    "Name": "boundary",
+    "MeshName": "",
+    "CoOrds": {
+      "X": 70,
+      "Y": 99
+    }
+  }
+]

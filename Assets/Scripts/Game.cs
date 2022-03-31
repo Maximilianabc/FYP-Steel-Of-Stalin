@@ -28,6 +28,7 @@ using static SteelOfStalin.Util.Utilities;
 using Capture = SteelOfStalin.Commands.Capture;
 using Plane = SteelOfStalin.Assets.Props.Units.Air.Plane;
 using SteelOfStalin.Assets;
+using SteelOfStalin.Assets.Props.Buildings.Units;
 
 namespace SteelOfStalin
 {
@@ -48,14 +49,17 @@ namespace SteelOfStalin
 
         public void Start()
         {
+            LoadAllAssets();
+        }
+
+        public static void LoadAllAssets()
+        {
             GameObjects = UnityEngine.Resources.LoadAll<GameObject>("Prefabs").ToList();
             AudioClips = UnityEngine.Resources.LoadAll<AudioClip>("Audio").ToList();
             UnitData.Load();
             BuildingData.Load();
             TileData.Load();
             CustomizableData.Load();
-            // new Map().Load();
-            // Settings = DeserializeJson<GameSettings>("settings.json");
         }
     }
 
@@ -74,86 +78,168 @@ namespace SteelOfStalin
     {
         public static Battle Instance { get; private set; }
 
-        public string Name { get; set; }
+        /* use the following to set battle name:
+         * Battle battle = *get the battle controller object*.GetComponent<Battle>();
+         * battle.Name = *name here*;
+         */ 
+        public string Name { get; set; } = "test";
         public Map Map { get; set; } = new Map();
         public List<Player> Players { get; set; } = new List<Player>();
         public BattleRules Rules { get; set; } = new BattleRules();
-        public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
 
         public List<Round> Rounds = new List<Round>();
         public Round CurrentRound { get; set; }
         public int RoundNumber { get; set; } = 1;
-
+        public int TimeRemaining { get; set; }
         public bool EnablePlayerInput { get; set; } = true;
-        public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
+
+        [JsonIgnore] public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
+        [JsonIgnore] public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
 
         private Player m_winner { get; set; } = null;
+        private string m_folder => $@"Saves\{Name}";
 
-        public void Start()
+        private void Start()
         {
             Instance = this;
             Load();
 
-            // main game logic loop
-            //while (m_winner == null)
-            //{
-            CurrentRound = new Round();
-            ActivePlayers.ToList().ForEach(p => p.IsReady = false);
-            CurrentRound.InitializeRoundStart();
-            CurrentRound.CommandPrerequisitesChecking();
-            EnablePlayerInput = true;
+            foreach (Tile tile in Map.GetTiles())
+            {
+                tile.AddToScene();
+            }
+            _ = StartCoroutine(GameLoop());
+        }
 
-            _ = StartCoroutine(CurrentRound.Planning.PhaseLoop(Rules.TimeForEachRound));
+        private IEnumerator GameLoop()
+        {
+            // main game logic loop
+            while (m_winner == null)
+            {
+                CurrentRound = new Round();
+                ActivePlayers.ToList().ForEach(p => p.IsReady = false);
+                CurrentRound.InitializeRoundStart();
+                CurrentRound.CommandPrerequisitesChecking();
+                EnablePlayerInput = true;
+                TimeRemaining = Rules.TimeForEachRound;
+                yield return new WaitForEndOfFrame();
+
+                bool unlimited_time = Rules.TimeForEachRound < 0;
+                if (unlimited_time)
+                {
+                    Debug.Log("No time limit. Wait for all players ready to continue");
+                }
+
+                int counter = 0;
+                while ((counter < Rules.TimeForEachRound && !unlimited_time) || !AreAllPlayersReady)
+                {
+                    yield return new WaitForSeconds(1);
+                    if (!unlimited_time)
+                    {
+                        counter += 1;
+                        TimeRemaining--;
+                        Debug.Log($"Time remaining: {TimeRemaining} second(s)");
+                    }
+                }
+                EndPlanning();
+            }
+            yield return null;
+        }
+
+        private void EndPlanning()
+        {
             Debug.Log("End Turn");
             EnablePlayerInput = false;
             CurrentRound.EndPlanning();
             m_winner = CurrentRound.GetWinner();
             Rounds.Add(CurrentRound);
             RoundNumber++;
-            //}
         }
+
+        public Player GetPlayer(string name) => Players.Find(p => p.Name == name);
+        public Player GetPlayer(Color color) => Players.Find(p => p.Color == color);
+
+        // for testing maps, i.e. map and battle are decoupled (not generated together)
+        public void SetMetropolisOwners()
+        {
+            int i = 0;
+            foreach (Metropolis m in Map.GetCities<Metropolis>())
+            {
+                m.SetOwner(Players[i]);
+                i++;
+            }
+        }
+        // for testing maps
+        public void SetDefaultUnitBuildingsOwners()
+        {
+            IEnumerable<Metropolis> metro = Map.GetCities<Metropolis>();
+            foreach (Metropolis m in metro)
+            {
+                foreach (Building building in Map.Instance.GetBuildings(m.CoOrds))
+                {
+                    if (building is UnitBuilding ub)
+                    {
+                        ub.SetOwner(m.Owner);
+                    }
+                }
+            }
+        }
+
         public void Save()
         {
-            Rules.SerializeJson($@"Saves\{Name}\rules");
-            Players.SerializeJson($@"Saves\{Name}\players");
+            Rules.Save();
+            Players.SerializeJson($@"{m_folder}\players");
+            Map.Save();
+            Debug.Log($"Saved battle {Name}");
         }
         public void Load()
         {
-            Rules = DeserializeJson<BattleRules>($@"Saves\{Name}\rules");
+            if (!StreamingAssetExists($@"{m_folder}\rules.json"))
+            {
+                Rules.Save();
+            }
+            Rules = DeserializeJson<BattleRules>($@"{m_folder}\rules");
+            Players = DeserializeJson<List<Player>>($@"{m_folder}\players");
             Map.Load();
+            Debug.Log($"Loaded battle {Name}");
         }
     }
 
     // Contains different rules of the battle, like how much time is allowed for each round etc.
     public class BattleRules
     {
-        public int TimeForEachRound { get; set; } = 120; // in seconds, -1 means unlimited
+        public int TimeForEachRound { get; set; } = 10; // in seconds, -1 means unlimited
         public bool IsFogOfWar { get; set; } = true;
         public bool RequireSignalConnection { get; set; } = true;
         public bool DestroyedUnitsCanBeScavenged { get; set; }
         public bool AllowUniversalQueue { get; set; }
 
         public BattleRules() { }
+
+        public void Save() => this.SerializeJson($@"Saves\{Battle.Instance.Name}\rules");
     }
 
     public class Map : ICloneable, INamedAsset
     {
         public static Map Instance { get; private set; }
-        public string Name { get; set; } = "test";
+        public string Name { get; set; }
+        public string BattleName { get; set; } = "test";
+        public int Width { get; protected set; }
+        public int Height { get; protected set; }
+
+        [JsonIgnore] public IEnumerable<Prop> AllProps => CombineAll<Prop>(Tiles.Flatten(), Units, Buildings);
 
         protected Tile[][] Tiles { get; set; }
         protected List<Unit> Units { get; set; } = new List<Unit>();
         protected List<Building> Buildings { get; set; } = new List<Building>();
-        protected int Width { get; set; }
-        protected int Height { get; set; }
 
         public Map() => Instance = this;
-        public Map(int width, int height) => (Width, Height, Instance) = (width, height, this);
+        public Map(int width, int height) => (Width, Height, Instance, BattleName) = (width, height, this, Battle.Instance?.Name ?? "test");
 
-        protected string Folder => $@"Saves\Maps\{Name}";
-        protected string TileFolder => $@"Saves\Maps\{Name}\tiles";
+        protected string Folder => $@"Saves\{BattleName}\map";
+        protected string TileFolder => $@"{Folder}\tiles";
 
-        public void Save()
+        public virtual void Save()
         {
             CreateStreamingAssetsFolder(Folder);
             Units.SerializeJson($@"{Folder}\units");
@@ -166,11 +252,12 @@ namespace SteelOfStalin
             {
                 Tiles[i].SerializeJson($@"{TileFolder}\map_{i}");
             }
-            Debug.Log($"Saved map {Name}");
+            Debug.Log($"Saved map {Name} for {BattleName}");
         }
 
-        public void Load()
+        public virtual void Load()
         {
+            BattleName = Battle.Instance?.Name ?? "test";
             Units = DeserializeJson<List<Unit>>($@"{Folder}\units");
             Buildings = DeserializeJson<List<Building>>($@"{Folder}\buildings");
             ReadStatistics();
@@ -182,7 +269,7 @@ namespace SteelOfStalin
                 // TODO FUT. Impl. regenerate map files by reading the stats.txt in case any map files corrupted (e.g. edge of map is not boundary etc.)
                 Tiles[i] = DeserializeJson<List<Tile>>($@"{TileFolder}\map_{i}").ToArray();
             }
-            Debug.Log($"Loaded map {Name}");
+            Debug.Log($"Loaded map {Name} for {BattleName}");
         }
 
         // get a color png for the map
@@ -285,6 +372,7 @@ namespace SteelOfStalin
             Buildings.Add(b);
             return true;
         }
+        public void AddBuildings(params Building[] buildings) => Buildings.AddRange(buildings);
         public bool RemoveUnit(Unit u)
         {
             if (u == null)
@@ -325,7 +413,13 @@ namespace SteelOfStalin
             Debug.Log(sb.ToString());
         }
 
-        public Prop GetProp(GameObject gameObject) => Utilities.CombineAll<Prop>(Tiles.Flatten(), Units, Buildings).Find(p => p.MeshName == gameObject.name);
+        public Prop GetProp(GameObject gameObject) => AllProps.Find(p => p.MeshName == gameObject.name);
+        public IEnumerable<Prop> GetProps(Coordinates c) => AllProps.Where(p => p.CoOrds == c);
+        public IEnumerable<Prop> GetProps(CubeCoordinates c) => AllProps.Where(p => p.CubeCoOrds == c);
+        public IEnumerable<Prop> GetProps(Predicate<Prop> predicate) => AllProps.Where(p => predicate(p));
+        public IEnumerable<T> GetProps<T>() where T : Prop => AllProps.OfType<T>();
+        public IEnumerable<T> GetProps<T>(CubeCoordinates c) where T : Prop => GetProps(c).OfType<T>();
+        public IEnumerable<T> GetProps<T>(Predicate<T> predicate) where T : Prop => AllProps.OfType<T>().Where(p => predicate(p));
 
         public Tile GetTile(int x, int y) => Tiles[x][y];
         public Tile GetTile(Coordinates p) => Tiles[p.X][p.Y];
@@ -333,31 +427,33 @@ namespace SteelOfStalin
         public IEnumerable<Tile> GetTiles() => Tiles.Flatten();
         public IEnumerable<Tile> GetTiles(TileType type) => Tiles.Flatten().Where(t => t.Type == type);
         public IEnumerable<Tile> GetTiles(Predicate<Tile> predicate) => Tiles.Flatten().Where(t => predicate(t));
+        public IEnumerable<T> GetTiles<T>() where T : Tile => Tiles.Flatten().OfType<T>();
 
         public IEnumerable<Cities> GetCities() => Tiles.Flatten().Where(t => t is Cities).Cast<Cities>();
         public IEnumerable<Cities> GetCities(Player player) => GetCities().Where(c => c.Owner == player);
         public IEnumerable<Cities> GetCities(Predicate<Cities> predicate) => GetCities().Where(c => predicate(c));
+        public IEnumerable<T> GetCities<T>() where T : Cities => Tiles.Flatten().OfType<T>();
 
-        public IEnumerable<Tile> GetNeigbours(CubeCoordinates c, int distance = 1) => c.GetNeigbours(distance).Where(c =>
+        public IEnumerable<Tile> GetNeighbours(CubeCoordinates c, int distance = 1, bool include_self = false) => c.GetNeigbours(distance, include_self).Where(c =>
         {
             Coordinates p = (Coordinates)c;
             return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
         }).Select(c => GetTile(c));
         public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, decimal distance = 1) => distance < 1
                 ? throw new ArgumentException("Distance must be >= 1.")
-                : GetNeigbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
-        public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeigbours(c, distance).Any(t => !t.IsOccupied);
+                : GetNeighbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
+        public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeighbours(c, distance).Any(t => !t.IsOccupied);
 
         public IEnumerable<Unit> GetUnits() => Units;
-        public IEnumerable<Unit> GetUnits<T>() where T : Unit => Units.OfType<T>();
-        public IEnumerable<Unit> GetUnits<T>(Predicate<Unit> predicate) where T : Unit => GetUnits<T>().Where(u => predicate(u));
+        public IEnumerable<T> GetUnits<T>() where T : Unit => Units.OfType<T>();
+        public IEnumerable<T> GetUnits<T>(Predicate<Unit> predicate) where T : Unit => GetUnits<T>().Where(u => predicate(u));
         public IEnumerable<Unit> GetUnits(Coordinates p) => GetUnits(GetTile(p));
         public IEnumerable<Unit> GetUnits(Tile t)
         {
             if (t == null)
             {
-                Debug.LogWarning("Error when trying to get unit: input tile is null");
-                return null;
+                Debug.LogError("Error when trying to get unit: input tile is null");
+                return Enumerable.Empty<Unit>();
             }
 
             List<Unit> units = Units.Where(u => u.CoOrds.X == t.CoOrds.X && u.CoOrds.Y == t.CoOrds.Y).ToList();
@@ -376,15 +472,15 @@ namespace SteelOfStalin
         public IEnumerable<Unit> GetUnits(Predicate<Unit> predicate) => Units.Where(u => predicate(u));
 
         public IEnumerable<Building> GetBuildings() => Buildings;
-        public IEnumerable<Building> GetBuildings<T>() where T : Building => Buildings.OfType<T>();
+        public IEnumerable<T> GetBuildings<T>() where T : Building => Buildings.OfType<T>();
         public IEnumerable<Building> GetBuildings(Coordinates p) => GetBuildings(GetTile(p));
         public IEnumerable<Building> GetBuildings(IEnumerable<Coordinates> coordinates) => coordinates.SelectMany(c => GetBuildings(c));
         public IEnumerable<Building> GetBuildings(Tile t)
         {
             if (t == null)
             {
-                Debug.LogWarning("Error when trying to get building: input tile is null");
-                return null;
+                Debug.LogError("Error when trying to get building: input tile is null");
+                return Enumerable.Empty<Building>();
             }
             return Buildings.Where(b => b.CoOrds.X == t.CoOrds.X && b.CoOrds.Y == t.CoOrds.Y);
         }
@@ -413,6 +509,7 @@ namespace SteelOfStalin
         public PerlinMap HumidityMap { get; set; }
         public int WaterSourceNum { get; set; } = -1;
         public int CitiesNum { get; set; } = -1;
+        public int CitiesSeed { get; set; } = -1;
         private List<CubeCoordinates> m_flatLands { get; set; }
         private List<CubeCoordinates> m_cities { get; set; } = new List<CubeCoordinates>();
 
@@ -435,13 +532,13 @@ namespace SteelOfStalin
                 {
                     if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
                     {
-                        Tiles[x][y] = Game.TileData.GetNewTile(TileType.BOUNDARY);
+                        Tiles[x][y] = Game.TileData.GetNew(TileType.BOUNDARY);
                         Tiles[x][y].CoOrds = new Coordinates(x, y);
                         continue;
                     }
                     else if (HeightMap.Values[x][y] <= 0.25)
                     {
-                        Tiles[x][y] = Game.TileData.GetNewTile(TileType.OCEAN);
+                        Tiles[x][y] = Game.TileData.GetNew(TileType.OCEAN);
                     }
                     else if (HeightMap.Values[x][y] <= 0.6)
                     {
@@ -454,13 +551,13 @@ namespace SteelOfStalin
                             _ when HumidityMap.Values[x][y] < 0.3 => TileType.DESERT,
                             _ => TileType.PLAINS,
                         };
-                        Tiles[x][y] = Game.TileData.GetNewTile(type);
+                        Tiles[x][y] = Game.TileData.GetNew(type);
                     }
                     else
                     {
                         Tiles[x][y] = HeightMap.Values[x][y] <= 0.65
-                            ? Game.TileData.GetNewTile(TileType.HILLOCK)
-                            : Game.TileData.GetNewTile(HeightMap.Values[x][y] <= 0.75 ? TileType.HILLS : TileType.MOUNTAINS);
+                            ? Game.TileData.GetNew(TileType.HILLOCK)
+                            : Game.TileData.GetNew(HeightMap.Values[x][y] <= 0.75 ? TileType.HILLS : TileType.MOUNTAINS);
                     }
                     // TODO move these back to json generation
                     Tiles[x][y].Height = Tiles[x][y].Type switch
@@ -489,6 +586,7 @@ namespace SteelOfStalin
             }
             GenerateRivers();
             GenerateCities(num_player);
+            PostGenerateProcesses();
         }
 
         // TODO FUT Impl. Replace A* with a more advanced procedural generation algo
@@ -576,7 +674,7 @@ namespace SteelOfStalin
                     {
                         continue;
                     }
-                    Tiles[coords.X][coords.Y] = Game.TileData.GetNewTile(type == TileType.STREAM ? TileType.RIVER : TileType.STREAM);
+                    Tiles[coords.X][coords.Y] = Game.TileData.GetNew(type == TileType.STREAM ? TileType.RIVER : TileType.STREAM);
                     Tiles[coords.X][coords.Y].CoOrds = new Coordinates(coords);
                 }
             }
@@ -620,7 +718,7 @@ namespace SteelOfStalin
             for (int i = 0; i < num_player; i++)
             {
                 Coordinates c = (Coordinates)m_cities[i];
-                Tiles[c.X][c.Y] = Game.TileData.GetNewCities("metropolis");
+                Tiles[c.X][c.Y] = Game.TileData.GetNew<Cities>("metropolis");
                 Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
             }
             m_cities.RemoveRange(0, num_player);
@@ -630,7 +728,7 @@ namespace SteelOfStalin
             {
                 int index = new System.Random().Next(m_cities.Count);
                 Coordinates c = (Coordinates)m_cities[index];
-                Tiles[c.X][c.Y] = Game.TileData.GetNewCities("suburb");
+                Tiles[c.X][c.Y] = Game.TileData.GetNew<Cities>("suburb");
                 Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
                 m_cities.RemoveAt(index);
             }
@@ -638,7 +736,7 @@ namespace SteelOfStalin
             foreach (CubeCoordinates cube in m_cities)
             {
                 Coordinates c = (Coordinates)cube;
-                Tiles[c.X][c.Y] = Game.TileData.GetNewCities("city");
+                Tiles[c.X][c.Y] = Game.TileData.GetNew<Cities>("city");
                 Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
             }
         }
@@ -668,7 +766,9 @@ namespace SteelOfStalin
                 _ = active.Remove(check);
 
                 List<WeightedTile> neigbours = new List<WeightedTile>();
-                GetNeigbours(check.CubeCoOrds).ToList().ForEach(t => neigbours.Add(new WeightedTile()
+
+                // TODO FUT. Impl. it had thrown arithmetic overflow exception once here when testing, need further investigation
+                GetNeighbours(check.CubeCoOrds).ToList().ForEach(t => neigbours.Add(new WeightedTile()
                 {
                     Parent = check,
                     CubeCoOrds = t.CubeCoOrds,
@@ -710,6 +810,18 @@ namespace SteelOfStalin
             return sb.ToString();
         }
 
+        public override void Save()
+        {
+            // TODO
+            base.Save();
+        }
+
+        public override void Load()
+        {
+            // TODO
+            base.Load();
+        }
+
         private void PickCities(int num_cities, int min_sep, int max_sep)
         {
             Debug.Log($"Generating cities: no. of cities to generate: {num_cities}, min. separation: {min_sep}, max. separation: {max_sep}");
@@ -738,26 +850,55 @@ namespace SteelOfStalin
 
                         int candidate_x = (int)(last.X + rand_dist * Math.Cos(rand_theta));
                         int candidate_y = (int)(last.Y + rand_dist * Math.Sin(rand_theta));
-                        if (candidate_x > 0 && candidate_y > 0 && candidate_x < Width && candidate_y < Height)
+
+                        // out of bounds
+                        if (!(candidate_x > 0 && candidate_y > 0 && candidate_x < Width && candidate_y < Height))
                         {
-                            CubeCoordinates candidate = (CubeCoordinates)new Coordinates(candidate_x, candidate_y);
-                            if (m_flatLands.Any(s => s == candidate))
-                            {
-                                has_cities_within_range = candidate.GetNeigbours(min_sep).Intersect(m_cities).Any();
+                            continue;
+                        }
 
-                                // be it passing the test or not, it won't be suitable: if it passes, it will be turned into a city, if not then obviously not a suitable tile for any other city generation
-                                _ = m_flatLands.Remove(candidate);
+                        CubeCoordinates candidate = (CubeCoordinates)new Coordinates(candidate_x, candidate_y);
+                        if (!m_flatLands.Any(s => s == candidate)) // not a flatland
+                        {
+                            continue;
+                        }
+                        has_cities_within_range = candidate.GetNeigbours(min_sep).Intersect(m_cities).Any();
 
-                                if (!has_cities_within_range)
-                                {
-                                    m_cities.Add(candidate);
-                                    num_cities--;
-                                    break;
-                                }
-                            }
+                        // be it passing the test or not, it won't be suitable: if it passes, it will be turned into a city, if not then obviously not a suitable tile for any other city generation
+                        _ = m_flatLands.Remove(candidate);
+                        if (!has_cities_within_range)
+                        {
+                            m_cities.Add(candidate);
+                            num_cities--;
+                            break;
                         }
                     }
                 }
+            }
+        }
+
+        private void PostGenerateProcesses()
+        {
+            int i = 0;
+            foreach (Metropolis m in GetCities<Metropolis>())
+            {
+                m.SetOwner(Battle.Instance?.Players[i]);
+                i++;
+            }
+            foreach (Cities c in GetCities())
+            {
+                Barracks barracks = Game.BuildingData.GetNew<Barracks>();
+                Arsenal arsenal = Game.BuildingData.GetNew<Arsenal>();
+
+                barracks.Initialize(c.Owner, new Coordinates(c.CoOrds));
+                barracks.CoOrds = new Coordinates(c.CoOrds);
+                arsenal.CoOrds = new Coordinates(c.CoOrds);
+                if (c.Owner != null)
+                {
+                    barracks.Owner = c.Owner;
+                    arsenal.Owner = c.Owner;
+                }
+                AddBuildings(barracks, arsenal);
             }
         }
     }
@@ -881,15 +1022,16 @@ namespace SteelOfStalin
         }
     }
 
-    public abstract class Command : ICloneable
+    public class Command : ICloneable
     {
         public Coordinates Source { get; set; }
         public Coordinates Destination { get; set; }
         public Unit Unit { get; set; }
-        public string Name => GetType().Name;
-        public StringBuilder Recorder => new StringBuilder();
 
-        public abstract void Execute();
+        [JsonIgnore] public string Name => GetType().Name;
+        [JsonIgnore] public StringBuilder Recorder => new StringBuilder();
+
+        public virtual void Execute() { }
 
         public Command() { }
         public Command(Unit u) => Unit = u;
@@ -1180,17 +1322,6 @@ namespace SteelOfStalin.Flow
     public sealed class Planning : Phase
     {
         public Planning() { }
-        public IEnumerator PhaseLoop(float wait_time)
-        {
-            float counter = 0;
-            while (counter < wait_time || !Battle.Instance.AreAllPlayersReady)
-            {
-                yield return new WaitForSeconds(1);
-                counter += 1;
-                Debug.Log($"Time remaining: {wait_time - counter} second(s)");
-                yield return null;
-            }
-        }
     }
     public sealed class Moving : Phase
     {

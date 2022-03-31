@@ -194,8 +194,8 @@ namespace SteelOfStalin.Attributes
         public Attribute Power { get; set; } = new Attribute();
         public Attribute Time { get; set; } = new Attribute();
 
-        public IEnumerable<Attribute> All => Utilities.CombineAll(Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Time);
-        public bool IsZero => All.All(a => a.Value == 0);
+        [JsonIgnore] public IEnumerable<Attribute> All => Utilities.CombineAll(Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Time);
+        [JsonIgnore] public bool IsZero => All.All(a => a.Value == 0);
 
         public Resources() { }
         public Resources(Resources another)
@@ -319,7 +319,7 @@ namespace SteelOfStalin.Attributes
         public Resources Recycling { get; set; } = new Resources();
         public Modifier CostModifier { get; set; } = new Modifier();
 
-        public IEnumerable<Resources> All => Utilities.CombineAll(Base, Research, Repair, Fortification, Manufacture, Maintenance, Recycling);
+        [JsonIgnore] public IEnumerable<Resources> All => Utilities.CombineAll(Base, Research, Repair, Fortification, Manufacture, Maintenance, Recycling);
 
         public Cost() { }
         public Cost(Cost another)

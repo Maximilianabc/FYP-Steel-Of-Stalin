@@ -17,15 +17,50 @@ using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 using Resources = SteelOfStalin.Attributes.Resources;
 using SteelOfStalin.Util;
+using System.Text.RegularExpressions;
 
 namespace SteelOfStalin.Assets.Props
 {
+    [Flags]
+    public enum PropConnection
+    {
+        NONE = 0,
+        POS_1 = 1 << 0,
+        POS_2 = 1 << 1,
+        POS_3 = 1 << 2,
+        POS_4 = 1 << 3,
+        POS_5 = 1 << 4,
+        POS_6 = 1 << 5,
+        ALL = ~0
+    }
+
     public abstract class Prop : ICloneable, IEquatable<Prop>, INamedAsset
     {
+        public const float APOTHEM = 37.8F; // apothem of a hex in unity scale
+
+        public static Dictionary<PropConnection, string> UniqueVariants => new Dictionary<PropConnection, string>()
+        {
+            [PropConnection.POS_1] = "l",
+            [PropConnection.POS_1 | PropConnection.POS_2] = "o",
+            [PropConnection.POS_1 | PropConnection.POS_3] = "m",
+            [PropConnection.POS_1 | PropConnection.POS_4] = "p",
+            [PropConnection.POS_1 | PropConnection.POS_2 | PropConnection.POS_3] = "e",
+            [PropConnection.POS_1 | PropConnection.POS_2 | PropConnection.POS_4] = "u",
+            [PropConnection.POS_1 | PropConnection.POS_3 | PropConnection.POS_4] = "h",
+            [PropConnection.POS_2 | PropConnection.POS_4 | PropConnection.POS_6] = "y",
+            [PropConnection.POS_1 | PropConnection.POS_2 | PropConnection.POS_3 | PropConnection.POS_4] = "k",
+            [PropConnection.POS_1 | PropConnection.POS_2 | PropConnection.POS_4 | PropConnection.POS_6] = "t",
+            [PropConnection.POS_2 | PropConnection.POS_3 | PropConnection.POS_5 | PropConnection.POS_6] = "x",
+            [PropConnection.POS_1 | PropConnection.POS_2 | PropConnection.POS_3 | PropConnection.POS_5 | PropConnection.POS_6] = "s",
+            [PropConnection.ALL] = "a"
+        };
+
         public string Name { get; set; }
-        public string MeshName { get; set; }
+        public string MeshName { get; set; } = "";
         public Coordinates CoOrds { get; set; }
-        public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
+
+        [JsonIgnore] public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
+        [JsonIgnore] public PropConnection PropConnection { get; set; }
 
         public Prop() { }
         public Prop(Prop another) => (Name, MeshName, CoOrds) = (another.Name, another.MeshName, new Coordinates(another.CoOrds));
@@ -37,31 +72,143 @@ namespace SteelOfStalin.Assets.Props
         {
             string scene = SceneManager.GetActiveScene().name;
             // TODO add a loading scene
-            if (scene != "Battle" || scene != "Loading")
+            if (scene != "Game" && scene != "Loading")
             {
-                Debug.LogError($"Cannot add gameobject to scene: Current scene ({scene}) is not Battle or Loading.");
+                Debug.LogError($"Cannot add gameobject to scene: Current scene ({scene}) is neither Game nor Loading.");
                 return;
             }
-            GameObject gameObject = Game.GameObjects.Find(g => g.name == Name);
-            if (gameObject == null)
+
+            // TODO FUT. Impl. handle connected props in a separate method
+            string name_with_suffix = Name;
+            Quaternion quad = Quaternion.identity;
+            if (GetType() == typeof(Boundary))
             {
-                Debug.LogError($"Cannot find game object with name {Name}");
+                string variant = GetVariantString(GetConnection());
+
+                Match match = Regex.Match(variant, @"([lompeuhyktxsa])([+\-=]\d?)?");
+                if (!match.Success)
+                {
+                    Debug.LogError($"Failed to match variant string {variant}");
+                }
+
+                name_with_suffix += $"_{match.Groups[1].Value}";
+                string rot = match.Groups[2].Value;
+                if (!string.IsNullOrEmpty(rot))
+                {
+                    quad = Quaternion.Euler(0, rot == "=" ? 180 : int.Parse(rot) * 60, 0);
+                }
+            }
+
+            GameObject g = Game.GameObjects.Find(g => g.name == name_with_suffix);
+            if (g == null)
+            {
+                Debug.LogError($"Cannot find game object with name {name_with_suffix}");
                 return;
             }
-            if (gameObject.GetComponent<PropObject>() == null)
+
+            GameObject cloned = UnityEngine.Object.Instantiate(g, CalculateOnScreenCoordinates(), quad);
+            cloned.name += $"_{Guid.NewGuid().ToString().Replace("-", "")}";
+            if (cloned.GetComponent<PropObject>() == null)
             {
-                gameObject.AddComponent<PropObject>();
+                cloned.AddComponent<PropObject>();
             }
-            gameObject.name += $"_{Guid.NewGuid().ToString().Replace("-", "")}";
-            MeshName = gameObject.name;
-            //UnityEngine.Object.Instantiate
+            cloned.name = cloned.name.Replace("(Cloned)", "");
+            MeshName = cloned.name;
         }
         public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GetObjectOnScene());
         public virtual GameObject GetObjectOnScene() => GameObject.Find(MeshName);
+        public Vector3 GetOnScreenCoordinates() => GetObjectOnScene().transform.position;
+        public Vector3 CalculateOnScreenCoordinates() => new Vector3(APOTHEM * CoOrds.X * (float)Math.Cos(Math.PI / 6), 0, APOTHEM * (CoOrds.Y + (CoOrds.X % 2 == 1 ? 0.5F : 0)));
+
+        public PropConnection GetConnection()
+        {
+            PropConnection conn = PropConnection.NONE;
+            IEnumerable<CubeCoordinates> connected = GetNeighboursWithSameType().Select(p => p.CubeCoOrds);
+
+            foreach (CubeCoordinates coor in connected)
+            {
+                Direction direction = CubeCoOrds.GetDirectionTo(coor);
+                conn |= direction switch
+                {
+                    Direction.NONE => 0,
+                    Direction.W => PropConnection.POS_1,
+                    Direction.E => PropConnection.POS_2,
+                    Direction.D => PropConnection.POS_3,
+                    Direction.S => PropConnection.POS_4,
+                    Direction.A => PropConnection.POS_5,
+                    Direction.Q => PropConnection.POS_6,
+                    _ => throw new NotImplementedException($"Unknown direction {direction}"),
+                };
+            }
+            return conn;
+        }
+        public static string GetVariantString(PropConnection connection)
+        {
+            if (UniqueVariants.ContainsKey(connection))
+            {
+                return UniqueVariants[connection];
+            }
+
+            int num_rotations;
+            PropConnection rotate = connection;
+            for (num_rotations = 1; num_rotations <= 3; num_rotations++)
+            {
+                rotate = Rotate(connection, num_rotations);
+                if (UniqueVariants.ContainsKey(rotate))
+                {
+                    // rotate connection clockwise to get the unique variant == rotate unique variant anti-clockwise to get the connection
+                    num_rotations = -num_rotations;
+                    break;
+                }
+                rotate = Rotate(connection, -num_rotations);
+                if (UniqueVariants.ContainsKey(rotate))
+                {
+                    break;
+                }
+            }
+            return UniqueVariants[rotate] + (num_rotations == 3 || num_rotations == -3 ? "=" : num_rotations.ToString("+0;-0"));
+        }
+        public static PropConnection Rotate(PropConnection original, int thirds_of_pi)
+        {
+            if (Math.Abs(thirds_of_pi) > 3)
+            {
+                throw new ArgumentOutOfRangeException($"thirds of pi must be with in [-3, 3]");
+            }
+
+            PropConnection rotated = original;
+            if (thirds_of_pi < 0)
+            {
+                int cycles = (int)Math.Abs(thirds_of_pi);
+                for (int i = 0; i < cycles; i++)
+                {
+                    bool needs_cyclic = rotated.HasFlag(PropConnection.POS_1);
+                    rotated = (PropConnection)((int)rotated >> 1);
+                    if (needs_cyclic)
+                    {
+                        rotated |= PropConnection.POS_6;
+                    }
+                }
+
+            }
+            else if (thirds_of_pi > 0)
+            {
+                for (int i = 0; i < thirds_of_pi; i++)
+                {
+                    bool needs_cyclic = rotated.HasFlag(PropConnection.POS_6);
+                    rotated = (PropConnection)(((int)rotated << 1) % (1 << 6));
+                    if (needs_cyclic)
+                    {
+                        rotated |= PropConnection.POS_1;
+                    }
+                }
+            }
+            return rotated;
+        }
 
         public virtual int GetDistance(Prop prop) => CubeCoordinates.GetDistance(CubeCoOrds, prop.CubeCoOrds);
         public virtual decimal GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
-        public Vector3 GetOnScreenCoordinates() => GetObjectOnScene().transform.position;
+        public virtual IEnumerable<Prop> GetNeighboursWithSameType() => CubeCoOrds.GetNeigbours(include_self: false).SelectMany(c => Map.Instance.GetProps(p => p.CubeCoOrds == c && p.GetType() == GetType()));
+        public virtual Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
 
         public virtual object Clone()
         {
@@ -70,7 +217,7 @@ namespace SteelOfStalin.Assets.Props
             return copy;
         }
         public virtual bool Equals(Prop other) => !string.IsNullOrEmpty(MeshName) && MeshName == other.MeshName;
-        public override string ToString() => $"{Name} ({CoOrds})";
+        public override string ToString() => $"{Name} {CoOrds}";
     }
 
     public class PropObject : MonoBehaviour
@@ -240,7 +387,7 @@ namespace SteelOfStalin.Assets.Props.Units
     }
 
     [JsonConverter(typeof(AssetConverter<Unit>))]
-    public abstract class Unit : Prop, ICloneable, IEquatable<Unit>
+    public abstract class Unit : Prop, IOwnableAsset, ICloneable, IEquatable<Unit>
     {
         public UnitStatus Status { get; set; }
         [JsonIgnore] public Player Owner { get; set; }
@@ -271,8 +418,9 @@ namespace SteelOfStalin.Assets.Props.Units
         public int ConsecutiveSuppressedRound { get; set; } = 0;
         public decimal TrainingTimeRemaining { get; set; } = 0;
 
-        public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
-        public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
+        [JsonIgnore] public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
+        [JsonIgnore] public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
+
         public bool IsOwn(Player p) => Owner == p;
         public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
@@ -316,6 +464,30 @@ namespace SteelOfStalin.Assets.Props.Units
                 another.ConsecutiveSuppressedRound,
                 another.TrainingTimeRemaining);
 
+        public virtual void Initialize(Player owner, Coordinates coordinates, UnitStatus status, IEnumerable<IOffensiveCustomizable> weapons)
+        {
+            SetOwner(owner);
+            CoOrds = coordinates;
+            Status = status;
+            SetWeapons(weapons);
+        }
+        public void SetOwner(Player player)
+        {
+            Owner = player;
+            OwnerName = player?.Name ?? "";
+        }
+        // called after deserialization
+        public void SetOwnerFromName()
+        {
+            if (string.IsNullOrEmpty(OwnerName))
+            {
+                this.LogWarning("OwnerName is null or empty");
+                return;
+            }
+            Owner = Battle.Instance.GetPlayer(OwnerName);
+        }
+        public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
+
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
         public virtual bool CanAccessTile(Tile t)
         {
@@ -358,11 +530,17 @@ namespace SteelOfStalin.Assets.Props.Units
         public bool HasSpotted(Building building) => Owner.GetAllBuildingsInSight().Contains(building);
 
         public IEnumerable<Tile> GetAccessibleNeigbours(int distance = 1)
-            => Map.Instance.GetNeigbours(CubeCoOrds, distance).Where(n => CanAccessTile(n) && GetPath(GetLocatedTile(), n).Any());
+            => Map.Instance.GetNeighbours(CubeCoOrds, distance).Where(n => CanAccessTile(n) && GetPath(GetLocatedTile(), n).Any());
         public IEnumerable<Tile> GetAccessibleNeigbours(CubeCoordinates c, int distance = 1)
-            => Map.Instance.GetNeigbours(c, distance).Where(n => CanAccessTile(n) && GetPath(Map.Instance.GetTile(c), n).Any());
+            => Map.Instance.GetNeighbours(c, distance).Where(n => CanAccessTile(n) && GetPath(Map.Instance.GetTile(c), n).Any());
         public IEnumerable<Tile> GetFiringRange(IOffensiveCustomizable weapon)
         {
+            if (weapon == null)
+            {
+                this.LogError("weapon is null");
+                return Enumerable.Empty<Tile>();
+            }
+
             IEnumerable<Tile> range = Map.Instance.GetStraightLineNeighbours(CubeCoOrds, weapon.Offense.MaxRange.ApplyMod());
             if (weapon.Offense.MinRange > 0)
             {
@@ -479,7 +657,6 @@ namespace SteelOfStalin.Assets.Props.Units
         public IEnumerable<Unit> GetHostileUnitsInReconRange() => GetHostileUnitsInRange(GetReconRange());
         public IEnumerable<Building> GetHostileBuildingsInReconRange() => GetHostileBuildingsInRange(GetReconRange());
 
-        public Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
         public decimal GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.ApplyTo(Consumption.Supplies.ApplyMod());
         public decimal GetSuppliesRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
         public decimal GetFuelRequired(Tile t) => t.TerrainMod.Fuel.ApplyTo(Consumption.Fuel.ApplyMod());
@@ -555,7 +732,7 @@ namespace SteelOfStalin.Assets.Props.Buildings
 
     // TODO FUT Impl. add toggle for accessibility to allies of buildings (e.g. allow ally planes land on own airfield etc.)
     [JsonConverter(typeof(AssetConverter<Building>))]
-    public abstract class Building : Prop, ICloneable
+    public abstract class Building : Prop, IOwnableAsset, ICloneable
     {
         [JsonIgnore] public Player Owner { get; set; }
         public string OwnerName { get; set; }
@@ -570,7 +747,7 @@ namespace SteelOfStalin.Assets.Props.Buildings
         public bool DestroyTerrainOnBuilt { get; set; } = true;
         public decimal ConstructionTimeRemaining { get; set; }
 
-        public bool IsFortifying => Status == BuildingStatus.UNDER_CONSTRUCTION && Level > 0;
+        [JsonIgnore] public bool IsFortifying => Status == BuildingStatus.UNDER_CONSTRUCTION && Level > 0;
 
         public Building() : base() { }
         public Building(Building another) : base(another)
@@ -593,10 +770,31 @@ namespace SteelOfStalin.Assets.Props.Buildings
         // public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p); /*&& !IsNeutral();*/
 
+        public virtual void Initialize(Player owner, Coordinates coordinates, BuildingStatus status = BuildingStatus.ACTIVE)
+        {
+            SetOwner(owner);
+            CoOrds = coordinates;
+            Status = status;
+        }
+        public void SetOwner(Player player)
+        {
+            Owner = player;
+            OwnerName = player?.Name ?? "";
+        }
+        // called after deserialization
+        public void SetOwnerFromName()
+        {
+            if (string.IsNullOrEmpty(OwnerName))
+            {
+                this.LogWarning("OwnerName is null or empty");
+                return;
+            }
+            Owner = Battle.Instance.GetPlayer(OwnerName);
+        }
+
         public bool CanBeFortified() => Level < MaxLevel && Status == BuildingStatus.ACTIVE;
         public bool CanBeDemolished() => Level > 0 && Status == BuildingStatus.ACTIVE;
 
-        public Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
         public string GetDurabilityChangeRecord(decimal change) => $" d:{change:+0.##;-0.##}=>{Durability} ";
 
         public abstract override object Clone();
@@ -641,7 +839,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         ALL = ~0
     }
 
-    public abstract class Cities : Tile
+    public abstract class Cities : Tile, IOwnableAsset
     {
         [JsonIgnore] public Player Owner { get; set; }
         public string OwnerName { get; set; }
@@ -652,7 +850,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public Attribute Durability { get; set; } = new Attribute();
         public Attribute Morale { get; set; } = new Attribute();
 
-        public bool IsDestroyed => Durability <= 0;
+        [JsonIgnore] public bool IsDestroyed => Durability <= 0;
 
         public Cities() : base() { }
         public Cities(Cities another) : base(another)
@@ -671,6 +869,22 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p) && !IsNeutral();
+
+        public void SetOwner(Player player)
+        {
+            Owner = player;
+            OwnerName = player?.Name ?? "";
+        }
+        // called after deserialization
+        public void SetOwnerFromName()
+        {
+            if (string.IsNullOrEmpty(OwnerName))
+            {
+                this.LogWarning("OwnerName is null or empty");
+                return;
+            }
+            Owner = Battle.Instance.GetPlayer(OwnerName);
+        }
 
         public bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
         public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
@@ -692,13 +906,13 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public decimal Height { get; set; }
         public char Symbol { get; set; }
 
-        public bool IsWater => Type == TileType.STREAM || Type == TileType.RIVER || Type == TileType.OCEAN || Type == TileType.SWAMP;
-        public bool IsHill => Type is TileType.HILLOCK || Type is TileType.HILLS || Type is TileType.MOUNTAINS;
-        public bool IsFlatLand => !IsWater && !IsHill && Type != TileType.BOUNDARY;
-        public bool IsCity => Type is TileType.SUBURB || Type is TileType.CITY || Type is TileType.METROPOLIS;
-        public bool HasUnit => Map.Instance.GetUnits(this).Any();
-        public bool HasBuilding => Map.Instance.GetBuildings(this).Any();
-        public bool IsOccupied => HasUnit || HasBuilding;
+        [JsonIgnore] public bool IsWater => Type == TileType.STREAM || Type == TileType.RIVER || Type == TileType.OCEAN || Type == TileType.SWAMP;
+        [JsonIgnore] public bool IsHill => Type is TileType.HILLOCK || Type is TileType.HILLS || Type is TileType.MOUNTAINS;
+        [JsonIgnore] public bool IsFlatLand => !IsWater && !IsHill && Type != TileType.BOUNDARY;
+        [JsonIgnore] public bool IsCity => Type is TileType.SUBURB || Type is TileType.CITY || Type is TileType.METROPOLIS;
+        [JsonIgnore] public bool HasUnit => Map.Instance.GetUnits(this).Any();
+        [JsonIgnore] public bool HasBuilding => Map.Instance.GetBuildings(this).Any();
+        [JsonIgnore] public bool IsOccupied => HasUnit || HasBuilding;
 
         public Tile() : base() { }
         public Tile(Tile another) : base(another)
@@ -726,6 +940,8 @@ namespace SteelOfStalin.Assets.Props.Tiles
             DistanceSoFar = parent == null ? 0 : parent.DistanceSoFar + 1,
             DistanceToGoal = CubeCoordinates.GetDistance(CubeCoOrds, end.CubeCoOrds)
         };
+
+        public override Tile GetLocatedTile() => this;
 
         public override bool Equals(object other) => this == (Tile)other;
         public override int GetHashCode() => base.GetHashCode();
