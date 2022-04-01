@@ -25,7 +25,7 @@
   },
   "Obstruction": 0.9,
   "AllowConstruction": false,
-  "Height": 3,
+  "Height": 8,
   "Symbol": "H",
   "Name": "hills",
   "MeshName": "",
