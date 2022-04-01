@@ -27,12 +27,7 @@ public class UnitPanel : MonoBehaviour
         SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry infantry = u as SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry;
         infantry.PrimaryFirearm = Game.CustomizableData["rifle"].Clone() as Firearm;
         infantry.SecondaryFirearm = Game.CustomizableData["rifle"].Clone() as Firearm;
-        //Debug.Log(Mathf.RoundToInt((float)infantry.PrimaryFirearm.Offense.Damage.Soft.Value).ToString());
-        //SetUnit(infantry);
-        //menu.transform.Find("Modules").gameObject.GetComponent<Resize>().DoResize();
-        //menu.transform.Find("Carrying").gameObject.GetComponent<Resize>().DoResize();
-        //menu.transform.Find("Weapons").gameObject.GetComponent<Resize>().DoResize();
-        //GetComponent<Resize>().DoResize();
+        SetUnit(u);
 
 
 
