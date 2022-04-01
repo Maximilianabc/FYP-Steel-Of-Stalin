@@ -50,6 +50,7 @@ namespace SteelOfStalin
         public void Start()
         {
             LoadAllAssets();
+            new RandomMap(100, 100, 3);
         }
 
         public static void LoadAllAssets()
@@ -559,28 +560,6 @@ namespace SteelOfStalin
                             ? Game.TileData.GetNew(TileType.HILLOCK)
                             : Game.TileData.GetNew(HeightMap.Values[x][y] <= 0.75 ? TileType.HILLS : TileType.MOUNTAINS);
                     }
-                    // TODO move these back to json generation
-                    Tiles[x][y].Height = Tiles[x][y].Type switch
-                    {
-                        TileType.BOUNDARY => decimal.MaxValue,
-                        TileType.PLAINS => 2,
-                        TileType.GRASSLAND => 2,
-                        TileType.FOREST => 2,
-                        TileType.JUNGLE => 2,
-                        TileType.STREAM => 1,
-                        TileType.RIVER => 1,
-                        TileType.OCEAN => 1,
-                        TileType.SWAMP => 1,
-                        TileType.DESERT => 2,
-                        TileType.HILLOCK => 4,
-                        TileType.HILLS => 8,
-                        TileType.MOUNTAINS => 16,
-                        TileType.ROCKS => 4,
-                        TileType.SUBURB => 2,
-                        TileType.CITY => 2,
-                        TileType.METROPOLIS => 2,
-                        _ => throw new NotImplementedException(),
-                    };
                     Tiles[x][y].CoOrds = new Coordinates(x, y);
                 }
             }

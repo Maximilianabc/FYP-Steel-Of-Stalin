@@ -25,7 +25,7 @@
   },
   "Obstruction": 0,
   "AllowConstruction": false,
-  "Height": -2,
+  "Height": 1,
   "Symbol": "N",
   "Name": "ocean",
   "MeshName": "",
