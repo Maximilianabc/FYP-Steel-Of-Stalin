@@ -2,6 +2,7 @@ using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Props.Units.Land;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
 using System;
@@ -110,20 +111,23 @@ namespace SteelOfStalin
         // AI algo goes here
         //make flag true
         void train(){
-            //get buidling
-            var numberowned = Buildings.Count();
-            var y = Buildings.Where(unitbuild => unitbuild is UnitBuilding);
+            //get training buidling
+            var y = Buildings.Where(c => c is UnitBuilding);
+            //check number of resources generated
+            var rate = Cities.Where(c => !c.IsDestroyed).Count();
+            
             if(y.Any()){
                 //check training queue/slot
-                var number = y.Count();
                 var building = y.Cast<UnitBuilding>();
+
                 foreach(var x in building){
                     if(x.CanTrain()){
-                        //cheack required resources
+                        //check required resources
                         //     //check enemy units types
                         //     //train units
-                               
-
+                        // consume resource depending the unit
+                        Commands.Add(new Train());
+                        // ConsumeResources(10);             
                     }
                 }                 
             }
@@ -134,66 +138,71 @@ namespace SteelOfStalin
                 //get unit capacity
                 var capa = unit.Capacity.Fuel.Value;
                 //if capacity not full, assign supply to units
-
                 //check if unit near owned cities
                     // if(unit.GetBuildingsInRange()){
-
+                         //add supply to units
                     // }
-                //add supply to units
+ 
 
             }
 
         }
 
-        void movetonewcities(){
+        void movetonewcity(){
 
+            //add maximum city owned(?)
             //get a non occupied cities   
             var neut = Map.Instance.GetCities(c => c.IsNeutral());
             //get nearest city from base
             var nearest = neut.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
             //get avaiable units
-            var avaunits = Units.Where(c => c.CanMove()).First();
+            var avaunits = Units.Where(c => c is Personnel).Where(c => c.CanMove()).First();
+            // var avaunits = Units.Where(c => c.CanMove()).First();
             var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
-            // var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), Map.Instance.GetTile(nearest));
-            // Commands.Add(new Move(avaunits, pathtocity));
+            //add commands to units (order a single units to new city)
+            Commands.Add(new Move(avaunits, pathtocity.ToList()));
             // var unitpath = Units.ElementAt(0).GetPath(Units.ElementAt(0).GetLocatedTile(), Map.Instance.GetTile(nearest));
-
-            // var x = Cities.Where(x => x is Cities);
-
-            //assign number of units to city according to the morale // a single unit is fine
-            //Buildings.OfType<UnitBuilding>();
-
-            //get available/moveable unit to the new city
-
-
-            foreach(var unit in Units){
-                //check if unit is not in command
-                if(unit.CanMove()){
-                    //get unit morale
-                    //move units to city
-                    // Units.ElementAt(0).GetFuelRequired(coor);
-
-                }
-            }       
         }
 
         //build building 
         void buildbuilding(){
-            //get cities owned
-            var x = Cities;
-            var y = Buildings;
-            //check if there any building/unit building
-            if(!y.Any()){
-                //build unit building
+            var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
+            //get nearby city tiles
+            var x = GetAllTilesAroundCities();
+            //check if there any building/unit building near cities
+            foreach(var i in orderedcities){
+                 var around = Map.Instance.GetNeighbours(i.CubeCoOrds);
+                 if(!around.Any(c => c.HasBuilding)){
+                    //check the required resources
+                    //build unit building
+                 }
+                 
+            }
+            foreach(var i in orderedcities){
+                var around = Map.Instance.GetNeighbours(i.CubeCoOrds);
+                foreach(var j in around){
+                    var typebuild = Map.Instance.GetBuildings(j);
+                    if(!typebuild.Any(c => c is UnitBuilding)){
+                        //build unitbuilding
+                        Commands.Add(new Construct());
+                    }
+                    if(!typebuild.Any(c => c is ProductionBuilding)){
+                        //build productionbuilding
+                        Commands.Add(new Construct());
+                    }
+                    if(!typebuild.Any(c => c is UnitBuilding)){
+                        //build unitbuilding
+                        Commands.Add(new Construct());
+                    }
+                    
+                    // if(typebuild is UnitBuilding){
+
+                    // }
+                }          
             }
             //for each cities, check not owned building
-            for(var i = 0; i<x.Count(); i++){
-                //if no building, build unit building
-                
+            //create building
 
-
-            }
-            //check the required resources
             //build
 
 
