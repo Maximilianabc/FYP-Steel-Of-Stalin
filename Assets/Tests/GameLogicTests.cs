@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SteelOfStalin;
 using SteelOfStalin.Assets.Props;
 using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units.Land.Personnels;
 using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
 using UnityEngine;
@@ -173,6 +174,21 @@ public class GameLogicTest
                 }
             }
         }
+    }
+
+    [Test]
+    public void MapAddUnitTest()
+    {
+        LogAssert.ignoreFailingMessages = true;
+
+        Infantry i = UnitData.GetNew<Infantry>();
+        i.SetMeshName();
+        Assert.IsNotNull(i);
+
+        Assert.IsTrue(Map.AddUnit(i));
+        Assert.IsFalse(Map.AddUnit(null));
+        Assert.IsFalse(Map.AddUnit(i));
+        Assert.IsTrue(Map.GetUnits().Contains(i));
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use

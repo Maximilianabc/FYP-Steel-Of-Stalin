@@ -33,6 +33,7 @@ namespace SteelOfStalin.Tests
             BuildingData.Load();
             TileData.Load();
             CustomizableData.Load();
+            LogAssert.ignoreFailingMessages = true;
         }
 
         [Test]

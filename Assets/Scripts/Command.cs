@@ -550,8 +550,8 @@ namespace SteelOfStalin.Commands
 
         public Fortify() : base() { }
         public Fortify(Unit u, Building target) : base(u) => Target = target;
-        public Fortify(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
-        public Fortify(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
+        // public Fortify(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
+        // public Fortify(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
 
         public override void Execute()
         {
@@ -613,12 +613,14 @@ namespace SteelOfStalin.Commands
     }
     public sealed class Construct : Command
     {
+        public Player Builder { get; set; }
         public Building Target { get; set; }
 
         public Construct() : base() { }
-        public Construct(Unit u, Building target) : base(u) => Target = target;
-        public Construct(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
-        public Construct(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
+        public Construct(Unit u, Building target, Coordinates dest) : base(u, default, dest) => Target = target;
+        public Construct(Player builder, Building target, Coordinates dest) : base(null, default, dest) => (Builder, Target) = (builder, target);
+        // public Construct(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
+        // public Construct(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
 
         public override void Execute()
         {
@@ -639,13 +641,13 @@ namespace SteelOfStalin.Commands
             }
 
             Resources consume = Target.Cost.Base;
-            if (Unit == null)
+            if (Unit == null && Builder != null)
             {
-                if (Target.Owner.GetAllConstructibleTilesAroundCities().Where(t => t.CoOrds == Destination).Any())
+                if (Builder.GetAllConstructibleTilesAroundCities().Where(t => t.CoOrds == Destination).Any())
                 {
-                    _ = Recorder.Append(Target.Owner.ToString());
+                    _ = Recorder.Append(Builder.ToString());
                     Target.Owner.Resources.Consume(consume);
-                    _ = Recorder.Append(Target.Owner.GetResourcesChangeRecord(consume));
+                    _ = Recorder.Append(Builder.GetResourcesChangeRecord(consume));
                 }
                 else
                 {
@@ -672,9 +674,7 @@ namespace SteelOfStalin.Commands
             }
 
             _ = Map.Instance.AddBuilding(Target);
-            Target.CoOrds = new Coordinates(Destination);
-            Target.Status = BuildingStatus.UNDER_CONSTRUCTION;
-            Target.ConstructionTimeRemaining = consume.Time.ApplyMod();
+            Target.Initialize(Builder ?? Unit.Owner, Destination, BuildingStatus.UNDER_CONSTRUCTION);
             _ = Recorder.AppendLine($"`$ {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Constructing {Target.Name} at {Destination} for {Target.ConstructionTimeRemaining} round(s)");
         }
@@ -685,8 +685,8 @@ namespace SteelOfStalin.Commands
 
         public Demolish() : base() { }
         public Demolish(Unit u, Building target) : base(u) => Target = target;
-        public Demolish(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
-        public Demolish(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
+        // public Demolish(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
+        // public Demolish(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
 
         public override void Execute()
         {
@@ -719,11 +719,11 @@ namespace SteelOfStalin.Commands
     #region Training-Related
     public sealed class Train : Command
     {
+        public Player Trainer { get; set; }
         public UnitBuilding TrainingGround { get; set; }
 
         public Train() : base() { }
-        public Train(Unit u) : base(u) { }
-        public Train(Unit u, UnitBuilding training) : base(u) => TrainingGround = training;
+        public Train(Unit u, UnitBuilding training, Player trainer) : base(u) => (TrainingGround, Trainer) = (training, trainer);
 
         public override void Execute()
         {
@@ -742,27 +742,26 @@ namespace SteelOfStalin.Commands
                 this.LogError("Unit is null");
                 return;
             }
-            if (Unit.Owner == null)
+            if (Trainer == null)
             {
-                this.LogError("Owner must be set before training the unit");
+                this.LogError("Trainer must be set before training the unit");
                 return;
             }
-            if (!Unit.Owner.HasEnoughResources(Unit.Cost.Base))
+            if (!Trainer.HasEnoughResources(Unit.Cost.Base))
             {
                 this.LogError("Not enough resources.");
                 return;
             }
 
             Resources consume = Unit.Cost.Base;
-            Unit.Owner.ConsumeResources(consume);
+            Trainer.ConsumeResources(consume);
             Unit.TrainingTimeRemaining = consume.Time.ApplyMod() + TrainingGround.CurrentQueueTime;
 
             TrainingGround.TrainingQueue.Enqueue(Unit);
 
-            Unit.CoOrds = new Coordinates(TrainingGround.CoOrds);
-            Unit.Status = UnitStatus.IN_QUEUE;
+            Unit.Initialize(Trainer, TrainingGround.CoOrds, UnitStatus.IN_QUEUE);
 
-            _ = Recorder.AppendLine($"{Unit.Owner}{Unit.Owner.GetResourcesChangeRecord(consume)}|$ {Unit} {Unit.TrainingTimeRemaining}");
+            _ = Recorder.AppendLine($"{Trainer}{Trainer.GetResourcesChangeRecord(consume)}|$ {Unit} {Unit.TrainingTimeRemaining}");
             _ = Map.Instance.AddUnit(Unit);
 
             this.Log($"Training {Unit}. Time remaining {Unit.TrainingTimeRemaining}");
@@ -771,11 +770,12 @@ namespace SteelOfStalin.Commands
     public sealed class Deploy : Command
     {
         public UnitBuilding TrainingGround { get; set; }
+        public IEnumerable<IOffensiveCustomizable> Weapons { get; set; }
 
         public Deploy() : base() { }
-        public Deploy(Unit u, UnitBuilding training) : base(u) => TrainingGround = training;
-        public Deploy(Unit u, Coordinates src, Coordinates dest, UnitBuilding training) : base(u, src, dest) => TrainingGround = training;
-        public Deploy(Unit u, int srcX, int srcY, int destX, int destY, UnitBuilding training) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => TrainingGround = training;
+        public Deploy(Unit u, UnitBuilding training, Coordinates dest, IEnumerable<IOffensiveCustomizable> weapons) : base(u, default, dest) => (TrainingGround, Weapons)= (training, weapons);
+        // public Deploy(Unit u, Coordinates src, Coordinates dest, UnitBuilding training) : base(u, src, dest) => TrainingGround = training;
+        // public Deploy(Unit u, int srcX, int srcY, int destX, int destY, UnitBuilding training) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => TrainingGround = training;
 
         public override void Execute()
         {
@@ -804,6 +804,11 @@ namespace SteelOfStalin.Commands
                 this.LogError($"Status is not CAN_BE_DEPLOYED. It is {Unit.Status} instead.");
                 return;
             }
+            if (Weapons == null || Weapons == Enumerable.Empty<IOffensiveCustomizable>())
+            {
+                this.LogError($"Weapons must be assigned before deploying.");
+                return;
+            }
             if (Map.Instance.GetUnits(Destination).Any(u => u.IsOfSameCategory(Unit)))
             {
                 this.LogError($"There is/are unit(s) at the destination {Destination}.");
@@ -817,8 +822,9 @@ namespace SteelOfStalin.Commands
 
             Unit.Status = UnitStatus.ACTIVE;
             Unit.CoOrds = new Coordinates(Destination);
+            Unit.SetWeapons(Weapons);
             _ = Recorder.AppendLine($"{Unit.Owner} |@ {Unit}");
-            this.Log($"Deployed {Unit}");
+            this.Log($"Deployed {Unit} at {Destination}");
         }
     }
     public sealed class Rearm : Command
