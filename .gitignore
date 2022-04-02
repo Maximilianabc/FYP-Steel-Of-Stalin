@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+/[Pp]rojectSettings/
+/[Uu]serSettings/
+/[Cc]ode[Cc]overage/
