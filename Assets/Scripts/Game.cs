@@ -50,7 +50,6 @@ namespace SteelOfStalin
         public void Start()
         {
             LoadAllAssets();
-            new RandomMap(100, 100, 3);
         }
 
         public static void LoadAllAssets()
@@ -132,7 +131,7 @@ namespace SteelOfStalin
                 }
 
                 int counter = 0;
-                while ((counter < Rules.TimeForEachRound && !unlimited_time) || !AreAllPlayersReady)
+                while (counter < Rules.TimeForEachRound && !AreAllPlayersReady)
                 {
                     yield return new WaitForSeconds(1);
                     if (!unlimited_time)
@@ -228,6 +227,7 @@ namespace SteelOfStalin
         public int Width { get; protected set; }
         public int Height { get; protected set; }
 
+        [JsonIgnore] public List<Player> Players { get; set; }
         [JsonIgnore] public IEnumerable<Prop> AllProps => CombineAll<Prop>(Tiles.Flatten(), Units, Buildings);
 
         protected Tile[][] Tiles { get; set; }
@@ -259,10 +259,37 @@ namespace SteelOfStalin
         public virtual void Load()
         {
             BattleName = Battle.Instance?.Name ?? "test";
-            Units = DeserializeJson<List<Unit>>($@"{Folder}\units");
-            Buildings = DeserializeJson<List<Building>>($@"{Folder}\buildings");
-            ReadStatistics();
+            // must be called from unit tests if Battle.Instance is null
+            Players = Battle.Instance?.Players ?? DeserializeJson<List<Player>>($@"Saves\test\players");
 
+            Units = DeserializeJson<List<Unit>>($@"{Folder}\units");
+            foreach (Unit u in Units)
+            {
+                u.SetMeshName();
+                if (!string.IsNullOrEmpty(u.OwnerName))
+                {
+                    u.SetMeshName();
+                    u.SetOwnerFromName();
+                }
+                else
+                {
+                    Debug.LogWarning($"Unit {u} does not have an owner");
+                }
+            }
+
+            Buildings = DeserializeJson<List<Building>>($@"{Folder}\buildings");
+            foreach (Building b in Buildings)
+            {
+                b.SetMeshName();
+                if (!string.IsNullOrEmpty(b.OwnerName))
+                {
+                    b.SetMeshName();
+                    b.SetOwnerFromName();
+                }
+                // building can have no owners (e.g. unit buildings in neutral cities)
+            }
+
+            ReadStatistics();
             Tiles = new Tile[Width][];
             for (int i = 0; i < Width; i++)
             {
@@ -270,6 +297,15 @@ namespace SteelOfStalin
                 // TODO FUT. Impl. regenerate map files by reading the stats.txt in case any map files corrupted (e.g. edge of map is not boundary etc.)
                 Tiles[i] = DeserializeJson<List<Tile>>($@"{TileFolder}\map_{i}").ToArray();
             }
+            foreach (Tile t in Tiles.Flatten())
+            {
+                if (t is Cities c && !string.IsNullOrEmpty(c.OwnerName))
+                {
+                    c.SetOwnerFromName();
+                }
+                t.SetMeshName();
+            }
+
             Debug.Log($"Loaded map {Name} for {BattleName}");
         }
 
@@ -353,7 +389,7 @@ namespace SteelOfStalin
             if (Units.Contains(u))
             {
                 Debug.LogWarning($"Unit {u.Name} ({u.CoOrds.X}, {u.CoOrds.Y}) already in map unit array. Skipping operation.");
-                return true;
+                return false;
             }
             Units.Add(u);
             return true;
@@ -368,7 +404,7 @@ namespace SteelOfStalin
             if (Buildings.Contains(b))
             {
                 Debug.LogWarning($"Building {b.Name} ({b.CoOrds.X}, {b.CoOrds.Y}) already in map unit array. Skipping operation.");
-                return true;
+                return false;
             }
             Buildings.Add(b);
             return true;
@@ -1027,6 +1063,11 @@ namespace SteelOfStalin
 
         protected void ConsumeSuppliesStandingStill()
         {
+            if (Unit == null)
+            {
+                return;
+            }
+
             decimal supplies = Unit.GetSuppliesRequired(Unit.GetLocatedTile());
             Unit.Carrying.Supplies.MinusEquals(supplies);
             if (Unit.Carrying.Supplies < 0)
@@ -1038,6 +1079,11 @@ namespace SteelOfStalin
         }
         protected void ConsumeAmmoFiring(IOffensiveCustomizable weapon, bool normal = true)
         {
+            if (Unit == null)
+            {
+                return;
+            }
+
             decimal cartridges = normal ? weapon.ConsumptionNormal.Cartridges.ApplyMod() : weapon.ConsumptionSuppress.Cartridges.ApplyMod();
             decimal shells = normal ? weapon.ConsumptionNormal.Shells.ApplyMod() : weapon.ConsumptionSuppress.Shells.ApplyMod();
             decimal fuel = normal ? weapon.ConsumptionNormal.Fuel.ApplyMod() : weapon.ConsumptionSuppress.Fuel.ApplyMod();

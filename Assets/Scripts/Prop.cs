@@ -107,18 +107,27 @@ namespace SteelOfStalin.Assets.Props
             }
 
             GameObject cloned = UnityEngine.Object.Instantiate(g, CalculateOnScreenCoordinates(), quad);
-            cloned.name += $"_{Guid.NewGuid().ToString().Replace("-", "")}";
             if (cloned.GetComponent<PropObject>() == null)
             {
                 cloned.AddComponent<PropObject>();
             }
-            cloned.name = cloned.name.Replace("(Cloned)", "");
-            MeshName = cloned.name;
+            if (string.IsNullOrEmpty(MeshName))
+            {
+                SetMeshName();
+            }
+            cloned.name = MeshName;
         }
         public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GetObjectOnScene());
         public virtual GameObject GetObjectOnScene() => GameObject.Find(MeshName);
         public Vector3 GetOnScreenCoordinates() => GetObjectOnScene().transform.position;
         public Vector3 CalculateOnScreenCoordinates() => new Vector3(APOTHEM * CoOrds.X * (float)Math.Cos(Math.PI / 6), 0, APOTHEM * (CoOrds.Y + (CoOrds.X % 2 == 1 ? 0.5F : 0)));
+        public void SetMeshName()
+        {
+            if (string.IsNullOrEmpty(MeshName))
+            {
+                MeshName = $"{Name}_{Guid.NewGuid().ToString().Replace("-", "")}";
+            }
+        }
 
         public PropConnection GetConnection()
         {
@@ -464,12 +473,12 @@ namespace SteelOfStalin.Assets.Props.Units
                 another.ConsecutiveSuppressedRound,
                 another.TrainingTimeRemaining);
 
-        public virtual void Initialize(Player owner, Coordinates coordinates, UnitStatus status, IEnumerable<IOffensiveCustomizable> weapons)
+        public virtual void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
         {
             SetOwner(owner);
             CoOrds = coordinates;
             Status = status;
-            SetWeapons(weapons);
+            SetMeshName();
         }
         public void SetOwner(Player player)
         {
@@ -484,7 +493,8 @@ namespace SteelOfStalin.Assets.Props.Units
                 this.LogWarning("OwnerName is null or empty");
                 return;
             }
-            Owner = Battle.Instance.GetPlayer(OwnerName);
+            // called from test if Battle.Instance is null
+            Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
         public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
 
@@ -775,6 +785,9 @@ namespace SteelOfStalin.Assets.Props.Buildings
             SetOwner(owner);
             CoOrds = coordinates;
             Status = status;
+            // TODO FUT. Impl. consider time cost reduction for diff units
+            ConstructionTimeRemaining = Cost.Base.Time.ApplyMod();
+            SetMeshName();
         }
         public void SetOwner(Player player)
         {
@@ -789,7 +802,8 @@ namespace SteelOfStalin.Assets.Props.Buildings
                 this.LogWarning("OwnerName is null or empty");
                 return;
             }
-            Owner = Battle.Instance.GetPlayer(OwnerName);
+            // called from test if Battle.Instance is null
+            Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
 
         public bool CanBeFortified() => Level < MaxLevel && Status == BuildingStatus.ACTIVE;
@@ -883,7 +897,8 @@ namespace SteelOfStalin.Assets.Props.Tiles
                 this.LogWarning("OwnerName is null or empty");
                 return;
             }
-            Owner = Battle.Instance.GetPlayer(OwnerName);
+            // called from test if Battle.Instance is null
+            Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
 
         public bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
