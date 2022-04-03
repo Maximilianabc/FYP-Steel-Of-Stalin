@@ -1,5 +1,7 @@
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Units;
+using SteelOfStalin.Assets.Props.Units.Land.Personnels;
+using SteelOfStalin.Assets.Props.Buildings.Productions;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
@@ -126,7 +128,8 @@ namespace SteelOfStalin
                         //     //check enemy units types
                         //     //train units
                         // consume resource depending the unit
-                        Commands.Add(new Train());
+                        Commands.Add(new Train(Game.UnitData.GetNew<Militia>()));
+
                         // ConsumeResources(10);             
                     }
                 }                 
@@ -142,30 +145,31 @@ namespace SteelOfStalin
                     // if(unit.GetBuildingsInRange()){
                          //add supply to units
                     // }
- 
 
             }
 
         }
 
         void movetonewcity(){
-
-            //add maximum city owned(?)
             //get a non occupied cities   
             var neut = Map.Instance.GetCities(c => c.IsNeutral());
             //get nearest city from base
             var nearest = neut.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
-            //get avaiable units
-            var avaunits = Units.Where(c => c is Personnel).Where(c => c.CanMove()).First();
-            // var avaunits = Units.Where(c => c.CanMove()).First();
+            //get avaiable units nearest to the newest cities
+            var avaunits = Units.OrderBy(c => Units.First(c => c is Personnel).GetDistance(nearest)).First();
+            if(avaunits.GetDistance(nearest) == 0){
+                Commands.Add(new Capture());
+            }
+            else{
             var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
             //add commands to units (order a single units to new city)
-            Commands.Add(new Move(avaunits, pathtocity.ToList()));
-            // var unitpath = Units.ElementAt(0).GetPath(Units.ElementAt(0).GetLocatedTile(), Map.Instance.GetTile(nearest));
+            Commands.Add(new Move(avaunits, pathtocity.ToList()));   
+            avaunits.CommandAssigned = CommandAssigned.MOVE;
+            }
         }
 
         //build building 
-        void buildbuilding(){
+        void constructbuilding(){
             var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
             //get nearby city tiles
             var x = GetAllTilesAroundCities();
@@ -182,28 +186,32 @@ namespace SteelOfStalin
                 var around = Map.Instance.GetNeighbours(i.CubeCoOrds);
                 foreach(var j in around){
                     var typebuild = Map.Instance.GetBuildings(j);
-                    if(!typebuild.Any(c => c is UnitBuilding)){
+                    if(!typebuild.Any(c => c is Arsenal)){
                         //build unitbuilding
                         Commands.Add(new Construct());
                     }
-                    if(!typebuild.Any(c => c is ProductionBuilding)){
-                        //build productionbuilding
+                    else if(!typebuild.Any(c => c is Foundry)){
+                        //build foundry
                         Commands.Add(new Construct());
                     }
-                    if(!typebuild.Any(c => c is UnitBuilding)){
+                    else if(!typebuild.Any(c => c is Barracks)){
                         //build unitbuilding
                         Commands.Add(new Construct());
                     }
-                    
-                    // if(typebuild is UnitBuilding){
-
-                    // }
+                    else if(!typebuild.Any(c => c is AmmoFactory)){
+                        //build unitbuilding
+                        Commands.Add(new Construct());
+                    }
+                    else if(!typebuild.Any(c => c is  Industries)){
+                        //build unitbuilding
+                        Commands.Add(new Construct());
+                    }
+                    else if(!typebuild.Any(c => c is Refinery)){
+                        //build unitbuilding
+                        Commands.Add(new Construct());
+                    }
                 }          
             }
-            //for each cities, check not owned building
-            //create building
-
-            //build
 
 
 
