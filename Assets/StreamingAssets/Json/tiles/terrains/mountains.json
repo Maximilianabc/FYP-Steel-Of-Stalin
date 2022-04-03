@@ -25,7 +25,7 @@
   },
   "Obstruction": 1,
   "AllowConstruction": false,
-  "Height": 4,
+  "Height": 16,
   "Symbol": "M",
   "Name": "mountains",
   "MeshName": "",

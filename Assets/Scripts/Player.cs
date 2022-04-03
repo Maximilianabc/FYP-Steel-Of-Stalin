@@ -32,8 +32,10 @@ namespace SteelOfStalin
         [JsonIgnore] public IEnumerable<Unit> Units => Map.Instance.GetUnits(this);
         [JsonIgnore] public IEnumerable<Building> Buildings => Map.Instance.GetBuildings(this);
         [JsonIgnore] public IEnumerable<Cities> Cities => Map.Instance.GetCities(this);
-        [JsonIgnore] public Metropolis Capital => Cities.OfType<Metropolis>().First();
+        [JsonIgnore] public Metropolis Capital => Cities.OfType<Metropolis>().First(); // TODO FUT. Impl. Consider distinguishing Metropolis and the Capital
 
+        // TODO FUT. Impl. Consider researches as well, change back FYPImplement to All
+        public IEnumerable<Unit> GetAllTrainableUnits() => Game.UnitData.FYPImplement.Where(u => HasEnoughResources(u.Cost.Base));
         public IEnumerable<Unit> GetAllUnitsInSight() => Units.SelectMany(u => u.UnitsInSight).Distinct();
         public IEnumerable<Unit> GetAllUnitsUnknown() => Units.SelectMany(u => u.UnitsUnknown).Distinct();
         public IEnumerable<Building> GetAllBuildingsInSight() => Units.SelectMany(u => u.BuildingsInSight).Distinct();
