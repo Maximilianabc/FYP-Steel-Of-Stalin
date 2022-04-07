@@ -22,15 +22,6 @@ public class UnitPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        Unit u = Game.UnitData.GetNew("infantry");
-        SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry infantry = u as SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry;
-        infantry.PrimaryFirearm = Game.CustomizableData["rifle"].Clone() as Firearm;
-        infantry.SecondaryFirearm = Game.CustomizableData["rifle"].Clone() as Firearm;
-        SetUnit(u);
-
-
-
 
     }
 
@@ -67,8 +58,9 @@ public class UnitPanel : MonoBehaviour
                 instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = module.Name;
                 instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)Game.CustomizableData.Modules[module.Name].Integrity.Value), Mathf.RoundToInt((float)module.Integrity.Value));
             }
-        }      
-        modules.GetComponent<Resize>().DoResize();
+        }
+        //modules.GetComponent<Resize>().DoResize();
+        StartCoroutine(DelayResize(modules,1));
 
         GameObject carrying = menu.transform.Find("Carrying").gameObject;
         foreach (Transform child in carrying.transform)
@@ -95,7 +87,8 @@ public class UnitPanel : MonoBehaviour
         instance.transform.SetParent(carrying.transform);
         instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Fuel";
         instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Fuel.Value), Mathf.RoundToInt((float)u.Carrying.Fuel.Value));
-        carrying.GetComponent<Resize>().DoResize();
+        //carrying.GetComponent<Resize>().DoResize();
+        StartCoroutine(DelayResize(carrying,1));
         
 
         GameObject weapons = menu.transform.Find("Weapons").gameObject;
@@ -118,8 +111,9 @@ public class UnitPanel : MonoBehaviour
                 instance.transform.Find("Hard").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Hard.Value).ToString();
                 instance.transform.Find("Destruct.").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Destruction.Value).ToString();
             }
-        }       
-        weapons.GetComponent<Resize>().DoResize();
+        }
+        //weapons.GetComponent<Resize>().DoResize();
+        StartCoroutine(DelayResize(weapons,1));
 
         GameObject shellType = menu.transform.Find("ShellType").gameObject;
         List<Gun> unitGuns;
@@ -133,18 +127,14 @@ public class UnitPanel : MonoBehaviour
 
 
 
-
         GameObject speed = menu.transform.Find("Speed").gameObject;
         speed.transform.Find("Text_Speed").GetComponent<TMPro.TMP_Text>().text= Mathf.RoundToInt((float)u.Maneuverability.Speed.Value).ToString();
         GameObject recon = menu.transform.Find("Recon").gameObject;
         recon.transform.Find("Text_Recon").GetComponent<TMPro.TMP_Text>().text= Mathf.RoundToInt((float)u.Scouting.Reconnaissance.Value).ToString();
         GameObject communication = menu.transform.Find("Communication").gameObject;
         communication.transform.Find("Text_Communication").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)u.Scouting.Communication.Value).ToString();
-        Resize r = GetComponent<Resize>();
-        if (r != null)
-        {
-            r.DoResize();
-        }
+        StartCoroutine(DelayResize(gameObject,2));
+
         if (!gameObject.activeSelf) {
             this.Show();
         }
@@ -170,7 +160,13 @@ public class UnitPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
+    IEnumerator DelayResize(GameObject gameObject,int step)
+    {
+        for(int i=0;i<step;i++)yield return null;
+        if (gameObject.activeSelf && gameObject.GetComponent<Resize>()) {
+            gameObject.GetComponent<Resize>().DoResize();
+        }
+    }
 }
 
 

@@ -13,6 +13,7 @@ public class Resize : MonoBehaviour
     public float paddingDown = 10f;
     public bool  resizeWidth=false;
     public bool  resizeHeight=false;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,7 @@ public class Resize : MonoBehaviour
     {
     }
     public void DoResize() {
-        if (objectToBeResized == null || parentOfContent == null) {
+        if (objectToBeResized == null || parentOfContent == null||!objectToBeResized.activeSelf) {
             return;
         }
         if (!resizeWidth && !resizeHeight) {
@@ -68,4 +69,6 @@ public class Resize : MonoBehaviour
         objectToBeResized.GetComponent<RectTransform>().sizeDelta = resultVector;
         LayoutRebuilder.MarkLayoutForRebuild(objectToBeResized.GetComponent<RectTransform>());
     }
+
+
 }

@@ -22,7 +22,6 @@ public class MapMenu : MonoBehaviour
     {
         if (taskMapGen != null && taskMapGen.IsCompleted && !taskMapGen.IsFaulted && !taskMapGen.IsCanceled)
         {
-            Debug.Log("taskfinished");
             taskMapGen = null;
             RawImage mapPreview = transform.Find("MapPreview").GetComponent<RawImage>();
             mapPreview.texture = map.Visualize();
@@ -61,6 +60,7 @@ public class MapMenu : MonoBehaviour
         await Task.Run(() =>
         {
             map = new RandomMap(width, height, numPlayers);
+            Debug.Log("taskfinished");
         });
     }
 
