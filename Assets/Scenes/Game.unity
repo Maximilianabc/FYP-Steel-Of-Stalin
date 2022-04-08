@@ -10498,6 +10498,14 @@ MonoBehaviour:
   smallRotationThreshold: 0.1
   mouseControlEnabled: 1
   keyboardControlEnabled: 1
+  minCameraAngle: 30
+  maxCameraAngle: 55
+  minX: -100
+  minZ: -100
+  maxX: 100
+  maxZ: 100
+  minZoom: 80
+  maxZoom: 200
   newPosition: {x: 0, y: 0, z: 0}
   newRotation: {x: 0, y: 0, z: 0, w: 0}
   newZoom: 0
