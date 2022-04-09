@@ -106,7 +106,7 @@ namespace SteelOfStalin
 
             foreach (Tile tile in Map.GetTiles())
             {
-                tile.AddToScene();
+                //tile.AddToScene();
             }
             _ = StartCoroutine(GameLoop());
         }
@@ -268,7 +268,6 @@ namespace SteelOfStalin
                 u.SetMeshName();
                 if (!string.IsNullOrEmpty(u.OwnerName))
                 {
-                    u.SetMeshName();
                     u.SetOwnerFromName();
                 }
                 else
@@ -283,7 +282,6 @@ namespace SteelOfStalin
                 b.SetMeshName();
                 if (!string.IsNullOrEmpty(b.OwnerName))
                 {
-                    b.SetMeshName();
                     b.SetOwnerFromName();
                 }
                 // building can have no owners (e.g. unit buildings in neutral cities)
