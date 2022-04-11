@@ -171,6 +171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8084598564462527745}
+  - component: {fileID: 148304378952242728}
   m_Layer: 0
   m_Name: mountains
   m_TagString: Untagged
@@ -194,3 +195,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!136 &148304378952242728
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8897304321287020475}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 19
+  m_Height: 68
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
