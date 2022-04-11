@@ -2,253 +2,333 @@
   {
     "Name": "dummy_1",
     "SerializableColor": {
-      "R": 0,
+      "R": 255,
       "G": 0,
       "B": 0,
-      "A": 0
+      "A": 255
     },
     "Resources": {
       "Money": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Steel": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Supplies": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Cartridges": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Shells": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Fuel": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "RareMetal": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Manpower": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Power": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Time": {
+        "Value": 0,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 0
+        }
       }
     },
     "Allies": [],
-    "Commands": [],
-    "IsReady": false
+    "Commands": []
   },
   {
     "Name": "dummy_2",
     "SerializableColor": {
-      "R": 0,
-      "G": 0,
+      "R": 255,
+      "G": 255,
       "B": 0,
-      "A": 0
+      "A": 255
     },
     "Resources": {
       "Money": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Steel": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Supplies": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Cartridges": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Shells": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Fuel": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "RareMetal": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Manpower": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Power": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Time": {
+        "Value": 0,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 0
+        }
       }
     },
     "Allies": [],
-    "Commands": [],
-    "IsReady": false
+    "Commands": []
   },
   {
     "Name": "dummy_3",
     "SerializableColor": {
       "R": 0,
       "G": 0,
-      "B": 0,
-      "A": 0
+      "B": 255,
+      "A": 255
     },
     "Resources": {
       "Money": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Steel": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Supplies": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Cartridges": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Shells": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Fuel": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "RareMetal": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Manpower": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Power": {
+        "Value": 99999,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 99999
+        }
       },
       "Time": {
+        "Value": 0,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
-        },
-        "Value": 0
+        }
       }
     },
     "Allies": [],
-    "Commands": [],
-    "IsReady": false
+    "Commands": []
+  },
+  {
+    "Name": "dummy_4",
+    "SerializableColor": {
+      "R": 0,
+      "G": 128,
+      "B": 0,
+      "A": 255
+    },
+    "Resources": {
+      "Money": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Steel": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Supplies": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Cartridges": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Shells": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Fuel": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "RareMetal": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Manpower": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Power": {
+        "Value": 99999,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      },
+      "Time": {
+        "Value": 0,
+        "Mod": {
+          "Type": "FIXED_VALUE",
+          "Value": 0
+        }
+      }
+    },
+    "Allies": [],
+    "Commands": []
   }
 ]

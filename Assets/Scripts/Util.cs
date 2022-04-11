@@ -32,6 +32,8 @@ using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
 using SteelOfStalin.Assets.Props.Units.Land.Vehicles;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
+using Unity.Netcode;
+using System.Text;
 
 namespace SteelOfStalin.Util
 {
@@ -74,6 +76,12 @@ namespace SteelOfStalin.Util
             }
             return -1;
         }
+        public static T[] Slice<T>(this T[] source, int index, int length)
+        {
+            T[] sliced = new T[length];
+            Array.Copy(source, index, sliced, 0, length);
+            return sliced;
+        }
 
         public static bool HasAnyOfFlags<T>(this T @enum, T group) where T : Enum => (Convert.ToInt64(@enum) & Convert.ToInt64(group)) != 0;
 
@@ -92,6 +100,23 @@ namespace SteelOfStalin.Util
         public static bool IsNonInteger(this Type type) => type.IsPrimitive && (type == typeof(decimal) || type == typeof(decimal) || type == typeof(float));
 
         public static T CloneNew<T>(this List<T> list, string name) where T : ICloneable, INamedAsset => (T)list.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
+
+        public static GameObject GetChildByName(this GameObject parent, string child_name)
+        {
+            GameObject child_object = null;
+            Transform transform = parent.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform child = transform.GetChild(i);
+                child_object = string.Equals(child.name, child_name, StringComparison.OrdinalIgnoreCase) ? child.gameObject : child.gameObject.GetChildByName(child_name);
+                if (child_object != null)
+                {
+                    break;
+                }
+            }
+            return child_object;
+        }
+        public static T GetComponentInSpecificChild<T>(this GameObject parent, string child_name) where T : Component => parent.GetChildByName(child_name)?.GetComponent<T>();
 
         public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(new System.Random().NextDouble() * 2 - 1);
         public static string ToPascal(this string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
@@ -688,5 +713,343 @@ namespace SteelOfStalin.DataIO
         }
 
         public static bool StreamingAssetExists(string path) => File.Exists($@"{ExternalFilePath}\{path}");
+
+        public static DataChunk[] MakeChunks<T>(this T data)
+        {
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data);
+            int num_chunks = (int)Math.Ceiling((float)bytes.Length / DataChunk.CHUNK_SIZE);
+            if (num_chunks > ushort.MaxValue)
+            {
+                Debug.LogError($"number of chunks needed ({num_chunks}) exceeds 65535");
+                return null;
+            }
+
+            DataChunk[] chunks = new DataChunk[num_chunks];
+            for (int i = 0; i < num_chunks; i++)
+            {
+                int current_index = DataChunk.CHUNK_SIZE * i;
+                chunks[i] = new DataChunk()
+                {
+                    Order = (ushort)i,
+                    Data = bytes.Slice(current_index, bytes.Length - current_index < DataChunk.CHUNK_SIZE ? bytes.Length - current_index : DataChunk.CHUNK_SIZE),
+                };
+            }
+            return chunks;
+        }
+
+        public static object AssembleChunksIntoObject(this List<DataChunk> chunks, Type type)
+        {
+            byte[] data = chunks.OrderBy(d => d.Order).SelectMany(d => d.Data).ToArray();
+            return JsonSerializer.Deserialize(data, type);
+        }
+    }
+
+    public class DataChunk : INetworkSerializable
+    {
+        public const int CHUNK_SIZE = 1500; // FastBufferReader's buffer maximum is around 1500 bytes
+
+        private ushort _order;
+        public ushort Order { get => _order; set => _order = value; }
+
+        private byte[] _data;
+        public byte[] Data { get => _data; set => _data = value; }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref _order);
+            serializer.SerializeValue(ref _data);
+        }
+    }
+
+    public class RpcMessageObject
+    {
+        public List<DataChunk> Chunks { get; set; }
+        public bool IsReady { get; set; }
+    }
+
+    public class NamedMessageObject
+    {
+        public ulong SenderID { get; set; }
+        public NetworkMessageType MessageType { get; set; }
+        public Type Type { get; set; }
+        public string Message { get; set; }
+
+        public object GetDeserializedObject() => JsonSerializer.Deserialize(Message, Type);
+    }
+
+    public enum NetworkMessageType
+    {
+        NONE,
+        HANDSHAKE,
+        DATA,
+        COMMAND,
+        CHAT
+    }
+
+    public class NetworkUtilities : NetworkBehaviour
+    {
+        private Dictionary<Type, RpcMessageObject> m_rpcMessages = new Dictionary<Type, RpcMessageObject>();
+        private List<NamedMessageObject> m_namedMessages = new List<NamedMessageObject>();
+        public Dictionary<NetworkMessageType, string> MessageNames => new Dictionary<NetworkMessageType, string>()
+        {
+            [NetworkMessageType.HANDSHAKE] = "handshake",
+            [NetworkMessageType.DATA] = "data",
+            [NetworkMessageType.COMMAND] = "command",
+            [NetworkMessageType.CHAT] = "chat",
+        };
+        public static ClientRpcParams GetClientRpcSendParams(params ulong[] ids) 
+            => NetworkManager.Singleton.IsServer ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
+
+        private void Start()
+        {
+            NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.HANDSHAKE], (sender_id, reader) =>
+            {
+                reader.ReadValueSafe(out string message);
+                CacheNamedMessage(NetworkMessageType.HANDSHAKE, sender_id, message);
+            });
+            NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.DATA], (sender_id, reader) =>
+            {
+                reader.ReadValueSafe(out string message);
+                CacheNamedMessage(NetworkMessageType.DATA, sender_id, message);
+
+            });
+            NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.COMMAND], (sender_id, reader) =>
+            {
+                reader.ReadValueSafe(out string message);
+                CacheNamedMessage(NetworkMessageType.COMMAND, sender_id, message);
+
+            });
+            NetworkManager.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.CHAT], (sender_id, reader) =>
+            {
+                reader.ReadValueSafe(out string message);
+                CacheNamedMessage(NetworkMessageType.CHAT, sender_id, message);
+            });
+        }
+
+        public void CacheClinetRpcMessage(string type_name, ushort num_to_receive, DataChunk chunk, bool isAppend = false)
+        {
+            Type type = Type.GetType(type_name);
+            if (m_rpcMessages.ContainsKey(type))
+            {
+                if (m_rpcMessages[type].Chunks.Count < num_to_receive || isAppend)
+                {
+                    m_rpcMessages[type].Chunks.Add(chunk);
+                }
+                else
+                {
+                    Debug.LogError($"Number of chunks received exceed {num_to_receive}");
+                }
+            }
+            else
+            {
+                m_rpcMessages.Add(type, new RpcMessageObject()
+                { 
+                    Chunks = new List<DataChunk>() { chunk },
+                    IsReady = isAppend
+                });
+                Debug.Log($"New type {type_name} received.");
+            }
+            if (m_rpcMessages[type].Chunks.Count == num_to_receive && !isAppend)
+            {
+                m_rpcMessages[type].IsReady = true;
+                Debug.Log($"Received all chunks ({num_to_receive} in total) for type {type}");
+            }
+        }
+
+        public void CacheNamedMessage(NetworkMessageType message_type, ulong sender_id, string message)
+        {
+            Match match = Regex.Match(message, @"^([^:]+): (.*?)$");
+            if (!match.Success)
+            {
+                Debug.Log(message);
+                Debug.LogError($"Message is not in correct format");
+                return;
+            }
+            m_namedMessages.Add(new NamedMessageObject()
+            {
+                SenderID = sender_id,
+                MessageType = message_type,
+                Type = Type.GetType(match.Groups[1].Value),
+                Message = match.Groups[2].Value
+            });
+        }
+
+        public void SendMessageByRpc<T>(T obj, bool from_host = true)
+        {
+            DataChunk[] object_chunks = obj.MakeChunks();
+            /*
+#pragma warning disable IDE0004 // The cast is neccessary for unity compiler unless newer version of unity (compiler) is used
+            Action<DataChunk, ushort> rpc = from_host ? (Action<DataChunk, ushort>)ReceiveDataClientRpc<T> : ReceiveDataServerRpc<T>;
+#pragma warning restore IDE0004
+            */
+            Action<DataChunk, ushort> rpc = typeof(T) switch
+            {
+                _ when typeof(T) == typeof(Map) && from_host => ReceiveMapInfoClientRpc,
+                _ when typeof(T) == typeof(Tile[][]) && from_host => ReceiveMapTilesClientRpc,
+                _ when typeof(T) == typeof(IEnumerable<Unit>) && from_host => ReceiveMapUnitsClientRpc,
+                _ when typeof(T) == typeof(IEnumerable<Building>) && from_host => ReceiveMapBuildingsClientRpc,
+                _ when typeof(T) == typeof(List<Player>) && from_host => ReceiveBattlePlayersClientRpc,
+                _ when typeof(T) == typeof(BattleRules) && from_host => ReceiveBattleRulesClientRpc,
+                _ => throw new NotImplementedException($"Sending message by rpc from " + (from_host ? "host" : "client") + $" with type {typeof(T).Name} is not supported at the moment")
+            };
+            foreach (DataChunk chunk in object_chunks)
+            {
+                rpc(chunk, (ushort)object_chunks.Length);
+            }
+        }
+
+        public void SendNamedMessage<T>(T obj, ulong receiver_id, NetworkMessageType type)
+        {
+            string data = $"{typeof(T).FullName}: {JsonSerializer.Serialize(obj)}";
+            int byte_length = Encoding.UTF8.GetByteCount(data);
+            using FastBufferWriter writer = new FastBufferWriter(byte_length * 2 + 4, Unity.Collections.Allocator.Temp);
+            writer.WriteValueSafe(data);
+            NetworkManager.CustomMessagingManager.SendNamedMessage(MessageNames[type], receiver_id, writer, NetworkDelivery.Reliable);
+        }
+
+        public object GetRpcMessage(Type type)
+        {
+            if (!m_rpcMessages.ContainsKey(type))
+            {
+                Debug.LogError($"No data with type {type} is found.");
+                return null;
+            }
+            if (!m_rpcMessages[type].IsReady)
+            {
+                return null;
+            }
+            object obj = m_rpcMessages[type].Chunks.AssembleChunksIntoObject(type);
+            m_rpcMessages.Remove(type);
+            return obj;
+        }
+
+        public IEnumerator TryGetRpcMessage<T>(Action<T> callback)
+        {
+            int counter = 0;
+            object message = GetRpcMessage(typeof(T));
+            while (message == null && counter < 20)
+            {
+                message = GetRpcMessage(typeof(T));
+                yield return new WaitForSeconds(2);
+                counter++;
+            }
+            if (message == null)
+            {
+                Debug.LogError("Failed to retrieve cached rpc message after 20 tries");
+                yield return null;
+            }
+            else
+            {
+                callback?.Invoke((T)message);
+            }
+        }
+
+        public IEnumerable<object> GetNamedMessages(Predicate<NamedMessageObject> predicate)
+        {
+            IEnumerable<NamedMessageObject> targets = m_namedMessages.Where(m => predicate(m));
+            IEnumerable<object> deserialized = targets.Select(m => m.GetDeserializedObject());
+            Debug.Log(m_namedMessages.Count);
+            m_namedMessages = m_namedMessages.Except(targets).ToList();
+            Debug.Log(m_namedMessages.Count);
+            return deserialized;
+        }
+
+        public IEnumerator TryGetNamedMessage<T>(Predicate<NamedMessageObject> predicate, Action<T> callback)
+        {
+            int counter = 0;
+            IEnumerable<object> messages = GetNamedMessages(m => m.Type == typeof(T) && predicate(m));
+            while (messages.Count() == 0 && counter < 20)
+            {
+                messages = GetNamedMessages(m => m.Type == typeof(T) && predicate(m));
+                yield return new WaitForSeconds(2);
+                counter++;
+            }
+            if (messages == null)
+            {
+                Debug.LogError("Failed to retrieve named message after 20 tries");
+                yield return null;
+            }
+            else
+            {
+                foreach (object message in messages)
+                {
+                    callback?.Invoke((T)message);
+                }
+            }
+        }
+
+        /* UNITY FUCKING CRASHED ON CALLING A GENERIC RPC AND IT IS A FUCKING BUG
+         * REFERNCE: https://forum.unity.com/threads/unity-crashes-on-rpc-call.1256361/
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveDataClientRpc<T>(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CachePackets(typeof(T).FullName, num_to_receive, chunk);
+            }
+        }
+
+        [ServerRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveDataServerRpc<T>(DataChunk chunk, ushort num_to_receive)
+        {
+            if (NetworkManager.Singleton.IsServer)
+            {
+                CachePackets(typeof(T).FullName, num_to_receive, chunk);
+            }
+        }*/
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapInfoClientRpc(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CacheClinetRpcMessage(typeof(Map).FullName, num_to_receive, chunk);
+            }
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapTilesClientRpc(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CacheClinetRpcMessage(typeof(Tile[][]).FullName, num_to_receive, chunk);
+            }
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapUnitsClientRpc(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CacheClinetRpcMessage(typeof(IEnumerable<Unit>).FullName, num_to_receive, chunk);
+            }
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapBuildingsClientRpc(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CacheClinetRpcMessage(typeof(IEnumerable<Building>).FullName, num_to_receive, chunk);
+            }
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveBattlePlayersClientRpc(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CacheClinetRpcMessage(typeof(List<Player>).FullName, num_to_receive, chunk);
+            }
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveBattleRulesClientRpc(DataChunk chunk, ushort num_to_receive)
+        {
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                CacheClinetRpcMessage(typeof(BattleRules).FullName, num_to_receive, chunk);
+            }
+        }
     }
 }

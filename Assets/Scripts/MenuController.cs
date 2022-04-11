@@ -1,21 +1,34 @@
+using SteelOfStalin.DataIO;
 using UnityEngine;
 
 namespace SteelOfStalin
 {
     public class MenuController : MonoBehaviour
     {
-        public GameObject Game { get; set; }
-
         private void Start()
         {
-            Game = Resources.Load<GameObject>(@"Prefabs\game");
-            if (Game.GetComponent<Game>() == null)
+            GameObject game = Resources.Load<GameObject>(@"Prefabs\game");
+            if (game.GetComponent<Game>() == null)
             {
-                Game.AddComponent<Game>();
+                game.AddComponent<Game>();
             }
-            GameObject gameInstance = Instantiate(Game);
+            GameObject gameInstance = Instantiate(game);
             gameInstance.name = "game";
             DontDestroyOnLoad(gameInstance);
+
+            GameObject network = Resources.Load<GameObject>(@"Prefabs\network");
+            GameObject network_instance = Instantiate(network);
+            network_instance.name = "network";
+            DontDestroyOnLoad(network_instance);
+
+            GameObject network_util = Resources.Load<GameObject>(@"Prefabs\network_util");
+            GameObject network_util_instance = Instantiate(network_util);
+            if (network_util_instance.GetComponent<NetworkUtilities>() == null)
+            {
+                network_util_instance.AddComponent<NetworkUtilities>();
+            }
+            DontDestroyOnLoad(network_util_instance);
+
             Destroy(gameObject);
         }
 

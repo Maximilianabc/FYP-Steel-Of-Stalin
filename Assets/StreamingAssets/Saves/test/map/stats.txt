@@ -1,5 +1,7 @@
+Name: testing123
 Width: 100
 Height: 100
+Players: 3
 BOUNDARY:	396 (3.96%)
 PLAINS:	1911 (19.11%)
 GRASSLAND:	1396 (13.96%)
