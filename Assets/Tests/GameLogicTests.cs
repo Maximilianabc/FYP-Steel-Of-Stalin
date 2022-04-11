@@ -5,6 +5,8 @@ using System.Linq;
 using NUnit.Framework;
 using SteelOfStalin;
 using SteelOfStalin.Assets.Props;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
 using SteelOfStalin.CustomTypes;
