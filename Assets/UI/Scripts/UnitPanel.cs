@@ -7,6 +7,7 @@ using SteelOfStalin;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Shells;
 using SteelOfStalin.Assets;
 using SteelOfStalin.Assets.Props.Units.Land;
 
@@ -115,12 +116,32 @@ public class UnitPanel : MonoBehaviour
         //weapons.GetComponent<Resize>().DoResize();
         StartCoroutine(DelayResize(weapons,1));
 
-        GameObject shellType = menu.transform.Find("ShellType").gameObject;
+        GameObject guns = menu.transform.Find("Guns").gameObject;
+        foreach (Transform child in guns.transform)
+        {
+            if (child.gameObject.name != "Text_Guns" && child.gameObject.name != "GunsHeading") Destroy(child.gameObject);
+        }
         List<Gun> unitGuns;
         if (u.GetModules<Gun>() == null) {unitGuns = null;} 
         else { unitGuns = u.GetModules<Gun>().ToList();}
-        shellType.SetActive(unitGuns != null && unitGuns.Count != 0);
-
+        guns.SetActive(unitGuns != null && unitGuns.Count != 0);
+        if (unitGuns != null)
+        {
+            foreach (Gun gun in unitGuns)
+            {
+                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelGun"));
+                instance.name = gun.Name;
+                instance.transform.SetParent(guns.transform);
+                instance.transform.Find("Text_Weapons").GetComponent<TMPro.TMP_Text>().text = gun.Name;
+                instance.transform.Find("Text_ShellType").GetComponent<TMPro.TMP_Text>().text = gun.CurrentShell.Name;
+                //TODO:handle command
+                instance.transform.Find("Button_Switch").GetComponent<Button>().onClick.AddListener(() => {
+                    Shell newShell = Game.CustomizableData.GetNewShell(gun.CompatibleShells[(gun.CompatibleShells.IndexOf(gun.CurrentShell.Name) + 1) % gun.CompatibleShells.Count]);
+                    gun.CurrentShell = newShell;
+                    SetUnit(u);
+                });
+            }
+        }
 
 
 

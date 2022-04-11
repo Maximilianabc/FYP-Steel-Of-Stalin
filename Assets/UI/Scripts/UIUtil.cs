@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class UIUtil : MonoBehaviour
 {
+    public UIUtil instance;
     // Start is called before the first frame update
     void Start()
     {
-        
+        instance = this;
     }
 
     // Update is called once per frame
@@ -24,6 +25,7 @@ public class UIUtil : MonoBehaviour
     public void ChangeScene(string sceneName) {
         SceneManager.LoadScene(sceneName);
     }
+
 
     //Only for testing 
     public void testfunction() {
