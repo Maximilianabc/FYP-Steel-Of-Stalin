@@ -23,6 +23,7 @@ namespace SteelOfStalin
 
             GameObject network_util = Resources.Load<GameObject>(@"Prefabs\network_util");
             GameObject network_util_instance = Instantiate(network_util);
+            network_util_instance.name = "network_util";
             if (network_util_instance.GetComponent<NetworkUtilities>() == null)
             {
                 network_util_instance.AddComponent<NetworkUtilities>();

@@ -40,7 +40,7 @@ namespace SteelOfStalin
                 }
                 network_util_instance.name = "network_util";
                 DontDestroyOnLoad(network_util_instance);
-
+#if UNITY_EDITOR
                 if (StartAsHost)
                 {
                     NetworkManager.Singleton.StartHost();
@@ -49,6 +49,7 @@ namespace SteelOfStalin
                 {
                     NetworkManager.Singleton.StartClient();
                 }
+#endif
             }
             Destroy(gameObject);
         }

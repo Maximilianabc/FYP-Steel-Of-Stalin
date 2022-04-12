@@ -61,11 +61,10 @@ namespace SteelOfStalin
         {
             LoadAllAssets();
             LoadBattleInfos();
-            // StartHost();
         }
 
         public static void StartHost() => NetworkManager.Singleton.StartHost();
-        // public static void StartServer() => NetworkManager.Singleton.StartServer();
+        public static void StartServer() => NetworkManager.Singleton.StartServer();
         public static void StartClient()
         {
             NetworkManager manager = NetworkManager.Singleton;
@@ -110,7 +109,8 @@ namespace SteelOfStalin
                     MapName = Regex.Match(lines[0], @"^Name: (\w+)$").Groups[1].Value,
                     MapWidth = int.Parse(Regex.Match(lines[1], @"^Width: (\d+)$").Groups[1].Value),
                     MapHeight = int.Parse(Regex.Match(lines[2], @"^Height: (\d+)$").Groups[1].Value),
-                    MaxNumPlayers = int.Parse(Regex.Match(lines[3], @"^Players: (\d)$").Groups[1].Value)
+                    MaxNumPlayers = int.Parse(Regex.Match(lines[3], @"^Players: (\d)$").Groups[1].Value),
+                    Rules = DeserializeJson<BattleRules>($@"{save}\rules", false)
                 });
             }
         }
@@ -121,21 +121,15 @@ namespace SteelOfStalin
         public bool EnableAnimations { get; set; }
         public byte VolumeMusic { get; set; } = 100;
         public byte VolumeSoundFX { get; set; } = 100;
-        private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
 
-        public void Save() => File.WriteAllText(m_settingsPath, JsonSerializer.Serialize(this, Options));
-        public GameSettings Load() => JsonSerializer.Deserialize<GameSettings>(m_settingsPath);
+        public void Save() => this.SerializeJson("settings");
     }
 
     public class Battle : NetworkBehaviour, INamedAsset
     {
         public static Battle Instance { get; private set; }
 
-        /* use the following to set battle name:
-         * Battle battle = *get the battle controller object*.GetComponent<Battle>();
-         * battle.Name = *name here*;
-         */ 
-        public string Name { get; set; } = "test";
+        public string Name { get; set; }
         public Map Map { get; set; } = new Map();
         public List<Player> Players { get; set; } = new List<Player>();
         public BattleRules Rules { get; set; } = new BattleRules();
@@ -157,6 +151,19 @@ namespace SteelOfStalin
         private void Start()
         {
             Instance = this;
+#if UNITY_EDITOR
+            if (Game.ActiveBattle == null)
+            {
+                Game.ActiveBattle = new BattleInfo();
+            }
+#endif
+            BattleInfo info = Game.ActiveBattle;
+            Name = info.Name;
+            Rules = info.Rules;
+            Map.Name = info.MapName;
+            Map.Width = info.MapWidth;
+            Map.Height = info.MapHeight;
+
             NetworkUtilities = GameObject.FindObjectOfType<NetworkUtilities>();
             if (NetworkManager.IsHost)
             {
@@ -316,13 +323,19 @@ namespace SteelOfStalin
             Debug.Log($"Client (id: {id}) connected");
             ClientRpcParams send_params = NetworkUtilities.GetClientRpcSendParams(id);
 
+            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.UnitData.LocalJsonFilePaths), send_params);
+            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.BuildingData.LocalJsonFilePaths), send_params);
+            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.TileData.LocalJsonFilePaths), send_params);
+            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.CustomizableData.LocalJsonFilePaths), send_params);
+
             NetworkUtilities.SendNamedMessage(Map, id, NetworkMessageType.DATA);
-            // NetworkUtilities.SendMessageByRpc(Map);
-            NetworkUtilities.SendMessageByRpc(Map.GetTilesUnflatterned());
-            NetworkUtilities.SendMessageByRpc(Map.GetUnits());
-            NetworkUtilities.SendMessageByRpc(Map.GetBuildings());
-            NetworkUtilities.SendMessageByRpc(Players);
-            NetworkUtilities.SendMessageByRpc(Rules);
+            // NetworkUtilities.SendNamedMessage(Map.GetTilesUnflatterned(), id, NetworkMessageType.DATA);
+            // NOTE: if sending a named message that is too long (like whole map), the handle of the reader on client side won't be able to accessed and throws NRE continuously
+            NetworkUtilities.SendMessageFromHostByRpc(Map.GetTilesUnflatterned(), send_params);
+            NetworkUtilities.SendNamedMessage(Map.GetUnits(), id, NetworkMessageType.DATA);
+            NetworkUtilities.SendNamedMessage(Map.GetBuildings(), id, NetworkMessageType.DATA);
+            NetworkUtilities.SendNamedMessage(Players, id, NetworkMessageType.DATA);
+            NetworkUtilities.SendNamedMessage(Rules, id, NetworkMessageType.DATA);
 
             Debug.Log($"Sent all data to client (id: {id})");
 
@@ -332,34 +345,32 @@ namespace SteelOfStalin
         [ClientRpc]
         private void SetAllDataClientRpc(ClientRpcParams @params)
         {
-            if (!NetworkManager.IsHost)
-            {
-                // _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Map>(result => Map = result));
-                _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result => Map = result));
-                /*_ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => Map.SetTiles(result)));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<IEnumerable<Unit>>(result => Map.SetUnits(result)));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<IEnumerable<Building>>(result => Map.SetBuildings(result)));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<List<Player>>(result => Players = result));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<BattleRules>(result => Rules = result));*/
+            _ = StartCoroutine(NetworkUtilities.TrySaveFiles());
 
-                // TODO FUT. Impl. create stats dump folder for caching instead of overriding
-                /*
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<UnitData>(result => Game.UnitData = result));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<BuildingData>(result => Game.BuildingData = result));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<BattleRules>(result => Rules = result));
-                _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<BattleRules>(result => Rules = result));*/
-            }
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result => Map = result));
+            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => Map.SetTiles(result)));
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetUnits(result)));
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetBuildings(result)));
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<List<Player>>(m => m.MessageType == NetworkMessageType.DATA, result => Players = result));
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => Rules = result));
         }
     }
 
     // a simple class for reading stats of the battles when game starts
     public class BattleInfo
     {
-        public string Name { get; set; }
-        public string MapName { get; set; }
-        public int MapWidth { get; set; }
-        public int MapHeight { get; set; }
-        public int MaxNumPlayers { get; set; }
+        public string Name { get; set; } = "test";
+        // TODO FUT. Impl. Add load map from map name when implementing Historical gamemode
+        public string MapName { get; set; } = "testing123";
+        public int MapWidth { get; set; } = 100;
+        public int MapHeight { get; set; } = 100;
+        public int MaxNumPlayers { get; set; } = 3;
+        public BattleRules Rules { get; set; } = new BattleRules();
+
+        public BattleInfo() { }
+
+        public BattleInfo(string name, string map_name, int width, int height, int max_players, BattleRules rules)
+            => (Name, MapName, MapWidth, MapHeight, MaxNumPlayers, Rules) = (name, map_name, width, height, max_players, rules);
     }
 
     // Contains different rules of the battle, like how much time is allowed for each round etc.
