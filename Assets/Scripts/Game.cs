@@ -829,14 +829,13 @@ namespace SteelOfStalin
         /// </summary>
         /// <param></param>
         /// <returns>All Cities</returns>
-        public IEnumerable<Cities> GetCities() => Tiles.Flatten().Where(t => t is Cities).Cast<Cities>();
-        
+        public IEnumerable<Cities> GetCities() => GetTiles<Cities>();
+
         /// <summary>
         /// Gets all Cities controlled by a given player
         /// </summary>
         /// <param name="player">A player</param>
         /// <returns>Cities controlled by a given player</returns>
-        public IEnumerable<Cities> GetCities() => GetTiles<Cities>();
         public IEnumerable<Cities> GetCities(Player player) => GetCities().Where(c => c.Owner == player);
         
         /// <summary>
