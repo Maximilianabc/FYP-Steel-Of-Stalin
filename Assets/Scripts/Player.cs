@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using Unity.Netcode;
 using UnityEngine;
 using Resources = SteelOfStalin.Attributes.Resources;
 
@@ -60,7 +61,7 @@ namespace SteelOfStalin
             {
                 return "";
             }
-
+            
             StringBuilder sb = new StringBuilder();
             if (consume.Money > 0)
             {
@@ -112,7 +113,7 @@ namespace SteelOfStalin
         // AI algo goes here
     }
 
-    public class PlayerObject : MonoBehaviour
+    public class PlayerObject : NetworkBehaviour
     {
         public Player Player { get; set; }
         public bool IsAI => Player is AIPlayer;
