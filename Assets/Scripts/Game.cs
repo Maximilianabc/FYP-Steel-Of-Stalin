@@ -602,6 +602,12 @@ namespace SteelOfStalin
             Buildings = buildings.ToList();
         }
 
+
+        /// <summary>
+        /// Adds a unit but does not initialize it
+        /// </summary>
+        /// <param name="u">Unit to be added</param>
+        /// <returns>If addition successful, returns true, else returns false</returns>        
         public bool AddUnit(Unit u)
         {
             if (u == null)
@@ -617,6 +623,12 @@ namespace SteelOfStalin
             Units.Add(u);
             return true;
         }
+        
+        /// <summary>
+        /// Adds a building but does not initialize it
+        /// </summary>
+        /// <param name="b">Building to be added</param>
+        /// <returns>If addition successful, returns true, else returns false</returns>
         public void AddUnits(params Unit[] units) => Units.AddRange(units);
         public bool AddBuilding(Building b)
         {
@@ -633,7 +645,19 @@ namespace SteelOfStalin
             Buildings.Add(b);
             return true;
         }
+
+        /// <summary>
+        /// Adds an array of buildings, but does not initialize them
+        /// </summary>
+        /// <param name="buildings">Buildings to be added</param>
+        /// <returns></returns>
         public void AddBuildings(params Building[] buildings) => Buildings.AddRange(buildings);
+
+        /// <summary>
+        /// Removes a unit
+        /// </summary>
+        /// <param name="u">Unit to be removed</param>
+        /// <returns>If removal successful, returns true, else returns false</returns>
         public bool RemoveUnit(Unit u)
         {
             if (u == null)
@@ -643,6 +667,12 @@ namespace SteelOfStalin
             }
             return Units.Remove(u);
         }
+
+        /// <summary>
+        /// Removes a building
+        /// </summary>
+        /// <param name="b">Building to be removed</param>
+        /// <returns>If removal successful, returns true, else returns false</returns>
         public void RemoveUnits(IEnumerable<Unit> units) => Units.RemoveAll(u => units.Contains(u));
         public bool RemoveBuilding(Building b)
         {
@@ -654,6 +684,12 @@ namespace SteelOfStalin
             return Buildings.Remove(b);
         }
 
+        
+        /// <summary>
+        /// Prints unit list
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
         public void PrintUnitList()
         {
             StringBuilder sb = new StringBuilder();
@@ -664,6 +700,12 @@ namespace SteelOfStalin
             }
             Debug.Log(sb.ToString());
         }
+        
+        /// <summary>
+        /// Prints building list
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
         public void PrintBuildingList()
         {
             StringBuilder sb = new StringBuilder();
@@ -675,38 +717,166 @@ namespace SteelOfStalin
             Debug.Log(sb.ToString());
         }
 
+        
+        /// <summary>
+        /// Gets Prop from a GameObject
+        /// </summary>
+        /// <param name="gameObject">GameObject to get Prop from</param>
+        /// <returns>Prop that shares MeshName with gameObject name</returns>
         public Prop GetProp(GameObject gameObject) => AllProps.Find(p => p.MeshName == gameObject.name);
+        
+        /// <summary>
+        /// Gets all Props from a Coordinate
+        /// </summary>
+        /// <param name="c">A Coordinate</param>
+        /// <returns>Props at given Coordinate</returns>
         public IEnumerable<Prop> GetProps(Coordinates c) => AllProps.Where(p => p.CoOrds == c);
+        
+        /// <summary>
+        /// Gets all Props from a CubeCoordinate
+        /// </summary>
+        /// <param name="c">A CubeCoordinate</param>
+        /// <returns>Props at a given CubeCoordinate</returns>
         public IEnumerable<Prop> GetProps(CubeCoordinates c) => AllProps.Where(p => p.CubeCoOrds == c);
+        
+        /// <summary>
+        /// Wildcard function that gets all Props via predicate
+        /// </summary>
+        /// <param name="predicate">A Predicate</param>
+        /// <returns>Props that match predicate</returns>
         public IEnumerable<Prop> GetProps(Predicate<Prop> predicate) => AllProps.Where(p => predicate(p));
+        
+        /// <summary>
+        /// Gets all Props of a specific type
+        /// </summary>
+        /// <param></param>
+        /// <returns>Props of a specific type</returns>
         public IEnumerable<T> GetProps<T>() where T : Prop => AllProps.OfType<T>();
+        
+        /// <summary>
+        /// Gets all Props of a specific type from a CubeCoordinate
+        /// </summary>
+        /// <param name="c">A CubeCoordinate</param>
+        /// <returns>Props of a specific type at given CubeCoordinate</returns>
         public IEnumerable<T> GetProps<T>(CubeCoordinates c) where T : Prop => GetProps(c).OfType<T>();
+        
+        /// <summary>
+        /// Wildcard function that gets all Props of a specific type via predicate
+        /// </summary>
+        /// <param name="predicate">A Predicate</param>
+        /// <returns>Props of a specific type that match predicate</returns>
         public IEnumerable<T> GetProps<T>(Predicate<T> predicate) where T : Prop => AllProps.OfType<T>().Where(p => predicate(p));
 
+        
+        /// <summary>
+        /// Gets a Tile from position x, y
+        /// </summary>
+        /// <param name="x">x position</param>
+        /// <param name="y">y position</param>
+        /// <returns>Tile at position x, y</returns>
         public Tile GetTile(int x, int y) => Tiles[x][y];
+        
+        /// <summary>
+        /// Gets a Tile from position x, y
+        /// </summary>
+        /// <param name="x">x position</param>
+        /// <param name="y">y position</param>
+        /// <returns>Tile at position x, y</returns>
         public Tile GetTile(Coordinates p) => Tiles[p.X][p.Y];
+        
+        /// <summary>
+        /// Gets a Tile at a CubeCoordinate
+        /// </summary>
+        /// <param name="c">A CubeCoordinate</param>
+        /// <returns>Tile at a given CubeCoordinate</returns>
         public Tile GetTile(CubeCoordinates c) => Tiles[((Coordinates)c).X][((Coordinates)c).Y];
+        
+        /// <summary>
+        /// Gets all Tiles
+        /// </summary>
+        /// <param></param>
+        /// <returns>All Tiles</returns>
         public IEnumerable<Tile> GetTiles() => Tiles.Flatten();
+        
+        /// <summary>
+        /// Gets all Tiles of a given TileType
+        /// </summary>
+        /// <param name="type">A TileType</param>
+        /// <returns>Tiles of a given TileType</returns>
         public IEnumerable<Tile> GetTiles(TileType type) => Tiles.Flatten().Where(t => t.Type == type);
+        
+        /// <summary>
+        /// Wildcard function that gets all Tiles that match a given predicate
+        /// </summary>
+        /// <param name="predicate">A Predicate</param>
+        /// <returns>Tiles that match predicate</returns>
         public IEnumerable<Tile> GetTiles(Predicate<Tile> predicate) => Tiles.Flatten().Where(t => predicate(t));
+        
+        /// <summary>
+        /// Gets all Tiles of specific type
+        /// </summary>
+        /// <param></param>
+        /// <returns>Tiles of a specific type</returns>
         public IEnumerable<T> GetTiles<T>() where T : Tile => Tiles.Flatten().OfType<T>();
         public Tile[][] GetTilesUnflatterned() => Tiles;
 
+        /// <summary>
+        /// Gets all Cities
+        /// </summary>
+        /// <param></param>
+        /// <returns>All Cities</returns>
+        public IEnumerable<Cities> GetCities() => Tiles.Flatten().Where(t => t is Cities).Cast<Cities>();
+        
+        /// <summary>
+        /// Gets all Cities controlled by a given player
+        /// </summary>
+        /// <param name="player">A player</param>
+        /// <returns>Cities controlled by a given player</returns>
         public IEnumerable<Cities> GetCities() => GetTiles<Cities>();
         public IEnumerable<Cities> GetCities(Player player) => GetCities().Where(c => c.Owner == player);
+        
+        /// <summary>
+        /// Wildcard function that gets all Cities that match a given predicate
+        /// </summary>
+        /// <param name="predicate">A Predicate</param>
+        /// <returns>Cities that match predicate</returns>
         public IEnumerable<Cities> GetCities(Predicate<Cities> predicate) => GetCities().Where(c => predicate(c));
+        
+        /// <summary>
+        /// Gets all Cities of specific type
+        /// </summary>
+        /// <param></param>
+        /// <returns>Cities of a specific type</returns>
         public IEnumerable<T> GetCities<T>() where T : Cities => Tiles.Flatten().OfType<T>();
 
+        /// <summary>
+        /// Gets neighbouring Tiles of a Tile at a given CubeCoordinate
+        /// </summary>
+        /// <param name="c">A CubeCoordinate specifying location of tile</param>
+        /// <returns>Neighbouring Tiles</returns>
         public IEnumerable<Tile> GetNeighbours(CubeCoordinates c, int distance = 1, bool include_self = false) => c.GetNeigbours(distance, include_self).Where(c =>
         {
             Coordinates p = (Coordinates)c;
             return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
         }).Select(c => GetTile(c));
+        
+        /// <summary>
+        /// Gets straight line neighbouring Tiles of a Tile at a given CubeCoordinate
+        /// </summary>
+        /// <param name="c">A CubeCoordinate specifying location of tile</param>
+        /// <returns>Straight line neighbouring Tiles</returns>
         public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, decimal distance = 1) => distance < 1
                 ? throw new ArgumentException("Distance must be >= 1.")
                 : GetNeighbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
+        
+        /// <summary>
+        /// Function querying a tile for unoccupied neighbours
+        /// </summary>
+        /// <param name="c">A CubeCoordinate specifying location of main tile</param>
+        /// <returns>If there are unoccupied neighbouring Tiles, returns true, else false </returns>
         public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeighbours(c, distance).Any(t => !t.IsOccupied);
 
+        
         public IEnumerable<Unit> GetUnits() => Units;
         public IEnumerable<T> GetUnits<T>() where T : Unit => Units.OfType<T>();
         public IEnumerable<T> GetUnits<T>(Predicate<Unit> predicate) where T : Unit => GetUnits<T>().Where(u => predicate(u));
