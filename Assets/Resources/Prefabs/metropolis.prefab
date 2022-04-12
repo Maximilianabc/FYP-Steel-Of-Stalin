@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 8818417420373975621}
   - component: {fileID: 2745098600777359615}
   m_Layer: 0
-  m_Name: Metro
+  m_Name: Metropolis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

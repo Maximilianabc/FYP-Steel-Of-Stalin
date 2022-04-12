@@ -673,8 +673,8 @@ namespace SteelOfStalin.Commands
                 return;
             }
 
-            _ = Map.Instance.AddBuilding(Target);
             Target.Initialize(Builder ?? Unit.Owner, Destination, BuildingStatus.UNDER_CONSTRUCTION);
+            _ = Map.Instance.AddBuilding(Target);
             _ = Recorder.AppendLine($"`$ {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Constructing {Target.Name} at {Destination} for {Target.ConstructionTimeRemaining} round(s)");
         }
