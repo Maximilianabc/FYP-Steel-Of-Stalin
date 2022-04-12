@@ -142,6 +142,10 @@ namespace SteelOfStalin
         public bool EnableAnimations { get; set; }
         public byte VolumeMusic { get; set; } = 100;
         public byte VolumeSoundFX { get; set; } = 100;
+        public bool Fullscreen { get; set; }
+        public byte ResolutionX { get; set; }
+        public byte ResolutionY { get; set; }
+        private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
 
         public void Save() => this.SerializeJson("settings");
     }

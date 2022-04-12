@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Resize : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Resize : MonoBehaviour
     public float paddingDown = 10f;
     public bool  resizeWidth=false;
     public bool  resizeHeight=false;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +24,9 @@ public class Resize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
     public void DoResize() {
-        if (objectToBeResized == null || parentOfContent == null) {
+        if (objectToBeResized == null || parentOfContent == null||!objectToBeResized.activeSelf) {
             return;
         }
         if (!resizeWidth && !resizeHeight) {
@@ -66,5 +67,8 @@ public class Resize : MonoBehaviour
         }
 
         objectToBeResized.GetComponent<RectTransform>().sizeDelta = resultVector;
+        LayoutRebuilder.MarkLayoutForRebuild(objectToBeResized.GetComponent<RectTransform>());
     }
+
+
 }

@@ -20,7 +20,8 @@ public class ProgressBar : MonoBehaviour
     }
     private void UpdateCurrentFill()
     {
-        float fillAmount = (float)current / (float)maximum;
+        //avoid divide zero error
+        float fillAmount = maximum==0?1f:(float)current / (float)maximum;
         fill.fillAmount = fillAmount;
     }
 
