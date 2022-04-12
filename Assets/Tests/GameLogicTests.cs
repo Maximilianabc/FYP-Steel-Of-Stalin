@@ -184,7 +184,7 @@ public class GameLogicTest
         LogAssert.ignoreFailingMessages = true;
 
         Infantry i = UnitData.GetNew<Infantry>();
-        // i.SetMeshName();
+        i.SetMeshName();
         Assert.IsNotNull(i);
 
         Assert.IsTrue(Map.AddUnit(i));
@@ -324,9 +324,44 @@ public class GameLogicTest
     [Test]
     public void UnitOwnershipTest(){
         Player p1 = Map.Players[0];
-        Player p2 = Map.Players[0];
+        Player p2 = Map.Players[1];
+        Coordinates point = new Coordinates(0,0);
 
-        
+        Infantry i = UnitData.GetNew<Infantry>();
+        i.SetMeshName();
+        i.Initialize(p1, point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+
+        Infantry i2 = UnitData.GetNew<Infantry>();
+        i2.SetMeshName();
+        i2.Initialize(null, point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+
+        Assert.IsTrue(i.IsOwn(p1));
+        Assert.IsFalse(i.IsOwn(p2));
+        Assert.IsTrue(i.IsFriendly(p1));
+        Assert.IsFalse(i.IsFriendly(p2));
+        Assert.IsTrue(i2.IsNeutral());
+    }
+
+    [Test]
+    public void UnitFunctionTest(){
+        Player p1 = Map.Players[0];
+
+        Coordinates point1 = new Coordinates(0,0);
+        Coordinates point2 = new Coordinates(1,1);
+        Tile tile1 = Map.GetTile(point1);
+        Tile tile2 = Map.GetTile(point2);
+
+        Infantry i = UnitData.GetNew<Infantry>();
+        i.SetMeshName();
+        i.Initialize(p1, point1, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        IEnumerable<SteelOfStalin.Assets.Customizables.IOffensiveCustomizable> weapons = i.GetWeapons();
+        i.SetWeapons(weapons);
+
+        // Assert.IsTrue(i.CanAccessTile(tile1));
+        // Assert.IsFalse(i.CanAccessTile(tile2));
+
+        // Assert.IsTrue(i.CanMove());
+
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
