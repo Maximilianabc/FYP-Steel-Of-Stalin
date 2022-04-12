@@ -96,6 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5617365285401121124}
   - component: {fileID: 841887662401873429}
+  - component: {fileID: 5390093136059263012}
   m_Layer: 0
   m_Name: jungle
   m_TagString: Untagged
@@ -152,6 +153,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8361060608467993004}
   m_Enabled: 1
+--- !u!136 &5390093136059263012
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5097849771612277726}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 20
+  m_Height: 46
+  m_Direction: 0
+  m_Center: {x: 0, y: -6, z: 0}
 --- !u!1 &5902584019603317871
 GameObject:
   m_ObjectHideFlags: 0

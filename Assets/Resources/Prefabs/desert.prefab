@@ -172,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7716953279616414750}
   - component: {fileID: -8679160217945985710}
-  - component: {fileID: -4201820992597204198}
+  - component: {fileID: 3450566790291336289}
   m_Layer: 0
   m_Name: desert
   m_TagString: Untagged
@@ -237,8 +237,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &-4201820992597204198
-SphereCollider:
+--- !u!136 &3450566790291336289
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -247,6 +247,7 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 19
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 20
+  m_Height: 48
+  m_Direction: 0
+  m_Center: {x: 0, y: -10, z: 0}

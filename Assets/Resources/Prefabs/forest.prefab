@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4232570944694568947}
   - component: {fileID: 9037003838372011797}
   - component: {fileID: 8474210458484190182}
-  - component: {fileID: 8628193000052250594}
   m_Layer: 0
   m_Name: Forest_LOD1
   m_TagString: Untagged
@@ -87,19 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8628193000052250594
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667919631938932815}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 15.954276, y: 9.9259, z: 16.62587}
-  m_Center: {x: -2.7292395, y: 3.8954196, z: 5.4053802}
 --- !u!1 &1015370910997343820
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,6 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 386327542404134134}
   - component: {fileID: 4829720767652168583}
+  - component: {fileID: 9069381435807377228}
   m_Layer: 0
   m_Name: forest
   m_TagString: Untagged
@@ -166,6 +153,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 551669575725917383}
   m_Enabled: 1
+--- !u!136 &9069381435807377228
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015370910997343820}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 20
+  m_Height: 48
+  m_Direction: 0
+  m_Center: {x: 0, y: -10, z: 0}
 --- !u!1 &5852908054847732158
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +178,6 @@ GameObject:
   - component: {fileID: 3891113106630331023}
   - component: {fileID: 1387034496857553683}
   - component: {fileID: 6748196030498626940}
-  - component: {fileID: 6893643996318308307}
   m_Layer: 0
   m_Name: Forest_LOD2
   m_TagString: Untagged
@@ -253,19 +253,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6893643996318308307
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5852908054847732158}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 18.368738, y: 11.414786, z: 19.117311}
-  m_Center: {x: -3.8298616, y: 4.479733, z: -6.4529867}
 --- !u!1 &6575775635593631132
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +264,6 @@ GameObject:
   - component: {fileID: 1133119391942697407}
   - component: {fileID: 5269110255287374584}
   - component: {fileID: 4891861322379282306}
-  - component: {fileID: 1315361276429789852}
   m_Layer: 0
   m_Name: Forest_LOD0
   m_TagString: Untagged
@@ -353,19 +339,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1315361276429789852
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6575775635593631132}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 18.332012, y: 11.414786, z: 19.117311}
-  m_Center: {x: -3.8114967, y: 4.479733, z: -6.4529867}
 --- !u!1 &7434919197474365016
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +350,6 @@ GameObject:
   - component: {fileID: 580958101793358626}
   - component: {fileID: 2737745710922850621}
   - component: {fileID: 551669575725917383}
-  - component: {fileID: 6075702125701720267}
   m_Layer: 0
   m_Name: Forest_LOD3
   m_TagString: Untagged
@@ -453,16 +425,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6075702125701720267
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7434919197474365016}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 124.8854, y: 13.492688, z: 16.107616}
-  m_Center: {x: -0.81767106, y: -0.043548394, z: -5.7104864}
