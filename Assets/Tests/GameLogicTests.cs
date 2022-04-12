@@ -357,8 +357,8 @@ public class GameLogicTest
         IEnumerable<SteelOfStalin.Assets.Customizables.IOffensiveCustomizable> weapons = i.GetWeapons();
         i.SetWeapons(weapons);
 
-        // Assert.IsTrue(i.CanAccessTile(tile1));
-        // Assert.IsFalse(i.CanAccessTile(tile2));
+        Assert.IsTrue(i.CanAccessTile(tile1));
+        Assert.IsFalse(i.CanAccessTile(tile2));
 
         // Assert.IsTrue(i.CanMove());
 
