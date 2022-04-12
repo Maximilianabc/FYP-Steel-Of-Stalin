@@ -24,7 +24,7 @@ namespace SteelOfStalin
             }
             battle_instance.name = "battle";
 
-            if (NetworkManager.Singleton == null)
+            if (Game.Network == null)
             {
                 // must be playing battle scene directly, add a decoy network prefab first
                 GameObject network = Game.GameObjects.Find(g => g.name == "network");
@@ -41,13 +41,18 @@ namespace SteelOfStalin
                 network_util_instance.name = "network_util";
                 DontDestroyOnLoad(network_util_instance);
 #if UNITY_EDITOR
+                if (Game.ActiveBattle == null)
+                {
+                    Game.ActiveBattle = new BattleInfo();
+                }
+                Game.Network.ConnectionApprovalCallback += Game.ApprovalCheck;
                 if (StartAsHost)
                 {
-                    NetworkManager.Singleton.StartHost();
+                    Game.StartHost();
                 }
                 else
                 {
-                    NetworkManager.Singleton.StartClient();
+                    Game.StartClient();
                 }
 #endif
             }

@@ -894,7 +894,7 @@ namespace SteelOfStalin.DataIO
         };
 
         public static ClientRpcParams GetClientRpcSendParams(params ulong[] ids) 
-            => NetworkManager.Singleton.IsServer && ids.Length != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
+            => Game.Network.IsServer && ids.Length != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
         public static Dictionary<string, string> GetRelativePathsWithPattern(List<string> local_relative_paths, Func<string, string> replacer)
             => local_relative_paths.Zip(local_relative_paths.Select(p => replacer(p)), (local, dest) => new { local, dest }).ToDictionary(ps => ps.local, ps => ps.dest);
         public static Dictionary<string, string> GetDumpPaths(List<string> local_relative_paths) 
@@ -907,13 +907,13 @@ namespace SteelOfStalin.DataIO
 
         private IEnumerator Initialize()
         {
-            yield return new WaitWhile(() => NetworkManager.Singleton == null);
-            yield return new WaitWhile(() => NetworkManager.Singleton.CustomMessagingManager == null);
+            yield return new WaitWhile(() => Game.Network == null);
+            yield return new WaitWhile(() => Game.Network.CustomMessagingManager == null);
 
-            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.HANDSHAKE], MessageHandler(NetworkMessageType.HANDSHAKE));
-            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.DATA], MessageHandler(NetworkMessageType.DATA));
-            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.COMMAND], MessageHandler(NetworkMessageType.COMMAND));
-            NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.CHAT], MessageHandler(NetworkMessageType.CHAT));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.HANDSHAKE], MessageHandler(NetworkMessageType.HANDSHAKE));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.DATA], MessageHandler(NetworkMessageType.DATA));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.COMMAND], MessageHandler(NetworkMessageType.COMMAND));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.CHAT], MessageHandler(NetworkMessageType.CHAT));
 
             Debug.Log("Network utilities initialized");
             yield return null;
@@ -1202,19 +1202,13 @@ namespace SteelOfStalin.DataIO
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void ReceiveDataClientRpc<T>(RpcMessageChunk chunk, ushort num_to_receive)
         {
-            if (!NetworkManager.Singleton.IsHost)
-            {
-                CacheRpcMessage(chunk, num_to_receive, typeof(T).FullName);
-            }
+            CacheRpcMessage(chunk, num_to_receive, typeof(T).FullName);
         }
 
         [ServerRpc(Delivery = RpcDelivery.Reliable)]
         private void ReceiveDataServerRpc<T>(RpcMessageChunk chunk, ushort num_to_receive)
         {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                CacheRpcMessage(chunk, num_to_receive, typeof(T).FullName);
-            }
+            CacheRpcMessage(chunk, num_to_receive, typeof(T).FullName);
         }*/
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]

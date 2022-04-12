@@ -58,7 +58,11 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# automatic backup files
+*.bak
+
 /[Pp]rojectSettings/
 /[Uu]serSettings/
 /[Cc]ode[Cc]overage/
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump/
+/[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump.meta

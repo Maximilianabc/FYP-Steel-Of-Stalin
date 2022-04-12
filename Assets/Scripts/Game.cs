@@ -47,6 +47,7 @@ namespace SteelOfStalin
         public static List<GameObject> GameObjects { get; set; } = new List<GameObject>();
         public static List<AudioClip> AudioClips { get; set; } = new List<AudioClip>();
         public static BattleInfo ActiveBattle { get; set; }
+        public static NetworkManager Network => NetworkManager.Singleton;
 
         // TODO FUT Impl. add achievements
 
@@ -61,18 +62,21 @@ namespace SteelOfStalin
         {
             LoadAllAssets();
             LoadBattleInfos();
+            Network.ConnectionApprovalCallback += ApprovalCheck;
         }
 
-        public static void StartHost() => NetworkManager.Singleton.StartHost();
-        public static void StartServer() => NetworkManager.Singleton.StartServer();
+        public static void StartHost() => Network.StartHost();
+
+        public static void StartServer() => Network.StartServer();
+
         public static void StartClient()
         {
-            NetworkManager manager = NetworkManager.Singleton;
-            ConnectionAddressData connection = manager.GetComponent<UnityTransport>().ConnectionData;
+            ConnectionAddressData connection = Network.GetComponent<UnityTransport>().ConnectionData;
             // TODO FUT. Impl. change these to player input instead of loopback address in production
             connection.Address = "127.0.0.1";
             connection.Port = 7777;
-            NetworkManager.Singleton.StartClient();
+            Network.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes("Hello"); // TODO FUT. Impl. add password here
+            Network.StartClient();
         }
 
         public static void LoadAllAssets()
@@ -114,6 +118,23 @@ namespace SteelOfStalin
                 });
             }
         }
+
+        public static void ApprovalCheck(byte[] connectionData, ulong clientId, NetworkManager.ConnectionApprovedDelegate callback)
+        {
+            Debug.Log("Approval");
+            Debug.Log($"Message from client (id: {clientId}): {Encoding.UTF8.GetString(connectionData)}");
+            if (clientId != 0)
+            {
+                Debug.Log($"Current number of players: {Battle.Instance.Players.Count}, maximum: {ActiveBattle.MaxNumPlayers}");
+                bool approve = /*Battle.Instance.Players.Count + 1 <= ActiveBattle.MaxNumPlayers*/ true;
+                callback(false, null, approve, null, null);
+            }
+            else
+            {
+                Debug.Log("Skipped approval check for host client (id: 0)");
+                callback(false, null, true, null, null);
+            }
+        }
     }
 
     public class GameSettings
@@ -133,6 +154,7 @@ namespace SteelOfStalin
         public Map Map { get; set; } = new Map();
         public List<Player> Players { get; set; } = new List<Player>();
         public BattleRules Rules { get; set; } = new BattleRules();
+        public int MaxNumPlayers { get; set; }
 
         public List<Round> Rounds = new List<Round>();
         public Round CurrentRound { get; set; }
@@ -151,24 +173,21 @@ namespace SteelOfStalin
         private void Start()
         {
             Instance = this;
-#if UNITY_EDITOR
-            if (Game.ActiveBattle == null)
-            {
-                Game.ActiveBattle = new BattleInfo();
-            }
-#endif
+
             BattleInfo info = Game.ActiveBattle;
             Name = info.Name;
             Rules = info.Rules;
+            MaxNumPlayers = info.MaxNumPlayers;
             Map.Name = info.MapName;
             Map.Width = info.MapWidth;
             Map.Height = info.MapHeight;
 
-            NetworkUtilities = GameObject.FindObjectOfType<NetworkUtilities>();
+            NetworkUtilities = FindObjectOfType<NetworkUtilities>();
+
             if (NetworkManager.IsHost)
             {
                 Debug.Log("Started as host");
-                NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+                NetworkManager.OnClientConnectedCallback += OnClientConnected;
                 Load();
             }
             else if (NetworkManager.IsClient)
