@@ -59,7 +59,7 @@ public class MapMenu : MonoBehaviour
     async Task GenerateMap(int width,int height,int numPlayers) {
         await Task.Run(() =>
         {
-            map = new RandomMap(width, height, numPlayers);
+            map = new RandomMap(width, height, numPlayers, "abc", "abc123"); // TODO add input from player in UI for both battle name and map name
             Debug.Log("taskfinished");
         });
     }
