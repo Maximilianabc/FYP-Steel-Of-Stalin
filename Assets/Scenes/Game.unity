@@ -11840,14 +11840,14 @@ MonoBehaviour:
   smallRotationThreshold: 0.1
   mouseControlEnabled: 1
   keyboardControlEnabled: 1
-  minCameraAngle: 20
-  maxCameraAngle: 70
-  minX: -100
-  minZ: -100
-  maxX: 100
-  maxZ: 100
-  minZoom: 80
-  maxZoom: 200
+  minCameraAngle: 10
+  maxCameraAngle: 90
+  minX: 0
+  minZ: 0
+  maxX: 3800
+  maxZ: 3800
+  minZoom: 40
+  maxZoom: 600
   newPosition: {x: 0, y: 0, z: 0}
   newRotation: {x: 0, y: 0, z: 0, w: 0}
   newZoom: 0
@@ -23507,7 +23507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1859870366
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SteelOfStalin.CustomTypes
 {
@@ -165,8 +166,15 @@ namespace SteelOfStalin.CustomTypes
 
         public SerializableColor(byte r, byte g, byte b, byte a) : this() => (R, G, B, A) = (r, g, b, a);
 
+        public static bool operator ==(SerializableColor c1, SerializableColor c2) => c1.R == c2.R && c1.G == c2.G && c1.B == c2.B && c1.A == c2.A;
+        public static bool operator !=(SerializableColor c1, SerializableColor c2) => !(c1.R == c2.R && c1.G == c2.G && c1.B == c2.B && c1.A == c2.A);
+
         public static explicit operator SerializableColor(Color color) => new SerializableColor((byte)(color.r * 255), (byte)(color.g * 255), (byte)(color.b * 255), (byte)(color.a * 255));
         public static explicit operator Color(SerializableColor color) => new Color(color.R / 255F, color.G / 255F, color.B / 255F, color.A / 255F);
+
+        public override bool Equals(object obj) => this == (SerializableColor)obj;
+        public override int GetHashCode() => (R, G, B, A).GetHashCode();
+        public override string ToString() => $"(R: {R}, G: {G}, B: {B}, A: {A})";
     }
 
     public class Graph<T>
@@ -232,6 +240,61 @@ namespace SteelOfStalin.CustomTypes
         }
 
         public IEnumerable<T> GetIsloatedVertices() => GetVerticesWithNoInput().Intersect(GetVerticesWithNoOutput());
+    }
+
+    public class TogglableEntry : EventTrigger.Entry
+    {
+        public bool Active { get; set; } = true;
+    }
+
+    public class PropEventTrigger : EventTrigger
+    {
+        private new Dictionary<string, TogglableEntry> triggers = new Dictionary<string, TogglableEntry>();
+
+        public void Subscribe(string name, EventTriggerType id, Action<BaseEventData> action, bool activate = true)
+        {
+            if (triggers.ContainsKey(name))
+            {
+                Debug.LogWarning($"An event named {name} already exists in object {gameObject.name}'s triggers");
+                return;
+            }
+            TogglableEntry entry = new TogglableEntry()
+            {
+                eventID = id,
+                Active = activate,
+            };
+            entry.callback.AddListener((data) => action(data));
+            triggers[name] = entry;
+        }
+
+        public void Unsubscribe(string name)
+        {
+            if (triggers.ContainsKey(name))
+            {
+                triggers.Remove(name);
+            }
+            else
+            {
+                Debug.LogWarning($"No event named {name} found in object {gameObject.name}'s triggers");
+            }
+        }
+
+        public void SetActive(string name, bool active)
+        {
+            if (triggers.ContainsKey(name))
+            {
+                triggers[name].Active = active;
+            }
+            else
+            {
+                Debug.LogWarning($"No event named {name} found in object {gameObject.name}'s triggers");
+            }
+        }
+
+        private void Execute(EventTriggerType id, BaseEventData data)
+            => triggers.Values.Where(entry => entry.eventID == id && entry.callback != null && entry.Active).ToList().ForEach(e => e.callback.Invoke(data));
+
+        public override void OnPointerClick(PointerEventData eventData) => Execute(EventTriggerType.PointerClick, eventData);
     }
 
     public class AssetListConverterFactory : JsonConverterFactory
