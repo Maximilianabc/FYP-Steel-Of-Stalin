@@ -172,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6294507793431131997}
   - component: {fileID: 1225131743337332780}
-  - component: {fileID: 2410737939770930458}
+  - component: {fileID: 6814034581045671837}
   m_Layer: 0
   m_Name: plains
   m_TagString: Untagged
@@ -229,8 +229,8 @@ LODGroup:
     renderers:
     - renderer: {fileID: 552955648025750134}
   m_Enabled: 1
---- !u!135 &2410737939770930458
-SphereCollider:
+--- !u!136 &6814034581045671837
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -239,9 +239,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 19
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 20
+  m_Height: 48
+  m_Direction: 0
+  m_Center: {x: 0, y: -10, z: 0}
 --- !u!1 &7621048653103024856
 GameObject:
   m_ObjectHideFlags: 0
