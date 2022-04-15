@@ -9,7 +9,7 @@
     "com.unity.ide.rider": "2.0.7",
     "com.unity.ide.visualstudio": "2.0.12",
     "com.unity.ide.vscode": "1.2.4",
-    "com.unity.netcode.gameobjects": "file:../LocalPackages/com.unity.netcode.gameobjects",
+    "com.unity.netcode.gameobjects": "file:E:/fyp/com.unity.netcode.gameobjects-develop/com.unity.netcode.gameobjects",
     "com.unity.purchasing": "4.0.3",
     "com.unity.render-pipelines.high-definition": "10.7.0",
     "com.unity.render-pipelines.high-definition-config": "file:../LocalPackages/com.unity.render-pipelines.high-definition-config",

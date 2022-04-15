@@ -99,7 +99,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "file:../LocalPackages/com.unity.netcode.gameobjects",
+      "version": "file:E:/fyp/com.unity.netcode.gameobjects-develop/com.unity.netcode.gameobjects",
       "depth": 0,
       "source": "local",
       "dependencies": {

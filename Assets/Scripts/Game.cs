@@ -60,6 +60,7 @@ namespace SteelOfStalin
 
         public void Start()
         {
+            Settings = DeserializeJson<GameSettings>("Settings");
             LoadAllAssets();
             LoadBattleInfos();
             Network.ConnectionApprovalCallback += ApprovalCheck;
@@ -143,8 +144,8 @@ namespace SteelOfStalin
         public byte VolumeMusic { get; set; } = 100;
         public byte VolumeSoundFX { get; set; } = 100;
         public bool Fullscreen { get; set; }
-        public byte ResolutionX { get; set; }
-        public byte ResolutionY { get; set; }
+        public int ResolutionX { get; set; }
+        public int ResolutionY { get; set; }
         private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
 
         public void Save() => this.SerializeJson("settings");

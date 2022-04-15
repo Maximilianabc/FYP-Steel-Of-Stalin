@@ -8,6 +8,9 @@ using SteelOfStalin;
 
 public class TrainPanel : MonoBehaviour
 {
+    public int currentPage;
+    public Sprite buttonRed;
+    public Sprite buttonGreen;
     [SerializeField]
     private int maxItemsInPage;
 
@@ -26,7 +29,8 @@ public class TrainPanel : MonoBehaviour
 
     private List<Unit> trainableUnits;
 
-    void Awake() {
+    void Awake()
+    {
         citySelection = transform.Find("City").gameObject;
         barrack = transform.Find("Barrack").gameObject;
         arsenal = transform.Find("Arsenal").gameObject;
@@ -35,36 +39,44 @@ public class TrainPanel : MonoBehaviour
         unitList = transform.Find("UnitList").gameObject;
         //trainableUnits = Game.UnitData.FYPImplement.ToList();
         trainableUnits = new List<Unit>();
+        for (int i = 0; i < 30; i++) {
+            trainableUnits.Add(new SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry());
+        }
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        RedrawUnitsList();
+        SetPage(1);
     }
 
     // Update is called once per frame
     void Update()
     {
-        ResizeUnitsList();
+
     }
 
-    public void Show() {
-        
+    public void Show()
+    {
+
     }
 
-    public void ResizeUnitsList() {
-        float height=0;
+    public void RedrawUnitsList()
+    {
+        float height = 0;
         height += gameObject.GetComponent<VerticalLayoutGroup>().padding.top;
         height += gameObject.GetComponent<VerticalLayoutGroup>().padding.bottom;
-        foreach (Transform child in transform) {
-            if (child.gameObject.activeSelf) {
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.activeSelf)
+            {
                 height += child.gameObject.GetComponent<RectTransform>().sizeDelta.y;
                 height += gameObject.GetComponent<VerticalLayoutGroup>().spacing;
             }
         }
-        height-= gameObject.GetComponent<VerticalLayoutGroup>().spacing;
+        height -= gameObject.GetComponent<VerticalLayoutGroup>().spacing;
         float maxHeight = GetComponent<RectTransform>().sizeDelta.y;
-        unitList.GetComponent<RectTransform>().sizeDelta += new Vector2(0, maxHeight-height);
+        unitList.GetComponent<RectTransform>().sizeDelta += new Vector2(0, maxHeight - height);
         float unitListItemsHeight = unitList.GetComponent<RectTransform>().sizeDelta.y - 50;
         Transform unitListItems = unitList.transform.Find("UnitListItems");
         unitListItemsHeight -= unitListItems.GetComponent<VerticalLayoutGroup>().padding.top;
@@ -74,20 +86,31 @@ public class TrainPanel : MonoBehaviour
 
         Transform navigationButtons = unitList.transform.Find("NavigationButtons");
         int numPage = Mathf.CeilToInt(trainableUnits.Count / maxItemsInPage);
-        foreach (Transform child in navigationButtons) {
-            Destroy(child);
+        foreach (Transform child in navigationButtons)
+        {
+            Destroy(child.gameObject);
         }
-        GameObject navigationButton = Resources.Load<GameObject>(@"Prefab\TrainMenuButtonGreen");
-        for (int i = 0; i < numPage; i++) {
+        GameObject navigationButton = Resources.Load<GameObject>(@"Prefabs\TrainMenuButtonGreen");
+        for (int i = 1; i <= numPage; i++)
+        {
+            int x = i;
             GameObject instance = Instantiate(navigationButton);
-            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = i.ToString();
-            instance.GetComponent<Button>().onClick.AddListener(delegate { SetPage(i); });
-            instance.transform.SetParent(navigationButtons); 
+            instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = x.ToString();
+            instance.GetComponent<Button>().onClick.AddListener(delegate { SetPage(x); });
+            instance.name = x.ToString();
+            instance.transform.SetParent(navigationButtons);
         }
     }
 
-    public void SetPage(int i) { 
-        
+    public void SetPage(int pageNum)
+    {
+        Transform previousButton = unitList.transform.Find("NavigationButtons").Find(currentPage.ToString());
+        if (previousButton != null) { 
+            previousButton.GetComponent<Image>().sprite = buttonGreen;
+        }
+        unitList.transform.Find("NavigationButtons").Find(pageNum.ToString()).GetComponent<Image>().sprite = buttonRed;
+        currentPage = pageNum;
+
+
     }
-    
 }

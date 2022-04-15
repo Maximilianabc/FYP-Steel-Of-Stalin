@@ -11413,6 +11413,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c00370da43171d4d82d7783df98aec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPage: 0
+  buttonRed: {fileID: 21300000, guid: 17d94ca4fd841c84b9a6d6d3e5222e93, type: 3}
+  buttonGreen: {fileID: 21300000, guid: 3b72883e5cb9bbc4b9f9d901ecebfa0f, type: 3}
   maxItemsInPage: 0
 --- !u!1 &875152415
 GameObject:
@@ -12388,12 +12391,12 @@ MonoBehaviour:
   keyboardControlEnabled: 1
   minCameraAngle: 20
   maxCameraAngle: 70
-  minX: -100
-  minZ: -100
-  maxX: 100
-  maxZ: 100
+  minX: 0
+  minZ: 0
+  maxX: 3800
+  maxZ: 3800
   minZoom: 80
-  maxZoom: 200
+  maxZoom: 500
   newPosition: {x: 0, y: 0, z: 0}
   newRotation: {x: 0, y: 0, z: 0, w: 0}
   newZoom: 0
@@ -24360,7 +24363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1859870366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24373,6 +24376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17f17b38a0d3c1842954e850340a5171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartAsHost: 0
 --- !u!4 &1859870367
 Transform:
   m_ObjectHideFlags: 0

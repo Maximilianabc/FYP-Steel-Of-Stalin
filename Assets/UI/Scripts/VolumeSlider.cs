@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SteelOfStalin;
 
 public class VolumeSlider : MonoBehaviour
 {
@@ -9,11 +10,11 @@ public class VolumeSlider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //TODO: Deserialized from files
-        float playerVolume = 0.3f;
+        float playerVolume = (float)Game.Settings.VolumeMusic/100;
         Slider slider = GetComponent<Slider>();
-        slider.onValueChanged.AddListener(delegate { SliderValueChanged(GetComponent<Slider>().value); });
         slider.value = playerVolume;
+        slider.onValueChanged.AddListener(delegate { UIUtil.instance.SetVolume(GetComponent<Slider>().value); });
+
     }
 
     // Update is called once per frame
@@ -21,8 +22,5 @@ public class VolumeSlider : MonoBehaviour
     {
         
     }
-    //TODO: functionality not throughly tested
-    public void SliderValueChanged(float volume) {
-        AudioListener.volume = volume;
-    }
+
 }

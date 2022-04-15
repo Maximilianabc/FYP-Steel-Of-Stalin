@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SteelOfStalin;
 
 public class FullscreenToggle : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class FullscreenToggle : MonoBehaviour
     void Start()
     {
         //TODO: Deserialized from files
-        bool playerFullscreen = false;
         Toggle toggle = GetComponent<Toggle>();
-        toggle.onValueChanged.AddListener(delegate { ToggleValueChanged(toggle.isOn); });
-        toggle.isOn = playerFullscreen;
+        toggle.isOn = Game.Settings.Fullscreen;
+        toggle.onValueChanged.AddListener(delegate { UIUtil.instance.SetFullscreen(toggle.isOn); });
+
     }
 
     // Update is called once per frame
@@ -20,7 +21,5 @@ public class FullscreenToggle : MonoBehaviour
     {
         
     }
-    public void ToggleValueChanged(bool fullscreen) {
-        Screen.fullScreen = fullscreen;
-    }
+
 }

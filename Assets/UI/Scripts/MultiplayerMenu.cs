@@ -31,7 +31,7 @@ public class MultiplayerMenu : MonoBehaviour
         gameObject.SetActive(true);
         listPlayers.Clear();
         foreach (Transform child in menu.transform) {
-            Destroy(child);
+            Destroy(child.gameObject);
         }
         //TODO: initialize players list
         foreach (Player player in listPlayers) {
