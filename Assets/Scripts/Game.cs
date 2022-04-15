@@ -35,6 +35,7 @@ using static Unity.Netcode.Transports.UTP.UnityTransport;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
+using Resources = SteelOfStalin.Attributes.Resources;
 
 namespace SteelOfStalin
 {
@@ -42,14 +43,15 @@ namespace SteelOfStalin
     public class Game : MonoBehaviour
     {
         // Handles scenes (un)loading using Unity.SceneManager directly (all of its methods are static)
-        public static List<BattleInfo> BattleInfos { get; set; } = new List<BattleInfo>();
         public static GameSettings Settings { get; set; } = new GameSettings();
         public static List<GameObject> GameObjects { get; set; } = new List<GameObject>();
         public static List<AudioClip> AudioClips { get; set; } = new List<AudioClip>();
+
+        public static PlayerProfile Profile { get; set; } = new PlayerProfile();
+
+        public static List<BattleInfo> BattleInfos { get; set; } = new List<BattleInfo>(); 
         public static BattleInfo ActiveBattle { get; set; }
         public static NetworkManager Network => NetworkManager.Singleton;
-
-        // TODO FUT Impl. add achievements
 
         public static UnitData UnitData { get; set; } = new UnitData();
         public static BuildingData BuildingData { get; set; } = new BuildingData();
@@ -60,9 +62,10 @@ namespace SteelOfStalin
 
         public void Start()
         {
-            Settings = DeserializeJson<GameSettings>("Settings");
             LoadAllAssets();
             LoadBattleInfos();
+            LoadProfile();
+            LoadSettings();
             Network.ConnectionApprovalCallback += ApprovalCheck;
         }
 
@@ -76,7 +79,7 @@ namespace SteelOfStalin
             // TODO FUT. Impl. change these to player input instead of loopback address in production
             connection.Address = "127.0.0.1";
             connection.Port = 7777;
-            Network.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes("Hello"); // TODO FUT. Impl. add password here
+            Network.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(Profile.Name); // TODO FUT. Impl. add password here
             Network.StartClient();
         }
 
@@ -120,14 +123,52 @@ namespace SteelOfStalin
             }
         }
 
+        public static void LoadProfile()
+        {
+            if (StreamingAssetExists("profile.json"))
+            {
+                Profile = DeserializeJson<PlayerProfile>("profile");
+            }
+            else
+            {
+                Debug.Log("No profile is found");
+            }
+        }
+
+        public static void LoadSettings() => Settings = DeserializeJson<GameSettings>("settings");
+
         public static void ApprovalCheck(byte[] connectionData, ulong clientId, NetworkManager.ConnectionApprovedDelegate callback)
         {
-            Debug.Log("Approval");
-            Debug.Log($"Message from client (id: {clientId}): {Encoding.UTF8.GetString(connectionData)}");
+            // TODO FUT. Impl. sanitize the data because it is passed via network
+            string player_name = Encoding.UTF8.GetString(connectionData);
+            Battle current_battle = Battle.Instance;
+
             if (clientId != 0)
             {
-                Debug.Log($"Current number of players: {Battle.Instance.Players.Count}, maximum: {ActiveBattle.MaxNumPlayers}");
-                bool approve = /*Battle.Instance.Players.Count + 1 <= ActiveBattle.MaxNumPlayers*/ true;
+                bool has_vacancies = !current_battle.IsServerFull;
+                bool is_existing_player = current_battle.GetPlayer(player_name) != null;
+                bool approve = has_vacancies || is_existing_player;
+
+                if (approve)
+                {
+                    Debug.Log($"Approved connection from client (id: {clientId}, name: {player_name})");
+                    if (!is_existing_player)
+                    {
+                        Player connected_player = new Player()
+                        {
+                            Name = player_name,
+                            SerializableColor = (SerializableColor)current_battle.GetRandomAvailablePlayerColor(),
+                            Resources = (Resources)current_battle.Rules.StartingResources.Clone()
+                        };
+                        current_battle.Players.Add(connected_player);
+                    }
+                    current_battle.ConnectedPlayerIDs.Add(clientId, player_name);
+                }
+                else
+                {
+                    Debug.Log($"Rejected a connection: server is full");
+                }
+                // note: it creates duplicated player objects on scene, not sure what causing this
                 callback(false, null, approve, null, null);
             }
             else
@@ -144,9 +185,8 @@ namespace SteelOfStalin
         public byte VolumeMusic { get; set; } = 100;
         public byte VolumeSoundFX { get; set; } = 100;
         public bool Fullscreen { get; set; }
-        public int ResolutionX { get; set; }
-        public int ResolutionY { get; set; }
-        private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
+        public byte ResolutionX { get; set; }
+        public byte ResolutionY { get; set; }
 
         public void Save() => this.SerializeJson("settings");
     }
@@ -167,35 +207,60 @@ namespace SteelOfStalin
         public int TimeRemaining { get; set; }
         public bool EnablePlayerInput { get; set; } = true;
 
+        [JsonIgnore] public Player Self { get; set; }
         [JsonIgnore] public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
         [JsonIgnore] public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
-        public NetworkUtilities NetworkUtilities { get; set; }
+        [JsonIgnore] public bool AreAllPlayersReadyToStart => Players.All(p => p.IsReady);
+        [JsonIgnore] public bool IsServerFull => Game.Network.IsServer && Players.Count >= MaxNumPlayers;
+        [JsonIgnore] public NetworkUtilities NetworkUtilities { get; set; }
 
         private Player m_winner { get; set; } = null;
         private bool m_isInitialized => Players.Count > 0 && Map.IsInitialized;
         private string m_folder => $@"Saves\{Name}";
+        private List<Color> m_availableColors { get; set; } = new List<Color>(CommonColors);
+
+        private Dictionary<ulong, string> _playerIDs = new Dictionary<ulong, string>();
+        [JsonIgnore] public Dictionary<ulong, string> ConnectedPlayerIDs 
+        {
+            get => _playerIDs; 
+            set
+            {
+                if (Game.Network.IsServer)
+                {
+                    _playerIDs = value;
+                }
+            }
+        }
 
         private void Start()
         {
             Instance = this;
 
-            BattleInfo info = Game.ActiveBattle;
-            Name = info.Name;
-            Rules = info.Rules;
-            MaxNumPlayers = info.MaxNumPlayers;
-            Map.Name = info.MapName;
-            Map.Width = info.MapWidth;
-            Map.Height = info.MapHeight;
-
             NetworkUtilities = FindObjectOfType<NetworkUtilities>();
 
-            if (NetworkManager.IsHost)
+            if (Game.Network.IsHost)
             {
                 Debug.Log("Started as host");
-                NetworkManager.OnClientConnectedCallback += OnClientConnected;
+
+                BattleInfo info = Game.ActiveBattle;
+                Name = info.Name;
+                Rules = info.Rules;
+                MaxNumPlayers = info.MaxNumPlayers;
+                Map.Name = info.MapName;
+                Map.Width = info.MapWidth;
+                Map.Height = info.MapHeight;
+
                 Load();
+                ConnectedPlayerIDs = new Dictionary<ulong, string>()
+                {
+                    [0] = Self.Name
+                };
+                NetworkManager.OnClientConnectedCallback += OnClientConnected;
+
+                // remove colors of existing players from available colors
+                m_availableColors = m_availableColors.Except(Players.Select(p => p.Color)).ToList();
             }
-            else if (NetworkManager.IsClient)
+            else if (Game.Network.IsClient)
             {
                 Debug.Log("Started as client");
             }
@@ -204,7 +269,7 @@ namespace SteelOfStalin
                 Debug.LogError("Something went wrong: NetworkManager is neither host nor client.");
                 return;
             }
-            //_ = StartCoroutine(WaitForInitialization());
+            _ = StartCoroutine(WaitForGameStart());
         }
 
         private IEnumerator GameLoop()
@@ -241,15 +306,34 @@ namespace SteelOfStalin
             }
             yield return null;
         }
-        private IEnumerator WaitForInitialization()
+
+        // TODO add force start option for host even if not all players are ready
+        private IEnumerator WaitForGameStart()
         {
+            Debug.Log("Waiting for map initialization");
             yield return new WaitWhile(() => !m_isInitialized);
+            Debug.Log($"Map {Map.Name} initialized");
+
+            Debug.Log("Waiting for all players to be connected");
+            yield return new WaitWhile(() => Game.Network.IsServer ? ConnectedPlayerIDs.Count != MaxNumPlayers : Players.Count != MaxNumPlayers);
+            Debug.Log("All players connected");
+
+            Debug.Log("Waiting for all players to be ready");
+            yield return new WaitWhile(() => !AreAllPlayersReadyToStart);
+            Debug.Log("All players are ready");
+
             AddPropsToScene();
             _ = StartCoroutine(GameLoop());
         }
 
         private void AddPropsToScene()
         {
+            IEnumerable<Metropolis> metropolis = Map.GetCities<Metropolis>();
+            if (metropolis.All(m => string.IsNullOrEmpty(m.OwnerName)))
+            {
+                SetMetropolisOwners();
+                SetDefaultUnitBuildingsOwners();
+            }
             foreach (Unit unit in Map.GetUnits())
             {
                 unit.AddToScene();
@@ -267,22 +351,15 @@ namespace SteelOfStalin
                 if (!(ownable is Barracks) && !(ownable is Arsenal) && !string.IsNullOrEmpty(ownable.OwnerName))
                 {
                     Prop ownable_prop = ((Prop)ownable);
-                    GameObject ownable_object = ownable_prop.GetObjectOnScene();
+                    GameObject ownable_object = ownable_prop.PropObject;
                     if (ownable_object == null)
                     {
                         Debug.LogError($"Cannot get object {ownable_prop.MeshName} on screen");
                         continue;
                     }
-                    MeshRenderer mr = ownable_object.GetComponent<MeshRenderer>();
-                    if (mr == null)
-                    {
-                        mr = ownable_object.GetComponentInSpecificChild<MeshRenderer>(ownable_prop.Name);
-                    }
-                    // note: use _Color if not using HDRP
-                    mr.material.SetColor("_BaseColor", GetPlayer(ownable.OwnerName).Color);
+                    ownable_prop.PropObjectComponent.SetColorForChild(GetPlayer(ownable.OwnerName).Color, ownable_prop.Name);
                 }
             }
-            // _ = StartCoroutine(GameLoop());
         }
         private void EndPlanning()
         {
@@ -296,8 +373,9 @@ namespace SteelOfStalin
 
         public Player GetPlayer(string name) => Players.Find(p => p.Name == name);
         public Player GetPlayer(Color color) => Players.Find(p => p.Color == color);
+        public Player GetPlayer(ulong id) => Game.Network.IsServer ? GetPlayer(ConnectedPlayerIDs[id]) : null;
 
-        // for testing maps, i.e. map and battle are decoupled (not generated together)
+        // for host with new generated map
         public void SetMetropolisOwners()
         {
             int i = 0;
@@ -307,7 +385,6 @@ namespace SteelOfStalin
                 i++;
             }
         }
-        // for testing maps
         public void SetDefaultUnitBuildingsOwners()
         {
             IEnumerable<Metropolis> metro = Map.GetCities<Metropolis>();
@@ -337,15 +414,37 @@ namespace SteelOfStalin
                 Rules.Save();
             }
             Rules = DeserializeJson<BattleRules>($@"{m_folder}\rules");
+
             Players = DeserializeJson<List<Player>>($@"{m_folder}\players");
+            if (Players.Count == 0)
+            {
+                Self = new Player()
+                {
+                    Name = Game.Profile.Name,
+                    SerializableColor = (SerializableColor)GetRandomAvailablePlayerColor(),
+                    Resources = (Resources)Rules.StartingResources.Clone()
+                };
+                Players.Add(Self);
+                Debug.Log("Added self to Players");
+            }
+
             Map.Load();
             Debug.Log($"Loaded battle {Name}");
+        }
+
+        public Color GetRandomAvailablePlayerColor()
+        {
+            int index = new System.Random().Next(m_availableColors.Count);
+            Color color = m_availableColors[index];
+            m_availableColors.RemoveAt(index);
+            return color;
         }
 
         private void OnClientConnected(ulong id)
         {
             Debug.Log($"Client (id: {id}) connected");
             ClientRpcParams send_params = NetworkUtilities.GetClientRpcSendParams(id);
+            ClientRpcParams send_params_except_host = NetworkUtilities.GetClientRpcSendParams(ConnectedPlayerIDs.Keys.Where(id => id != Game.Network.LocalClientId));
 
             NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.UnitData.LocalJsonFilePaths), send_params);
             NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.BuildingData.LocalJsonFilePaths), send_params);
@@ -356,14 +455,19 @@ namespace SteelOfStalin
             // NetworkUtilities.SendNamedMessage(Map.GetTilesUnflatterned(), id, NetworkMessageType.DATA);
             // NOTE: if sending a named message that is too long (like whole map), the handle of the reader on client side won't be able to accessed and throws NRE continuously
             NetworkUtilities.SendMessageFromHostByRpc(Map.GetTilesUnflatterned(), send_params);
+
+            // TODO FUT. Impl. send only units and buildings which belong to and currently spotted to the client
             NetworkUtilities.SendNamedMessage(Map.GetUnits(), id, NetworkMessageType.DATA);
             NetworkUtilities.SendNamedMessage(Map.GetBuildings(), id, NetworkMessageType.DATA);
-            NetworkUtilities.SendNamedMessage(Players, id, NetworkMessageType.DATA);
             NetworkUtilities.SendNamedMessage(Rules, id, NetworkMessageType.DATA);
 
-            Debug.Log($"Sent all data to client (id: {id})");
+            Debug.Log($"Sent all data to client (id: {id}, name: {ConnectedPlayerIDs[id]})");
 
             SetAllDataClientRpc(send_params);
+
+            Debug.Log($"Invoke all client rpc to update player list");
+            NetworkUtilities.SendMessageFromHostByRpc(Players);
+            UpdatePlayerListAllClientRpc(MaxNumPlayers);
         }
 
         [ClientRpc]
@@ -375,8 +479,18 @@ namespace SteelOfStalin
             _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => Map.SetTiles(result)));
             _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetUnits(result)));
             _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetBuildings(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<List<Player>>(m => m.MessageType == NetworkMessageType.DATA, result => Players = result));
             _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => Rules = result));
+        }
+
+        [ClientRpc]
+        private void UpdatePlayerListAllClientRpc(int max_num_players)
+        {
+            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<List<Player>>(result =>
+            {
+                Players = result;
+                Self = GetPlayer(Game.Profile.Name);
+            }));
+            MaxNumPlayers = max_num_players;
         }
     }
 
@@ -406,12 +520,15 @@ namespace SteelOfStalin
         public bool DestroyedUnitsCanBeScavenged { get; set; }
         public bool AllowUniversalQueue { get; set; }
 
+        public Resources StartingResources { get; set; } = new Resources();
+
         public BattleRules() { }
 
         public void Save() => this.SerializeJson($@"Saves\{Battle.Instance.Name}\rules");
+        public void Save(string battle_name) => this.SerializeJson($@"Saves\{battle_name}\rules");
     }
 
-    public class Map : ICloneable, INamedAsset, INetworkSerializable
+    public class Map : ICloneable, INamedAsset
     {
         public static Map Instance { get; private set; }
         public string Name { get; set; }
@@ -935,11 +1052,6 @@ namespace SteelOfStalin
             copy.Tiles = Tiles.Select(t => t.ToArray()).ToArray();
             copy.Units = Units.Select(u => (Unit)u.Clone()).ToList();
             return copy;
-        }
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -1665,13 +1777,13 @@ namespace SteelOfStalin.Flow
         {
             // handle screen update here
             // not on screen, is active, has coordinates = newly deployed
-            IEnumerable<Unit> newly_deployed_units = Map.Instance.GetUnits(u => u.GetObjectOnScene() == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
+            IEnumerable<Unit> newly_deployed_units = Map.Instance.GetUnits(u => u.PropObject == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
             foreach (Unit u in newly_deployed_units)
             {
                 u.AddToScene();
             }
 
-            IEnumerable<Building> newly_constructed_buildings = Map.Instance.GetBuildings(b => b.GetObjectOnScene() == null && b.Status == BuildingStatus.UNDER_CONSTRUCTION);
+            IEnumerable<Building> newly_constructed_buildings = Map.Instance.GetBuildings(b => b.PropObject == null && b.Status == BuildingStatus.UNDER_CONSTRUCTION);
             foreach (Building b in newly_constructed_buildings)
             {
                 b.AddToScene();

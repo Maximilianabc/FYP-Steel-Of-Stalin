@@ -36,7 +36,7 @@
     }
   },
   {
-    "OwnerName": "dummy_2",
+    "OwnerName": "",
     "Population": 5000,
     "ConstructionRange": {
       "Mod": {

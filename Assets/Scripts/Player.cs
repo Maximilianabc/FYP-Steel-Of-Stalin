@@ -4,7 +4,9 @@ using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
+using SteelOfStalin.DataIO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,13 +17,24 @@ using Resources = SteelOfStalin.Attributes.Resources;
 
 namespace SteelOfStalin
 {
+    // local player profile
+    public class PlayerProfile
+    {
+        // passed to host if connected as client
+        // TODO FUT. Impl. add support for changing names, think of how to identify the same player on servers even if he changes his name (maybe using player ID)
+        public string Name { get; set; }
+        // TODO FUT. Impl. add more profile items: achievements, battle statistics etc..
+
+        public void Save() => this.SerializeJson("profile");
+    }
+
     public class Player : ICloneable
     {
         // TODO FUT Impl. add country property
         public string Name { get; set; }
         public SerializableColor SerializableColor { get; set; }
         public Resources Resources { get; set; } = new Resources();
-        public List<Player> Allies { get; set; } = new List<Player>();
+        public List<Player> Allies { get; set; } = new List<Player>(); // TODO FUT. Impl. Ally system (historical, designated before battle starts / unknown handshake)
         public List<Command> Commands { get; set; } = new List<Command>();
         public bool IsReady { get; set; } = false;
 
@@ -31,6 +44,7 @@ namespace SteelOfStalin
         [JsonIgnore] public IEnumerable<Building> Buildings => Map.Instance.GetBuildings(this);
         [JsonIgnore] public IEnumerable<Cities> Cities => Map.Instance.GetCities(this);
         [JsonIgnore] public Metropolis Capital => Cities.OfType<Metropolis>().First(); // TODO FUT. Impl. Consider distinguishing Metropolis and the Capital
+        [JsonIgnore] public PlayerObject PlayerObjectComponent => GameObject.Find(Name)?.GetComponent<PlayerObject>();
 
         // TODO FUT. Impl. Consider researches as well, change back FYPImplement to All
         public IEnumerable<Unit> GetAllTrainableUnits() => Game.UnitData.FYPImplement.Where(u => HasEnoughResources(u.Cost.Base));
@@ -115,31 +129,56 @@ namespace SteelOfStalin
 
     public class PlayerObject : NetworkBehaviour
     {
-        public Player Player { get; set; }
-        public bool IsAI => Player is AIPlayer;
+        public bool IsAI => m_self is AIPlayer;
+        private Battle m_battle => Battle.Instance;
+        private Player m_self => m_battle.Self;
+        private bool m_isInitialized { get; set; } = false;
 
         private void Start()
         {
-            
+            _ = StartCoroutine(Initialize());
         }
         private void FixedUpdate()
         {
-            // TODO FUT. Impl. Add key-binding options
+            // TODO FUT. Impl. Add key-binding options and move to KeyboardController.cs
             if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
             {
-
+                ChangeReadyStatus(true);
             }
         }
-
-        // [ClientRPC]
-        public void SendCommands()
+        private IEnumerator Initialize()
         {
-
+            yield return new WaitWhile(() => m_battle == null);
+            yield return new WaitWhile(() => m_self == null);
+            gameObject.name = m_self.Name;
+            m_isInitialized = true;
+            yield return null;
         }
 
-        public void ReceiveCommand()
+        private void ChangeReadyStatus(bool ready)
         {
-
+            if (!m_isInitialized || m_self.IsReady == ready)
+            {
+                return;
+            }
+            m_self.IsReady = ready;
+            UpdateReadyStatusServerRpc(ready, NetworkUtilities.GetServerRpcParams());
+        }
+        
+        [ClientRpc]
+        private void UpdateReadyStatusAllClientRpc(bool ready, string player_name)
+        {
+            m_battle.GetPlayer(player_name).IsReady = ready;
+        }
+        
+        [ServerRpc(RequireOwnership = false)]
+        private void UpdateReadyStatusServerRpc(bool ready, ServerRpcParams @params)
+        {
+            ulong sender = @params.Receive.SenderClientId;
+            Player player = m_battle.GetPlayer(sender);
+            player.IsReady = ready;
+            Debug.Log($"{player} is ready");
+            UpdateReadyStatusAllClientRpc(ready, player.Name);
         }
     }
 }

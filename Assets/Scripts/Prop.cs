@@ -18,6 +18,7 @@ using Attribute = SteelOfStalin.Attributes.Attribute;
 using Resources = SteelOfStalin.Attributes.Resources;
 using SteelOfStalin.Util;
 using System.Text.RegularExpressions;
+using UnityEngine.EventSystems;
 
 namespace SteelOfStalin.Assets.Props
 {
@@ -36,7 +37,7 @@ namespace SteelOfStalin.Assets.Props
 
     public abstract class Prop : ICloneable, IEquatable<Prop>, INamedAsset
     {
-        public const float APOTHEM = 37.8F; // apothem of a hex in unity scale
+        public const float HEX_APOTHEM = 18.9F; // apothem of a hex in unity scale
 
         public static Dictionary<PropConnection, string> UniqueVariants => new Dictionary<PropConnection, string>()
         {
@@ -61,6 +62,9 @@ namespace SteelOfStalin.Assets.Props
 
         [JsonIgnore] public CubeCoordinates CubeCoOrds => (CubeCoordinates)CoOrds;
         [JsonIgnore] public PropConnection PropConnection { get; set; }
+        [JsonIgnore] public virtual GameObject PropObject => GameObject.Find(MeshName);
+        [JsonIgnore] public virtual PropObject PropObjectComponent => PropObject.GetComponent<PropObject>();
+        [JsonIgnore] public Vector3 OnScreenCoordinates => PropObject.transform.position;
 
         public Prop() { }
         public Prop(Prop another) => (Name, MeshName, CoOrds) = (another.Name, another.MeshName, new Coordinates(another.CoOrds));
@@ -117,10 +121,8 @@ namespace SteelOfStalin.Assets.Props
             }
             cloned.name = MeshName;
         }
-        public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(GetObjectOnScene());
-        public virtual GameObject GetObjectOnScene() => GameObject.Find(MeshName);
-        public Vector3 GetOnScreenCoordinates() => GetObjectOnScene().transform.position;
-        public Vector3 CalculateOnScreenCoordinates() => new Vector3(APOTHEM * CoOrds.X * (float)Math.Cos(Math.PI / 6), 0, APOTHEM * (CoOrds.Y + (CoOrds.X % 2 == 1 ? 0.5F : 0)));
+        public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(PropObject);
+        public Vector3 CalculateOnScreenCoordinates() => new Vector3(2 * HEX_APOTHEM * CoOrds.X * (float)Math.Cos(Math.PI / 6), 0, 2 * HEX_APOTHEM * (CoOrds.Y + (CoOrds.X % 2 == 1 ? 0.5F : 0)));
         public void SetMeshName()
         {
             if (string.IsNullOrEmpty(MeshName))
@@ -237,21 +239,24 @@ namespace SteelOfStalin.Assets.Props
         public AudioClip AudioOnFire { get; set; }
         public AudioClip AudioOnMove { get; set; }
 
-        public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
+        public PropEventTrigger Trigger => GetComponent<PropEventTrigger>();
 
+        public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
         public Coordinates GetCoordinates() => Map.Instance.GetProp(gameObject).CoOrds;
+
+        public GameObject GetClickedObject(BaseEventData data) => ((PointerEventData)data).pointerClick;
+        public Prop GetClickedProp(BaseEventData data) => Map.Instance.GetProp(GetClickedObject(data));
+        public PropObject GetClickedPropObjectComponent(BaseEventData data) => GetClickedObject(data).GetComponent<PropObject>();
 
         public virtual void Start()
         {
-            /*
-            AudioSource placed = gameObject.AddComponent<AudioSource>();
-            placed.name = "placed";
-            placed.clip = AudioOnPlaced;
-
-            if (AudioOnPlaced != null)
+            if (Trigger == null)
             {
-                placed.Play();
-            }*/
+                gameObject.AddComponent<PropEventTrigger>();
+            }
+            // Trigger.Subscribe("test", EventTriggerType.PointerClick, (data) => Debug.Log(GetClickedProp(data).Name));
+            // Trigger.Subscribe("highlight", EventTriggerType.PointerClick, (data) => GetClickedPropObjectComponent(data).SetColorForAllChildren(Color.green));
+            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => CameraController.instance.FocusOn(GetClickedObject(data).transform));
         }
 
         public virtual void OnMouseDown()
@@ -263,6 +268,19 @@ namespace SteelOfStalin.Assets.Props
         {
 
         }
+
+        public void SetColorForChild(Color color, string child_name)
+        {
+            MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
+            if (mr == null)
+            {
+                mr = gameObject.GetComponentInSpecificChild<MeshRenderer>(child_name);
+            }
+            // note: use _Color if not using HDRP
+            mr.material.SetColor("_BaseColor", color);
+        }
+
+        public void SetColorForAllChildren(Color color) => GetComponentsInChildren<MeshRenderer>().ToList().ForEach(mr => mr.material.SetColor("_BaseColor", color));
     }
 }
 
