@@ -64,6 +64,8 @@ namespace SteelOfStalin
         {
             LoadAllAssets();
             LoadBattleInfos();
+            LoadProfile();
+            LoadSettings();
             Network.ConnectionApprovalCallback += ApprovalCheck;
         }
 
@@ -123,24 +125,17 @@ namespace SteelOfStalin
 
         public static void LoadProfile()
         {
-            bool profile_set = false;
             if (StreamingAssetExists("profile.json"))
             {
                 Profile = DeserializeJson<PlayerProfile>("profile");
-                profile_set = !string.IsNullOrEmpty(Profile.Name);
             }
             else
             {
                 Debug.Log("No profile is found");
             }
-
-            if (!profile_set)
-            {
-                // TODO ask for player name
-                Profile.Name = "dummy_1";
-                Profile.Save();
-            }
         }
+
+        public static void LoadSettings() => Settings = DeserializeJson<GameSettings>("settings");
 
         public static void ApprovalCheck(byte[] connectionData, ulong clientId, NetworkManager.ConnectionApprovedDelegate callback)
         {
@@ -192,7 +187,6 @@ namespace SteelOfStalin
         public bool Fullscreen { get; set; }
         public byte ResolutionX { get; set; }
         public byte ResolutionY { get; set; }
-        private string m_settingsPath => $@"{ExternalFilePath}\settings.json";
 
         public void Save() => this.SerializeJson("settings");
     }

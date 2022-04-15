@@ -244,8 +244,9 @@ namespace SteelOfStalin.Assets.Props
         public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
         public Coordinates GetCoordinates() => Map.Instance.GetProp(gameObject).CoOrds;
 
-        public Prop GetClickedProp(BaseEventData data) => Map.Instance.GetProp(((PointerEventData)data).pointerClick);
-        public PropObject GetClickedPropObjectComponent(BaseEventData data) => ((PointerEventData)data).pointerClick.GetComponent<PropObject>();
+        public GameObject GetClickedObject(BaseEventData data) => ((PointerEventData)data).pointerClick;
+        public Prop GetClickedProp(BaseEventData data) => Map.Instance.GetProp(GetClickedObject(data));
+        public PropObject GetClickedPropObjectComponent(BaseEventData data) => GetClickedObject(data).GetComponent<PropObject>();
 
         public virtual void Start()
         {
@@ -253,8 +254,9 @@ namespace SteelOfStalin.Assets.Props
             {
                 gameObject.AddComponent<PropEventTrigger>();
             }
-            Trigger.Subscribe("test", EventTriggerType.PointerClick, (data) => Debug.Log(GetClickedProp(data).Name));
-            Trigger.Subscribe("highlight", EventTriggerType.PointerClick, (data) => GetClickedPropObjectComponent(data).SetColorForAllChildren(Color.green));
+            // Trigger.Subscribe("test", EventTriggerType.PointerClick, (data) => Debug.Log(GetClickedProp(data).Name));
+            // Trigger.Subscribe("highlight", EventTriggerType.PointerClick, (data) => GetClickedPropObjectComponent(data).SetColorForAllChildren(Color.green));
+            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => CameraController.instance.FocusOn(GetClickedObject(data).transform));
         }
 
         public virtual void OnMouseDown()
