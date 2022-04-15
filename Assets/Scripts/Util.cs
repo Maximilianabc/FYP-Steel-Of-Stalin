@@ -40,6 +40,18 @@ namespace SteelOfStalin.Util
 {
     public static class Utilities
     {
+        public static List<Color> CommonColors => new List<Color>()
+        {
+            Color.red,
+            Color.yellow,
+            Color.green, // this one is lime
+            Color.blue,
+            new Color(0, 0.5F, 0, 1), // this one is green
+            new Color(1, 0.5F, 0, 1), // orange
+            new Color(0, 1, 1, 1), // cyan
+            new Color(0.5F, 0, 1, 1), // purple
+        };
+
         public static void Log(this Command command, string @event) => Debug.Log($"{command.Unit} has the following event when executing the command {command.Name}: {@event}");
         public static void LogWarning(this INamedAsset asset, string reason, [CallerMemberName] string method_name = "") => Debug.LogWarning($"Warning while executing method {method_name} for {asset}: {reason}");
         public static void LogError(this Command command, string reason, string explanation = "") => Debug.LogError($"Failed to execute command {command.Name} for unit at {command.Unit}: {reason} {explanation}");
@@ -881,6 +893,8 @@ namespace SteelOfStalin.DataIO
 
     public class NetworkUtilities : NetworkBehaviour
     {
+        public static NetworkUtilities Instance { get; private set; }
+
         private Dictionary<Type, RpcMessageObject> m_rpcMessages = new Dictionary<Type, RpcMessageObject>();
         private List<NamedMessageObject> m_namedMessages = new List<NamedMessageObject>();
         private Dictionary<string, RpcMessageObject> m_files = new Dictionary<string, RpcMessageObject>();
@@ -895,6 +909,11 @@ namespace SteelOfStalin.DataIO
 
         public static ClientRpcParams GetClientRpcSendParams(params ulong[] ids) 
             => Game.Network.IsServer && ids.Length != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
+        public static ClientRpcParams GetClientRpcSendParams(IEnumerable<ulong> ids)
+            => Game.Network.IsServer && ids.Count() != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
+        public static ServerRpcParams GetServerRpcParams()
+            => Game.Network.IsClient ? new ServerRpcParams() { Receive = new ServerRpcReceiveParams() { SenderClientId = Game.Network.LocalClientId } } : default;
+
         public static Dictionary<string, string> GetRelativePathsWithPattern(List<string> local_relative_paths, Func<string, string> replacer)
             => local_relative_paths.Zip(local_relative_paths.Select(p => replacer(p)), (local, dest) => new { local, dest }).ToDictionary(ps => ps.local, ps => ps.dest);
         public static Dictionary<string, string> GetDumpPaths(List<string> local_relative_paths) 
@@ -902,6 +921,7 @@ namespace SteelOfStalin.DataIO
 
         private void Start()
         {
+            Instance = this;
             _ = StartCoroutine(Initialize());
         }
 
@@ -1034,8 +1054,7 @@ namespace SteelOfStalin.DataIO
             Match match = Regex.Match(message, @"^([^:]+): (.*?)$");
             if (!match.Success)
             {
-                Debug.Log(message);
-                Debug.LogError($"Message is not in correct format");
+                Debug.LogError($"Message {message} is not in correct format");
                 return;
             }
             m_namedMessages.Add(new NamedMessageObject()
@@ -1114,12 +1133,10 @@ namespace SteelOfStalin.DataIO
                     Chunks = new List<RpcMessageChunk>() { chunk },
                     IsReady = false
                 });
-                Debug.Log($"New file {file_name} received.");
             }
             if (m_files[file_name].Chunks.Count == num_to_receive)
             {
                 m_files[file_name].IsReady = true;
-                Debug.Log($"Received all chunks ({num_to_receive} in total) for file {file_name}");
             }
         }
 
@@ -1178,11 +1195,6 @@ namespace SteelOfStalin.DataIO
             if (!saved)
             {
                 Debug.LogError("Failed to retrieve named message after 60 tries");
-                yield return null;
-            }
-            else
-            {
-                Debug.Log($"Saved file {relative_path}");
             }
             yield return null;
         }

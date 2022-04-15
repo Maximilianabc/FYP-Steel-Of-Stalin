@@ -1,13 +1,14 @@
-using SteelOfStalin.Assets.Props;
 using SteelOfStalin.DataIO;
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
+#if UNITY_EDITOR
+using ParrelSync;
+#endif
 
 namespace SteelOfStalin
 {
     public class BattleController : MonoBehaviour
     {
-        public bool StartAsHost;
         private void Start()
         {
             // assets aren't loaded if during testing (i.e. calling from tests or directly play battle scene)
@@ -24,6 +25,14 @@ namespace SteelOfStalin
             }
             battle_instance.name = "battle";
 
+            GameObject player = Game.GameObjects.Find(g => g.name == "player");
+            GameObject player_instance = Instantiate(player);
+            if (player_instance.GetComponent<PlayerObject>() == null)
+            {
+                player_instance.AddComponent<PlayerObject>();
+            }
+
+#if UNITY_EDITOR
             if (Game.Network == null)
             {
                 // must be playing battle scene directly, add a decoy network prefab first
@@ -40,13 +49,19 @@ namespace SteelOfStalin
                 }
                 network_util_instance.name = "network_util";
                 DontDestroyOnLoad(network_util_instance);
-#if UNITY_EDITOR
+
                 if (Game.ActiveBattle == null)
                 {
                     Game.ActiveBattle = new BattleInfo();
                 }
+                if (Game.Profile == null || string.IsNullOrEmpty(Game.Profile.Name))
+                {
+                    string name = ClonesManager.IsClone() ? $"dummy_client_{new System.Random().Next()}" : "dummy_host";
+                    Game.Profile = new PlayerProfile() { Name = name };
+                }
+
                 Game.Network.ConnectionApprovalCallback += Game.ApprovalCheck;
-                if (StartAsHost)
+                if (!ClonesManager.IsClone())
                 {
                     Game.StartHost();
                 }
@@ -54,14 +69,9 @@ namespace SteelOfStalin
                 {
                     Game.StartClient();
                 }
-#endif
             }
+#endif
             Destroy(gameObject);
-        }
-
-        private void Update()
-        {
-
         }
     }
 }
