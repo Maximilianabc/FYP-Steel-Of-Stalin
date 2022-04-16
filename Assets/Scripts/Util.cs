@@ -4,7 +4,6 @@ using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Modules.Guns;
 using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.Assets.Customizables.Shells;
-using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Flow;
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Tiles;
@@ -32,11 +31,36 @@ using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
 using SteelOfStalin.Assets.Props.Units.Land.Vehicles;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
+using Unity.Netcode;
+using System.Text;
+using static Unity.Netcode.CustomMessagingManager;
 
 namespace SteelOfStalin.Util
 {
     public static class Utilities
     {
+        public static class Random
+        {
+            private static System.Random m_random = new System.Random();
+
+            public static int Next() => m_random.Next();
+            public static int Next(int max) => m_random.Next(max); 
+            public static int Next(int min, int max) => m_random.Next(min, max);
+            public static double NextDouble() => m_random.NextDouble();
+            public static T NextItem<T>(IEnumerable<T> source) => source.ElementAt(m_random.Next(source.Count()));
+        }
+        public static List<Color> CommonColors => new List<Color>()
+        {
+            Color.red,
+            Color.yellow,
+            Color.green, // this one is lime
+            Color.blue,
+            new Color(0, 0.5F, 0, 1), // this one is green
+            new Color(1, 0.5F, 0, 1), // orange
+            new Color(0, 1, 1, 1), // cyan
+            new Color(0.5F, 0, 1, 1), // purple
+        };
+
         public static void Log(this Command command, string @event) => Debug.Log($"{command.Unit} has the following event when executing the command {command.Name}: {@event}");
         public static void LogWarning(this INamedAsset asset, string reason, [CallerMemberName] string method_name = "") => Debug.LogWarning($"Warning while executing method {method_name} for {asset}: {reason}");
         public static void LogError(this Command command, string reason, string explanation = "") => Debug.LogError($"Failed to execute command {command.Name} for unit at {command.Unit}: {reason} {explanation}");
@@ -74,6 +98,12 @@ namespace SteelOfStalin.Util
             }
             return -1;
         }
+        public static T[] Slice<T>(this T[] source, int index, int length)
+        {
+            T[] sliced = new T[length];
+            Array.Copy(source, index, sliced, 0, length);
+            return sliced;
+        }
 
         public static bool HasAnyOfFlags<T>(this T @enum, T group) where T : Enum => (Convert.ToInt64(@enum) & Convert.ToInt64(group)) != 0;
 
@@ -93,7 +123,24 @@ namespace SteelOfStalin.Util
 
         public static T CloneNew<T>(this List<T> list, string name) where T : ICloneable, INamedAsset => (T)list.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
 
-        public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(new System.Random().NextDouble() * 2 - 1);
+        public static GameObject GetChildByName(this GameObject parent, string child_name)
+        {
+            GameObject child_object = null;
+            Transform transform = parent.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform child = transform.GetChild(i);
+                child_object = string.Equals(child.name, child_name, StringComparison.OrdinalIgnoreCase) ? child.gameObject : child.gameObject.GetChildByName(child_name);
+                if (child_object != null)
+                {
+                    break;
+                }
+            }
+            return child_object;
+        }
+        public static T GetComponentInSpecificChild<T>(this GameObject parent, string child_name) where T : Component => parent.GetChildByName(child_name)?.GetComponent<T>();
+
+        public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(Random.NextDouble() * 2 - 1);
         public static string ToPascal(this string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
         public static string ToSnake(this string input) => Regex.Replace(input, @"(?<!^)([A-Z][a-z]+)", "_$1").ToLower();
         public static string PrintMembers(object invoke_target)
@@ -213,10 +260,22 @@ namespace SteelOfStalin.DataIO
         public T GetNew(string name) => (T)All.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
         public U GetNew<U>() where U : T => (U)All.OfType<U>().FirstOrDefault()?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with type {typeof(U).Name.ToSnake()}");
 
-        public abstract void Load();
+        public abstract void Load(bool from_dump = false);
+        public abstract void Clear();
         public abstract IEnumerable<T> All { get; }
         public abstract T GetNew<U>(string name) where U : INamedAsset;
         public virtual IEnumerable<T> FYPImplement => All;
+
+        public List<string> LocalJsonFilePaths { get; set; } = new List<string>();
+        // TODO FUT. Impl. add the path only if it's a valid data json
+        protected virtual void AddLocalJsonPath(string file_full_name, bool from_dump)
+        {
+            if (!from_dump)
+            {
+                // fucking no Path.GetRelativePath in netstandard 2.0 zzz
+                LocalJsonFilePaths.Add(ToRelativePath(file_full_name));
+            }
+        }
 
         protected FileInfo[] GetJsonFiles(string path) => new DirectoryInfo(path).GetFiles("*.json", SearchOption.AllDirectories);
         protected void PrintEmptyListNames()
@@ -278,11 +337,14 @@ namespace SteelOfStalin.DataIO
             _ => throw new ArgumentException($"There is no {typeof(U).Name.ToLower()} in type Unit")
         };
 
-        public override void Load()
+        public override void Load(bool from_dump = false)
         {
-            foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
+            string folder = from_dump ? ToDumpPath(JsonFolderPath) : JsonFolderPath;
+            foreach (FileInfo f in GetJsonFiles(folder))
             {
                 string json = File.ReadAllText(f.FullName);
+                AddLocalJsonPath(f.FullName, from_dump);
+
                 Unit u = JsonSerializer.Deserialize<Unit>(json, Options);
                 if (u is Personnel p)
                 {
@@ -310,7 +372,16 @@ namespace SteelOfStalin.DataIO
                 }
             }
             PrintEmptyListNames();
-            Debug.Log("All units data loaded.");
+            Debug.Log("All units data loaded" + (from_dump ? " from dump" : ""));
+        }
+
+        public override void Clear()
+        {
+            Personnels.Clear();
+            Artilleries.Clear();
+            Vehicles.Clear();
+            Vessels.Clear();
+            Planes.Clear();
         }
     }
 
@@ -342,11 +413,13 @@ namespace SteelOfStalin.DataIO
             _ => throw new ArgumentException($"There is no sub-type {typeof(U).Name.ToLower()} in type Building")
         };
 
-        public override void Load()
+        public override void Load(bool from_dump = false)
         {
             foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
                 string json = File.ReadAllText(f.FullName);
+                AddLocalJsonPath(f.FullName, from_dump);
+
                 object b = JsonSerializer.Deserialize<Building>(json, Options);
                 if (b is UnitBuilding u)
                 {
@@ -376,6 +449,15 @@ namespace SteelOfStalin.DataIO
             PrintEmptyListNames();
             Debug.Log("All buildings data loaded.");
         }
+
+        public override void Clear()
+        {
+            Units.Clear();
+            Productions.Clear();
+            Infrastructures.Clear();
+            Transmissions.Clear();
+            Defensives.Clear();
+        }
     }
 
     public sealed class TileData : Data<Tile>
@@ -395,11 +477,13 @@ namespace SteelOfStalin.DataIO
             _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Tile")
         };
 
-        public override void Load()
+        public override void Load(bool from_dump = false)
         {
             foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
                 string json = File.ReadAllText(f.FullName);
+                AddLocalJsonPath(f.FullName, from_dump);
+
                 object t = JsonSerializer.Deserialize<Tile>(json, Options);
                 if (t.GetType().IsSubclassOf(typeof(Cities)))
                 {
@@ -416,6 +500,12 @@ namespace SteelOfStalin.DataIO
             }
             PrintEmptyListNames();
             Debug.Log("All tiles data loaded.");
+        }
+
+        public override void Clear()
+        {
+            Terrains.Clear();
+            Cities.Clear();
         }
     }
 
@@ -441,11 +531,13 @@ namespace SteelOfStalin.DataIO
             _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Customizable")
         };
 
-        public override void Load()
+        public override void Load(bool from_dump = false)
         {
             foreach (FileInfo f in GetJsonFiles(JsonFolderPath))
             {
-                string json = File.ReadAllText(f.FullName); 
+                string json = File.ReadAllText(f.FullName);
+                AddLocalJsonPath(f.FullName, from_dump);
+
                 Customizable c = JsonSerializer.Deserialize<Customizable>(json, Options);
                 if (c is Module m)
                 {
@@ -467,6 +559,13 @@ namespace SteelOfStalin.DataIO
             PrintEmptyListNames();
             Modules.Load();
             Debug.Log("All customizables data loaded.");
+        }
+
+        public override void Clear()
+        {
+            Firearms.Clear();
+            Modules.Clear();
+            Shells.Clear();
         }
     }
 
@@ -513,10 +612,29 @@ namespace SteelOfStalin.DataIO
             _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Module")
         };
 
-        public override void Load()
+        public override void Load(bool from_dump = false)
         {
             PrintEmptyListNames();
-            Guns.Load();
+            Guns.Load(from_dump);
+        }
+
+        public override void Clear()
+        {
+            Guns.Clear();
+            HeavyMachineGuns.Clear();
+            Engines.Clear();
+            Suspensions.Clear();
+            Radios.Clear();
+            Periscopes.Clear();
+            FuelTanks.Clear();
+            AmmoRacks.Clear();
+            TorpedoTubes.Clear();
+            Sonars.Clear();
+            Propellers.Clear();
+            Rudders.Clear();
+            Wings.Clear();
+            LandingGears.Clear();
+            Radars.Clear();
         }
 
         public void Add(Module m)
@@ -604,7 +722,14 @@ namespace SteelOfStalin.DataIO
             _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Gun")
         };
 
-        public override void Load() => PrintEmptyListNames();
+        public override void Load(bool from_dump = false) => PrintEmptyListNames();
+
+        public override void Clear()
+        {
+            Cannons.Clear();
+            Howitzers.Clear();
+            AutoCannons.Clear();
+        }
 
         public void Add(Gun g)
         {
@@ -637,12 +762,16 @@ namespace SteelOfStalin.DataIO
             // Converters = { new RoundingJsonConverter() }
         };
         public static string ExternalFilePath => ConvertToWindowsPath(Application.streamingAssetsPath);
+        public static string DumpFolderName => "Multiplayer_Dump";
+        public static Func<string, string> ToRelativePath => full => full.Replace(ExternalFilePath, ""); // with slash in front
+        public static Func<string, string> AddDumpPath => path => @$"{DumpFolderName}{path}";
+        public static Func<string, string> ToDumpPath => local => local.Replace(ExternalFilePath, @$"{ExternalFilePath}\{DumpFolderName}");
 
         public static string ConvertToWindowsPath(string path) => path.Replace("/", @"\");
-        public static void CreateStreamingAssetsFolder(string path) => Directory.CreateDirectory($@"{ExternalFilePath}\{path}");
+        public static void CreateStreamingAssetsFolder(string relative_path) => Directory.CreateDirectory($@"{ExternalFilePath}\{relative_path}");
 
-        public static void SerializeJson<T>(this T input, string path) => File.WriteAllText($@"{ExternalFilePath}\{path}.json", JsonSerializer.Serialize<T>(input, Options));
-        public static T DeserializeJson<T>(string path) => JsonSerializer.Deserialize<T>(File.ReadAllText($@"{ExternalFilePath}\{path}.json"), Options);
+        public static void SerializeJson<T>(this T input, string relative_path) => File.WriteAllText($@"{ExternalFilePath}\{relative_path}.json", JsonSerializer.Serialize<T>(input, Options));
+        public static T DeserializeJson<T>(string path, bool is_relative = true) => JsonSerializer.Deserialize<T>(File.ReadAllText(is_relative ? $@"{ExternalFilePath}\{path}.json" : $"{path}.json"), Options);
         public static IEnumerable<T> DeserializeJsonWithAbstractType<T>(string path, string identifier_property_name, string base_type_name)
         {
             object deserialized = DeserializeJson<object>(path);
@@ -677,16 +806,481 @@ namespace SteelOfStalin.DataIO
             }
         }
 
-        public static void SaveToTxt(string path, string content) => File.WriteAllText($@"{ExternalFilePath}\{path}.txt", content);
-        public static string[] ReadTxt(string path) => File.ReadAllLines($@"{ExternalFilePath}\{path}.txt");
-        public static void SaveToPng(string path, Texture2D texture)
+        public static void SaveToTxt(string relative_path, string content) => File.WriteAllText($@"{ExternalFilePath}\{relative_path}.txt", content);
+        public static string[] ReadTxt(string relative_path) => File.ReadAllLines($@"{ExternalFilePath}\{relative_path}.txt");
+        public static void SaveToPng(string relative_path, Texture2D texture)
         {
             byte[] bs = texture.EncodeToPNG();
-            using FileStream fs = new FileStream($@"{ExternalFilePath}\{path}.png", FileMode.OpenOrCreate, FileAccess.Write);
+            using FileStream fs = new FileStream($@"{ExternalFilePath}\{relative_path}.png", FileMode.OpenOrCreate, FileAccess.Write);
             fs.Write(bs, 0, bs.Length);
             fs.Close();
         }
 
-        public static bool StreamingAssetExists(string path) => File.Exists($@"{ExternalFilePath}\{path}");
+        public static bool StreamingAssetExists(string relative_path) => File.Exists($@"{ExternalFilePath}\{relative_path}");
+
+        public static RpcMessageChunk[] MakeChunks(this byte[] bytes)
+        {
+            int num_chunks = (int)Math.Ceiling((float)bytes.Length / RpcMessageChunk.CHUNK_SIZE);
+            if (num_chunks > ushort.MaxValue)
+            {
+                Debug.LogError($"number of chunks needed ({num_chunks}) exceeds 65535");
+                return null;
+            }
+
+            RpcMessageChunk[] chunks = new RpcMessageChunk[num_chunks];
+            for (int i = 0; i < num_chunks; i++)
+            {
+                int current_index = RpcMessageChunk.CHUNK_SIZE * i;
+                chunks[i] = new RpcMessageChunk()
+                {
+                    Order = (ushort)i,
+                    Data = bytes.Slice(current_index, bytes.Length - current_index < RpcMessageChunk.CHUNK_SIZE ? bytes.Length - current_index : RpcMessageChunk.CHUNK_SIZE),
+                };
+            }
+            return chunks;
+        }
+
+        public static RpcMessageChunk[] MakeChunks<T>(this T data) => JsonSerializer.SerializeToUtf8Bytes(data).MakeChunks();
+
+        public static byte[] AssembleChunks(this List<RpcMessageChunk> chunks) => chunks.OrderBy(d => d.Order).SelectMany(d => d.Data).ToArray();
+
+        public static object AssembleChunksIntoObject(this List<RpcMessageChunk> chunks, Type type) => JsonSerializer.Deserialize(chunks.AssembleChunks(), type);
+
+        /// <summary>
+        /// Assemble chunks received from rpc and save it into json file.
+        /// </summary>
+        /// <param name="chunks">the list of chunks received</param>
+        /// <param name="relative_path">the file path relative to streaming asset path</param>
+        public static void AssembleChunksIntoFile(this List<RpcMessageChunk> chunks, string relative_path)
+        {
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(@$"{ExternalFilePath}\{relative_path}"));
+            File.WriteAllBytes(@$"{ExternalFilePath}\{relative_path}", chunks.AssembleChunks());
+        }
+    }
+
+    public class RpcMessageChunk : INetworkSerializable
+    {
+        public const int CHUNK_SIZE = 1290; // FastBufferReader's buffer maximum (1292) - sizeof(_order) = 1290
+
+        private ushort _order;
+        public ushort Order { get => _order; set => _order = value; }
+
+        private byte[] _data;
+        public byte[] Data { get => _data; set => _data = value; }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref _order);
+            serializer.SerializeValue(ref _data);
+        }
+    }
+
+    public class RpcMessageObject
+    {
+        public List<RpcMessageChunk> Chunks { get; set; }
+        public bool IsReady { get; set; }
+    }
+
+    public class NamedMessageObject
+    {
+        public ulong SenderID { get; set; }
+        public NetworkMessageType MessageType { get; set; }
+        public Type Type { get; set; }
+        public string Message { get; set; }
+
+        public object GetDeserializedObject() => JsonSerializer.Deserialize(Message, Type);
+    }
+
+    public enum NetworkMessageType
+    {
+        NONE,
+        HANDSHAKE,
+        DATA,
+        COMMAND,
+        CHAT
+    }
+
+    public class NetworkUtilities : NetworkBehaviour
+    {
+        public static NetworkUtilities Instance { get; private set; }
+
+        private Dictionary<Type, RpcMessageObject> m_rpcMessages = new Dictionary<Type, RpcMessageObject>();
+        private List<NamedMessageObject> m_namedMessages = new List<NamedMessageObject>();
+        private Dictionary<string, RpcMessageObject> m_files = new Dictionary<string, RpcMessageObject>();
+
+        public Dictionary<NetworkMessageType, string> MessageNames => new Dictionary<NetworkMessageType, string>()
+        {
+            [NetworkMessageType.HANDSHAKE] = "handshake",
+            [NetworkMessageType.DATA] = "data",
+            [NetworkMessageType.COMMAND] = "command",
+            [NetworkMessageType.CHAT] = "chat",
+        };
+
+        public static ClientRpcParams GetClientRpcSendParams(params ulong[] ids) 
+            => Game.Network.IsServer && ids.Length != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
+        public static ClientRpcParams GetClientRpcSendParams(IEnumerable<ulong> ids)
+            => Game.Network.IsServer && ids.Count() != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
+        public static ServerRpcParams GetServerRpcParams()
+            => Game.Network.IsClient ? new ServerRpcParams() { Receive = new ServerRpcReceiveParams() { SenderClientId = Game.Network.LocalClientId } } : default;
+
+        public static Dictionary<string, string> GetRelativePathsWithPattern(List<string> local_relative_paths, Func<string, string> replacer)
+            => local_relative_paths.Zip(local_relative_paths.Select(p => replacer(p)), (local, dest) => new { local, dest }).ToDictionary(ps => ps.local, ps => ps.dest);
+        public static Dictionary<string, string> GetDumpPaths(List<string> local_relative_paths) 
+            => GetRelativePathsWithPattern(local_relative_paths, AddDumpPath);
+
+        private void Start()
+        {
+            Instance = this;
+            _ = StartCoroutine(Initialize());
+        }
+
+        private IEnumerator Initialize()
+        {
+            yield return new WaitWhile(() => Game.Network == null);
+            yield return new WaitWhile(() => Game.Network.CustomMessagingManager == null);
+
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.HANDSHAKE], MessageHandler(NetworkMessageType.HANDSHAKE));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.DATA], MessageHandler(NetworkMessageType.DATA));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.COMMAND], MessageHandler(NetworkMessageType.COMMAND));
+            Game.Network.CustomMessagingManager.RegisterNamedMessageHandler(MessageNames[NetworkMessageType.CHAT], MessageHandler(NetworkMessageType.CHAT));
+
+            Debug.Log("Network utilities initialized");
+            yield return null;
+        }
+
+        public void CacheRpcMessageChunk(RpcMessageChunk chunk, ushort num_to_receive, string type_name, bool isAppend = false)
+        {
+            Type type = Type.GetType(type_name);
+            if (m_rpcMessages.ContainsKey(type))
+            {
+                if (m_rpcMessages[type].Chunks.Count < num_to_receive || isAppend)
+                {
+                    m_rpcMessages[type].Chunks.Add(chunk);
+                }
+                else
+                {
+                    Debug.LogError($"Number of chunks received exceed {num_to_receive}");
+                }
+            }
+            else
+            {
+                m_rpcMessages.Add(type, new RpcMessageObject()
+                { 
+                    Chunks = new List<RpcMessageChunk>() { chunk },
+                    IsReady = isAppend
+                });
+                Debug.Log($"New type {type_name} received.");
+            }
+            if (m_rpcMessages[type].Chunks.Count == num_to_receive && !isAppend)
+            {
+                m_rpcMessages[type].IsReady = true;
+                Debug.Log($"Received all chunks ({num_to_receive} in total) for type {type}");
+            }
+        }
+
+        public void SendMessageFromHostByRpc<T>(T obj, ClientRpcParams @params = default)
+        {
+            RpcMessageChunk[] object_chunks = obj.MakeChunks();
+            /*
+#pragma warning disable IDE0004 // The cast is neccessary for unity compiler unless newer version of unity (compiler) is used
+            Action<DataChunk, ushort> rpc = from_host ? (Action<DataChunk, ushort>)ReceiveDataClientRpc<T> : ReceiveDataServerRpc<T>;
+#pragma warning restore IDE0004
+            */
+            Action<RpcMessageChunk, ushort, ClientRpcParams> client_rpc = typeof(T) switch
+            {
+                _ when typeof(T) == typeof(Map) => ReceiveMapInfoClientRpc,
+                _ when typeof(T) == typeof(Tile[][]) => ReceiveMapTilesClientRpc,
+                _ when typeof(T) == typeof(IEnumerable<Unit>) => ReceiveMapUnitsClientRpc,
+                _ when typeof(T) == typeof(IEnumerable<Building>) => ReceiveMapBuildingsClientRpc,
+                _ when typeof(T) == typeof(List<Player>) => ReceiveBattlePlayersClientRpc,
+                _ when typeof(T) == typeof(BattleRules) => ReceiveBattleRulesClientRpc,
+                _ when typeof(T) == typeof(UnitData) => ReceiveUnitDataClientRpc,
+                _ when typeof(T) == typeof(BuildingData) => ReceiveBuildingDataClientRpc,
+                _ when typeof(T) == typeof(TileData) => ReceiveTileDataClientRpc,
+                _ when typeof(T) == typeof(CustomizableData) => ReceiveCustomizableDataClientRpc,
+                _ => throw new NotImplementedException($"Sending message by rpc from host with type {typeof(T).Name} is not supported at the moment")
+            };
+            foreach (RpcMessageChunk chunk in object_chunks)
+            {
+                client_rpc(chunk, (ushort)object_chunks.Length, @params);
+            }
+        }
+
+        public void SendMessageFromClientByRpc<T>(T obj)
+        {
+            RpcMessageChunk[] object_chunks = obj.MakeChunks();
+            Action<RpcMessageChunk, ushort> server_rpc = typeof(T) switch
+            {
+                // TODO add ServerRpc
+                _ => throw new NotImplementedException($"Sending message by rpc from client with type {typeof(T).Name} is not supported at the moment")
+            };
+            foreach (RpcMessageChunk chunk in object_chunks)
+            {
+                server_rpc(chunk, (ushort)object_chunks.Length);
+            }
+        }
+
+        public object GetRpcMessage(Type type)
+        {
+            if (!m_rpcMessages.ContainsKey(type))
+            {
+                Debug.LogError($"No data with type {type} is found.");
+                return null;
+            }
+            if (!m_rpcMessages[type].IsReady)
+            {
+                return null;
+            }
+            object obj = m_rpcMessages[type].Chunks.AssembleChunksIntoObject(type);
+            m_rpcMessages.Remove(type);
+            return obj;
+        }
+
+        public IEnumerator TryGetRpcMessage<T>(Action<T> callback)
+        {
+            int counter = 0;
+            object message = GetRpcMessage(typeof(T));
+            while (message == null && counter < 20)
+            {
+                message = GetRpcMessage(typeof(T));
+                yield return new WaitForSeconds(2);
+                counter++;
+            }
+            if (message == null)
+            {
+                Debug.LogError("Failed to retrieve cached rpc message after 20 tries");
+                yield return null;
+            }
+            else
+            {
+                callback?.Invoke((T)message);
+            }
+            yield return null;
+        }
+
+        public void CacheNamedMessage(NetworkMessageType message_type, ulong sender_id, string message)
+        {
+            Match match = Regex.Match(message, @"^([^:]+): (.*?)$");
+            if (!match.Success)
+            {
+                Debug.LogError($"Message {message} is not in correct format");
+                return;
+            }
+            m_namedMessages.Add(new NamedMessageObject()
+            {
+                SenderID = sender_id,
+                MessageType = message_type,
+                Type = Type.GetType(match.Groups[1].Value),
+                Message = match.Groups[2].Value
+            });
+        }
+
+        public void SendNamedMessage<T>(T obj, ulong receiver_id, NetworkMessageType type)
+        {
+            string data = $"{typeof(T).FullName}: {JsonSerializer.Serialize(obj)}";
+            int byte_length = Encoding.UTF8.GetByteCount(data) * 2 + 4;
+            using FastBufferWriter writer = new FastBufferWriter(byte_length, Unity.Collections.Allocator.Temp);
+            writer.WriteValueSafe(data);
+            NetworkDelivery delivery = byte_length > 1292
+                ? NetworkDelivery.ReliableFragmentedSequenced
+                : type == NetworkMessageType.CHAT
+                    ? NetworkDelivery.ReliableSequenced
+                    : NetworkDelivery.Reliable;
+            NetworkManager.CustomMessagingManager.SendNamedMessage(MessageNames[type], receiver_id, writer, delivery);
+        }
+
+        public IEnumerable<object> GetNamedMessages(Predicate<NamedMessageObject> predicate)
+        {
+            IEnumerable<NamedMessageObject> targets = m_namedMessages.Where(m => predicate(m));
+            IEnumerable<object> deserialized = targets.Select(m => m.GetDeserializedObject());
+            m_namedMessages = m_namedMessages.Except(targets).ToList();
+            return deserialized;
+        }
+
+        public IEnumerator TryGetNamedMessage<T>(Predicate<NamedMessageObject> predicate, Action<T> callback)
+        {
+            int counter = 0;
+            IEnumerable<object> messages = GetNamedMessages(m => m.Type == typeof(T) && predicate(m));
+            while (messages.Count() == 0 && counter < 20)
+            {
+                messages = GetNamedMessages(m => m.Type == typeof(T) && predicate(m));
+                yield return new WaitForSeconds(2);
+                counter++;
+            }
+            if (messages == null)
+            {
+                Debug.LogError("Failed to retrieve named message after 20 tries");
+                yield return null;
+            }
+            else
+            {
+                foreach (object message in messages)
+                {
+                    callback?.Invoke((T)message);
+                }
+            }
+            yield return null;
+        }
+
+        public void CacheFileChunk(RpcMessageChunk chunk, ushort num_to_receive, string file_name)
+        {
+            if (m_files.ContainsKey(file_name))
+            {
+                if (m_files[file_name].Chunks.Count < num_to_receive )
+                {
+                    m_files[file_name].Chunks.Add(chunk);
+                }
+                else
+                {
+                    Debug.LogError($"Number of chunks received exceed {num_to_receive}");
+                }
+            }
+            else
+            {
+                m_files.Add(file_name, new RpcMessageObject()
+                {
+                    Chunks = new List<RpcMessageChunk>() { chunk },
+                    IsReady = false
+                });
+            }
+            if (m_files[file_name].Chunks.Count == num_to_receive)
+            {
+                m_files[file_name].IsReady = true;
+            }
+        }
+
+        public void SendFile(string local_relative_path, string destination_relative_path = "", ClientRpcParams @params = default)
+        {
+            byte[] bytes = File.ReadAllBytes(@$"{ExternalFilePath}\{local_relative_path}");
+            if (string.IsNullOrEmpty(destination_relative_path))
+            {
+                destination_relative_path = local_relative_path;
+            }
+
+            RpcMessageChunk[] file_chunks = bytes.MakeChunks();
+            foreach (RpcMessageChunk chunk in file_chunks)
+            {
+                ReceiveFileClientRpc(chunk, (ushort)file_chunks.Length, destination_relative_path, @params);
+            }
+        }
+
+        public void SendFiles(Dictionary<string, string> relative_paths, ClientRpcParams @params = default)
+        {
+            foreach (KeyValuePair<string, string> relative_path in relative_paths)
+            {
+                SendFile(relative_path.Key, relative_path.Value, @params);
+            }
+        }
+
+        public bool SaveFile(string relative_path, bool delete_on_saved = true)
+        {
+            if (!m_files.ContainsKey(relative_path))
+            {
+                Debug.LogError($"No file with path {relative_path} is found.");
+                return false;
+            }
+            if (!m_files[relative_path].IsReady)
+            {
+                return false;
+            }
+            m_files[relative_path].Chunks.AssembleChunksIntoFile(relative_path);
+            if (delete_on_saved)
+            {
+                m_files.Remove(relative_path);
+            }
+            return true;
+        }
+
+        public IEnumerator TrySaveFile(string relative_path, bool delete_on_saved = true)
+        {
+            int counter = 0;
+            bool saved = false;
+            while (!saved && counter < 60)
+            {
+                saved = SaveFile(relative_path, delete_on_saved);
+                yield return new WaitForSeconds(2);
+                counter++;
+            }
+            if (!saved)
+            {
+                Debug.LogError("Failed to retrieve named message after 60 tries");
+            }
+            yield return null;
+        }
+
+        public IEnumerator TrySaveFiles()
+        {
+            foreach (KeyValuePair<string, RpcMessageObject> files in m_files)
+            {
+                _ = StartCoroutine(TrySaveFile(files.Key, false));
+            }
+            // m_files.Clear();
+            yield return null;
+        }
+
+        /* UNITY FUCKING CRASHED ON CALLING A GENERIC RPC AND IT IS A FUCKING BUG
+         * REFERNCE: https://forum.unity.com/threads/unity-crashes-on-rpc-call.1256361/
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveDataClientRpc<T>(RpcMessageChunk chunk, ushort num_to_receive)
+        {
+            CacheRpcMessage(chunk, num_to_receive, typeof(T).FullName);
+        }
+
+        [ServerRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveDataServerRpc<T>(RpcMessageChunk chunk, ushort num_to_receive)
+        {
+            CacheRpcMessage(chunk, num_to_receive, typeof(T).FullName);
+        }*/
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapInfoClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(Map).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapTilesClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(Tile[][]).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapUnitsClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(IEnumerable<Unit>).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveMapBuildingsClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(IEnumerable<Building>).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveBattlePlayersClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(List<Player>).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveBattleRulesClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(BattleRules).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveUnitDataClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(UnitData).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveBuildingDataClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(BuildingData).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveTileDataClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(TileData).FullName);
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveCustomizableDataClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
+            => CacheRpcMessageChunk(chunk, num_to_receive, typeof(CustomizableData).FullName);
+
+        private HandleNamedMessageDelegate MessageHandler(NetworkMessageType type) => (sender, reader) =>
+        {
+            reader.ReadValueSafe(out string message);
+            Debug.Log($"Received a {type} message (length: {message.Length}) from " + (sender == 0 ? "server" : $"client with id {sender}"));
+            CacheNamedMessage(type, sender, message);
+        };
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ReceiveFileClientRpc(RpcMessageChunk chunk, ushort num_to_receive, string destination_relative_file_path, ClientRpcParams @params = default)
+            => CacheFileChunk(chunk, num_to_receive, destination_relative_file_path);
     }
 }

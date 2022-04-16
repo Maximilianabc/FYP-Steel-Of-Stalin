@@ -226,7 +226,7 @@ MonoBehaviour:
     customBufferFormat: 12
     supportedLitShaderMode: 2
     planarReflectionResolution:
-      m_Values: 000100000004000000080000
+      m_Values: 000100000004000000040000
       m_SchemaId:
         m_Id: With3Levels
     supportDecals: 1
@@ -351,7 +351,7 @@ MonoBehaviour:
       ChromaticAberrationMaxSamples: 03000000060000000c000000
     lightSettings:
       useContactShadow:
-        m_Values: 000001
+        m_Values: 010000
         m_SchemaId:
           m_Id: With3Levels
     maximumLODLevel:
@@ -440,8 +440,8 @@ MonoBehaviour:
   m_DefaultMaterialQualityLevel: 4
   diffusionProfileSettings: {fileID: 0}
   diffusionProfileSettingsList:
-  - {fileID: 11400000, guid: 10d5cdd49757f694ea381f000f20296b, type: 2}
-  - {fileID: 11400000, guid: 683aa42f4bc565c4c8b84e7ba17d3060, type: 2}
+  - {fileID: 11400000, guid: 85d8ef33071e2f94792c01b4709bc9e9, type: 2}
+  - {fileID: 11400000, guid: 90b6c3e5897df4e498e6b7cfbb682c63, type: 2}
   beforeTransparentCustomPostProcesses: []
   beforeTAACustomPostProcesses: []
   beforePostProcessCustomPostProcesses: []
