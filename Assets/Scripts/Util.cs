@@ -4,7 +4,6 @@ using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Modules.Guns;
 using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.Assets.Customizables.Shells;
-using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Flow;
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Tiles;
@@ -40,6 +39,16 @@ namespace SteelOfStalin.Util
 {
     public static class Utilities
     {
+        public static class Random
+        {
+            private static System.Random m_random = new System.Random();
+
+            public static int Next() => m_random.Next();
+            public static int Next(int max) => m_random.Next(max); 
+            public static int Next(int min, int max) => m_random.Next(min, max);
+            public static double NextDouble() => m_random.NextDouble();
+            public static T NextItem<T>(IEnumerable<T> source) => source.ElementAt(m_random.Next(source.Count()));
+        }
         public static List<Color> CommonColors => new List<Color>()
         {
             Color.red,
@@ -131,7 +140,7 @@ namespace SteelOfStalin.Util
         }
         public static T GetComponentInSpecificChild<T>(this GameObject parent, string child_name) where T : Component => parent.GetChildByName(child_name)?.GetComponent<T>();
 
-        public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(new System.Random().NextDouble() * 2 - 1);
+        public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(Random.NextDouble() * 2 - 1);
         public static string ToPascal(this string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
         public static string ToSnake(this string input) => Regex.Replace(input, @"(?<!^)([A-Z][a-z]+)", "_$1").ToLower();
         public static string PrintMembers(object invoke_target)

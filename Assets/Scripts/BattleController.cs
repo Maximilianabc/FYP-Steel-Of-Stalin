@@ -1,6 +1,7 @@
 using SteelOfStalin.DataIO;
 using UnityEngine;
 using Unity.Netcode;
+using SteelOfStalin.Util;
 #if UNITY_EDITOR
 using ParrelSync;
 #endif
@@ -56,7 +57,7 @@ namespace SteelOfStalin
                 }
                 if (Game.Profile == null || string.IsNullOrEmpty(Game.Profile.Name))
                 {
-                    string name = ClonesManager.IsClone() ? $"dummy_client_{new System.Random().Next()}" : "dummy_host";
+                    string name = ClonesManager.IsClone() ? $"dummy_client_{Utilities.Random.Next()}" : "dummy_host";
                     Game.Profile = new PlayerProfile() { Name = name };
                 }
 
