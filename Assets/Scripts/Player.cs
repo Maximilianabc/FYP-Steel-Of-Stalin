@@ -1,7 +1,9 @@
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Units;
+using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
 using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
+using SteelOfStalin.Assets.Props.Units.Land.Vehicles;
 using SteelOfStalin.Assets.Props.Buildings.Productions;
 using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Props.Tiles;
@@ -118,14 +120,28 @@ namespace SteelOfStalin
     {
         // AI algo goes here
         //make flag true
+        //no need consume resource
+
         void train(){
             //get training buidling
             var barracks = Buildings.Where(c => c is Barracks);
             var unitbuildings = Buildings.Where(c => c is UnitBuilding);
             //check number of resources generated
             var rate = Cities.Where(c => !c.IsDestroyed).Count();
-        
 
+            //deploy
+            if(unitbuildings.Any()){
+                var building = unitbuildings.Cast<UnitBuilding>();
+                foreach(var c in building){
+                    if(c.CanDeploy()){
+                        var typeunit = c.ReadyToDeploy.First();
+                        Commands.Add(new Deploy(typeunit,c,c.CoOrds,typeunit.GetWeapons()));
+                    }
+                }
+            }
+
+        
+            //train
             if(unitbuildings.Any()){
                 //check training queue/slot
                 var building = unitbuildings.Cast<UnitBuilding>();
@@ -135,72 +151,87 @@ namespace SteelOfStalin
                     var Artiltype = GetAllTrainableUnits().OfType<Artillery>();
                     if(x.CanTrain()){
                         //may be adjusted later
-                        if(rate <4){
-                            // maybe use random?
+                        if(rate < 4){
+                            //maybe use random?
+                            var rand = new System.Random();
+                            int num = rand.Next(1,unittype.Count());
+
+                            //train priority
                             if(x is Barracks){
                                 if(unittype.Any(c => c is Militia) && Units.Where(c => c is Militia).Count() <= 8){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Militia>(),x,this));
-                                    ConsumeResources(unittype.OfType<Militia>().First().Cost.Base);
                                 }
                                 else if(unittype.Any(c => c is Infantry) && Units.Where(c => c is Infantry).Count() <= 10){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Infantry>(),x,this));
-                                    ConsumeResources(unittype.OfType<Infantry>().First().Cost.Base);
                                 }
                                 else if(unittype.Any(c => c is Assault) && Units.Where(c => c is Assault).Count() <= 10){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Assault>(),x,this));
-                                    ConsumeResources(unittype.OfType<Assault>().First().Cost.Base);
                                 }
                                 else if(unittype.Any(c => c is Support) && Units.Where(c => c is Support).Count() <= 4){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Support>(),x,this));
-                                    ConsumeResources(unittype.OfType<Support>().First().Cost.Base);
                                 }
                                 else if(unittype.Any(c => c is Mountain) && Units.Where(c => c is Mountain).Count() <= 3){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Mountain>(),x,this));
-                                    ConsumeResources(unittype.OfType<Mountain>().First().Cost.Base);
                                 }
                                 else if(unittype.Any(c => c is Engineer) && Units.Where(c => c is Engineer).Count() <= 3){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Engineer>(),x,this));
-                                    ConsumeResources(unittype.OfType<Engineer>().First().Cost.Base);
                                 }
                             }
-                            else if(x is Arsenal){
+                            else if(x is Arsenal && Units.OfType<Personnel>().Count() > 15){
                                 //for arsenal
                                 //check enemy units composition
-                                if(Artiltype.Any(c => c is Portable) && Units.Where(c => c is Portable).Count() <= 8){
+                                //will be adjusted
+                                if(Artiltype.Any(c => c is Portable) && Units.Where(c => c is Portable).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Portable>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<Portable>().First().Cost.Base);
                                 }
-                                else if(Artiltype.Any(c => c is DirectFire) && Units.Where(c => c is DirectFire).Count() <= 10){
+                                else if(Artiltype.Any(c => c is DirectFire) && Units.Where(c => c is DirectFire).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<DirectFire>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<DirectFire>().First().Cost.Base);
                                 }
                                 else if(Artiltype.Any(c => c is AntiTank) && Units.Where(c => c is AntiTank).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<AntiTank>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<AntiTank>().First().Cost.Base);
                                 }
                                 else if(Artiltype.Any(c => c is AntiAircraft) && Units.Where(c => c is AntiAircraft).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<AntiAircraft>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<AntiAircraft>().First().Cost.Base);
                                 }
                                 else if(Artiltype.Any(c => c is HeavySupport) && Units.Where(c => c is HeavySupport).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<HeavySupport>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<HeavySupport>().First().Cost.Base);
                                 }
-                                else if(Artiltype.Any(c => c is SelfPropelled) && Units.Where(c => c is SelfPropelled).Count() <= 3){
+                                else if(Artiltype.Any(c => c is SelfPropelled) && Units.Where(c => c is SelfPropelled).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Engineer>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<SelfPropelled>().First().Cost.Base);
                                 }
-                                else if(Artiltype.Any(c => c is CoastalGun) && Units.Where(c => c is CoastalGun).Count() <= 3){
-                                    Commands.Add(new Train(Game.UnitData.GetNew<Engineer>(),x,this));
-                                    ConsumeResources(Artiltype.OfType<CoastalGun>().First().Cost.Base);
+                            }
+                            //vehicles
+                            else if(x is Dockyard){
+                                if(Units.OfType<MotorisedInfantry>().Count() > 5){
+                                     Commands.Add(new Train(Game.UnitData.GetNew<MotorisedInfantry>(),x,this));
                                 }
-                                // else if(Artiltype.Any(c => c is Railroad && Units.Where(c => c is Railroad).Count() <= 3)){
-                                //     Commands.Add(new Train(Game.UnitData.GetNew<Engineer>(),x,this));
-                                // }
+                                if(Units.OfType<Utility>().Count() > 5){
+                                     Commands.Add(new Train(Game.UnitData.GetNew<Utility>(),x,this));
+                                }
+                                if(Units.OfType<Carrier>().Count() > 5){
+                                     Commands.Add(new Train(Game.UnitData.GetNew<Carrier>(),x,this));
+                                }
+                                if(Units.OfType<ArmouredCar>().Count() > 5){
+                                     Commands.Add(new Train(Game.UnitData.GetNew<ArmouredCar>(),x,this));
+                                }
+                                if(Units.OfType<TankDestroyer>().Count() > 5){
+                                     Commands.Add(new Train(Game.UnitData.GetNew<TankDestroyer>(),x,this));
+                                }
+                                if(Units.OfType<AssaultGun>().Count() > 5){
+                                     Commands.Add(new Train(Game.UnitData.GetNew<AssaultGun>(),x,this));
+                                }
+                                // GetNew<LightTank>(),
+                                // GetNew<MediumTank>(),
+                                // GetNew<HeavyTank>()
                             }
 
                         }
+                        //if rate >= 4
                         else{
+                        //change the limit
+                        //maybe get the specific type of unit
+
+
 
 
 
@@ -219,14 +250,6 @@ namespace SteelOfStalin
                         this.Resources.Fuel.MinusEquals(amount);
  
                 }
-                //ammo
-                // if(!unit.HasEnoughAmmo(unit.GetWeapons())){
-                    // var amount = unit.Capacity.Cartridges - unit.Carrying.Cartridges;
-                    // unit.Carrying.Cartridges.PlusEquals(amount);
-                    // this.Resources.Cartridges.MinusEquals(amount);
-                // }
-
- 
             }
 
         }
@@ -253,6 +276,7 @@ namespace SteelOfStalin
 
         }
 
+
         //build building 
         void constructbuilding(){
             //for building in city range
@@ -278,42 +302,62 @@ namespace SteelOfStalin
                         if(!buildingaround.Any(c => c is Barracks) && Buildings.Where(c => c is Barracks).Count() < 3 && enough.Any(c => c is Barracks)){
                             //build unitbuilding
                             Commands.Add(new Construct(this,Game.BuildingData.GetNew<Barracks>(),j.CoOrds));
-                            ConsumeResources(enough.OfType<Barracks>().First().Cost.Base);
-                            num +=1;
-                        }
-                        else if(!buildingaround.Any(c => c is Foundry) && Buildings.Where(c => c is Foundry).Count() < 3 && enough.Any(c => c is Foundry)){
-                            //build foundry
-                            Commands.Add(new Construct(this,Game.BuildingData.GetNew<Foundry>(),j.CoOrds));
-                            ConsumeResources(enough.OfType<Foundry>().First().Cost.Base);
                             num +=1;
                         }
                         else if(!buildingaround.Any(c => c is Arsenal) && Buildings.Where(c => c is Arsenal).Count() < 3 && enough.Any(c => c is Arsenal)){
                             //build Arsenal
                             Commands.Add(new Construct(this,Game.BuildingData.GetNew<Arsenal>(),j.CoOrds));
-                            ConsumeResources(enough.OfType<Arsenal>().First().Cost.Base);
                             num +=1;
                         }
-                        else if(!buildingaround.Any(c => c is AmmoFactory)&& Buildings.Where(c => c is AmmoFactory).Count() < 3 && enough.Any(c => c is AmmoFactory)){
-                            //build AmmoFactory
-                            Commands.Add(new Construct(this,Game.BuildingData.GetNew<AmmoFactory>(),j.CoOrds));
-                            ConsumeResources(enough.OfType<AmmoFactory>().First().Cost.Base);
-                            num =+1;
-                        }
-                        else if(!buildingaround.Any(c => c is  Industries)&& Buildings.Where(c => c is Industries).Count() < 3 && enough.Any(c => c is Industries)){
-                            //build Industries
-                            Commands.Add(new Construct(this,Game.BuildingData.GetNew<Industries>(),j.CoOrds));
-                            ConsumeResources(enough.OfType<Industries>().First().Cost.Base);
-                            num =+1;
-                        }
-                        else if(!buildingaround.Any(c => c is Refinery)&& Buildings.Where(c => c is Refinery).Count() < 3 && enough.Any(c => c is Refinery)){
-                            //build Refinery
-                            Commands.Add(new Construct(this,Game.BuildingData.GetNew<Refinery>(),j.CoOrds));
-                            ConsumeResources(enough.OfType<Refinery>().First().Cost.Base);
-                            num +=1;
-                        }
+
+                        // else if(!buildingaround.Any(c => c is Foundry) && Buildings.Where(c => c is Foundry).Count() < 3 && enough.Any(c => c is Foundry)){
+                        //     //build foundry
+                        //     Commands.Add(new Construct(this,Game.BuildingData.GetNew<Foundry>(),j.CoOrds));
+                        //     num +=1;
+                        // }
+                        // else if(!buildingaround.Any(c => c is AmmoFactory)&& Buildings.Where(c => c is AmmoFactory).Count() < 3 && enough.Any(c => c is AmmoFactory)){
+                        //     //build AmmoFactory
+                        //     Commands.Add(new Construct(this,Game.BuildingData.GetNew<AmmoFactory>(),j.CoOrds));
+                        //     num =+1;
+                        // }
+                        // else if(!buildingaround.Any(c => c is  Industries)&& Buildings.Where(c => c is Industries).Count() < 3 && enough.Any(c => c is Industries)){
+                        //     //build Industries
+                        //     Commands.Add(new Construct(this,Game.BuildingData.GetNew<Industries>(),j.CoOrds));
+                        //     num =+1;
+                        // }
+                        // else if(!buildingaround.Any(c => c is Refinery)&& Buildings.Where(c => c is Refinery).Count() < 3 && enough.Any(c => c is Refinery)){
+                        //     //build Refinery
+                        //     Commands.Add(new Construct(this,Game.BuildingData.GetNew<Refinery>(),j.CoOrds));
+                        //     num +=1;
+                        // }
                     }  
                 }
             }
+        }
+        void constructetc(){
+            //outpost
+            var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
+            int num = orderedcities.Count();
+        
+            if(Buildings.Where(c => c is Outpost).Count() < num){
+                int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num).CoOrds.X) / 2;
+                int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num).CoOrds.Y) / 2;
+                var xycoor = new Coordinates(x,y);
+                var avaunits = Units.OrderBy(c => Units.First(c => c is Personnel).GetDistance(Map.Instance.GetTile(x,y))).First();
+                var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), Map.Instance.GetTile(x,y));
+
+                if(avaunits.GetDistance(Map.Instance.GetTile(x,y)) == 0){
+                    Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),xycoor));
+                    avaunits.CommandAssigned = CommandAssigned.CONSTRUCT;
+                }
+                else{
+                    Commands.Add(new Move(avaunits, pathtolocation.ToList()));
+                    avaunits.CommandAssigned = CommandAssigned.MOVE;
+                }
+            }
+            //bridge
+            //maybe combine with movement
+
         }
 
 
@@ -330,10 +374,8 @@ namespace SteelOfStalin
             //any enemy spotted
             // if(Units.Any(c => c.HasSpotted(Map.Instance.GetUnits().Where(c => c.IsHostile())))){
             //     Map.Instance.GetUnits().Where(c => c is hostile);
-                
             // }
             //move to enemy city
-
             foreach(var i in moveable){
                 var pathtocity = i.GetPath(i.GetLocatedTile(), nearest);
                 Commands.Add(new Move(i, pathtocity.ToList()));   
@@ -349,23 +391,36 @@ namespace SteelOfStalin
             //if not, request retreat
 
             var insight = GetAllUnitsInSight();
+
             foreach(var ally in Units.OfType<Personnel>()){
-                var enemy = ally.GetHostileUnitsInRange(ally.GetReconRange());
-
-
+                foreach(IOffensiveCustomizable weapon in ally.GetWeapons()){
+                    var enemy = ally.GetHostileUnitsInFiringRange(weapon);
+                    //if there is hostile unit
+                    if(enemy.Count() > 0){
+                        //if only one
+                        if(enemy.Count() == 1){
+                            Commands.Add(new Fire(ally,enemy.First(), weapon));
+                            ally.CommandAssigned = CommandAssigned.FIRE;
+                        }
+                        //if more
+                        else{
+                            var nearby = Units.OfType<Personnel>().OrderBy(c => c.GetDistance(c)).ElementAt(1);
+                            //if allied more
+                            if(true){
+                                Commands.Add(new Fire(ally,enemy.First(), weapon));
+                                ally.CommandAssigned = CommandAssigned.FIRE;
+                            }
+                            //if no retreat to nearest ally
+                            else{
+                                var pathtoally = ally.GetPath(ally.GetLocatedTile(), nearby.GetLocatedTile());
+                                Commands.Add(new Move(ally,pathtoally.ToList()));
+                                ally.CommandAssigned = CommandAssigned.MOVE;
+                            }
+                        }
+                    }
+                }  
             }
-            //if there is hostile unit
-            if(insight.Any(c => c.IsHostile(this))){
-                //get number of enemy
-                // int numenemy = insight.Where(c => c.IsHostile(this)).Count;
-                //get tnumber of ally nearby
-
-            }
-
-
         }
-
-
     }
 
     public class PlayerObject : MonoBehaviour
