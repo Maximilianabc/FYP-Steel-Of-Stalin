@@ -80,7 +80,11 @@ public class UIUtil : MonoBehaviour
     }
 
     public void ChangeScene(string sceneName) {
-        SceneManager.LoadScene(sceneName);
+        switch (sceneName) {
+            case "Loading": SceneManager.LoadScene(sceneName);break;
+            case "Game":AsyncOperation operation = SceneManager.LoadSceneAsync("Game");operation.completed += delegate { }; break;
+        }
+        
     }
 
 

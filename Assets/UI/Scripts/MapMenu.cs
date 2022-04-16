@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SteelOfStalin;
 using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.DataIO;
 using System.Threading.Tasks;
 
 public class MapMenu : MonoBehaviour
@@ -11,6 +12,7 @@ public class MapMenu : MonoBehaviour
     RandomMap map;
     Task taskMapGen;
     public Vector2 maxMapPreviewSize;
+    public GameObject subMenu;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +40,7 @@ public class MapMenu : MonoBehaviour
         }
     }
 
+
     public void GenerateMap() {
         if (taskMapGen != null && !taskMapGen.IsCompleted) {
             return;
@@ -59,9 +62,39 @@ public class MapMenu : MonoBehaviour
     async Task GenerateMap(int width,int height,int numPlayers) {
         await Task.Run(() =>
         {
-            map = new RandomMap(width, height, numPlayers, "abc", "abc123"); // TODO add input from player in UI for both battle name and map name
-            Debug.Log("taskfinished");
+            map = new RandomMap(width, height, numPlayers, "myBattle", "myMap"); // TODO add input from player in UI for both battle name and map name
+            Debug.Log("taskMapGen finished");
         });
     }
+
+    public void CreateNewBattle() {
+        if (map == null) return;
+        map.Save();
+        BattleRules battleRules = new BattleRules();
+        battleRules.Save(map.BattleName);
+        List<Player> players = new List<Player>();
+        players.SerializeJson($@"Saves\{map.BattleName}\rules");
+
+
+        //TODO: change numPLayers to real count
+        Game.BattleInfos.Add(new BattleInfo(map.BattleName, map.Name, map.Width, map.Height, map.TileCount(TileType.METROPOLIS),new BattleRules()));
+    }
+
+
+    public void CreateNewBattleOnClickHandler() {
+        if (map == null) return;
+        subMenu.SetActive(true);
+    }
+
+    public void SubmitNameOnClickHandler() {
+        string battleName = subMenu.transform.Find("MessageBox").Find("InputField_BattleName").GetComponent<TMPro.TMP_InputField>().text;
+        string mapName = subMenu.transform.Find("MessageBox").Find("InputField_MapName").GetComponent<TMPro.TMP_InputField>().text;
+        if (battleName == "" || mapName == "") return;
+        map.Name = mapName;
+        map.BattleName = battleName;
+        CreateNewBattle();
+        subMenu.SetActive(false);
+    }
+
 
 }

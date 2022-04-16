@@ -70,5 +70,17 @@ public class Resize : MonoBehaviour
         LayoutRebuilder.MarkLayoutForRebuild(objectToBeResized.GetComponent<RectTransform>());
     }
 
+    public void DelayResize(int step) {
+        StartCoroutine(DelayResizeCoroutine(step));
+    }
+
+    public IEnumerator DelayResizeCoroutine(int step)
+    {
+        for (int i = 0; i < step; i++) yield return null;
+        if (objectToBeResized.activeSelf)
+        {
+            DoResize();
+        }
+    }
 
 }

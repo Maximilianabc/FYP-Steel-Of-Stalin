@@ -108,6 +108,7 @@ namespace SteelOfStalin
             return sb.ToString();
         }
 
+
         public object Clone()
         {
             Player copy = (Player)MemberwiseClone();
