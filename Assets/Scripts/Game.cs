@@ -185,8 +185,8 @@ namespace SteelOfStalin
         public byte VolumeMusic { get; set; } = 100;
         public byte VolumeSoundFX { get; set; } = 100;
         public bool Fullscreen { get; set; }
-        public byte ResolutionX { get; set; }
-        public byte ResolutionY { get; set; }
+        public int ResolutionX { get; set; }
+        public int ResolutionY { get; set; }
 
         public void Save() => this.SerializeJson("settings");
     }
@@ -536,7 +536,7 @@ namespace SteelOfStalin
         public int Width { get; set; }
         public int Height { get; set; }
 
-        [JsonIgnore] public List<Player> Players { get; set; }
+        [JsonIgnore] public List<Player> Players { get; set; } = new List<Player>();
         [JsonIgnore] public IEnumerable<Prop> AllProps => CombineAll<Prop>(Tiles.Flatten(), Units, Buildings);
 
         protected Tile[][] Tiles { get; set; }

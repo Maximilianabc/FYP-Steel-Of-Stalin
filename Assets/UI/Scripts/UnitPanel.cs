@@ -15,6 +15,7 @@ public class UnitPanel : MonoBehaviour
 {
     private Unit currentUnit = null;
     private GameObject menu;
+    public float animationTime = 0.3f;
 
     private void Awake()
     {
@@ -23,7 +24,7 @@ public class UnitPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -61,7 +62,8 @@ public class UnitPanel : MonoBehaviour
             }
         }
         //modules.GetComponent<Resize>().DoResize();
-        StartCoroutine(DelayResize(modules,1));
+        //StartCoroutine(DelayResize(modules,1));
+        modules.GetComponent<Resize>().DelayResize(1);
 
         GameObject carrying = menu.transform.Find("Carrying").gameObject;
         foreach (Transform child in carrying.transform)
@@ -69,28 +71,26 @@ public class UnitPanel : MonoBehaviour
             if (child.gameObject.name != "Text_Carrying") Destroy(child.gameObject);
         }
         //Supplies
-        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-        instance.transform.SetParent(carrying.transform);
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"), carrying.transform,false);
         instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Supplies";
         instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Supplies.Value), Mathf.RoundToInt((float)u.Carrying.Supplies.Value));
         //Catridges
-        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-        instance.transform.SetParent(carrying.transform);
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"),carrying.transform,false);
         instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Catridges";
         instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Cartridges.Value), Mathf.RoundToInt((float)u.Carrying.Cartridges.Value));
         //Shells
-        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
-        instance.transform.SetParent(carrying.transform);
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"),carrying.transform,false);
         instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Shells";
         instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Shells.Value), Mathf.RoundToInt((float)u.Carrying.Shells.Value));
         //Fuel
-        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+        instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"),carrying.transform,false);
         instance.transform.SetParent(carrying.transform);
         instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = "Fuel";
         instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)u.Capacity.Fuel.Value), Mathf.RoundToInt((float)u.Carrying.Fuel.Value));
         //carrying.GetComponent<Resize>().DoResize();
-        StartCoroutine(DelayResize(carrying,1));
-        
+        //StartCoroutine(DelayResize(carrying,1));
+        carrying.GetComponent<Resize>().DelayResize(1);
+
 
         GameObject weapons = menu.transform.Find("Weapons").gameObject;
         foreach (Transform child in weapons.transform)
@@ -104,9 +104,8 @@ public class UnitPanel : MonoBehaviour
         if (unitWeapons != null) {
             foreach (IOffensiveCustomizable weapon in unitWeapons)
             {
-                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelWeapon"));
+                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelWeapon"),weapons.transform,false);
                 instance.name = weapon.Name;
-                instance.transform.SetParent(weapons.transform);
                 instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = weapon.Name;
                 instance.transform.Find("Soft").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Soft.Value).ToString();
                 instance.transform.Find("Hard").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Hard.Value).ToString();
@@ -114,7 +113,8 @@ public class UnitPanel : MonoBehaviour
             }
         }
         //weapons.GetComponent<Resize>().DoResize();
-        StartCoroutine(DelayResize(weapons,1));
+        //StartCoroutine(DelayResize(weapons,1));
+        weapons.GetComponent<Resize>().DelayResize(1);
 
         GameObject guns = menu.transform.Find("Guns").gameObject;
         foreach (Transform child in guns.transform)
@@ -129,9 +129,8 @@ public class UnitPanel : MonoBehaviour
         {
             foreach (Gun gun in unitGuns)
             {
-                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelGun"));
+                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelGun"),guns.transform,false);
                 instance.name = gun.Name;
-                instance.transform.SetParent(guns.transform);
                 instance.transform.Find("Text_Weapons").GetComponent<TMPro.TMP_Text>().text = gun.Name;
                 instance.transform.Find("Text_ShellType").GetComponent<TMPro.TMP_Text>().text = gun.CurrentShell.Name;
                 //TODO:handle command
@@ -154,7 +153,8 @@ public class UnitPanel : MonoBehaviour
         recon.transform.Find("Text_Recon").GetComponent<TMPro.TMP_Text>().text= Mathf.RoundToInt((float)u.Scouting.Reconnaissance.Value).ToString();
         GameObject communication = menu.transform.Find("Communication").gameObject;
         communication.transform.Find("Text_Communication").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)u.Scouting.Communication.Value).ToString();
-        StartCoroutine(DelayResize(gameObject,2));
+        //StartCoroutine(DelayResize(gameObject,2));
+        GetComponent<Resize>().DelayResize(2);
 
         if (!gameObject.activeSelf) {
             this.Show();
@@ -175,19 +175,24 @@ public class UnitPanel : MonoBehaviour
     //TODO: Animation
     public void Show() {
         gameObject.SetActive(true);
+        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), 0, animationTime);
+        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), 0, animationTime);
     }
 
     public void Hide() {
-        gameObject.SetActive(false);
+        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime);
+        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime);
+        LeanTween.delayedCall(animationTime, (System.Action)delegate { gameObject.SetActive(false); });
+        
     }
 
-    IEnumerator DelayResize(GameObject gameObject,int step)
+    /*IEnumerator DelayResize(GameObject gameObject,int step)
     {
         for(int i=0;i<step;i++)yield return null;
         if (gameObject.activeSelf && gameObject.GetComponent<Resize>()) {
             gameObject.GetComponent<Resize>().DoResize();
         }
-    }
+    }*/
 }
 
 

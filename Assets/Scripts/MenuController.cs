@@ -7,6 +7,7 @@ namespace SteelOfStalin
     {
         private void Start()
         {
+            if (GameObject.Find("game") != null) return;
             GameObject game = Resources.Load<GameObject>(@"Prefabs\game");
             if (game.GetComponent<Game>() == null)
             {
@@ -29,6 +30,11 @@ namespace SteelOfStalin
                 network_util_instance.AddComponent<NetworkUtilities>();
             }
             DontDestroyOnLoad(network_util_instance);
+
+            GameObject UI_util = Resources.Load<GameObject>(@"Prefabs\UI_util");
+            GameObject UI_util_instance = Instantiate(UI_util);
+            UI_util_instance.name = "UI_util";
+            DontDestroyOnLoad(UI_util_instance);
 
             Destroy(gameObject);
         }
