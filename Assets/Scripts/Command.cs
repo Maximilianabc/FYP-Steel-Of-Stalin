@@ -49,8 +49,6 @@ namespace SteelOfStalin.Commands
     {
         public Hold() : base() { }
         public Hold(Unit u) : base(u) { }
-        public Hold(Unit u, Coordinates src, Coordinates dest) : base(u, src, dest) { }
-        public Hold(Unit u, int srcX, int srcY, int destX, int destY) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) { }
 
         public override void Execute()
         {
@@ -69,7 +67,7 @@ namespace SteelOfStalin.Commands
                 Unit.Carrying.Fuel.MinusEquals(fuel);
                 _ = Recorder.Append(Unit.GetResourcesChangeRecord("Fuel", -fuel));
             }
-            _ = Recorder.AppendLine("@");
+            _ = Recorder.AppendLine($" @ {Unit.CoOrds}");
         }
     }
     public sealed class Move : Command
@@ -78,8 +76,6 @@ namespace SteelOfStalin.Commands
 
         public Move() : base() { }
         public Move(Unit u, List<Tile> path) : base(u) => Path = path;
-        public Move(Unit u, Coordinates src, Coordinates dest, List<Tile> path) : base(u, src, dest) => Path = path;
-        public Move(Unit u, int srcX, int srcY, int destX, int destY, List<Tile> path) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Path = path;
 
         // resolve move conflicts at moving phase
         public override void Execute()
@@ -123,13 +119,13 @@ namespace SteelOfStalin.Commands
             {
                 this.Log($"Moved to {dest}. Consumed {supplies} supplies and {fuel} fuel");
                 Unit.CoOrds = new Coordinates(dest);
-                _ = Recorder.AppendLine($"-> {dest}");
+                _ = Recorder.AppendLine($" -> {dest}");
                 Unit.Status |= UnitStatus.MOVED;
             }
             else
             {
                 this.Log($"Destination {dest} is the same as original coords of unit {Unit}. Only cause should be movement conflict.");
-                _ = Recorder.AppendLine($"-x->");
+                _ = Recorder.AppendLine($" -x->");
             }
         }
     }
@@ -176,8 +172,6 @@ namespace SteelOfStalin.Commands
 
         public Fire() : base() { }
         public Fire(Unit u, Unit target, IOffensiveCustomizable weapon) : base(u) => (Target, Weapon) = (target, weapon);
-        public Fire(Unit u, Coordinates src, Coordinates dest, Unit target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
-        public Fire(Unit u, int srcX, int srcY, int destX, int destY, Unit target, IOffensiveCustomizable weapon) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, Weapon) = (target, weapon);
 
         // handle direct-fire in Firing Phase
         // TODO FUT Impl. add effect of module status
@@ -267,8 +261,6 @@ namespace SteelOfStalin.Commands
 
         public Suppress() : base() { }
         public Suppress(Unit u, Unit target, IOffensiveCustomizable weapon) : base(u) => (Target, Weapon) = (target, weapon);
-        public Suppress(Unit u, Coordinates src, Coordinates dest, Unit target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
-        public Suppress(Unit u, int srcX, int srcY, int destX, int destY, Unit target, IOffensiveCustomizable weapon) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, Weapon) = (target, weapon);
 
         // handle direct-fire in Firing Phase
         public override void Execute()
@@ -319,8 +311,6 @@ namespace SteelOfStalin.Commands
 
         public Sabotage() : base() { }
         public Sabotage(Unit u, Building target, IOffensiveCustomizable weapon) : base(u) => (Target, Weapon) = (target, weapon);
-        public Sabotage(Unit u, Coordinates src, Coordinates dest, Building target, IOffensiveCustomizable weapon) : base(u, src, dest) => (Target, Weapon) = (target, weapon);
-        public Sabotage(Unit u, int srcX, int srcY, int destX, int destY, Building target, IOffensiveCustomizable weapon) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, Weapon) = (target, weapon);
 
         // assume target is large enough that no units can block, no need to handle direct-fire
         public override void Execute()
@@ -345,7 +335,7 @@ namespace SteelOfStalin.Commands
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon);
             Unit.Status |= UnitStatus.FIRED;
-            _ = Recorder.Append($"^ {Target}");
+            _ = Recorder.Append($" ^ {Target}");
 
             decimal damage_dealt = Formula.DamageAgainstBuilding(Weapon);
             if (damage_dealt > 0)
@@ -465,8 +455,6 @@ namespace SteelOfStalin.Commands
 
         public Repair() : base() { }
         public Repair(Unit u, Unit t, Module target) : base(u) => (Target, RepairingTarget) = (t, target);
-        public Repair(Unit u, Coordinates src, Coordinates dest, Unit t, Module target) : base(u, src, dest) => (Target, RepairingTarget) = (t, target);
-        public Repair(Unit u, int srcX, int srcY, int destX, int destY, Unit t, Module target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => (Target, RepairingTarget) = (t, target);
 
         public override void Execute()
         {
@@ -508,7 +496,7 @@ namespace SteelOfStalin.Commands
                     e.Carrying.Consume(repair_cost);
                     _ = Recorder.Append(e.GetResourcesChangeRecord(repair_cost));
 
-                    _ = Recorder.Append($"%+ {Target}");
+                    _ = Recorder.Append($" %+ {Target}");
 
                     RepairingTarget.Integrity.PlusEquals(repairing_amount);
                     if (RepairingTarget.Integrity >= integrity_cap)
@@ -607,7 +595,7 @@ namespace SteelOfStalin.Commands
 
             Target.Status = BuildingStatus.UNDER_CONSTRUCTION;
             Target.ConstructionTimeRemaining = consume.Time.ApplyMod();
-            _ = Recorder.AppendLine($"`^ {Target} {Target.ConstructionTimeRemaining}");
+            _ = Recorder.AppendLine($" `^ {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Fortifying {Target.Name} at {Target.CoOrds} for {Target.ConstructionTimeRemaining} round(s)");
         }
     }
@@ -619,8 +607,6 @@ namespace SteelOfStalin.Commands
         public Construct() : base() { }
         public Construct(Unit u, Building target, Coordinates dest) : base(u, default, dest) => Target = target;
         public Construct(Player builder, Building target, Coordinates dest) : base(null, default, dest) => (Builder, Target) = (builder, target);
-        // public Construct(Unit u, Coordinates src, Coordinates dest, Building target) : base(u, src, dest) => Target = target;
-        // public Construct(Unit u, int srcX, int srcY, int destX, int destY, Building target) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => Target = target;
 
         public override void Execute()
         {
@@ -675,7 +661,7 @@ namespace SteelOfStalin.Commands
 
             Target.Initialize(Builder ?? Unit.Owner, Destination, BuildingStatus.UNDER_CONSTRUCTION);
             _ = Map.Instance.AddBuilding(Target);
-            _ = Recorder.AppendLine($"`$ {Target} {Target.ConstructionTimeRemaining}");
+            _ = Recorder.AppendLine($" `$ {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Constructing {Target.Name} at {Destination} for {Target.ConstructionTimeRemaining} round(s)");
         }
     }
@@ -761,7 +747,7 @@ namespace SteelOfStalin.Commands
 
             Unit.Initialize(Trainer, TrainingGround.CoOrds, UnitStatus.IN_QUEUE);
 
-            _ = Recorder.AppendLine($"{Trainer}{Trainer.GetResourcesChangeRecord(consume)}|$ {Unit} {Unit.TrainingTimeRemaining}");
+            _ = Recorder.AppendLine($"{Trainer}{Trainer.GetResourcesChangeRecord(consume)} |$ {Unit} {Unit.TrainingTimeRemaining}");
             _ = Map.Instance.AddUnit(Unit);
 
             this.Log($"Training {Unit}. Time remaining {Unit.TrainingTimeRemaining}");
@@ -872,7 +858,7 @@ namespace SteelOfStalin.Commands
 
             if (c.IsFriendly(Unit.Owner))
             {
-                _ = Recorder.Append($"|^ {c}");
+                _ = Recorder.Append($" |^ {c}");
 
                 Attribute morale_cap = ((Cities)Game.TileData[c.Name]).Morale;
 
@@ -890,7 +876,7 @@ namespace SteelOfStalin.Commands
             }
             else
             {
-                _ = Recorder.Append($"|v {c}");
+                _ = Recorder.Append($" |v {c}");
                 if (c.Morale > 0)
                 {
 

@@ -702,13 +702,13 @@ namespace SteelOfStalin.Assets.Props.Units
 
         public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
-            "Money" => $" m:{change:+0.##;-0.##}=>{Carrying.Money.ApplyMod()}/{Capacity.Money.ApplyMod()} ",
-            "Steel'" => $" t:{change:+0.##;-0.##}=>{Carrying.Steel.ApplyMod()}/{Capacity.Steel.ApplyMod()} ",
-            "Supplies" => $" s:{change:+0.##;-0.##}=>{Carrying.Supplies.ApplyMod()}/{Capacity.Supplies.ApplyMod()} ",
-            "Cartridges" => $" c:{change:+0.##;-0.##}=>{Carrying.Cartridges.ApplyMod()}/{Capacity.Cartridges.ApplyMod()} ",
-            "Shells" => $" h:{change:+0.##;-0.##}=>{Carrying.Shells.ApplyMod()}/{Capacity.Shells.ApplyMod()} ",
-            "Fuel" => $" f:{change:+0.##;-0.##}=>{Carrying.Fuel.ApplyMod()}/{Capacity.Fuel.ApplyMod()} ",
-            "RareMetal" => $" r:{change:+0.##;-0.##}=>{Carrying.RareMetal.ApplyMod()}/{Capacity.RareMetal.ApplyMod()} ",
+            "Money" => $" m:{change:+0.##;-0.##}=>{Carrying.Money.ApplyMod()}/{Capacity.Money.ApplyMod()}",
+            "Steel'" => $" t:{change:+0.##;-0.##}=>{Carrying.Steel.ApplyMod()}/{Capacity.Steel.ApplyMod()}",
+            "Supplies" => $" s:{change:+0.##;-0.##}=>{Carrying.Supplies.ApplyMod()}/{Capacity.Supplies.ApplyMod()}",
+            "Cartridges" => $" c:{change:+0.##;-0.##}=>{Carrying.Cartridges.ApplyMod()}/{Capacity.Cartridges.ApplyMod()}",
+            "Shells" => $" h:{change:+0.##;-0.##}=>{Carrying.Shells.ApplyMod()}/{Capacity.Shells.ApplyMod()}",
+            "Fuel" => $" f:{change:+0.##;-0.##}=>{Carrying.Fuel.ApplyMod()}/{Capacity.Fuel.ApplyMod()}",
+            "RareMetal" => $" r:{change:+0.##;-0.##}=>{Carrying.RareMetal.ApplyMod()}/{Capacity.RareMetal.ApplyMod()}",
             _ => throw new ArgumentException($"Unknown resources symbol {res}")
         };
         public string GetResourcesChangeRecord(Resources consume)
@@ -749,8 +749,8 @@ namespace SteelOfStalin.Assets.Props.Units
             }
             return sb.ToString();
         }
-        public string GetStrengthChangeRecord(decimal change) => $" hp:{change:+0.##;-0.##}=>{Defense.Strength.ApplyMod()}/{Game.UnitData[Name].Defense.Strength.ApplyMod()} ";
-        public string GetSuppressionChangeRecord(decimal change) => $" sup:{change:+0.####;-0.####}=>{CurrentSuppressionLevel:0.####} ";
+        public string GetStrengthChangeRecord(decimal change) => $" hp:{change:+0.##;-0.##}=>{Defense.Strength.ApplyMod():0.##}/{Game.UnitData[Name].Defense.Strength.ApplyMod():0.##}";
+        public string GetSuppressionChangeRecord(decimal change) => $" sup:{change:+0.####;-0.####}=>{CurrentSuppressionLevel:0.####}";
 
         public abstract override object Clone();
         public bool Equals(Unit other) => base.Equals(other);
@@ -837,7 +837,7 @@ namespace SteelOfStalin.Assets.Props.Buildings
         public bool CanBeFortified() => Level < MaxLevel && Status == BuildingStatus.ACTIVE;
         public bool CanBeDemolished() => Level > 0 && Status == BuildingStatus.ACTIVE;
 
-        public string GetDurabilityChangeRecord(decimal change) => $" d:{change:+0.##;-0.##}=>{Durability} ";
+        public string GetDurabilityChangeRecord(decimal change) => $" d:{change:+0.##;-0.##}=>{Durability.ApplyMod()}";
 
         public abstract override object Clone();
     }
@@ -933,7 +933,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
         public bool CanCommunicateWith(Cities c) => this != c && GetStraightLineDistance(c) <= Communication + c.Communication;
 
-        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##,-0.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale} ";
+        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##,-0.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
 
         public abstract override object Clone();
     }

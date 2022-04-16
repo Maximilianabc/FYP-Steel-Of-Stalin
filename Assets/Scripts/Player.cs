@@ -129,14 +129,14 @@ namespace SteelOfStalin
         public override int GetHashCode() => base.GetHashCode();
         public override string ToString() => Name;
 
-        public static Player NewDummyTestPlayer() => new Player()
+        public static AIPlayer NewDummyTestPlayer() => new AIPlayer()
         {
             Name = $"dummy_test_{Utilities.Random.Next()}",
             SerializableColor = (SerializableColor)new Color((float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble()),
             Resources = (Resources)Resources.TEST.Clone()
         };
 
-        public static IEnumerable<Player> NewDummyTestPlayers(int count)
+        public static IEnumerable<AIPlayer> NewDummyTestPlayers(int count)
         {
             for (int i = 0; i < count; i++)
             {
