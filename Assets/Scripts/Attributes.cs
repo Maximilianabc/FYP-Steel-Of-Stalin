@@ -120,7 +120,7 @@ namespace SteelOfStalin.Attributes
         public Attribute() { }
         public Attribute(decimal value, Modifier mod = null) => (Value, Mod) = (value, mod);
 
-        public decimal ApplyMod() => (Mod == null || Mod == default(Modifier)) ? Value : Mod.ApplyTo(Value);
+        public decimal ApplyMod() => (Mod == null || Mod == default) ? Value : Mod.ApplyTo(Value);
         public decimal ApplyDeviation() => Utilities.RandomBetweenSymmetricRange(ApplyMod());
 
         public void PlusEquals(decimal value) => Value = ApplyMod() + value;
@@ -138,7 +138,7 @@ namespace SteelOfStalin.Attributes
         public object Clone()
         {
             Attribute attr = (Attribute)MemberwiseClone();
-            attr.Mod = (Modifier)Mod.Clone();
+            attr.Mod = (Modifier)Mod?.Clone();
             return attr;
         }
         public override bool Equals(object obj) => this == (Attribute)obj;
@@ -169,16 +169,16 @@ namespace SteelOfStalin.Attributes
         public static bool operator ==(Attribute a, decimal b) => a.ApplyMod() == b;
         public static bool operator !=(Attribute a, decimal b) => a.ApplyMod() != b;
 
-        public static decimal operator +(decimal a, Attribute b) => b.ApplyMod() + a;
-        public static decimal operator -(decimal a, Attribute b) => b.ApplyMod() - a;
-        public static decimal operator *(decimal a, Attribute b) => b.ApplyMod() * a;
-        public static decimal operator /(decimal a, Attribute b) => b.ApplyMod() / a;
-        public static bool operator >(decimal a, Attribute b) => b.ApplyMod() > a;
-        public static bool operator <(decimal a, Attribute b) => b.ApplyMod() < a;
-        public static bool operator >=(decimal a, Attribute b) => b.ApplyMod() >= a;
-        public static bool operator <=(decimal a, Attribute b) => b.ApplyMod() <= a;
-        public static bool operator ==(decimal a, Attribute b) => b.ApplyMod() == a;
-        public static bool operator !=(decimal a, Attribute b) => b.ApplyMod() != a;
+        public static decimal operator +(decimal a, Attribute b) => a + b.ApplyMod();
+        public static decimal operator -(decimal a, Attribute b) => a - b.ApplyMod();
+        public static decimal operator *(decimal a, Attribute b) => a * b.ApplyMod();
+        public static decimal operator /(decimal a, Attribute b) => a / b.ApplyMod();
+        public static bool operator >(decimal a, Attribute b) => a > b.ApplyMod();
+        public static bool operator <(decimal a, Attribute b) => a < b.ApplyMod();
+        public static bool operator >=(decimal a, Attribute b) => a >= b.ApplyMod();
+        public static bool operator <=(decimal a, Attribute b) => a <= b.ApplyMod();
+        public static bool operator ==(decimal a, Attribute b) => a == b.ApplyMod();
+        public static bool operator !=(decimal a, Attribute b) => a != b.ApplyMod();
     }
 
     public class Resources : ICloneable
@@ -193,6 +193,32 @@ namespace SteelOfStalin.Attributes
         public Attribute Manpower { get; set; } = new Attribute();
         public Attribute Power { get; set; } = new Attribute();
         public Attribute Time { get; set; } = new Attribute();
+        internal static Resources INFINITE => new Resources()
+        {
+            Money = new Attribute(decimal.MaxValue),
+            Steel = new Attribute(decimal.MaxValue),
+            Supplies = new Attribute(decimal.MaxValue),
+            Cartridges = new Attribute(decimal.MaxValue),
+            Shells = new Attribute(decimal.MaxValue),
+            Fuel = new Attribute(decimal.MaxValue),
+            RareMetal = new Attribute(decimal.MaxValue),
+            Manpower = new Attribute(decimal.MaxValue),
+            Power = new Attribute(decimal.MaxValue),
+            Time = new Attribute(decimal.MaxValue)
+        };
+        internal static Resources TEST => new Resources()
+        {
+            Money = new Attribute(99999),
+            Steel = new Attribute(99999),
+            Supplies = new Attribute(99999),
+            Cartridges = new Attribute(99999),
+            Shells = new Attribute(99999),
+            Fuel = new Attribute(99999),
+            RareMetal = new Attribute(99999),
+            Manpower = new Attribute(99999),
+            Power = new Attribute(99999),
+            Time = new Attribute(99999)
+        };
 
         [JsonIgnore] public IEnumerable<Attribute> All => Utilities.CombineAll(Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Time);
         [JsonIgnore] public bool IsZero => All.All(a => a.Value == 0);

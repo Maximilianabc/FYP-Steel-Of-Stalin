@@ -121,8 +121,8 @@ namespace SteelOfStalin.Commands
             Coordinates dest = Path.Last().CoOrds;
             if (Unit.CoOrds != dest)
             {
-                Unit.CoOrds = new Coordinates(dest);
                 this.Log($"Moved to {dest}. Consumed {supplies} supplies and {fuel} fuel");
+                Unit.CoOrds = new Coordinates(dest);
                 _ = Recorder.AppendLine($"-> {dest}");
                 Unit.Status |= UnitStatus.MOVED;
             }
@@ -202,7 +202,7 @@ namespace SteelOfStalin.Commands
 
             if (Weapon is Gun)
             {
-                if ((decimal)new System.Random().NextDouble() > Weapon.Offense.Accuracy.Normal)
+                if ((decimal)Random.NextDouble() > Weapon.Offense.Accuracy.Normal)
                 {
                     this.Log($"Missed the shot against target {Target}.");
                     _ = Recorder.AppendLine(" M");
@@ -235,7 +235,7 @@ namespace SteelOfStalin.Commands
             }
             else
             {
-                if ((decimal)new System.Random().NextDouble() <= Target.Defense.Evasion)
+                if ((decimal)Random.NextDouble() <= Target.Defense.Evasion)
                 {
                     this.Log($"Target {Target} evaded the attack.");
                     _ = Recorder.AppendLine(" E");

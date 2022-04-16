@@ -434,7 +434,7 @@ namespace SteelOfStalin
 
         public Color GetRandomAvailablePlayerColor()
         {
-            int index = new System.Random().Next(m_availableColors.Count);
+            int index = Utilities.Random.Next(m_availableColors.Count);
             Color color = m_availableColors[index];
             m_availableColors.RemoveAt(index);
             return color;
@@ -724,7 +724,6 @@ namespace SteelOfStalin
             Buildings = buildings.ToList();
         }
 
-
         /// <summary>
         /// Adds a unit but does not initialize it
         /// </summary>
@@ -1011,11 +1010,7 @@ namespace SteelOfStalin
             }
 
             List<Unit> units = Units.Where(u => u.CoOrds.X == t.CoOrds.X && u.CoOrds.Y == t.CoOrds.Y).ToList();
-            if (units.Count == 0)
-            {
-                Debug.Log($"No unit found at {t}");
-            }
-            else if (units.Count > 2 || (units.Count == 2 && units[0].IsOfSameCategory(units[1])))
+            if (units.Count > 2 || (units.Count == 2 && units[0].IsOfSameCategory(units[1])))
             {
                 Debug.LogError($"Illegal stacking of units found at {t}!");
             }
@@ -1071,9 +1066,8 @@ namespace SteelOfStalin
 
         public RandomMap(int width, int height, int num_player, string battle_name, string name) : base(width, height, battle_name, name)
         {
-            System.Random random = new System.Random();
-            HeightMap = new PerlinMap(width, height, seed_x: random.Next(-(1 << 16), 1 << 16), seed_y: random.Next(-(1 << 16), 1 << 16));
-            HumidityMap = new PerlinMap(width, height, seed_x: random.Next(-(1 << 16), 1 << 16), seed_y: random.Next(-(1 << 16), 1 << 16));
+            HeightMap = new PerlinMap(width, height, seed_x: Utilities.Random.Next(-(1 << 16), 1 << 16), seed_y: Utilities.Random.Next(-(1 << 16), 1 << 16));
+            HumidityMap = new PerlinMap(width, height, seed_x: Utilities.Random.Next(-(1 << 16), 1 << 16), seed_y: Utilities.Random.Next(-(1 << 16), 1 << 16));
 
             HeightMap.Generate();
             HumidityMap.Generate();
@@ -1258,7 +1252,7 @@ namespace SteelOfStalin
             int num_suburb = (int)(CitiesNum * suburb_ratio);
             for (int i = 0; i < num_suburb; i++)
             {
-                int index = new System.Random().Next(m_cities.Count);
+                int index = Utilities.Random.Next(m_cities.Count);
                 Coordinates c = (Coordinates)m_cities[index];
                 Tiles[c.X][c.Y] = Game.TileData.GetNew<Cities>("suburb");
                 Tiles[c.X][c.Y].CoOrds = new Coordinates(c);
@@ -1363,7 +1357,7 @@ namespace SteelOfStalin
                 // if not have any cities yet, randomly pick one from available;
                 if (m_cities.Count == 0 || force_generate_without_checking)
                 {
-                    CubeCoordinates c = m_flatLands[new System.Random().Next(m_flatLands.Count)];
+                    CubeCoordinates c = m_flatLands[Utilities.Random.Next(m_flatLands.Count)];
                     m_cities.Add(c);
                     _ = m_flatLands.Remove(c);
                     force_generate_without_checking = false;
@@ -1377,8 +1371,8 @@ namespace SteelOfStalin
                     while (has_cities_within_range)
                     {
                         // pick one
-                        int rand_dist = new System.Random().Next(min_sep, max_sep);
-                        double rand_theta = new System.Random().NextDouble() * 2 * Math.PI;
+                        int rand_dist = Utilities.Random.Next(min_sep, max_sep);
+                        double rand_theta = Utilities.Random.NextDouble() * 2 * Math.PI;
 
                         int candidate_x = (int)(last.X + rand_dist * Math.Cos(rand_theta));
                         int candidate_y = (int)(last.Y + rand_dist * Math.Sin(rand_theta));
@@ -1561,7 +1555,7 @@ namespace SteelOfStalin
         public Unit Unit { get; set; }
 
         [JsonIgnore] public string Name => GetType().Name;
-        [JsonIgnore] public StringBuilder Recorder => new StringBuilder();
+        [JsonIgnore] public StringBuilder Recorder { get; set; } = new StringBuilder();
 
         public virtual void Execute() { }
 
@@ -2155,7 +2149,7 @@ namespace SteelOfStalin.Flow
                 {
                     u.Morale.Value = 0;
                     // TODO FUT Impl. add some variations to the chance
-                    if (new System.Random().NextDouble() < 0.1)
+                    if (Utilities.Random.NextDouble() < 0.1)
                     {
                         // TODO FUT Impl. add some chance for surrender effect: enemy can capture this unit
                         u.Status = UnitStatus.DESTROYED;

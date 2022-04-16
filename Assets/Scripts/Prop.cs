@@ -448,8 +448,8 @@ namespace SteelOfStalin.Assets.Props.Units
         [JsonIgnore] public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
         [JsonIgnore] public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
 
-        public bool IsOwn(Player p) => Owner == p;
-        public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
+        public bool IsOwn(Player p) => p != null && Owner == p;
+        public bool IsAlly(Player p) => Owner?.Allies.Any(a => a == p) ?? false;
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p) && !IsNeutral();
@@ -497,6 +497,7 @@ namespace SteelOfStalin.Assets.Props.Units
             CoOrds = coordinates;
             Status = status;
             SetMeshName();
+            Carrying = (Resources)Cost.Base.Clone();
         }
         public void SetOwner(Player player)
         {
@@ -557,10 +558,10 @@ namespace SteelOfStalin.Assets.Props.Units
         public bool HasSpotted(Unit observee) => Owner.GetAllUnitsInSight().Contains(observee);
         public bool HasSpotted(Building building) => Owner.GetAllBuildingsInSight().Contains(building);
 
-        public IEnumerable<Tile> GetAccessibleNeigbours(int distance = 1)
-            => Map.Instance.GetNeighbours(CubeCoOrds, distance).Where(n => CanAccessTile(n) && GetPath(GetLocatedTile(), n).Any());
-        public IEnumerable<Tile> GetAccessibleNeigbours(CubeCoordinates c, int distance = 1)
-            => Map.Instance.GetNeighbours(c, distance).Where(n => CanAccessTile(n) && GetPath(Map.Instance.GetTile(c), n).Any());
+        public IEnumerable<Tile> GetAccessibleNeigbours(int distance = 1) => Map.Instance.GetNeighbours(CubeCoOrds, distance).Where(n => CanAccessTile(n));
+        public IEnumerable<Tile> GetAccessibleNeigbours(CubeCoordinates c, int distance = 1) => Map.Instance.GetNeighbours(c, distance).Where(n => CanAccessTile(n));
+
+        public IEnumerable<Tile> GetMoveRange() => GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod());
         public IEnumerable<Tile> GetFiringRange(IOffensiveCustomizable weapon)
         {
             if (weapon == null)
@@ -579,12 +580,21 @@ namespace SteelOfStalin.Assets.Props.Units
         }
         public virtual IEnumerable<Tile> GetReconRange() => Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Scouting.Reconnaissance.ApplyMod());
 
+        /* TODO FUT. Impl. think of a way to detect accessible (tile itself can be accessed by the unit) but unreachable (no valid path) goal tile
+        *  e.g. a flat-land tile surrounded by mountains on all 6 sides within speed of the unit
+        *  should be very rare in random gen maps, left for FUT. Impl. as map editor would be available later
+        */
         public IEnumerable<Tile> GetPath(Tile start, Tile end, PathfindingOptimization opt = PathfindingOptimization.LEAST_SUPPLIES_COST)
         {
             if (this is Personnel && opt == PathfindingOptimization.LEAST_FUEL_COST)
             {
                 this.LogError("Only units with fuel capacity can be used with fuel cost optimization for pathfinding.");
-                return new List<Tile>();
+                return Enumerable.Empty<Tile>();
+            }
+            if (!CanAccessTile(end))
+            {
+                this.LogError("This unit cannot access the destination");
+                return Enumerable.Empty<Tile>();
             }
 
             bool is_aerial = this is Aerial;
@@ -613,7 +623,7 @@ namespace SteelOfStalin.Assets.Props.Units
                         path.Add(Map.Instance.GetTile(w_check.CubeCoOrds));
                         w_check = w_check.Parent;
                     }
-                    return path;
+                    return path.Reverse<Tile>();
                 }
                 visited.Add(w_check);
                 _ = active.Remove(w_check);
@@ -692,13 +702,13 @@ namespace SteelOfStalin.Assets.Props.Units
 
         public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
-            "Money" => $" m:{change:+0.##;-0.##}=>{Carrying.Money}/{Capacity.Money} ",
-            "Steel'" => $" t:{change:+0.##;-0.##}=>{Carrying.Steel}/{Capacity.Steel} ",
-            "Supplies" => $" s:{change:+0.##;-0.##}=>{Carrying.Supplies}/{Capacity.Supplies} ",
-            "Cartridges" => $" c:{change:+0.##;-0.##}=>{Carrying.Cartridges}/{Capacity.Cartridges} ",
-            "Shells" => $" h:{change:+0.##;-0.##}=>{Carrying.Shells}/{Capacity.Shells} ",
-            "Fuel" => $" f:{change:+0.##;-0.##}=>{Carrying.Fuel}/{Capacity.Fuel} ",
-            "RareMetal" => $" r:{change:+0.##;-0.##}=>{Carrying.RareMetal}/{Capacity.RareMetal} ",
+            "Money" => $" m:{change:+0.##;-0.##}=>{Carrying.Money.ApplyMod()}/{Capacity.Money.ApplyMod()} ",
+            "Steel'" => $" t:{change:+0.##;-0.##}=>{Carrying.Steel.ApplyMod()}/{Capacity.Steel.ApplyMod()} ",
+            "Supplies" => $" s:{change:+0.##;-0.##}=>{Carrying.Supplies.ApplyMod()}/{Capacity.Supplies.ApplyMod()} ",
+            "Cartridges" => $" c:{change:+0.##;-0.##}=>{Carrying.Cartridges.ApplyMod()}/{Capacity.Cartridges.ApplyMod()} ",
+            "Shells" => $" h:{change:+0.##;-0.##}=>{Carrying.Shells.ApplyMod()}/{Capacity.Shells.ApplyMod()} ",
+            "Fuel" => $" f:{change:+0.##;-0.##}=>{Carrying.Fuel.ApplyMod()}/{Capacity.Fuel.ApplyMod()} ",
+            "RareMetal" => $" r:{change:+0.##;-0.##}=>{Carrying.RareMetal.ApplyMod()}/{Capacity.RareMetal.ApplyMod()} ",
             _ => throw new ArgumentException($"Unknown resources symbol {res}")
         };
         public string GetResourcesChangeRecord(Resources consume)
@@ -739,7 +749,7 @@ namespace SteelOfStalin.Assets.Props.Units
             }
             return sb.ToString();
         }
-        public string GetStrengthChangeRecord(decimal change) => $" hp:{change:+0.##;-0.##}=>{Defense.Strength}/{Game.UnitData[Name].Defense.Strength} ";
+        public string GetStrengthChangeRecord(decimal change) => $" hp:{change:+0.##;-0.##}=>{Defense.Strength.ApplyMod()}/{Game.UnitData[Name].Defense.Strength.ApplyMod()} ";
         public string GetSuppressionChangeRecord(decimal change) => $" sup:{change:+0.####;-0.####}=>{CurrentSuppressionLevel:0.####} ";
 
         public abstract override object Clone();
@@ -979,6 +989,11 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public override bool Equals(object other) => this == (Tile)other;
         public override int GetHashCode() => base.GetHashCode();
         public abstract override object Clone();
+
+        public Tile ToList()
+        {
+            throw new NotImplementedException();
+        }
 
         public static bool operator ==(Tile t1, Tile t2) => t1?.CoOrds.X == t2?.CoOrds.X && t2?.CoOrds.Y == t2?.CoOrds.Y;
         public static bool operator !=(Tile t1, Tile t2) => !(t1?.CoOrds.X == t2?.CoOrds.X && t2?.CoOrds.Y == t2?.CoOrds.Y);

@@ -5,6 +5,7 @@ using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
+using SteelOfStalin.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;
+using Random = System.Random;
 using Resources = SteelOfStalin.Attributes.Resources;
 
 namespace SteelOfStalin
@@ -117,6 +119,21 @@ namespace SteelOfStalin
         public override bool Equals(object obj) => base.Equals(obj);
         public override int GetHashCode() => base.GetHashCode();
         public override string ToString() => Name;
+
+        public static Player NewDummyTestPlayer() => new Player()
+        {
+            Name = $"dummy_test_{Utilities.Random.Next()}",
+            SerializableColor = (SerializableColor)new Color((float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble()),
+            Resources = (Resources)Resources.TEST.Clone()
+        };
+
+        public static IEnumerable<Player> NewDummyTestPlayers(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return NewDummyTestPlayer();
+            }
+        }
 
         public static bool operator ==(Player p1, Player p2) => p1?.Name == p2?.Name && p1?.Color == p2?.Color;
         public static bool operator !=(Player p1, Player p2) => !(p1?.Name == p2?.Name && p1?.Color == p2?.Color);

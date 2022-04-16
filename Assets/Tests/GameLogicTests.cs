@@ -9,8 +9,10 @@ using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
+using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
+using SteelOfStalin.Util;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -20,6 +22,7 @@ public class GameLogicTest
     public BuildingData BuildingData { get; set; } = new BuildingData();
     public TileData TileData { get; set; } = new TileData();
     public CustomizableData CustomizableData { get; set; } = new CustomizableData();
+    public BattleRules Rules { get; set; } = new BattleRules();
     public Map Map { get; set; } = new Map();
 
     [SetUp]
@@ -29,13 +32,18 @@ public class GameLogicTest
         BuildingData.Load();
         TileData.Load();
         CustomizableData.Load();
+        Rules = DataUtilities.DeserializeJson<BattleRules>(@"Saves\test\rules");
         Map.Load();
+        if (Map.Players.Count == 0)
+        {
+            Map.Players.AddRange(Player.NewDummyTestPlayers(3));
+        }
     }
 
     [Test]
     public void GetNeighbourTest()
     {
-        Coordinates random = new Coordinates(new System.Random().Next(100), new System.Random().Next(100));
+        Coordinates random = new Coordinates(Utilities.Random.Next(100), Utilities.Random.Next(100));
         CubeCoordinates random_cube = (CubeCoordinates)random;
 
         IEnumerable<CubeCoordinates> cubes = random_cube.GetNeigbours();
@@ -362,6 +370,34 @@ public class GameLogicTest
 
         // Assert.IsTrue(i.CanMove());
 
+    }
+
+    [Test]
+    public void GetPathTest()
+    {
+        Player p1 = Map.Players[0];
+        Infantry i = UnitData.GetNew<Infantry>();
+        i.SetMeshName();
+        i.Initialize(p1, new Coordinates(1, 1), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+
+        List<Tile> path = i.GetPath(i.GetLocatedTile(), Map.Instance.GetTile(1, 3)).ToList();
+        Assert.AreEqual(2, path.Count);
+    }
+
+    [Test]
+    public void CommandsTest()
+    {
+        Player p1 = Map.Players[0];
+        Infantry i = UnitData.GetNew<Infantry>();
+        i.SetMeshName();
+
+        Coordinates start_point = Utilities.Random.NextItem(Map.Instance.GetTiles().Where(t => i.CanAccessTile(t)).Select(t => t.CoOrds));
+        i.Initialize(p1, start_point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+
+        Tile end_point = Utilities.Random.NextItem(i.GetMoveRange());
+        Command command = new Move(i, i.GetPath(i.GetLocatedTile(), end_point).ToList());
+        command.Execute();
+        Debug.Log(command.Recorder);
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
