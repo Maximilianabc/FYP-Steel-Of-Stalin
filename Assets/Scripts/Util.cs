@@ -1180,6 +1180,15 @@ namespace SteelOfStalin.DataIO
             }
         }
 
+        public void SendDumpFiles(List<string> local_file_paths, ClientRpcParams @params = default)
+        {
+            Dictionary<string, string> relative_paths = GetDumpPaths(local_file_paths);
+            foreach (KeyValuePair<string, string> relative_path in relative_paths)
+            {
+                SendFile(relative_path.Key, relative_path.Value, @params);
+            }
+        }
+
         public bool SaveFile(string relative_path, bool delete_on_saved = true)
         {
             if (!m_files.ContainsKey(relative_path))

@@ -170,6 +170,7 @@ namespace SteelOfStalin
             yield return new WaitWhile(() => m_self == null);
             gameObject.name = m_self.Name;
             m_isInitialized = true;
+            Debug.Log("Player object initialized");
             yield return null;
         }
 

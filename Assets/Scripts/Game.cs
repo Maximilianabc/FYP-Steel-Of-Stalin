@@ -36,6 +36,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using Resources = SteelOfStalin.Attributes.Resources;
+using System.Threading.Tasks;
 
 namespace SteelOfStalin
 {
@@ -94,6 +95,7 @@ namespace SteelOfStalin
             AssetsLoaded = true;
         }
 
+        // TODO FUT. Impl. Handle corrupted save files
         public static void LoadBattleInfos()
         {
             foreach (string save in Directory.GetDirectories(@$"{ExternalFilePath}\Saves"))
@@ -250,15 +252,8 @@ namespace SteelOfStalin
                 Map.Width = info.MapWidth;
                 Map.Height = info.MapHeight;
 
-                Load();
-                ConnectedPlayerIDs = new Dictionary<ulong, string>()
-                {
-                    [0] = Self.Name
-                };
-                NetworkManager.OnClientConnectedCallback += OnClientConnected;
-
-                // remove colors of existing players from available colors
-                m_availableColors = m_availableColors.Except(Players.Select(p => p.Color)).ToList();
+                Task.Run(() => Load());
+                _ = StartCoroutine(HostPostInitialization());
             }
             else if (Game.Network.IsClient)
             {
@@ -306,7 +301,24 @@ namespace SteelOfStalin
             }
             yield return null;
         }
+        private IEnumerator HostPostInitialization()
+        {
+            yield return new WaitWhile(() => Self == null);
+            if (string.IsNullOrEmpty(Self.Name))
+            {
+                Debug.LogWarning("Profile name is null");
+            }
+            ConnectedPlayerIDs = new Dictionary<ulong, string>()
+            {
+                [0] = Self.Name
+            };
+            NetworkManager.OnClientConnectedCallback += OnClientConnected;
 
+            // remove colors of existing players from available colors
+            m_availableColors = m_availableColors.Except(Players.Select(p => p.Color)).ToList();
+            Debug.Log("Post initialization finished");
+            yield return null;
+        }
         // TODO add force start option for host even if not all players are ready
         private IEnumerator WaitForGameStart()
         {
@@ -446,10 +458,10 @@ namespace SteelOfStalin
             ClientRpcParams send_params = NetworkUtilities.GetClientRpcSendParams(id);
             ClientRpcParams send_params_except_host = NetworkUtilities.GetClientRpcSendParams(ConnectedPlayerIDs.Keys.Where(id => id != Game.Network.LocalClientId));
 
-            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.UnitData.LocalJsonFilePaths), send_params);
-            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.BuildingData.LocalJsonFilePaths), send_params);
-            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.TileData.LocalJsonFilePaths), send_params);
-            NetworkUtilities.SendFiles(NetworkUtilities.GetDumpPaths(Game.CustomizableData.LocalJsonFilePaths), send_params);
+            NetworkUtilities.SendDumpFiles(Game.UnitData.LocalJsonFilePaths, send_params);
+            NetworkUtilities.SendDumpFiles(Game.BuildingData.LocalJsonFilePaths, send_params);
+            NetworkUtilities.SendDumpFiles(Game.TileData.LocalJsonFilePaths, send_params);
+            NetworkUtilities.SendDumpFiles(Game.CustomizableData.LocalJsonFilePaths, send_params);
 
             NetworkUtilities.SendNamedMessage(Map, id, NetworkMessageType.DATA);
             // NetworkUtilities.SendNamedMessage(Map.GetTilesUnflatterned(), id, NetworkMessageType.DATA);

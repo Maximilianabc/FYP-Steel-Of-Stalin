@@ -2,6 +2,8 @@ using SteelOfStalin.DataIO;
 using UnityEngine;
 using Unity.Netcode;
 using SteelOfStalin.Util;
+using System.Collections;
+using System.Threading.Tasks;
 #if UNITY_EDITOR
 using ParrelSync;
 #endif
@@ -25,6 +27,7 @@ namespace SteelOfStalin
                 battle_instance.AddComponent<Battle>();
             }
             battle_instance.name = "battle";
+            DontDestroyOnLoad(battle_instance);
 
             GameObject player = Game.GameObjects.Find(g => g.name == "player");
             GameObject player_instance = Instantiate(player);
@@ -32,6 +35,7 @@ namespace SteelOfStalin
             {
                 player_instance.AddComponent<PlayerObject>();
             }
+            DontDestroyOnLoad(player_instance);
 
 #if UNITY_EDITOR
             if (Game.Network == null)
