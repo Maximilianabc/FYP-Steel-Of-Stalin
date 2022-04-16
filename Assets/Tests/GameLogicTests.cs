@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using SteelOfStalin;
+using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Props;
 using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
@@ -18,25 +20,22 @@ using UnityEngine.TestTools;
 
 public class GameLogicTest
 {
-    public UnitData UnitData { get; set; } = new UnitData();
-    public BuildingData BuildingData { get; set; } = new BuildingData();
-    public TileData TileData { get; set; } = new TileData();
-    public CustomizableData CustomizableData { get; set; } = new CustomizableData();
+    public UnitData UnitData => Game.UnitData;
+    public BuildingData BuildingData => Game.BuildingData;
+    public TileData TileData => Game.TileData;
+    public CustomizableData CustomizableData => Game.CustomizableData;
     public BattleRules Rules { get; set; } = new BattleRules();
     public Map Map { get; set; } = new Map();
 
     [SetUp]
     public void TestSetUp()
     {
-        UnitData.Load();
-        BuildingData.Load();
-        TileData.Load();
-        CustomizableData.Load();
+        Game.LoadAllAssets();
         Rules = DataUtilities.DeserializeJson<BattleRules>(@"Saves\test\rules");
         Map.Load();
-        if (Map.Players.Count == 0)
+        if (Map.Players.Count < 3)
         {
-            Map.Players.AddRange(Player.NewDummyTestPlayers(3));
+            Map.Players.AddRange(Player.NewDummyTestPlayers(3 - Map.Players.Count));
         }
     }
 
@@ -390,14 +389,47 @@ public class GameLogicTest
         Player p1 = Map.Players[0];
         Infantry i = UnitData.GetNew<Infantry>();
         i.SetMeshName();
-
         Coordinates start_point = Utilities.Random.NextItem(Map.Instance.GetTiles().Where(t => i.CanAccessTile(t)).Select(t => t.CoOrds));
         i.Initialize(p1, start_point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        i.ChangeFirearm(CustomizableData.GetNew<IOffensiveCustomizable>(i.AvailableFirearms[1]) as Firearm);
 
         Tile end_point = Utilities.Random.NextItem(i.GetMoveRange());
-        Command command = new Move(i, i.GetPath(i.GetLocatedTile(), end_point).ToList());
-        command.Execute();
-        Debug.Log(command.Recorder);
+
+        List<Command> commands = new List<Command>();
+        Command move = new Move(i, i.GetPath(i.GetLocatedTile(), end_point).ToList());
+        move.Execute();
+        commands.Add(move);
+
+        Command hold = new Hold(i);
+        hold.Execute();
+        commands.Add(hold);
+
+        Player p2 = Map.Players[1];
+        Assault a = UnitData.GetNew<Assault>();
+        a.SetMeshName();
+        a.Initialize(p2, start_point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+
+        Command fire = new Fire(i, a, i.PrimaryFirearm);
+        fire.Execute();
+        commands.Add(fire);
+
+        Command suppress = new Suppress(i, a, i.PrimaryFirearm);
+        suppress.Execute();
+        commands.Add(suppress);
+
+        Building outpost = BuildingData.GetNew<Outpost>();
+        outpost.SetMeshName();
+        outpost.Initialize(p2, new Coordinates(start_point.X - 1, start_point.Y));
+        Debug.Log(outpost.Durability);
+
+        Command sabotage = new Sabotage(i, outpost, i.PrimaryFirearm);
+        sabotage.Execute();
+        commands.Add(sabotage);
+
+        foreach (string result in commands.Select(c => c.ToString()))
+        {
+            Debug.Log(result);
+        }
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use

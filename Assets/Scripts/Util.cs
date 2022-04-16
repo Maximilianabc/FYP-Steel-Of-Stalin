@@ -213,10 +213,17 @@ namespace SteelOfStalin.Util
 
             decimal final_accuracy = offense.Accuracy.Suppress.ApplyMod() + offense.Accuracy.Deviation.ApplyDeviation();
             decimal suppress = offense.Suppression.ApplyMod() * final_accuracy;
-            int round = input.defender.ConsecutiveSuppressedRound;
+            int round = input.defender.ConsecutiveSuppressedRound + 1;
             decimal determinant = -round * (round - 2 / suppress);
+            decimal acos = suppress * round - 1;
 
-            return determinant > 0 ? 1.1M * (1 - 1 / Mathm.PI * Mathm.Acos((suppress * round - 1) - suppress * Mathm.Sqrt(determinant))) : 1.1M;
+            if (acos < -1 || acos > 1)
+            {
+                Debug.LogError($"Acos value {acos} in EffectiveSuppression is out of range");
+                return 0;
+            }
+
+            return determinant > 0 ? 1.1M * (1 - 1 / Mathm.PI * Mathm.Acos(acos) - suppress * Mathm.Sqrt(determinant)) : 1.1M;
         };
         public static Func<IOffensiveCustomizable, decimal> DamageAgainstBuilding => (weapon) => weapon.Offense.Damage.Destruction * weapon.Offense.Damage.Deviation.ApplyDeviation();
         public static Func<(decimal observer_recon, decimal observer_detect, decimal observee_conceal, decimal distance), bool> VisualSpotting => (input) =>
@@ -528,6 +535,7 @@ namespace SteelOfStalin.DataIO
             _ when typeof(U) == typeof(Module) => Modules.GetNew(name),
             _ when typeof(U) == typeof(Firearm) || typeof(U).IsSubclassOf(typeof(Firearm)) => Firearms.CloneNew(name),
             _ when typeof(U) == typeof(Shell) || typeof(U).IsSubclassOf(typeof(Shell)) => Shells.CloneNew(name),
+            _ when typeof(U) == typeof(IOffensiveCustomizable) => All.OfType<IOffensiveCustomizable>().Select(w => w as Customizable).ToList().CloneNew(name),
             _ => throw new ArgumentException($"There is no sub-type with name {typeof(U).Name.ToLower()} in type Customizable")
         };
 

@@ -62,10 +62,10 @@ namespace SteelOfStalin.Assets.Customizables
             = ((Attribute)another.Integrity.Clone(), (Attribute)another.Weight.Clone(), (Attribute)another.FunctionalThreshold.Clone(), (Attribute)another.TakeDamageChance.Clone());
 
         public abstract override object Clone();
-        public virtual string GetIntegrityChangeRecord(decimal change) => $" {Name}:i:{change:+0.##;-0.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity}";
+        public virtual string GetIntegrityChangeRecord(decimal change) => $" {Name}:i:{change:+0.##;-0.##}=>{Integrity}/{Game.CustomizableData.Modules[Name].Integrity.ApplyMod()}";
     }
 
-    public interface IOffensiveCustomizable : INamedAsset
+    public interface IOffensiveCustomizable : ICloneable, INamedAsset
     {
         public Offense Offense { get; set; }
         public Attribute Noise { get; set; }
