@@ -86,7 +86,7 @@ namespace SteelOfStalin
             {
                 return "";
             }
-            
+
             StringBuilder sb = new StringBuilder();
             if (consume.Money > 0)
             {
