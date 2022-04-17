@@ -80,32 +80,36 @@ namespace SteelOfStalin
             // TODO FUT. Impl. change these to player input instead of loopback address in production
             connection.Address = "127.0.0.1";
             connection.Port = 7777;
-            Network.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(Profile.Name); // TODO FUT. Impl. add password here
+            Network.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(string.IsNullOrEmpty(Profile.Name) ? "dummy_123" : Profile.Name); // TODO FUT. Impl. add password here
             Network.StartClient();
         }
 
-        public static void LoadAllAssets()
+        public static void LoadAllAssets(bool from_dump = false)
         {
-            GameObjects = UnityEngine.Resources.LoadAll<GameObject>("Prefabs").ToList();
-            AudioClips = UnityEngine.Resources.LoadAll<AudioClip>("Audio").ToList();
-            UnitData.Load();
-            BuildingData.Load();
-            TileData.Load();
-            CustomizableData.Load();
+            AssetsLoaded = false;
+            if (!from_dump)
+            {
+                GameObjects = UnityEngine.Resources.LoadAll<GameObject>("Prefabs").ToList();
+                AudioClips = UnityEngine.Resources.LoadAll<AudioClip>("Audio").ToList();
+            }
+            UnitData.Load(from_dump);
+            BuildingData.Load(from_dump);
+            TileData.Load(from_dump);
+            CustomizableData.Load(from_dump);
             AssetsLoaded = true;
         }
 
         // TODO FUT. Impl. Handle corrupted save files
         public static void LoadBattleInfos()
         {
-            foreach (string save in Directory.GetDirectories(@$"{ExternalFilePath}\Saves"))
+            foreach (string save in Directory.GetDirectories(SavesFolder))
             {
                 string battle_name = Path.GetFileName(save);
-                string map_path = $@"Saves\{battle_name}\map";
+                string map_path = GetRelativePath(ExternalFolder.SAVES, battle_name, "map");
                 string[] lines;
                 try
                 {
-                    lines = ReadTxt($@"{map_path}\stats");
+                    lines = ReadTxt(AppendPath(map_path, "stats"));
                 }
                 catch (FileNotFoundException)
                 {
@@ -120,7 +124,7 @@ namespace SteelOfStalin
                     MapWidth = int.Parse(Regex.Match(lines[1], @"^Width: (\d+)$").Groups[1].Value),
                     MapHeight = int.Parse(Regex.Match(lines[2], @"^Height: (\d+)$").Groups[1].Value),
                     MaxNumPlayers = int.Parse(Regex.Match(lines[3], @"^Players: (\d)$").Groups[1].Value),
-                    Rules = DeserializeJson<BattleRules>($@"{save}\rules", false)
+                    Rules = DeserializeJson<BattleRules>(AppendPath(save, "rules"), false)
                 });
             }
         }
@@ -218,7 +222,7 @@ namespace SteelOfStalin
 
         private Player m_winner { get; set; } = null;
         private bool m_isInitialized => Players.Count > 0 && Map.IsInitialized;
-        private string m_folder => $@"Saves\{Name}";
+        private string m_folder => AppendPath(FolderNames[ExternalFolder.SAVES], Name);
         private List<Color> m_availableColors { get; set; } = new List<Color>(CommonColors);
 
         private Dictionary<ulong, string> _playerIDs = new Dictionary<ulong, string>();
@@ -237,34 +241,8 @@ namespace SteelOfStalin
         private void Start()
         {
             Instance = this;
-
             NetworkUtilities = FindObjectOfType<NetworkUtilities>();
-
-            if (Game.Network.IsHost)
-            {
-                Debug.Log("Started as host");
-
-                BattleInfo info = Game.ActiveBattle;
-                Name = info.Name;
-                Rules = info.Rules;
-                MaxNumPlayers = info.MaxNumPlayers;
-                Map.Name = info.MapName;
-                Map.Width = info.MapWidth;
-                Map.Height = info.MapHeight;
-
-                Task.Run(() => Load());
-                _ = StartCoroutine(HostPostInitialization());
-            }
-            else if (Game.Network.IsClient)
-            {
-                Debug.Log("Started as client");
-            }
-            else
-            {
-                Debug.LogError("Something went wrong: NetworkManager is neither host nor client.");
-                return;
-            }
-            _ = StartCoroutine(WaitForGameStart());
+            _ = StartCoroutine(Initialize());
         }
 
         private IEnumerator GameLoop()
@@ -299,6 +277,36 @@ namespace SteelOfStalin
                 }
                 EndPlanning();
             }
+            yield return null;
+        }
+        private IEnumerator Initialize()
+        {
+            yield return new WaitWhile(() => !(Game.Network.IsClient || Game.Network.IsServer));
+            if (Game.Network.IsHost)
+            {
+                Debug.Log("Started as host");
+
+                BattleInfo info = Game.ActiveBattle;
+                Name = info.Name;
+                Rules = info.Rules;
+                MaxNumPlayers = info.MaxNumPlayers;
+                Map.Name = info.MapName;
+                Map.Width = info.MapWidth;
+                Map.Height = info.MapHeight;
+
+                Task.Run(() => Load());
+                _ = StartCoroutine(HostPostInitialization());
+            }
+            else if (Game.Network.IsClient)
+            {
+                Debug.Log("Started as client");
+            }
+            else
+            {
+                Debug.LogError("Something went wrong: NetworkManager is neither host nor client.");
+                yield break;
+            }
+            _ = StartCoroutine(WaitForGameStart());
             yield return null;
         }
         private IEnumerator HostPostInitialization()
@@ -415,19 +423,20 @@ namespace SteelOfStalin
         public void Save()
         {
             Rules.Save();
-            Players.SerializeJson($@"{m_folder}\players");
+            Players.SerializeJson(AppendPath(m_folder, "players"));
             Map.Save();
             Debug.Log($"Saved battle {Name}");
         }
         public void Load()
         {
-            if (!StreamingAssetExists($@"{m_folder}\rules.json"))
+
+            if (!StreamingAssetExists(AppendPath(m_folder, "rules.json")))
             {
                 Rules.Save();
             }
-            Rules = DeserializeJson<BattleRules>($@"{m_folder}\rules");
+            Rules = DeserializeJson<BattleRules>(AppendPath(m_folder, "rules"));
 
-            Players = DeserializeJson<List<Player>>($@"{m_folder}\players");
+            Players = DeserializeJson<List<Player>>(AppendPath(m_folder, "players"));
             if (Players.Count == 0)
             {
                 Self = new Player()
@@ -485,7 +494,7 @@ namespace SteelOfStalin
         [ClientRpc]
         private void SetAllDataClientRpc(ClientRpcParams @params)
         {
-            _ = StartCoroutine(NetworkUtilities.TrySaveFiles());
+            _ = StartCoroutine(NetworkUtilities.TrySaveFiles(() => Game.LoadAllAssets(true)));
 
             _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result => Map = result));
             _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => Map.SetTiles(result)));
@@ -536,8 +545,8 @@ namespace SteelOfStalin
 
         public BattleRules() { }
 
-        public void Save() => this.SerializeJson($@"Saves\{Battle.Instance.Name}\rules");
-        public void Save(string battle_name) => this.SerializeJson($@"Saves\{battle_name}\rules");
+        public void Save() => this.SerializeJson(AppendPath(Battle.Instance.Name, "rules"), ExternalFolder.SAVES);
+        public void Save(string battle_name) => this.SerializeJson(AppendPath(battle_name, "rules"), ExternalFolder.SAVES);
     }
 
     public class Map : ICloneable, INamedAsset
@@ -558,8 +567,8 @@ namespace SteelOfStalin
         [JsonIgnore] public bool IsInitialized => Tiles != null && Width != 0 && Height != 0;
         // TODO FUT. Impl. add more validity check
         [JsonIgnore] public bool IsValid => Tiles != null && GetTiles().Count() == Width * Height;
-        protected string Folder => $@"Saves\{BattleName}\map";
-        protected string TileFolder => $@"{Folder}\tiles";
+        protected string Folder => GetRelativePath(ExternalFolder.SAVES, BattleName, "map");
+        protected string TileFolder => AppendPath(Folder, "tiles");
 
         public Map() => Instance = this;
         public Map(int width, int height) => (Width, Height, BattleName, Instance) = (width, height, Battle.Instance?.Name ?? "test", this);
@@ -569,15 +578,15 @@ namespace SteelOfStalin
         public virtual void Save()
         {
             CreateStreamingAssetsFolder(Folder);
-            Units.SerializeJson($@"{Folder}\units");
-            Buildings.SerializeJson($@"{Folder}\buildings");
-            SaveToTxt($@"{Folder}\stats", GetStatistics());
-            SaveToPng($@"{Folder}\minimap", Visualize());
+            Units.SerializeJson(AppendPath(Folder, "units"));
+            Buildings.SerializeJson(AppendPath(Folder, "buildings"));
+            SaveToTxt(AppendPath(Folder, "stats"), GetStatistics());
+            SaveToPng(AppendPath(Folder, "minimap"), Visualize());
 
             CreateStreamingAssetsFolder(TileFolder);
             for (int i = 0; i < Tiles.Length; i++)
             {
-                Tiles[i].SerializeJson($@"{TileFolder}\map_{i}");
+                Tiles[i].SerializeJson(AppendPath(TileFolder, $"map_{i}"));
             }
             Debug.Log($"Saved map {Name} for {BattleName}");
         }
@@ -586,9 +595,9 @@ namespace SteelOfStalin
         {
             BattleName = Battle.Instance?.Name ?? "test";
             // must be called from unit tests if Battle.Instance is null
-            Players = Battle.Instance?.Players ?? DeserializeJson<List<Player>>($@"Saves\test\players");
+            Players = Battle.Instance?.Players ?? DeserializeJson<List<Player>>(GetRelativePath(ExternalFolder.SAVES, "test", "players"));
 
-            Units = DeserializeJson<List<Unit>>($@"{Folder}\units");
+            Units = DeserializeJson<List<Unit>>(AppendPath(Folder, "units"));
             foreach (Unit u in Units)
             {
                 u.SetMeshName();
@@ -602,7 +611,7 @@ namespace SteelOfStalin
                 }
             }
 
-            Buildings = DeserializeJson<List<Building>>($@"{Folder}\buildings");
+            Buildings = DeserializeJson<List<Building>>(AppendPath(Folder, "buildings"));
             foreach (Building b in Buildings)
             {
                 b.SetMeshName();
@@ -622,7 +631,7 @@ namespace SteelOfStalin
             {
                 // TODO handle FileIO exceptions for all IO operations
                 // TODO FUT. Impl. regenerate map files by reading the stats.txt in case any map files corrupted (e.g. edge of map is not boundary etc.)
-                Tiles[i] = DeserializeJson<List<Tile>>($@"{TileFolder}\map_{i}").ToArray();
+                Tiles[i] = DeserializeJson<List<Tile>>(AppendPath(TileFolder, $"map_{i}")).ToArray();
             }
             foreach (Tile t in Tiles.Flatten())
             {
@@ -702,7 +711,7 @@ namespace SteelOfStalin
         }
         public void ReadStatistics()
         {
-            string[] lines = ReadTxt($@"{Folder}\stats");
+            string[] lines = ReadTxt(AppendPath(Folder, "stats"));
             Name = Regex.Match(lines[0], @"^Name: (\w+)$").Groups[1].Value; 
             Width = int.Parse(Regex.Match(lines[1], @"(\d+)$").Groups[1].Value);
             Height = int.Parse(Regex.Match(lines[2], @"(\d+)$").Groups[1].Value);
