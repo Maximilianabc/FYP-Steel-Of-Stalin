@@ -23,6 +23,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static SteelOfStalin.DataIO.DataUtilities;
 using static SteelOfStalin.Util.Utilities;
 using Capture = SteelOfStalin.Commands.Capture;
@@ -186,9 +187,9 @@ namespace SteelOfStalin
         public bool EnableAnimations { get; set; }
         public byte VolumeMusic { get; set; } = 100;
         public byte VolumeSoundFX { get; set; } = 100;
-        public bool Fullscreen { get; set; }
-        public int ResolutionX { get; set; }
-        public int ResolutionY { get; set; }
+        public bool Fullscreen { get; set; } = false;
+        public int ResolutionX { get; set; } = 1366;
+        public int ResolutionY { get; set; } = 768;
 
         public void Save() => this.SerializeJson("settings");
     }
@@ -218,6 +219,7 @@ namespace SteelOfStalin
 
         private Player m_winner { get; set; } = null;
         private bool m_isInitialized => Players.Count > 0 && Map.IsInitialized;
+        private bool m_isLoaded = false;
         private string m_folder => $@"Saves\{Name}";
         private List<Color> m_availableColors { get; set; } = new List<Color>(CommonColors);
 
@@ -322,9 +324,16 @@ namespace SteelOfStalin
         // TODO add force start option for host even if not all players are ready
         private IEnumerator WaitForGameStart()
         {
+            //TODO: add handler for failed async load
+            AsyncOperation operation =SceneManager.LoadSceneAsync("Game");
+            operation.allowSceneActivation = false;
             Debug.Log("Waiting for map initialization");
             yield return new WaitWhile(() => !m_isInitialized);
             Debug.Log($"Map {Map.Name} initialized");
+            //TODO: wait for all players to load the battle for fairness
+            Debug.Log("Waiting for loading battle");
+            yield return new WaitWhile(() => !m_isLoaded);
+            Debug.Log($"Battle {Name} loaded");
 
             Debug.Log("Waiting for all players to be connected");
             yield return new WaitWhile(() => Game.Network.IsServer ? ConnectedPlayerIDs.Count != MaxNumPlayers : Players.Count != MaxNumPlayers);
@@ -333,7 +342,8 @@ namespace SteelOfStalin
             Debug.Log("Waiting for all players to be ready");
             yield return new WaitWhile(() => !AreAllPlayersReadyToStart);
             Debug.Log("All players are ready");
-
+            operation.allowSceneActivation = true;
+            yield return new WaitWhile(() => SceneManager.GetActiveScene()!=SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
             _ = StartCoroutine(GameLoop());
         }
@@ -442,6 +452,7 @@ namespace SteelOfStalin
 
             Map.Load();
             Debug.Log($"Loaded battle {Name}");
+            m_isLoaded = true;
         }
 
         public Color GetRandomAvailablePlayerColor()

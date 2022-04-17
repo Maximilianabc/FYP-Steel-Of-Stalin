@@ -64,7 +64,21 @@ public class UIUtil : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (!Game.AssetsLoaded)
+        {
+            LeanTween.delayedCall(1f, (System.Action)delegate
+            {
+                SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));
+                SetFullscreen(Game.Settings.Fullscreen);
+                SetVolume(Game.Settings.VolumeMusic);
+                
+            });
+        }
+        else {
+            SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));
+            SetFullscreen(Game.Settings.Fullscreen);
+            SetVolume(Game.Settings.VolumeMusic);
+        }
     }
 
     // Update is called once per frame

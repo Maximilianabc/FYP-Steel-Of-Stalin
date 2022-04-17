@@ -15,6 +15,7 @@ public class MenuNavigation : MonoBehaviour
     public GameObject IPMenu;
     public GameObject mapMenu;
     public GameObject battlesMenu;
+    public GameObject profileMenu;
     public bool multiplayer;
     // Start is called before the first frame update
     void Start()
@@ -36,8 +37,29 @@ public class MenuNavigation : MonoBehaviour
         battlesMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack(); });
         battlesMenu.transform.Find("Battles").Find("Viewport").Find("Content").Find("Save_Add").GetComponent<Button>().onClick.AddListener(delegate { NavigateTo(mapMenu); });
         mapMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack();});
-
+        profileMenu.transform.Find("SubmitButton").GetComponent<Button>().onClick.AddListener(delegate { 
+            NavigateBack();
+            Game.Profile.Name = profileMenu.transform.Find("InputField_ProfileName").GetComponent<TMPro.TMP_InputField>().text;
+            Game.Profile.Save();
+            });
+        if (!Game.AssetsLoaded)
+        {
+            LeanTween.delayedCall(1f, (System.Action)delegate
+            {
+                if (string.IsNullOrEmpty(Game.Profile.Name)) {
+                    NavigateTo(profileMenu);
+                }
+            });
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(Game.Profile.Name))
+            {
+                NavigateTo(profileMenu);
+            }
+        }
     }
+
 
     // Update is called once per frame
     void Update()

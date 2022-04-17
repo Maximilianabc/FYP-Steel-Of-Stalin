@@ -1,8 +1,8 @@
 {
   "EnableAnimations": false,
-  "VolumeMusic": 21,
+  "VolumeMusic": 0,
   "VolumeSoundFX": 100,
   "Fullscreen": false,
-  "ResolutionX": 1920,
-  "ResolutionY": 1080
+  "ResolutionX": 1366,
+  "ResolutionY": 768
 }
