@@ -332,12 +332,12 @@ namespace SteelOfStalin
         // TODO add force start option for host even if not all players are ready
         private IEnumerator WaitForGameStart()
         {
-            //TODO: add handler for failed async load
-            AsyncOperation operation =SceneManager.LoadSceneAsync("Game");
-            operation.allowSceneActivation = false;
             Debug.Log("Waiting for map initialization");
             yield return new WaitWhile(() => !m_isInitialized);
             Debug.Log($"Map {Map.Name} initialized");
+            //TODO: add handler for failed async load
+            AsyncOperation operation = SceneManager.LoadSceneAsync("Game");
+            operation.allowSceneActivation = false;
             //TODO: wait for all players to load the battle for fairness
             Debug.Log("Waiting for loading battle");
             yield return new WaitWhile(() => !m_isLoaded);

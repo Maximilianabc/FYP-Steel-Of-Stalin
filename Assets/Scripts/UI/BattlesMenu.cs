@@ -73,6 +73,7 @@ public class BattlesMenu : MonoBehaviour
         sb.AppendLine($"Time For Each Round: {bi.Rules.TimeForEachRound}");
         sb.AppendLine($"Fog of War: {bi.Rules.IsFogOfWar}");
         sb.AppendLine($"Signal Connection: {bi.Rules.RequireSignalConnection}");
+        sb.AppendLine($"Universal Queue: {bi.Rules.AllowUniversalQueue}");
         //sb.AppendLine($"Resources: {bi.Rules.StartingResources}");
         battleRuleTextContent.GetComponent<TMPro.TMP_Text>().text = sb.ToString();
     }
@@ -81,8 +82,9 @@ public class BattlesMenu : MonoBehaviour
         if (selectedBattle == null) return;
         bool multiplayer = MenuNavigation.instance.multiplayer;//not used for now
         Game.ActiveBattle = selectedBattle;
-        Game.StartHost();
         SceneManager.LoadScene("Loading");
+        Game.StartHost();
+        
         
     }
 

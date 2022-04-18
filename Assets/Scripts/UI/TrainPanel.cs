@@ -23,11 +23,6 @@ public class TrainPanel : MonoBehaviour
     private GameObject citySelection;
     private GameObject unitList;
 
-
-    private Queue<Unit> barrackQueue;
-    private Queue<Unit> arsenalQueue;
-    private Queue<Unit> dockyardQueue;
-    private Queue<Unit> airfieldQueue;
     private List<Unit> trainableUnits;
 
     void Awake()
@@ -144,7 +139,7 @@ public class TrainPanel : MonoBehaviour
             Transform t = transform.Find(b.Name);
             if (t != null) {
                 t.gameObject.SetActive(true);
-                b.TrainingQueue
+                Debug.Log(b.PrintMembers());
             }
         }
         
