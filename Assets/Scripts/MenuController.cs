@@ -36,6 +36,23 @@ namespace SteelOfStalin
             UI_util_instance.name = "UI_util";
             DontDestroyOnLoad(UI_util_instance);
 
+            GameObject battle = Resources.Load<GameObject>(@"Prefabs\battle");
+            GameObject battle_instance = Instantiate(battle);
+            if (battle_instance.GetComponent<Battle>() == null)
+            {
+                battle_instance.AddComponent<Battle>();
+            }
+            battle_instance.name = "battle";
+            DontDestroyOnLoad(battle_instance);
+
+            GameObject player = Resources.Load<GameObject>(@"Prefabs\player");
+            GameObject player_instance = Instantiate(player);
+            if (player_instance.GetComponent<PlayerObject>() == null)
+            {
+                player_instance.AddComponent<PlayerObject>();
+            }
+            DontDestroyOnLoad(player_instance);
+
             Destroy(gameObject);
         }
 

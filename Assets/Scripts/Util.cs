@@ -261,7 +261,7 @@ namespace SteelOfStalin.DataIO
 {
     public abstract class Data<T> where T : INamedAsset, ICloneable
     {
-        protected virtual string JsonFolderPath => $@"{ExternalFilePath}\Json";
+        protected virtual string JsonFolderPath => JsonFolder;
 
         public T this[string name] => All.Find(a => a.Name == name);
         public T GetNew(string name) => (T)All.Find(a => a.Name == name)?.Clone() ?? throw new ArgumentException($"There is no {typeof(T).Name.ToLower()} with name {name}");
@@ -302,7 +302,7 @@ namespace SteelOfStalin.DataIO
 
     public sealed class UnitData : Data<Unit>
     {
-        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\units";
+        protected override string JsonFolderPath => AppendPath(base.JsonFolderPath, "units");
         public List<Personnel> Personnels { get; set; } = new List<Personnel>();
         public List<Artillery> Artilleries { get; set; } = new List<Artillery>();
         public List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
@@ -394,7 +394,7 @@ namespace SteelOfStalin.DataIO
 
     public sealed class BuildingData : Data<Building>
     {
-        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\buildings";
+        protected override string JsonFolderPath => AppendPath(base.JsonFolderPath, "buildings");
         public List<UnitBuilding> Units { get; set; } = new List<UnitBuilding>();
         public List<ProductionBuilding> Productions { get; set; } = new List<ProductionBuilding>();
         public List<Infrastructure> Infrastructures { get; set; } = new List<Infrastructure>();
@@ -454,7 +454,7 @@ namespace SteelOfStalin.DataIO
                 }
             }
             PrintEmptyListNames();
-            Debug.Log("All buildings data loaded.");
+            Debug.Log("All buildings data loaded" + (from_dump ? " from dump" : ""));
         }
 
         public override void Clear()
@@ -469,7 +469,7 @@ namespace SteelOfStalin.DataIO
 
     public sealed class TileData : Data<Tile>
     {
-        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\tiles";
+        protected override string JsonFolderPath => AppendPath(base.JsonFolderPath, "tiles");
 
         public List<Tile> Terrains { get; set; } = new List<Tile>();
         public List<Cities> Cities { get; set; } = new List<Cities>();
@@ -506,7 +506,7 @@ namespace SteelOfStalin.DataIO
                 }
             }
             PrintEmptyListNames();
-            Debug.Log("All tiles data loaded.");
+            Debug.Log("All tiles data loaded" + (from_dump ? " from dump" : ""));
         }
 
         public override void Clear()
@@ -518,7 +518,7 @@ namespace SteelOfStalin.DataIO
 
     public sealed class CustomizableData : Data<Customizable>
     {
-        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\customizables";
+        protected override string JsonFolderPath => AppendPath(base.JsonFolderPath, "customizables");
         public List<Firearm> Firearms { get; set; } = new List<Firearm>();
         public ModuleData Modules { get; set; } = new ModuleData();
         public List<Shell> Shells { get; set; } = new List<Shell>();
@@ -566,7 +566,7 @@ namespace SteelOfStalin.DataIO
             }
             PrintEmptyListNames();
             Modules.Load();
-            Debug.Log("All customizables data loaded.");
+            Debug.Log("All customizables data loaded" + (from_dump ? " from dump" : ""));
         }
 
         public override void Clear()
@@ -579,7 +579,7 @@ namespace SteelOfStalin.DataIO
 
     public sealed class ModuleData : Data<Module>
     {
-        protected override string JsonFolderPath => $@"{base.JsonFolderPath}\customizables\modules";
+        protected override string JsonFolderPath => AppendPaths(base.JsonFolderPath, "customizables", "modules");
 
         public GunData Guns { get; set; } = new GunData();
         public List<HeavyMachineGun> HeavyMachineGuns { get; set; } = new List<HeavyMachineGun>();
@@ -760,6 +760,14 @@ namespace SteelOfStalin.DataIO
         }
     }
 
+    public enum ExternalFolder
+    {
+        NONE,
+        DUMP,
+        SAVES,
+        JSON
+    }
+
     public static class DataUtilities
     {
         public static JsonSerializerOptions Options => new JsonSerializerOptions()
@@ -769,17 +777,76 @@ namespace SteelOfStalin.DataIO
             IgnoreReadOnlyFields = true,
             // Converters = { new RoundingJsonConverter() }
         };
-        public static string ExternalFilePath => ConvertToWindowsPath(Application.streamingAssetsPath);
-        public static string DumpFolderName => "Multiplayer_Dump";
-        public static Func<string, string> ToRelativePath => full => full.Replace(ExternalFilePath, ""); // with slash in front
-        public static Func<string, string> AddDumpPath => path => @$"{DumpFolderName}{path}";
-        public static Func<string, string> ToDumpPath => local => local.Replace(ExternalFilePath, @$"{ExternalFilePath}\{DumpFolderName}");
+        public static string ExternalFolderRootPath => Application.streamingAssetsPath.Replace('/', path_sep);
+        public static Func<string, string> ToRelativePath => full => full.Replace(ExternalFolderRootPath, ""); // with slash in front
+        public static Func<string, string> AddDumpPath => path => @$"{FolderNames[ExternalFolder.DUMP]}{path}";
+        public static Func<string, string> ToDumpPath => local => local.Replace(ExternalFolderRootPath, DumpFolder);
 
-        public static string ConvertToWindowsPath(string path) => path.Replace("/", @"\");
-        public static void CreateStreamingAssetsFolder(string relative_path) => Directory.CreateDirectory($@"{ExternalFilePath}\{relative_path}");
+        public static char path_sep => Path.DirectorySeparatorChar;
+        public static Dictionary<ExternalFolder, string> FolderNames => new Dictionary<ExternalFolder, string>()
+        {
+            [ExternalFolder.NONE] = "",
+            [ExternalFolder.DUMP] = "Multiplayer_Dump",
+            [ExternalFolder.SAVES] = "Saves",
+            [ExternalFolder.JSON] = "Json",
+        };
+        public static string SavesFolder => GetFullPath(ExternalFolder.SAVES);
+        public static string JsonFolder => GetFullPath(ExternalFolder.JSON);
+        public static string DumpFolder => GetFullPath(ExternalFolder.DUMP);
 
-        public static void SerializeJson<T>(this T input, string relative_path) => File.WriteAllText($@"{ExternalFilePath}\{relative_path}.json", JsonSerializer.Serialize<T>(input, Options));
-        public static T DeserializeJson<T>(string path, bool is_relative = true) => JsonSerializer.Deserialize<T>(File.ReadAllText(is_relative ? $@"{ExternalFilePath}\{path}.json" : $"{path}.json"), Options);
+        /// <summary>
+        /// Get a path relative to <see cref="ExternalFolderRootPath"/> with sub-folders names provided
+        /// </summary>
+        /// <param name="base_folder">The base sub-folder in <see cref="ExternalFolderRootPath"/>, use none if <paramref name="sub_path_names"/> is directly relative to <see cref="ExternalFolderRootPath"/></param>
+        /// <param name="sub_path_names">include the file name and extension at the end if this is a file path</param>
+        /// <returns></returns>
+        public static string GetRelativePath(ExternalFolder base_folder, params string[] sub_path_names) => Path.Combine(FolderNames[base_folder], Path.Combine(sub_path_names));
+
+        /// <summary>
+        /// Get the full path with sub-folders names provided
+        /// </summary>
+        /// <param name="base_folder">The base sub-folder in <see cref="ExternalFolderRootPath"/>, use none if <paramref name="sub_path_names"/> is directly relative to <see cref="ExternalFolderRootPath"/></param>
+        /// <param name="sub_path_names">include the file name and extension at the end if this is a file path</param>
+        /// <returns></returns>
+        public static string GetFullPath(ExternalFolder base_folder = ExternalFolder.NONE, params string[] sub_path_names) => Path.Combine(ExternalFolderRootPath, GetRelativePath(base_folder, sub_path_names));
+
+        /// <summary>
+        /// Get the full file path with sub-folders names and file extension provided
+        /// </summary>
+        /// <param name="extension">The extension of the file</param>
+        /// <param name="base_folder">The base sub-folder in <see cref="ExternalFolderRootPath"/>, use none if <paramref name="sub_path_names"/> is directly relative to <see cref="ExternalFolderRootPath"/></param>
+        /// <param name="sub_path_names">The name of file must be included at the end</param>
+        /// <returns></returns>
+        public static string GetFullFilePath(string extension, ExternalFolder base_folder = ExternalFolder.NONE, params string[] sub_path_names) => $"{GetFullPath(base_folder, sub_path_names)}.{extension}";
+
+        /// <summary>
+        /// Append a path to an exisiting path
+        /// </summary>
+        /// <param name="original">The original path</param>
+        /// <param name="append">The path which is appended to <paramref name="original"/></param>
+        /// <returns></returns>
+        public static string AppendPath(string original, string append) => Path.Combine(original, append);
+
+        /// <summary>
+        /// Append multiple paths to an exisiting path
+        /// </summary>
+        /// <param name="original">The original path</param>
+        /// <param name="appends">The paths which are appended to <paramref name="original"/></param>
+        /// <returns></returns>
+        public static string AppendPaths(string original, params string[] appends) => Path.Combine(original, Path.Combine(appends));
+
+        /// <summary>
+        /// Prepend a path to an exisiting path
+        /// </summary>
+        /// <param name="original">The original path</param>
+        /// <param name="prepend">The path which is prepended to <paramref name="original"/></param>
+        /// <returns></returns>
+        public static string PrependPath(string original, string prepend) => Path.Combine(prepend, original);
+
+        public static void CreateStreamingAssetsFolder(string relative_path, ExternalFolder base_folder = ExternalFolder.NONE) => Directory.CreateDirectory(GetFullPath(base_folder, relative_path));
+
+        public static void SerializeJson<T>(this T input, string relative_path, ExternalFolder base_folder = ExternalFolder.NONE) => File.WriteAllText(GetFullFilePath("json", base_folder, relative_path), JsonSerializer.Serialize<T>(input, Options));
+        public static T DeserializeJson<T>(string path, bool is_relative = true, ExternalFolder base_folder = ExternalFolder.NONE) => JsonSerializer.Deserialize<T>(File.ReadAllText(is_relative ? GetFullFilePath("json", base_folder, path) : $"{path}.json"), Options);
         public static IEnumerable<T> DeserializeJsonWithAbstractType<T>(string path, string identifier_property_name, string base_type_name)
         {
             object deserialized = DeserializeJson<object>(path);
@@ -814,17 +881,17 @@ namespace SteelOfStalin.DataIO
             }
         }
 
-        public static void SaveToTxt(string relative_path, string content) => File.WriteAllText($@"{ExternalFilePath}\{relative_path}.txt", content);
-        public static string[] ReadTxt(string relative_path) => File.ReadAllLines($@"{ExternalFilePath}\{relative_path}.txt");
-        public static void SaveToPng(string relative_path, Texture2D texture)
+        public static void SaveToTxt(string relative_path, string content, ExternalFolder base_folder = ExternalFolder.NONE) => File.WriteAllText(GetFullFilePath("txt", base_folder, relative_path), content);
+        public static string[] ReadTxt(string relative_path, ExternalFolder base_folder = ExternalFolder.NONE) => File.ReadAllLines(GetFullFilePath("txt", base_folder, relative_path));
+        public static void SaveToPng(string relative_path, Texture2D texture, ExternalFolder base_folder = ExternalFolder.NONE)
         {
             byte[] bs = texture.EncodeToPNG();
-            using FileStream fs = new FileStream($@"{ExternalFilePath}\{relative_path}.png", FileMode.OpenOrCreate, FileAccess.Write);
+            using FileStream fs = new FileStream(GetFullFilePath("png", base_folder, relative_path), FileMode.OpenOrCreate, FileAccess.Write);
             fs.Write(bs, 0, bs.Length);
             fs.Close();
         }
 
-        public static bool StreamingAssetExists(string relative_path) => File.Exists($@"{ExternalFilePath}\{relative_path}");
+        public static bool StreamingAssetExists(string relative_path, ExternalFolder base_folder = ExternalFolder.NONE) => File.Exists(GetFullPath(base_folder, relative_path));
 
         public static RpcMessageChunk[] MakeChunks(this byte[] bytes)
         {
@@ -861,8 +928,8 @@ namespace SteelOfStalin.DataIO
         /// <param name="relative_path">the file path relative to streaming asset path</param>
         public static void AssembleChunksIntoFile(this List<RpcMessageChunk> chunks, string relative_path)
         {
-            _ = Directory.CreateDirectory(Path.GetDirectoryName(@$"{ExternalFilePath}\{relative_path}"));
-            File.WriteAllBytes(@$"{ExternalFilePath}\{relative_path}", chunks.AssembleChunks());
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(GetFullPath(sub_path_names: relative_path)));
+            File.WriteAllBytes(GetFullPath(sub_path_names: relative_path), chunks.AssembleChunks());
         }
     }
 
@@ -1159,7 +1226,13 @@ namespace SteelOfStalin.DataIO
 
         public void SendFile(string local_relative_path, string destination_relative_path = "", ClientRpcParams @params = default)
         {
-            byte[] bytes = File.ReadAllBytes(@$"{ExternalFilePath}\{local_relative_path}");
+            string local_full_path = GetFullPath(ExternalFolder.NONE, local_relative_path.TrimStart(path_sep));
+            if (!File.Exists(local_full_path))
+            {
+                Debug.LogError($"File not found at {local_full_path}");
+                return;
+            }
+            byte[] bytes = File.ReadAllBytes(local_full_path);
             if (string.IsNullOrEmpty(destination_relative_path))
             {
                 destination_relative_path = local_relative_path;
@@ -1222,16 +1295,30 @@ namespace SteelOfStalin.DataIO
             {
                 Debug.LogError("Failed to retrieve named message after 60 tries");
             }
-            yield return null;
+            yield return saved;
         }
 
-        public IEnumerator TrySaveFiles()
+        public IEnumerator TrySaveFiles(Action callback = null)
         {
+            List<IEnumerator> save_file_coroutines = new List<IEnumerator>();
             foreach (KeyValuePair<string, RpcMessageObject> files in m_files)
             {
-                _ = StartCoroutine(TrySaveFile(files.Key, false));
+                IEnumerator coroutine = TrySaveFile(files.Key, false);
+                save_file_coroutines.Add(coroutine);
+                StartCoroutine(coroutine);
             }
-            // m_files.Clear();
+
+            yield return new WaitWhile(() => !save_file_coroutines.All(c => c.Current is bool));
+
+            int failure_count = save_file_coroutines.Where(c => !(bool)c.Current).Count();
+            if (failure_count > 0)
+            {
+                Debug.LogWarning($"Failed to save {failure_count} file(s)");
+            }
+            m_files.Clear();
+
+            callback?.Invoke();
+
             yield return null;
         }
 
