@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using SteelOfStalin;
 
@@ -56,6 +57,22 @@ public class UIUtil : MonoBehaviour
         Game.Settings.Save();
     }
 
+    public bool isBlockedByUI() {
+        bool mouseOnUI = false;
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+        foreach (RaycastResult raycastResult in raycastResults)
+        {
+            if (raycastResult.gameObject.layer == 5)
+            {
+                mouseOnUI = true;
+                break;
+            }
+        }
+        return mouseOnUI;
+    }
+
     void Awake()
     {
         instance = this;
@@ -93,25 +110,4 @@ public class UIUtil : MonoBehaviour
         Application.Quit();
     }
 
-    public void ChangeScene(string sceneName) {
-        switch (sceneName) {
-            case "Loading": SceneManager.LoadScene(sceneName);break;
-            case "Game":AsyncOperation operation = SceneManager.LoadSceneAsync("Game");operation.completed += delegate { }; break;
-        }
-        
-    }
-
-
-    //Only for testing 
-    public void testfunction() {
-        DontDestroyOnLoad(transform.parent.gameObject);
-        //SteelOfStalin.Battle battleInstance=GameObject.Find("battle").GetComponent<SteelOfStalin.Battle>();
-        //battleInstance.Map.AddUnit(new SteelOfStalin.Props.Units.Land.Personnels.Infantry());
-        //Debug.Log(battleInstance.Map.GetUnits().ToString());
-        //Debug.Log(SteelOfStalin.Battle.Instance != null);
-        
-    }
-    public void testfunction2() { 
-        
-    }
 }

@@ -8,7 +8,7 @@ public class Tooltip : MonoBehaviour
     public static Tooltip instance;
     private Text tooltipText;
     private RectTransform backgroundRectTransform;
-    private bool isShow;
+    LTDescr previousDelayedCall=null;
     private void Start()
     {
         gameObject.SetActive(false);
@@ -22,25 +22,32 @@ public class Tooltip : MonoBehaviour
     }
     private void Update()
     {
+
         transform.position = Input.mousePosition;
     }
     private void ShowTooltip(string tooltipString) {
-        isShow = true;
-        LeanTween.delayedCall(2f, (System.Action)delegate
+        if (previousDelayedCall != null && LeanTween.isTweening(previousDelayedCall.id))
         {
-            if (isShow) {
-                tooltipText.text = tooltipString;
-                float textPaddingSize = 12f;
-                Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + textPaddingSize * 2f, tooltipText.preferredHeight + textPaddingSize * 2f);
-                backgroundRectTransform.sizeDelta = backgroundSize;
-                gameObject.SetActive(true);
-            }
+            LeanTween.cancel(previousDelayedCall.id);
+        }
+        previousDelayedCall=LeanTween.delayedCall(1.5f, (System.Action)delegate
+        {
+            tooltipText.text = tooltipString;
+            float textPaddingSize = 12f;
+            Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + textPaddingSize * 2f, tooltipText.preferredHeight + textPaddingSize * 2f);
+            backgroundRectTransform.sizeDelta = backgroundSize;
+            transform.position = Input.mousePosition;
+            gameObject.SetActive(true);
         });
 
     }
     
     private void HideTooltip() {
-        isShow = false;
+        if (previousDelayedCall != null && LeanTween.isTweening(previousDelayedCall.id))
+        {
+            LeanTween.cancel(previousDelayedCall.id);
+        }
+        previousDelayedCall = null;
         gameObject.SetActive(false);
     }
 

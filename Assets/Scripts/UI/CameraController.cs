@@ -69,17 +69,7 @@ public class CameraController : MonoBehaviour
     }
 
     void HandleMouseInput() {
-        bool mouseOnUI=false;
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
-        foreach (RaycastResult raycastResult in raycastResults) {
-            if (raycastResult.gameObject.layer == 5) {
-                mouseOnUI = true;
-                break;
-            }
-        }
-
+        bool mouseOnUI=UIUtil.instance.isBlockedByUI();
 
         if (!mouseOnUI&&Input.mouseScrollDelta.y != 0) {
             newZoom -= Input.mouseScrollDelta.y * zoomAmount*5f;

@@ -49,6 +49,8 @@ namespace SteelOfStalin
         public static List<GameObject> GameObjects { get; set; } = new List<GameObject>();
         public static List<AudioClip> AudioClips { get; set; } = new List<AudioClip>();
 
+        public static List<Sprite> Icons { get; set; } = new List<Sprite>();
+
         public static PlayerProfile Profile { get; set; } = new PlayerProfile();
 
         public static List<BattleInfo> BattleInfos { get; set; } = new List<BattleInfo>(); 
@@ -92,6 +94,7 @@ namespace SteelOfStalin
             {
                 GameObjects = UnityEngine.Resources.LoadAll<GameObject>("Prefabs").ToList();
                 AudioClips = UnityEngine.Resources.LoadAll<AudioClip>("Audio").ToList();
+                Icons = UnityEngine.Resources.LoadAll<Sprite>("Icons").ToList();
             }
             UnitData.Load(from_dump);
             BuildingData.Load(from_dump);
