@@ -1329,7 +1329,6 @@ namespace SteelOfStalin
 
                 List<WeightedTile> neigbours = new List<WeightedTile>();
 
-                // TODO FUT. Impl. it had thrown arithmetic overflow exception once here when testing, need further investigation
                 GetNeighbours(check.CubeCoOrds).ToList().ForEach(t => neigbours.Add(new WeightedTile()
                 {
                     Parent = check,
