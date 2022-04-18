@@ -1561,6 +1561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9090083103499470095}
   - component: {fileID: 4070244447346193022}
+  - component: {fileID: 9026796209686311054}
   m_Layer: 0
   m_Name: jungle
   m_TagString: Untagged
@@ -1616,7 +1617,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.25
+  - screenRelativeHeight: 0.7027346
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 7670333794882025270}
@@ -1624,7 +1625,7 @@ LODGroup:
     - renderer: {fileID: 3718743495075837963}
     - renderer: {fileID: 5751502897231887482}
     - renderer: {fileID: 8887050364753676786}
-  - screenRelativeHeight: 0.125
+  - screenRelativeHeight: 0.4001111
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2301222981975729982}
@@ -1632,7 +1633,7 @@ LODGroup:
     - renderer: {fileID: 7598557488338720381}
     - renderer: {fileID: 1694437268397061847}
     - renderer: {fileID: 5222382785903305281}
-  - screenRelativeHeight: 0.0625
+  - screenRelativeHeight: 0.15312894
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 311669985788119760}
@@ -1640,7 +1641,7 @@ LODGroup:
     - renderer: {fileID: 4731583309210521638}
     - renderer: {fileID: 2568117129343010543}
     - renderer: {fileID: 8440562447767612412}
-  - screenRelativeHeight: 0.01
+  - screenRelativeHeight: 0.047563102
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4569301239969949682}
@@ -1649,6 +1650,20 @@ LODGroup:
     - renderer: {fileID: 465532846249124407}
     - renderer: {fileID: 2003352565962387879}
   m_Enabled: 1
+--- !u!136 &9026796209686311054
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8461602649608658869}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 20
+  m_Height: 48
+  m_Direction: 0
+  m_Center: {x: 0, y: -8, z: 0}
 --- !u!1 &8506914524949167063
 GameObject:
   m_ObjectHideFlags: 0
