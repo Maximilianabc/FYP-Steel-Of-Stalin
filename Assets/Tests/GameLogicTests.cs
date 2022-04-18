@@ -35,7 +35,7 @@ public class GameLogicTest
         Map.Load();
         if (Map.Players.Count < 3)
         {
-            Map.Players.AddRange(Player.NewDummyTestPlayers(3 - Map.Players.Count));
+            Map.Players.AddRange(Player.NewDummyPlayers(3 - Map.Players.Count));
         }
     }
 

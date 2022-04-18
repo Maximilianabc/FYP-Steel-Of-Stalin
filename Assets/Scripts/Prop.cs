@@ -254,8 +254,6 @@ namespace SteelOfStalin.Assets.Props
             {
                 gameObject.AddComponent<PropEventTrigger>();
             }
-            // Trigger.Subscribe("test", EventTriggerType.PointerClick, (data) => Debug.Log(GetClickedProp(data).Name));
-            // Trigger.Subscribe("highlight", EventTriggerType.PointerClick, (data) => GetClickedPropObjectComponent(data).SetColorForAllChildren(Color.green));
             Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => CameraController.instance.FocusOn(GetClickedObject(data).transform));
         }
 
