@@ -1,53 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin;
 
 public class TrainPanel : MonoBehaviour
 {
     public int currentPage;
+    public Cities currentCity;
     public Sprite buttonRed;
     public Sprite buttonGreen;
-    [SerializeField]
     private int maxItemsInPage;
 
+    public List<Cities> cities;
+    public List<UnitBuilding> buildings;
     private GameObject citySelection;
-    private GameObject barrack;
-    private GameObject arsenal;
-    private GameObject dockyard;
-    private GameObject airfield;
     private GameObject unitList;
 
 
-    private List<Unit> barrackQueue;
-    private List<Unit> arsenalQueue;
-    private List<Unit> dockyardQueue;
-    private List<Unit> airfieldQueue;
-
+    private Queue<Unit> barrackQueue;
+    private Queue<Unit> arsenalQueue;
+    private Queue<Unit> dockyardQueue;
+    private Queue<Unit> airfieldQueue;
     private List<Unit> trainableUnits;
 
     void Awake()
     {
         citySelection = transform.Find("City").gameObject;
-        barrack = transform.Find("Barrack").gameObject;
-        arsenal = transform.Find("Arsenal").gameObject;
-        dockyard = transform.Find("Dockyard").gameObject;
-        airfield = transform.Find("Airfield").gameObject;
         unitList = transform.Find("UnitList").gameObject;
-        //trainableUnits = Game.UnitData.FYPImplement.ToList();
-        trainableUnits = new List<Unit>();
-        for (int i = 0; i < 30; i++) {
-            trainableUnits.Add(new SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry());
-        }
+        trainableUnits = Game.UnitData.FYPImplement.ToList();
     }
     // Start is called before the first frame update
     void Start()
     {
-        RedrawUnitsList();
-        SetPage(1);
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().onValueChanged.AddListener(delegate
+        {
+            int cityIndex = (int)Mathf.Clamp(citySelection.GetComponent<TMPro.TMP_Dropdown>().value, 0f, cities.Count - 1);
+            SetCity(cities[cityIndex]);
+        });
+        LeanTween.delayedCall(0.5f, (System.Action)delegate
+        {
+            ResetCity();
+            Debug.Log(cities.Count);
+            //
+            RedrawUnitsList();
+            SetPage(1);
+        });
+
+
     }
 
     // Update is called once per frame
@@ -113,4 +119,36 @@ public class TrainPanel : MonoBehaviour
 
 
     }
+
+    public void ResetCity()
+    {
+        cities = Battle.Instance.Map.GetCities(Battle.Instance.Self).ToList();
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().ClearOptions();
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c=>c.Name));
+        if (cities.Count > 0) SetCity(cities[0]);
+    }
+
+    public void SetCity(Cities city) {
+        currentCity = city;
+        CameraController.instance.FocusOn(GameObject.Find(city.MeshName).transform);
+        RedrawQueues();
+    }
+
+    public void RedrawQueues() {
+        buildings =Battle.Instance.Map.GetBuildings(currentCity.CoOrds).Where(b => b is UnitBuilding).ToList().ConvertAll<UnitBuilding>(b=>(UnitBuilding)b.Clone());
+        transform.Find("barracks").gameObject.SetActive(false);
+        transform.Find("arsenal").gameObject.SetActive(false);
+        transform.Find("dockyard").gameObject.SetActive(false);
+        transform.Find("airfield").gameObject.SetActive(false);
+        foreach (UnitBuilding b in buildings) {
+            Transform t = transform.Find(b.Name);
+            if (t != null) {
+                t.gameObject.SetActive(true);
+                b.TrainingQueue
+            }
+        }
+        
+    }
+
+
 }

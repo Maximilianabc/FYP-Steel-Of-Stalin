@@ -49,7 +49,7 @@ public class MenuNavigation : MonoBehaviour
                 if (string.IsNullOrEmpty(Game.Profile.Name)) {
                     NavigateTo(profileMenu);
                 }
-            });
+            }).setDestroyOnComplete(true);
         }
         else
         {

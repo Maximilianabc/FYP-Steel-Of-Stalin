@@ -72,7 +72,7 @@ public class UIUtil : MonoBehaviour
                 SetFullscreen(Game.Settings.Fullscreen);
                 SetVolume(Game.Settings.VolumeMusic);
                 
-            });
+            }).setDestroyOnComplete(true);
         }
         else {
             SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));

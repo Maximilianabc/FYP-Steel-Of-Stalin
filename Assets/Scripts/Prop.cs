@@ -245,8 +245,11 @@ namespace SteelOfStalin.Assets.Props
         public Coordinates GetCoordinates() => Map.Instance.GetProp(gameObject).CoOrds;
 
         public GameObject GetClickedObject(BaseEventData data) => ((PointerEventData)data).pointerClick;
+        public GameObject GetEnteredObject(BaseEventData data) => ((PointerEventData)data).pointerEnter;
         public Prop GetClickedProp(BaseEventData data) => Map.Instance.GetProp(GetClickedObject(data));
+        public Prop GetEnteredProp(BaseEventData data) => Map.Instance.GetProp(GetEnteredObject(data));
         public PropObject GetClickedPropObjectComponent(BaseEventData data) => GetClickedObject(data).GetComponent<PropObject>();
+        public PropObject GetEnteredPropObjectComponent(BaseEventData data) => GetEnteredObject(data).GetComponent<PropObject>();
 
         public virtual void Start()
         {
@@ -257,6 +260,8 @@ namespace SteelOfStalin.Assets.Props
             // Trigger.Subscribe("test", EventTriggerType.PointerClick, (data) => Debug.Log(GetClickedProp(data).Name));
             // Trigger.Subscribe("highlight", EventTriggerType.PointerClick, (data) => GetClickedPropObjectComponent(data).SetColorForAllChildren(Color.green));
             Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => CameraController.instance.FocusOn(GetClickedObject(data).transform));
+            Trigger.Subscribe("tooltip_show", EventTriggerType.PointerEnter, (data) => Tooltip.ShowTooltip_Static(GetEnteredProp(data).OnScreenCoordinates.ToString()));
+            Trigger.Subscribe("tooltip_hide", EventTriggerType.PointerExit, (data) => Tooltip.HideTooltip_Static());
         }
 
         public virtual void OnMouseDown()

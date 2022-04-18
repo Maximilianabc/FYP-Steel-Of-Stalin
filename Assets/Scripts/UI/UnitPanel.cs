@@ -175,24 +175,17 @@ public class UnitPanel : MonoBehaviour
     //TODO: Animation
     public void Show() {
         gameObject.SetActive(true);
-        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), 0, animationTime);
-        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), 0, animationTime);
+        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), 0, animationTime).setDestroyOnComplete(true);
+        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), 0, animationTime).setDestroyOnComplete(true);
     }
 
     public void Hide() {
-        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime);
-        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime);
-        LeanTween.delayedCall(animationTime, (System.Action)delegate { gameObject.SetActive(false); });
+        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime).setDestroyOnComplete(true);
+        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime).setDestroyOnComplete(true);
+        LeanTween.delayedCall(animationTime, (System.Action)delegate { gameObject.SetActive(false); }).setDestroyOnComplete(true);
         
     }
 
-    /*IEnumerator DelayResize(GameObject gameObject,int step)
-    {
-        for(int i=0;i<step;i++)yield return null;
-        if (gameObject.activeSelf && gameObject.GetComponent<Resize>()) {
-            gameObject.GetComponent<Resize>().DoResize();
-        }
-    }*/
 }
 
 

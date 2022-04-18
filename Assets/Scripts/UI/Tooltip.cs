@@ -8,6 +8,7 @@ public class Tooltip : MonoBehaviour
     public static Tooltip instance;
     private Text tooltipText;
     private RectTransform backgroundRectTransform;
+    private bool isShow;
     private void Start()
     {
         gameObject.SetActive(false);
@@ -24,14 +25,22 @@ public class Tooltip : MonoBehaviour
         transform.position = Input.mousePosition;
     }
     private void ShowTooltip(string tooltipString) {
-        gameObject.SetActive(true);
-        tooltipText.text = tooltipString;
-        float textPaddingSize = 12f;
-        Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth+textPaddingSize*2f, tooltipText.preferredHeight+textPaddingSize*2f);        
-        backgroundRectTransform.sizeDelta = backgroundSize;
+        isShow = true;
+        LeanTween.delayedCall(2f, (System.Action)delegate
+        {
+            if (isShow) {
+                tooltipText.text = tooltipString;
+                float textPaddingSize = 12f;
+                Vector2 backgroundSize = new Vector2(tooltipText.preferredWidth + textPaddingSize * 2f, tooltipText.preferredHeight + textPaddingSize * 2f);
+                backgroundRectTransform.sizeDelta = backgroundSize;
+                gameObject.SetActive(true);
+            }
+        });
+
     }
     
     private void HideTooltip() {
+        isShow = false;
         gameObject.SetActive(false);
     }
 
