@@ -212,7 +212,8 @@ namespace SteelOfStalin
         public Round CurrentRound { get; set; }
         public int RoundNumber { get; set; } = 1;
         public int TimeRemaining { get; set; }
-        public bool EnablePlayerInput { get; set; } = true;
+        public bool EnablePlayerInput { get; private set; } = true;
+        public bool IsSinglePlayer { get; private set; }
 
         [JsonIgnore] public Player Self { get; set; }
         [JsonIgnore] public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
@@ -295,8 +296,9 @@ namespace SteelOfStalin
                 Map.Name = info.MapName;
                 Map.Width = info.MapWidth;
                 Map.Height = info.MapHeight;
+                IsSinglePlayer = info.IsSinglePlayer;
 
-                Task.Run(() => Load());
+                _ = Task.Run(() => Load());
                 _ = StartCoroutine(HostPostInitialization());
             }
             else if (Game.Network.IsClient)
@@ -457,6 +459,15 @@ namespace SteelOfStalin
                 };
                 Players.Add(Self);
                 Debug.Log("Added self to Players");
+
+                if (IsSinglePlayer)
+                {
+                    foreach (AIPlayer ai in Player.NewDummyPlayers(MaxNumPlayers - Players.Count))
+                    {
+                        Players.Add(ai);
+                        Debug.Log($"Added bot {ai.Name} to Players");
+                    }
+                }
             }
 
             Map.Load();
@@ -520,7 +531,10 @@ namespace SteelOfStalin
             _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<List<Player>>(result =>
             {
                 Players = result;
-                Self = GetPlayer(Game.Profile.Name);
+                if (Self == null)
+                {
+                    Self = GetPlayer(Game.Profile.Name);
+                }
             }));
             MaxNumPlayers = max_num_players;
         }
@@ -535,6 +549,7 @@ namespace SteelOfStalin
         public int MapWidth { get; set; } = 100;
         public int MapHeight { get; set; } = 100;
         public int MaxNumPlayers { get; set; } = 3;
+        public bool IsSinglePlayer { get; set; } = false;
         public BattleRules Rules { get; set; } = new BattleRules();
 
         public BattleInfo() { }
@@ -1590,13 +1605,20 @@ namespace SteelOfStalin
         [JsonIgnore] public StringBuilder Recorder { get; set; } = new StringBuilder();
 
         public virtual void Execute() { }
+        public virtual string ToStringBeforeExecution() => "";
+        public virtual string ToStringAfterExecution() => Game.Network.IsServer ? Recorder.ToString() : "";
+        public static Command FromStringBeforeExecution(string command_string_without_result)
+        {
+            return null;
+        }
+
+        public virtual bool BelongsToPlayer(Player p) => Unit != null && Unit.Owner == p;
 
         public Command() { }
         public Command(Unit u) => Unit = u;
         public Command(Unit u, Coordinates src, Coordinates dest) => (Unit, Source, Destination) = (u, src, dest);
         public Command(Unit u, int srcX, int srcY, int destX, int destY) => (Unit, Source, Destination) = (u, new Coordinates(srcX, srcY), new Coordinates(destX, destY));
 
-        public override string ToString() => Recorder.ToString();
         public object Clone()
         {
             Command copy = (Command)MemberwiseClone();
