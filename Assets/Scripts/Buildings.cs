@@ -10,7 +10,7 @@ namespace SteelOfStalin.Assets.Props.Buildings
 {
     public abstract class UnitBuilding : Building
     {
-        public Attribute QueueCapacity { get; set; } = new Attribute(7);
+        public Attribute QueueCapacity { get; set; } = new Attribute(8);
         public Queue<Unit> TrainingQueue { get; set; } = new Queue<Unit>();
         public List<Unit> ReadyToDeploy { get; set; } = new List<Unit>();
         public Attribute DeployRange { get; set; } = new Attribute(1);

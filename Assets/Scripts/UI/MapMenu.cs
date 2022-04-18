@@ -73,7 +73,7 @@ public class MapMenu : MonoBehaviour
         BattleRules battleRules = new BattleRules();
         battleRules.Save(map.BattleName);
         List<Player> players = new List<Player>();
-        players.SerializeJson($@"Saves\{map.BattleName}\rules");
+        players.SerializeJson($@"Saves\{map.BattleName}\players");
 
 
         //TODO: change numPLayers to real count
