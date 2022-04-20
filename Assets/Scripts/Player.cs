@@ -265,8 +265,6 @@ namespace SteelOfStalin
 
 
 
-
-
                         }           
                     }
                 }                 
@@ -422,13 +420,12 @@ namespace SteelOfStalin
             //if enough, proceed to combat
             //if not, request retreat
 
-            var insight = GetAllUnitsInSight();
-
             foreach(var ally in Units.OfType<Personnel>()){
                 foreach(IOffensiveCustomizable weapon in ally.GetWeapons()){
                     var enemy = ally.GetHostileUnitsInFiringRange(weapon);
                     //if there is hostile unit
                     if(enemy.Count() > 0){
+                        enemy = enemy.OrderBy(c => c.GetDistance(ally));
                         //if only one
                         if(enemy.Count() == 1){
                             Commands.Add(new Fire(ally,enemy.First(), weapon));
@@ -436,15 +433,16 @@ namespace SteelOfStalin
                         }
                         //if more
                         else{
-                            var nearby = Units.OfType<Personnel>().OrderBy(c => c.GetDistance(c)).ElementAt(1);
+                            var nearby = ally.GetFriendlyUnitsInRange(ally.GetAccessibleNeigbours(5));
                             //if allied more
-                            if(true){
+                            if(nearby.Count() >= enemy.Count()){
                                 Commands.Add(new Fire(ally,enemy.First(), weapon));
                                 ally.CommandAssigned = CommandAssigned.FIRE;
                             }
+                            
                             //if no retreat to nearest ally
                             else{
-                                var pathtoally = ally.GetPath(ally.GetLocatedTile(), nearby.GetLocatedTile());
+                                var pathtoally = ally.GetPath(Map.Instance.GetTile(ally.CoOrds.X,ally.CoOrds.Y), nearby.First().GetLocatedTile());
                                 Commands.Add(new Move(ally,pathtoally.ToList()));
                                 ally.CommandAssigned = CommandAssigned.MOVE;
                             }
