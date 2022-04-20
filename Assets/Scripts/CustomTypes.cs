@@ -295,6 +295,8 @@ namespace SteelOfStalin.CustomTypes
             => triggers.Values.Where(entry => entry.eventID == id && entry.callback != null && entry.Active).ToList().ForEach(e => e.callback.Invoke(data));
 
         public override void OnPointerClick(PointerEventData eventData) => Execute(EventTriggerType.PointerClick, eventData);
+        public override void OnPointerEnter(PointerEventData eventData) => Execute(EventTriggerType.PointerEnter, eventData);
+        public override void OnPointerExit(PointerEventData eventData) => Execute(EventTriggerType.PointerExit, eventData);
     }
 
     public class AssetListConverterFactory : JsonConverterFactory

@@ -64,5 +64,10 @@ crashlytics-build.properties
 /[Pp]rojectSettings/
 /[Uu]serSettings/
 /[Cc]ode[Cc]overage/
+/[Aa]ssets/[Ss]treaming[Aa]ssets/Saves/**
+!/[Aa]ssets/[Ss]treaming[Aa]ssets/Saves/test
+!/[Aa]ssets/[Ss]treaming[Aa]ssets/Saves/test.meta
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump/
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump.meta
+/[Pp]ackages
+/[Aa]ssets/[Tt]ext[Mm]esh [Pp]ro

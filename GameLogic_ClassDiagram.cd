@@ -1,0 +1,3701 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="SteelOfStalin.Assets.Customizable">
+    <Position X="105" Y="2" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Assets.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Modifier" BaseTypeListCollapsed="true">
+    <Position X="25.75" Y="31" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEkAAAAAAAAAAAAIAAAQAgIAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.TerrainModifier" BaseTypeListCollapsed="true">
+    <Position X="25.75" Y="35.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAEAgAAAAAAAAAAEAIAAAgAAAAAAIjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Attribute" BaseTypeListCollapsed="true">
+    <Position X="21.5" Y="29.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAAAACAAAACE4AWAAgAAACQAAIAAAAAgAAAABzA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Resources" BaseTypeListCollapsed="true">
+    <Position X="15.5" Y="29.25" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>BMAQAAAIAIQAAAAAgAAABAAAAAAgAIABEoAAAABAAzg=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Cost" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="29.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAAAAAAAgAAAAAAAQCAAAIAABIACAAAAQjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Maneuverability" BaseTypeListCollapsed="true">
+    <Position X="13.25" Y="39.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAEAgAAAAAABACAAAIAAAAAAAAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Defense" BaseTypeListCollapsed="true">
+    <Position X="17.75" Y="36" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAgAAAAAAAAABAAoAAAAAAAQAIIjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Suppression" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="35.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAAAgAQAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Offense" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="29.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAQAAIAAAAgAAIAAAABAIAAIAAAAAAACAAIjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Damage" BaseTypeListCollapsed="true">
+    <Position X="4" Y="29.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAKAACAAAAACgAAQAAAAAAAAAIAAAAAAAAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Handling" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="29.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAIgAAgQAAAAAAAAAAAIAACAAAIAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Accuracy" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="33.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAACgAAAAAAAAAAIAIAAAAAAAAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.AOE" BaseTypeListCollapsed="true">
+    <Position X="4" Y="33.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAEAAAAAAAAEIAAAAAAAAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Payload" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="39.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIABEAAAAAAAAjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.LoadLimit" BaseTypeListCollapsed="true">
+    <Position X="6" Y="39.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAgAAAAAAAACAAAIAAAAAAAAAAEjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Attributes.Scouting" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="34.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAgAAAAQAAAAAAAIAAAAAAAAIAIjA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.BattleController">
+    <Position X="23.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\BattleController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Game">
+    <Position X="99" Y="27" Width="7" />
+    <TypeIdentifier>
+      <HashCode>AAAYQgAEACAAAKAgEQQAAAAAEAAAAAgQgBAAQASAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.GameSettings">
+    <Position X="99" Y="33.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AACAAIAAAAACYAAAAAAAAAAAAAAAAAIAAAAAAAACAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Battle" BaseTypeListCollapsed="true">
+    <Position X="113.75" Y="27" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAmIgQAHAUAwgBA4FBAgYAAEAgBhQAQAQQQEIAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.BattleInfo">
+    <Position X="106.5" Y="30.75" Width="6.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAQAABAAABAAAAAAAEAAEBA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.BattleRules">
+    <Position X="106.75" Y="27" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAICAAAAAAAABACAgAAEAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Map">
+    <Position X="67.25" Y="26.5" Width="7" />
+    <TypeIdentifier>
+      <HashCode>AUEAgJAABUQAAgCBABgAAEaAEQywAiIAUIAABAAABxA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.RandomMap">
+    <Position X="75.5" Y="26.75" Width="8.5" />
+    <TypeIdentifier>
+      <HashCode>AIgAiIAAEAQAEAAABAAYAIAAAAAAAgAABIAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.PerlinMap">
+    <Position X="75.5" Y="32.25" Width="11.25" />
+    <TypeIdentifier>
+      <HashCode>AAAgABAABkQAAAAAAAQAAEABgIAAAAAAFAAgAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Command">
+    <Position X="89.5" Y="26.75" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEgAAAA4AIAAEAAQAAAAIAAAEIAAAAAAABBA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.MenuController">
+    <Position X="23.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\MenuController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.PlayerProfile">
+    <Position X="71.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Player">
+    <Position X="76.75" Y="0.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>EAAAAhAgIDBCQEJEgAgAEAQAAAAAAIgAGQAAgAAEAjg=</HashCode>
+      <FileName>Assets\Scripts\Player.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.AIPlayer" Collapsed="true">
+    <Position X="73.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.PlayerObject">
+    <Position X="70.25" Y="5.25" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAiAAAQAAAKAAAAAAAAgAAAAAAACAEAAgAAA=</HashCode>
+      <FileName>Assets\Scripts\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.UnitBuilding">
+    <Position X="16.25" Y="17.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAIYAAAAQAAAAIAAAAABAAAAAEBA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding">
+    <Position X="21.5" Y="17.5" Width="4.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding.ProductionBuildingStatus">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Buildings.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAACAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Infrastructure">
+    <Position X="27.5" Y="17.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.TransmissionBuilding">
+    <Position X="32.25" Y="17.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding">
+    <Position X="37.75" Y="17.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAgAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Building">
+    <Position X="25.5" Y="9.75" Width="7" />
+    <TypeIdentifier>
+      <HashCode>ACIAAACcABACgQAAAAAACBIAAwAEAAABAAAAABACANA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Units.Barracks" Collapsed="true">
+    <Position X="16.5" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.UnitBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="18.375" Y="21.221" />
+        <Point X="18.375" Y="22.062" />
+        <Point X="18" Y="22.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Units.Arsenal" Collapsed="true">
+    <Position X="16.5" Y="23.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.UnitBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="18.375" Y="21.221" />
+        <Point X="18.375" Y="23.562" />
+        <Point X="18" Y="23.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Units.Dockyard" Collapsed="true">
+    <Position X="18.75" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.UnitBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="18.375" Y="21.221" />
+        <Point X="18.375" Y="22.062" />
+        <Point X="18.75" Y="22.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Units.Airfield" Collapsed="true">
+    <Position X="18.75" Y="23.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.UnitBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="18.375" Y="21.221" />
+        <Point X="18.375" Y="23.562" />
+        <Point X="18.75" Y="23.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Productions.Foundry" Collapsed="true">
+    <Position X="21.5" Y="22.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="23.625" Y="21.732" />
+        <Point X="23.625" Y="22.619" />
+        <Point X="23" Y="22.619" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Productions.Industries" Collapsed="true">
+    <Position X="21.25" Y="23.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="23.625" Y="21.732" />
+        <Point X="23.625" Y="23.937" />
+        <Point X="22.75" Y="23.937" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Productions.AmmoFactory" Collapsed="true">
+    <Position X="21.25" Y="25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="23.625" Y="21.732" />
+        <Point X="23.625" Y="25.375" />
+        <Point X="22.75" Y="25.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Productions.Refinery" Collapsed="true">
+    <Position X="24.25" Y="25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="23.625" Y="21.732" />
+        <Point X="23.625" Y="25.375" />
+        <Point X="24.25" Y="25.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Productions.Quarry" Collapsed="true">
+    <Position X="24.25" Y="22.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="23.625" Y="21.732" />
+        <Point X="23.625" Y="22.687" />
+        <Point X="24.25" Y="22.687" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Productions.PowerPlant" Collapsed="true">
+    <Position X="24.25" Y="23.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.ProductionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="23.625" Y="21.732" />
+        <Point X="23.625" Y="23.937" />
+        <Point X="24.25" Y="23.937" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Infrastructures.Road" Collapsed="true">
+    <Position X="29.5" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.Infrastructure" FixedToPoint="true">
+      <Path>
+        <Point X="29" Y="19.247" />
+        <Point X="29" Y="22.125" />
+        <Point X="29.5" Y="22.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Infrastructures.Railway" Collapsed="true">
+    <Position X="27" Y="20" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.Infrastructure" FixedToPoint="true">
+      <Path>
+        <Point X="29" Y="19.247" />
+        <Point X="29" Y="20.375" />
+        <Point X="28.5" Y="20.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Infrastructures.Bridge" Collapsed="true">
+    <Position X="27" Y="21.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.Infrastructure" FixedToPoint="true">
+      <Path>
+        <Point X="29" Y="19.247" />
+        <Point X="29" Y="21.875" />
+        <Point X="28.5" Y="21.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Infrastructures.Depot" Collapsed="true">
+    <Position X="27" Y="22.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.Infrastructure" FixedToPoint="true">
+      <Path>
+        <Point X="29" Y="19.247" />
+        <Point X="29" Y="23.125" />
+        <Point X="28.5" Y="23.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Infrastructures.Outpost" Collapsed="true">
+    <Position X="29.5" Y="20.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.Infrastructure" FixedToPoint="true">
+      <Path>
+        <Point X="29" Y="19.247" />
+        <Point X="29" Y="20.625" />
+        <Point X="29.5" Y="20.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Transmissions.Watchtower" Collapsed="true">
+    <Position X="32" Y="20.5" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.TransmissionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="34.25" Y="19.745" />
+        <Point X="34.25" Y="20.875" />
+        <Point X="33.75" Y="20.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Transmissions.SignalTower" Collapsed="true">
+    <Position X="32" Y="21.75" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.TransmissionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="34.25" Y="19.745" />
+        <Point X="34.25" Y="22.062" />
+        <Point X="33.75" Y="22.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Transmissions.JammingTower" Collapsed="true">
+    <Position X="34.75" Y="20.5" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.TransmissionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="34.25" Y="19.745" />
+        <Point X="34.25" Y="20.875" />
+        <Point X="34.75" Y="20.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Transmissions.RadarTower" Collapsed="true">
+    <Position X="34.75" Y="21.75" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.TransmissionBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="34.25" Y="19.745" />
+        <Point X="34.25" Y="22.062" />
+        <Point X="34.75" Y="22.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.Trench" Collapsed="true">
+    <Position X="37.25" Y="20.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="20.875" />
+        <Point X="38.75" Y="20.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.Foxhole" Collapsed="true">
+    <Position X="37.25" Y="21.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="21.937" />
+        <Point X="38.75" Y="21.937" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.Pillbox" Collapsed="true">
+    <Position X="37.25" Y="24" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="24.375" />
+        <Point X="38.75" Y="24.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.Bunker" Collapsed="true">
+    <Position X="37.25" Y="22.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="23.187" />
+        <Point X="38.75" Y="23.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.Wires" Collapsed="true">
+    <Position X="40" Y="20.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="20.875" />
+        <Point X="40" Y="20.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.TankTraps" Collapsed="true">
+    <Position X="40" Y="21.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="21.937" />
+        <Point X="40" Y="21.937" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Buildings.Defensives.Minefield" Collapsed="true">
+    <Position X="40" Y="22.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Buildings.DefensiveBuilding" FixedToPoint="true">
+      <Path>
+        <Point X="39.5" Y="19.956" />
+        <Point X="39.5" Y="23" />
+        <Point X="40" Y="23" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraController">
+    <Position X="19.5" Y="2.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>glQQAAGKACAAECABAoAEoUEAQABgCUwKAQAgAPAAQAA=</HashCode>
+      <FileName>Assets\Scripts\CameraController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Hold" Collapsed="true">
+    <Position X="87.75" Y="32" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="89.49" Y="31.834" />
+        <Point X="89.49" Y="32.375" />
+        <Point X="89.25" Y="32.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Move" Collapsed="true">
+    <Position X="87.75" Y="33" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="89.49" Y="31.834" />
+        <Point X="89.49" Y="33.375" />
+        <Point X="89.25" Y="33.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Merge" Collapsed="true">
+    <Position X="87.75" Y="34" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="89.49" Y="31.834" />
+        <Point X="89.49" Y="34.375" />
+        <Point X="89.25" Y="34.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Submerge" Collapsed="true">
+    <Position X="87.75" Y="35" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="89.49" Y="31.834" />
+        <Point X="89.49" Y="35.375" />
+        <Point X="89.25" Y="35.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Surface" Collapsed="true">
+    <Position X="87.75" Y="36" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="89.49" Y="31.834" />
+        <Point X="89.49" Y="36.438" />
+        <Point X="89.25" Y="36.438" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Land" Collapsed="true">
+    <Position X="87.75" Y="37" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="89.49" Y="31.834" />
+        <Point X="89.49" Y="37.375" />
+        <Point X="89.25" Y="37.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Fire" Collapsed="true">
+    <Position X="89.75" Y="32" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="91.49" Y="31.834" />
+        <Point X="91.49" Y="32.312" />
+        <Point X="91.25" Y="32.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Suppress" Collapsed="true">
+    <Position X="89.75" Y="33" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="91.49" Y="31.834" />
+        <Point X="91.49" Y="33.375" />
+        <Point X="91.25" Y="33.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Sabotage" Collapsed="true">
+    <Position X="89.75" Y="34" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="91.49" Y="31.834" />
+        <Point X="91.49" Y="34.375" />
+        <Point X="91.25" Y="34.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Ambush" Collapsed="true">
+    <Position X="89.75" Y="35" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="91.49" Y="31.834" />
+        <Point X="91.49" Y="35.312" />
+        <Point X="91.25" Y="35.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Bombard" Collapsed="true">
+    <Position X="89.75" Y="36" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="91.49" Y="31.834" />
+        <Point X="91.49" Y="36.312" />
+        <Point X="91.25" Y="36.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Aboard" Collapsed="true">
+    <Position X="91.75" Y="32" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="32.375" />
+        <Point X="93.25" Y="32.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Disembark" Collapsed="true">
+    <Position X="91.75" Y="33" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="33.375" />
+        <Point X="93.25" Y="33.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Load" Collapsed="true">
+    <Position X="91.75" Y="34" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="34.375" />
+        <Point X="93.25" Y="34.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Unload" Collapsed="true">
+    <Position X="91.75" Y="35" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="35.375" />
+        <Point X="93.25" Y="35.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Resupply" Collapsed="true">
+    <Position X="91.75" Y="38" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="38.312" />
+        <Point X="93.25" Y="38.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Repair" Collapsed="true">
+    <Position X="91.75" Y="36" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="36.375" />
+        <Point X="93.25" Y="36.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Reconstruct" Collapsed="true">
+    <Position X="91.75" Y="37" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="37.438" />
+        <Point X="93.25" Y="37.438" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Fortify" Collapsed="true">
+    <Position X="94" Y="32" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="32.375" />
+        <Point X="94" Y="32.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Construct" Collapsed="true">
+    <Position X="94" Y="33" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="33.375" />
+        <Point X="94" Y="33.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Demolish" Collapsed="true">
+    <Position X="94" Y="34" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="34.375" />
+        <Point X="94" Y="34.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Train" Collapsed="true">
+    <Position X="94" Y="35" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="35.375" />
+        <Point X="94" Y="35.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAACAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Deploy" Collapsed="true">
+    <Position X="94" Y="36" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="36.375" />
+        <Point X="94" Y="36.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAACAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Rearm" Collapsed="true">
+    <Position X="94" Y="37" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="93.49" Y="31.834" />
+        <Point X="93.49" Y="37.437" />
+        <Point X="94" Y="37.437" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Capture" Collapsed="true">
+    <Position X="96" Y="32" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="95.76" Y="31.834" />
+        <Point X="95.76" Y="32.437" />
+        <Point X="96" Y="32.437" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Scavenge" Collapsed="true">
+    <Position X="96" Y="33" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="95.76" Y="31.834" />
+        <Point X="95.76" Y="33.375" />
+        <Point X="96" Y="33.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Disassemble" Collapsed="true">
+    <Position X="96" Y="35" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="95.76" Y="31.834" />
+        <Point X="95.76" Y="35.437" />
+        <Point X="96" Y="35.437" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Commands.Assemble" Collapsed="true">
+    <Position X="96" Y="34" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Command" FixedToPoint="true">
+      <Path>
+        <Point X="92.375" Y="31.594" />
+        <Point X="92.375" Y="31.834" />
+        <Point X="95.76" Y="31.834" />
+        <Point X="95.76" Y="34.375" />
+        <Point X="96" Y="34.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearm">
+    <Position X="86.75" Y="8.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>CAgAAEAIAAAAACQAgAAgAAAABAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Module">
+    <Position X="115.5" Y="8.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizable" ManuallyRouted="true">
+      <Path>
+        <Point X="106.5" Y="4.314" />
+        <Point X="106.5" Y="7.847" />
+        <Point X="117.125" Y="7.847" />
+        <Point X="117.125" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAABAAAgAAAAAAACAAAAAAAAAAAQAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Pistol" Collapsed="true">
+    <Position X="83.25" Y="13" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="85.125" Y="12.431" />
+        <Point X="85.125" Y="13.438" />
+        <Point X="84.75" Y="13.438" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Revolver" Collapsed="true">
+    <Position X="83.25" Y="14.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="85.125" Y="12.431" />
+        <Point X="85.125" Y="14.625" />
+        <Point X="84.75" Y="14.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.BurstPistol" Collapsed="true">
+    <Position X="83.25" Y="16.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="85.125" Y="12.431" />
+        <Point X="85.125" Y="16.938" />
+        <Point X="84.75" Y="16.938" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.MachinePistol" Collapsed="true">
+    <Position X="83.25" Y="15.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="85.125" Y="12.431" />
+        <Point X="85.125" Y="15.75" />
+        <Point X="84.75" Y="15.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Submachinegun" Collapsed="true">
+    <Position X="83.25" Y="20" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="85.125" Y="12.431" />
+        <Point X="85.125" Y="20.438" />
+        <Point X="84.75" Y="20.438" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Carbine" Collapsed="true">
+    <Position X="83.25" Y="17.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="85.125" Y="12.431" />
+        <Point X="85.125" Y="17.875" />
+        <Point X="84.75" Y="17.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Rifle" Collapsed="true">
+    <Position X="85.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.SemiAutoRifle" Collapsed="true">
+    <Position X="85.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.BattleRifle" Collapsed="true">
+    <Position X="85.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.AssaultRifle" Collapsed="true">
+    <Position X="85.75" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.ScopedRifle" Collapsed="true">
+    <Position X="85.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Shotgun" Collapsed="true">
+    <Position X="92.25" Y="14.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="91.875" Y="12.431" />
+        <Point X="91.875" Y="15.25" />
+        <Point X="92.25" Y="15.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.SemiAutoCarbine" Collapsed="true">
+    <Position X="83.25" Y="18.75" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="19.188" />
+        <Point X="85.208" Y="19.188" Type="JumpStart" />
+        <Point X="85.042" Y="19.188" Type="JumpEnd" />
+        <Point X="85" Y="19.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.RocketLauncher" Collapsed="true">
+    <Position X="84" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.GrenadeLauncher" Collapsed="true">
+    <Position X="81.75" Y="21.25" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" ManuallyRouted="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="17.196" />
+        <Point X="85.208" Y="17.196" Type="JumpStart" />
+        <Point X="85.042" Y="17.196" Type="JumpEnd" />
+        <Point X="82.625" Y="17.196" />
+        <Point X="82.625" Y="21.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Mortar" Collapsed="true">
+    <Position X="92.25" Y="13.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Firearm" FixedToPoint="true">
+      <Path>
+        <Point X="88.625" Y="12.181" />
+        <Point X="88.625" Y="12.431" />
+        <Point X="91.875" Y="12.431" />
+        <Point X="91.875" Y="13.75" />
+        <Point X="92.25" Y="13.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.InfantryGun" Collapsed="true">
+    <Position X="86.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.RecoillessRifle" Collapsed="true">
+    <Position X="85.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.AutomaticGrenadeLauncher" Collapsed="true">
+    <Position X="89.25" Y="21.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.MultipleRocketLauncher" Collapsed="true">
+    <Position X="92.75" Y="21.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Molotov" Collapsed="true">
+    <Position X="89.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.AutomaticRifle" Collapsed="true">
+    <Position X="90" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.LightMachinegun" Collapsed="true">
+    <Position X="89.75" Y="15.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Grenade" Collapsed="true">
+    <Position X="89.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.RifleGrenade" Collapsed="true">
+    <Position X="90" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.Flamethrower" Collapsed="true">
+    <Position X="90" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Firearms.MountainGun" Collapsed="true">
+    <Position X="90" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Gun">
+    <Position X="115.5" Y="11.75" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAgAAEAIAAAAACAAAAAAAAAABAAAAgAAAAACBAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.HeavyMachineGun">
+    <Position X="109.75" Y="8.25" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAgAAEAIAAAAACQAAAAAAAAABAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Engine">
+    <Position X="105.25" Y="17.75" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="109.375" Y="11.327" />
+        <Point X="109.375" Y="18.812" />
+        <Point X="109" Y="18.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAQAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Suspension">
+    <Position X="102.5" Y="15" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.343" />
+        <Point X="105.375" Y="11.343" />
+        <Point X="105.375" Y="15.875" />
+        <Point X="105" Y="15.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Radio">
+    <Position X="106" Y="15.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.375" />
+        <Point X="109.375" Y="11.375" />
+        <Point X="109.375" Y="16.562" />
+        <Point X="109" Y="16.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Periscope">
+    <Position X="106.25" Y="12" Width="2.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.375" />
+        <Point X="109.375" Y="11.375" />
+        <Point X="109.375" Y="13.313" />
+        <Point X="109" Y="13.313" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.FuelTank">
+    <Position X="106" Y="20.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.375" />
+        <Point X="109.375" Y="11.375" />
+        <Point X="109.375" Y="21.585" />
+        <Point X="109" Y="21.585" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAACAAAAABAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.CannonBreech">
+    <Position X="111" Y="12.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="114.375" Y="11.327" />
+        <Point X="114.375" Y="13.688" />
+        <Point X="114" Y="13.688" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.AmmoRack">
+    <Position X="111" Y="14.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="114.375" Y="11.327" />
+        <Point X="114.375" Y="15.5" />
+        <Point X="114" Y="15.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAACAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.TorpedoTubes">
+    <Position X="102.5" Y="12.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.375" />
+        <Point X="105.375" Y="11.375" />
+        <Point X="105.375" Y="13.25" />
+        <Point X="105" Y="13.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Sonar">
+    <Position X="120" Y="13.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="119.625" Y="11.327" />
+        <Point X="119.625" Y="14.667" />
+        <Point X="120" Y="14.667" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Propeller">
+    <Position X="120" Y="15.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="119.625" Y="11.327" />
+        <Point X="119.625" Y="16.533" />
+        <Point X="120" Y="16.533" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Rudder">
+    <Position X="120" Y="17.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="119.625" Y="11.327" />
+        <Point X="119.625" Y="18.488" />
+        <Point X="120" Y="18.488" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Wings">
+    <Position X="120" Y="19.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="119.625" Y="11.327" />
+        <Point X="119.625" Y="20.138" />
+        <Point X="120" Y="20.138" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.LandingGear">
+    <Position X="120" Y="21" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="119.625" Y="11.327" />
+        <Point X="119.625" Y="21.678" />
+        <Point X="120" Y="21.678" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Radar">
+    <Position X="120" Y="11.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Module" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="117.125" Y="10.745" />
+        <Point X="117.125" Y="11.327" />
+        <Point X="119.625" Y="11.327" />
+        <Point X="119.625" Y="13" />
+        <Point X="120" Y="13" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" Collapsed="true">
+    <Position X="111.25" Y="17.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" Collapsed="true">
+    <Position X="115.25" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.AutoCannon" Collapsed="true">
+    <Position X="117.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C20mm" Collapsed="true">
+    <Position X="110.25" Y="18.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="19.132" />
+        <Point X="111.99" Y="19.132" />
+        <Point X="111.99" Y="18.75" />
+        <Point X="111.75" Y="18.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C37mm" Collapsed="true">
+    <Position X="110.25" Y="19.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="19.938" />
+        <Point X="111.75" Y="19.938" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C50mm" Collapsed="true">
+    <Position X="110.25" Y="20.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="21.125" />
+        <Point X="111.75" Y="21.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C75mm" Collapsed="true">
+    <Position X="110.25" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="22.125" />
+        <Point X="111.75" Y="22.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C88mm" Collapsed="true">
+    <Position X="110.25" Y="22.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="23.125" />
+        <Point X="111.75" Y="23.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C128mm" Collapsed="true">
+    <Position X="110.25" Y="23.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="24.125" />
+        <Point X="111.75" Y="24.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C152mm" Collapsed="true">
+    <Position X="110.25" Y="24.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="25.125" />
+        <Point X="111.75" Y="25.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C203mm" Collapsed="true">
+    <Position X="112.25" Y="18.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="18.75" />
+        <Point X="112.25" Y="18.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C280mm" Collapsed="true">
+    <Position X="112.25" Y="19.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="19.173" />
+        <Point X="111.99" Y="19.173" />
+        <Point X="111.99" Y="19.938" />
+        <Point X="112.25" Y="19.938" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C305mm" Collapsed="true">
+    <Position X="112.25" Y="20.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="21.125" />
+        <Point X="112.25" Y="21.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C381mm" Collapsed="true">
+    <Position X="112.25" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="22.125" />
+        <Point X="112.25" Y="22.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C480mm" Collapsed="true">
+    <Position X="112.25" Y="22.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="23.125" />
+        <Point X="112.25" Y="23.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.C800mm" Collapsed="true">
+    <Position X="112.25" Y="23.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Cannon" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="112" Y="17.988" />
+        <Point X="112" Y="24.125" />
+        <Point X="112.25" Y="24.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.H75mm" Collapsed="true">
+    <Position X="114.25" Y="18.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" FixedToPoint="true">
+      <Path>
+        <Point X="116" Y="17.988" />
+        <Point X="116" Y="18.625" />
+        <Point X="115.75" Y="18.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.H105mm" Collapsed="true">
+    <Position X="114.25" Y="19.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" FixedToPoint="true">
+      <Path>
+        <Point X="116" Y="17.988" />
+        <Point X="116" Y="19.875" />
+        <Point X="115.75" Y="19.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.H122mm" Collapsed="true">
+    <Position X="114.25" Y="20.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" FixedToPoint="true">
+      <Path>
+        <Point X="116" Y="17.988" />
+        <Point X="116" Y="21.125" />
+        <Point X="115.75" Y="21.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.H155mm" Collapsed="true">
+    <Position X="114.25" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" FixedToPoint="true">
+      <Path>
+        <Point X="116" Y="17.988" />
+        <Point X="116" Y="22.125" />
+        <Point X="115.75" Y="22.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.H203mm" Collapsed="true">
+    <Position X="114.25" Y="22.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" FixedToPoint="true">
+      <Path>
+        <Point X="116" Y="17.988" />
+        <Point X="116" Y="23.125" />
+        <Point X="115.75" Y="23.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.H280mm" Collapsed="true">
+    <Position X="114.25" Y="23.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.Howitzer" FixedToPoint="true">
+      <Path>
+        <Point X="116" Y="17.988" />
+        <Point X="116" Y="24.125" />
+        <Point X="115.75" Y="24.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.Ac20mm" Collapsed="true">
+    <Position X="116.5" Y="18.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.AutoCannon" FixedToPoint="true">
+      <Path>
+        <Point X="118.25" Y="17.988" />
+        <Point X="118.25" Y="18.625" />
+        <Point X="118" Y="18.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.Ac30mm" Collapsed="true">
+    <Position X="116.5" Y="19.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.AutoCannon" FixedToPoint="true">
+      <Path>
+        <Point X="118.25" Y="17.988" />
+        <Point X="118.25" Y="19.875" />
+        <Point X="118" Y="19.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.Ac40mm" Collapsed="true">
+    <Position X="116.5" Y="20.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.AutoCannon" FixedToPoint="true">
+      <Path>
+        <Point X="118.25" Y="17.988" />
+        <Point X="118.25" Y="21.125" />
+        <Point X="118" Y="21.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Modules.Guns.Ac57mm" Collapsed="true">
+    <Position X="116.5" Y="21.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Modules.Guns.AutoCannon" FixedToPoint="true">
+      <Path>
+        <Point X="118.25" Y="17.988" />
+        <Point X="118.25" Y="22.125" />
+        <Point X="118" Y="22.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Shell">
+    <Position X="96.5" Y="8.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAQAAAAAACAAEAACAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Ap" Collapsed="true">
+    <Position X="95.5" Y="11.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="11.619" />
+        <Point X="97.142" Y="11.619" />
+        <Point X="97.142" Y="12.188" />
+        <Point X="97" Y="12.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.He" Collapsed="true">
+    <Position X="100.25" Y="11.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="11.619" />
+        <Point X="100.127" Y="11.619" />
+        <Point X="100.127" Y="12.188" />
+        <Point X="100.25" Y="12.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apc" Collapsed="true">
+    <Position X="94.5" Y="12.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="12.598" />
+        <Point X="96.193" Y="12.598" />
+        <Point X="96.193" Y="13.188" />
+        <Point X="96" Y="13.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apbc" Collapsed="true">
+    <Position X="94.5" Y="13.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="11.578" />
+        <Point X="97.188" Y="11.578" />
+        <Point X="97.188" Y="12.59" />
+        <Point X="96.148" Y="12.59" />
+        <Point X="96.148" Y="14.188" />
+        <Point X="96" Y="14.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apcbc" Collapsed="true">
+    <Position X="94.5" Y="15" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="12.629" />
+        <Point X="96.164" Y="12.629" />
+        <Point X="96.164" Y="15.25" />
+        <Point X="96" Y="15.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apcbc_he" Collapsed="true">
+    <Position X="94.5" Y="16" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="12.576" />
+        <Point X="96.158" Y="12.576" />
+        <Point X="96.158" Y="16.375" />
+        <Point X="96" Y="16.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apcr" Collapsed="true">
+    <Position X="96.5" Y="16" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="16.375" />
+        <Point X="98" Y="16.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apcnr" Collapsed="true">
+    <Position X="96.5" Y="14.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="15.125" />
+        <Point X="98" Y="15.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apds" Collapsed="true">
+    <Position X="96.5" Y="13.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="14.062" />
+        <Point X="98" Y="14.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Apfsds" Collapsed="true">
+    <Position X="96.5" Y="12.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="13.125" />
+        <Point X="98" Y="13.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Hesh" Collapsed="true">
+    <Position X="100.25" Y="14" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="14.438" />
+        <Point X="100.25" Y="14.438" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Heat" Collapsed="true">
+    <Position X="100.25" Y="12.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="13.125" />
+        <Point X="100.25" Y="13.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Frag" Collapsed="true">
+    <Position X="100.25" Y="15" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="15.375" />
+        <Point X="100.25" Y="15.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Aphe" Collapsed="true">
+    <Position X="98.5" Y="11.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" FixedToPoint="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="12.188" />
+        <Point X="98.5" Y="12.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Incendiray" Collapsed="true">
+    <Position X="96.25" Y="17.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="17.26" />
+        <Point X="97" Y="17.26" />
+        <Point X="97" Y="17.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Customizables.Shells.Tracer" Collapsed="true">
+    <Position X="98.5" Y="17.5" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Customizables.Shells.Shell" ManuallyRouted="true">
+      <Path>
+        <Point X="98.25" Y="11.338" />
+        <Point X="98.25" Y="17.26" />
+        <Point X="99.25" Y="17.26" />
+        <Point X="99.25" Y="17.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.Graph&lt;T&gt;">
+    <Position X="12.25" Y="11.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAEAAAAIAAAAAAAAAAAAAAAAAAAEgAAAQAEAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.TogglableEntry">
+    <Position X="33.25" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.PropEventTrigger">
+    <Position X="33.5" Y="5.5" Width="7.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAQAAAAIAAAAAAACAAAAQAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.AssetListConverterFactory">
+    <Position X="9.5" Y="54" Width="6" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.AssetListConverter&lt;T&gt;">
+    <Position X="9.5" Y="51.25" Width="6.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgACAAAAACAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.AssetConverter&lt;T&gt;">
+    <Position X="9.5" Y="48.75" Width="6.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.RoundingJsonConverter">
+    <Position X="2.75" Y="56.5" Width="6.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEACAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.StringEnumFlagConverterFactory">
+    <Position X="9.5" Y="57.75" Width="6" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.CustomTypes.StringEnumFlagConverter&lt;T&gt;">
+    <Position X="9.5" Y="55.75" Width="6.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Round" BaseTypeListCollapsed="true">
+    <Position X="102.5" Y="33" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAIAAAIABAEBAAAAAQAAgAAAAAQgAAAAABBA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Phase">
+    <Position X="77" Y="37.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAQAAAAAAACAAAAIAAAAAAAAAAAAQBA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Planning">
+    <Position X="75.25" Y="41" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Moving">
+    <Position X="77" Y="41" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Firing">
+    <Position X="78.75" Y="41" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.CounterAttacking">
+    <Position X="80.5" Y="41" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Spotting">
+    <Position X="75.25" Y="42.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Flow.Phase" ManuallyRouted="true">
+      <Path>
+        <Point X="79.5" Y="40.447" />
+        <Point X="79.5" Y="40.7" />
+        <Point X="78.649" Y="40.7" />
+        <Point X="78.649" Y="42.308" />
+        <Point X="76" Y="42.308" />
+        <Point X="76" Y="42.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Signaling">
+    <Position X="77" Y="42.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Constructing">
+    <Position X="78.75" Y="42.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Training">
+    <Position X="80.5" Y="42.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Flow.Phase" ManuallyRouted="true">
+      <Path>
+        <Point X="79.5" Y="40.447" />
+        <Point X="79.5" Y="40.7" />
+        <Point X="78.618" Y="40.7" />
+        <Point X="78.618" Y="42.308" />
+        <Point X="81.25" Y="42.308" />
+        <Point X="81.25" Y="42.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Flow.Misc">
+    <Position X="82.25" Y="42.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="SteelOfStalin.Flow.Phase" ManuallyRouted="true">
+      <Path>
+        <Point X="79.5" Y="40.447" />
+        <Point X="79.5" Y="40.7" />
+        <Point X="78.673" Y="40.7" />
+        <Point X="78.673" Y="42.304" />
+        <Point X="83" Y="42.304" />
+        <Point X="83" Y="42.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAQAAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Prop">
+    <Position X="41.5" Y="0.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>BAAFAABACAIAACAEgAAAEhQAECAAEAAAwAAQABAgCBA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.PropObject">
+    <Position X="35.75" Y="0.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAACCAEBAABAhAAAAACAAAAAABIBKIIAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Unit">
+    <Position X="44.25" Y="9.75" Width="8.75" />
+    <TypeIdentifier>
+      <HashCode>EGMEACi8CArAIaAEj1DYKDQCFzEGRIAE4gAAgpAAQRI=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Ground">
+    <Position X="40.75" Y="32" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAgAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Naval">
+    <Position X="53" Y="32.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Aerial">
+    <Position X="59" Y="32.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Cities">
+    <Position X="68.25" Y="10.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>ACJAAACIAAAAAQBYAAAAACAAAwAEAAAAoAAAABIAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Tile">
+    <Position X="57.75" Y="9.75" Width="9.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAwBAIAAAAAiABAAgBAAAiAAIAABQgCAAAAijA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.WeightedTile">
+    <Position X="72.75" Y="10.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AIAAACAAAAAAAAAAgAAAUEAAASAAIIAAAAAAAAAAEiA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Boundary" Collapsed="true">
+    <Position X="65.25" Y="16.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="16.451" />
+        <Point X="65.01" Y="16.451" />
+        <Point X="65.01" Y="17.125" />
+        <Point X="65.25" Y="17.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Plains" Collapsed="true">
+    <Position X="60.5" Y="16.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="17.125" />
+        <Point X="62" Y="17.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Grassland" Collapsed="true">
+    <Position X="60.5" Y="17.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="18.062" />
+        <Point X="62" Y="18.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Forest" Collapsed="true">
+    <Position X="60.5" Y="18.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="19.187" />
+        <Point X="62" Y="19.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Jungle" Collapsed="true">
+    <Position X="60.5" Y="19.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="20.187" />
+        <Point X="62" Y="20.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Stream" Collapsed="true">
+    <Position X="63.25" Y="17.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="18.062" />
+        <Point X="63.25" Y="18.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.River" Collapsed="true">
+    <Position X="63.25" Y="18.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="19.187" />
+        <Point X="63.25" Y="19.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Ocean" Collapsed="true">
+    <Position X="63.25" Y="19.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="20.187" />
+        <Point X="63.25" Y="20.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Swamp" Collapsed="true">
+    <Position X="63.25" Y="16.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="17.125" />
+        <Point X="63.25" Y="17.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Desert" Collapsed="true">
+    <Position X="60.5" Y="20.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="21.187" />
+        <Point X="62" Y="21.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Hillock" Collapsed="true">
+    <Position X="58.5" Y="16.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="16.451" />
+        <Point X="60.24" Y="16.451" />
+        <Point X="60.24" Y="17.187" />
+        <Point X="60" Y="17.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Hills" Collapsed="true">
+    <Position X="58.5" Y="17.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="16.451" />
+        <Point X="60.24" Y="16.451" />
+        <Point X="60.24" Y="18.125" />
+        <Point X="60" Y="18.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Mountains" Collapsed="true">
+    <Position X="58.5" Y="18.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="16.451" />
+        <Point X="60.24" Y="16.451" />
+        <Point X="60.24" Y="19.125" />
+        <Point X="60" Y="19.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Rocks" Collapsed="true">
+    <Position X="65.25" Y="17.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Tiles.Tile" FixedToPoint="true">
+      <Path>
+        <Point X="62.625" Y="16.211" />
+        <Point X="62.625" Y="16.451" />
+        <Point X="65.01" Y="16.451" />
+        <Point X="65.01" Y="18.187" />
+        <Point X="65.25" Y="18.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Suburb" Collapsed="true">
+    <Position X="68" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.City" Collapsed="true">
+    <Position X="69.75" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Tiles.Metropolis" Collapsed="true">
+    <Position X="71.5" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnel">
+    <Position X="34.5" Y="35.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>EAUAEAAAAAAAAAACBAAYBAAAgAGAAIAAEQIAgACAARA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artillery">
+    <Position X="40.75" Y="35.25" Width="5" />
+    <TypeIdentifier>
+      <HashCode>UEUQACAAAAAAAAAAAAGQAAgAQAEAACAGAAAAgAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicle">
+    <Position X="47.25" Y="35" Width="5" />
+    <TypeIdentifier>
+      <HashCode>EBEAACwAAAAAAQAAAAAQAAAIEIGAACAkBAAQgAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnels.Militia" Collapsed="true">
+    <Position X="35" Y="41.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Personnel" FixedToPoint="true">
+      <Path>
+        <Point X="37" Y="41.289" />
+        <Point X="37" Y="42.125" />
+        <Point X="36.5" Y="42.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnels.Infantry" Collapsed="true">
+    <Position X="35" Y="43.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Personnel" FixedToPoint="true">
+      <Path>
+        <Point X="37" Y="41.289" />
+        <Point X="37" Y="43.562" />
+        <Point X="36.5" Y="43.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnels.Assault" Collapsed="true">
+    <Position X="35" Y="44.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Personnel" FixedToPoint="true">
+      <Path>
+        <Point X="37" Y="41.289" />
+        <Point X="37" Y="45.125" />
+        <Point X="36.5" Y="45.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnels.Support" Collapsed="true">
+    <Position X="37.75" Y="41.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Personnel" FixedToPoint="true">
+      <Path>
+        <Point X="37" Y="41.289" />
+        <Point X="37" Y="42.125" />
+        <Point X="37.75" Y="42.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnels.Mountain" Collapsed="true">
+    <Position X="37.75" Y="43.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Personnel" FixedToPoint="true">
+      <Path>
+        <Point X="37" Y="41.289" />
+        <Point X="37" Y="43.562" />
+        <Point X="37.75" Y="43.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Personnels.Engineer" Collapsed="true">
+    <Position X="37.75" Y="44.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Personnel" FixedToPoint="true">
+      <Path>
+        <Point X="37" Y="41.289" />
+        <Point X="37" Y="45.125" />
+        <Point X="37.75" Y="45.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAACACAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.Portable" Collapsed="true">
+    <Position X="41.25" Y="41.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="41.625" />
+        <Point X="42.75" Y="41.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.DirectFire" Collapsed="true">
+    <Position X="41.25" Y="42.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="43.125" />
+        <Point X="42.75" Y="43.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.AntiTank" Collapsed="true">
+    <Position X="41.25" Y="44.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="44.625" />
+        <Point X="42.75" Y="44.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.AntiAircraft" Collapsed="true">
+    <Position X="41.25" Y="45.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="46.125" />
+        <Point X="42.75" Y="46.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.HeavySupport" Collapsed="true">
+    <Position X="43.75" Y="41.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="41.625" />
+        <Point X="43.75" Y="41.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.SelfPropelled" Collapsed="true">
+    <Position X="43.75" Y="42.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="43.125" />
+        <Point X="43.75" Y="43.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.Railroad" Collapsed="true">
+    <Position X="43.75" Y="44.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="44.625" />
+        <Point X="43.75" Y="44.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Artilleries.CoastalGun" Collapsed="true">
+    <Position X="43.75" Y="45.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Artillery" FixedToPoint="true">
+      <Path>
+        <Point X="43.25" Y="40.868" />
+        <Point X="43.25" Y="46.125" />
+        <Point X="43.75" Y="46.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.MotorisedInfantry" Collapsed="true">
+    <Position X="47.5" Y="41.75" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="42.125" />
+        <Point X="49.25" Y="42.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.Utility" Collapsed="true">
+    <Position X="47.5" Y="42.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="43.062" />
+        <Point X="49" Y="43.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.Carrier" Collapsed="true">
+    <Position X="47.5" Y="43.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="44.125" />
+        <Point X="49" Y="44.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.ArmouredCar" Collapsed="true">
+    <Position X="50.5" Y="41.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="42" />
+        <Point X="50.5" Y="42" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.TankDestroyer" Collapsed="true">
+    <Position X="47.5" Y="44.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="45.125" />
+        <Point X="49" Y="45.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.AssaultGun" Collapsed="true">
+    <Position X="50.5" Y="45.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="46.125" />
+        <Point X="50.5" Y="46.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.LightTank" Collapsed="true">
+    <Position X="50.5" Y="42.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="43.062" />
+        <Point X="50.5" Y="43.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.MediumTank" Collapsed="true">
+    <Position X="50.5" Y="43.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="44.125" />
+        <Point X="50.5" Y="44.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.HeavyTank" Collapsed="true">
+    <Position X="50.5" Y="44.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="45.125" />
+        <Point X="50.5" Y="45.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Land.Vehicles.ArmouredTrain" Collapsed="true">
+    <Position X="47.5" Y="45.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Land.Vehicle" FixedToPoint="true">
+      <Path>
+        <Point X="49.75" Y="41.671" />
+        <Point X="49.75" Y="46.125" />
+        <Point X="49" Y="46.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Vessel">
+    <Position X="53" Y="34.75" Width="5" />
+    <TypeIdentifier>
+      <HashCode>EBEAACwAAgAAAACAAAAQgAAAAIEAACAgBAAQkBACABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Gunboat" Collapsed="true">
+    <Position X="53.25" Y="41.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="42.062" />
+        <Point X="54.75" Y="42.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Frigate" Collapsed="true">
+    <Position X="53.25" Y="42.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="43.125" />
+        <Point X="54.75" Y="43.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Destroyer" Collapsed="true">
+    <Position X="53.25" Y="43.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="44.062" />
+        <Point X="54.75" Y="44.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.LightCruiser" Collapsed="true">
+    <Position X="53.25" Y="44.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="45.125" />
+        <Point X="54.75" Y="45.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Battlecruiser" Collapsed="true">
+    <Position X="56" Y="41.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="42.062" />
+        <Point X="56" Y="42.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Battleship" Collapsed="true">
+    <Position X="56" Y="42.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="43.125" />
+        <Point X="56" Y="43.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.AircraftCarrier" Collapsed="true">
+    <Position X="56" Y="43.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="44.187" />
+        <Point X="56" Y="44.187" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.Submarine" Collapsed="true">
+    <Position X="56" Y="44.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="45.062" />
+        <Point X="56" Y="45.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.EscortCarrier" Collapsed="true">
+    <Position X="56" Y="45.75" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="46.125" />
+        <Point X="56" Y="46.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Sea.ReplenishmentOiler" Collapsed="true">
+    <Position X="53.25" Y="45.75" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Sea.Vessel" FixedToPoint="true">
+      <Path>
+        <Point X="55.5" Y="41.211" />
+        <Point X="55.5" Y="46.125" />
+        <Point X="55" Y="46.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Air.Plane">
+    <Position X="59" Y="34.75" Width="5" />
+    <TypeIdentifier>
+      <HashCode>EBEAACgAAAAAAAAAAAAQgAAAAKEAACAgBAARkJACABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Air.Attacker" Collapsed="true">
+    <Position X="59.25" Y="42" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Air.Plane" FixedToPoint="true">
+      <Path>
+        <Point X="61.5" Y="41.211" />
+        <Point X="61.5" Y="42.312" />
+        <Point X="60.75" Y="42.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Air.Fighter" Collapsed="true">
+    <Position X="59.25" Y="43.25" Width="1.5" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Air.Plane" FixedToPoint="true">
+      <Path>
+        <Point X="61.5" Y="41.211" />
+        <Point X="61.5" Y="43.562" />
+        <Point X="60.75" Y="43.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Air.Bomber" Collapsed="true">
+    <Position X="60.75" Y="44.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Air.TransportAircraft" Collapsed="true">
+    <Position X="62" Y="42" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Air.Plane" FixedToPoint="true">
+      <Path>
+        <Point X="61.5" Y="41.211" />
+        <Point X="61.5" Y="42.312" />
+        <Point X="62" Y="42.312" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Assets.Props.Units.Air.SurveillanceAircraft" Collapsed="true">
+    <Position X="62" Y="43.25" Width="1.75" />
+    <InheritanceLine Type="SteelOfStalin.Assets.Props.Units.Air.Plane" FixedToPoint="true">
+      <Path>
+        <Point X="61.5" Y="41.211" />
+        <Point X="61.5" Y="43.562" />
+        <Point X="62" Y="43.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Util.Utilities">
+    <Position X="7" Y="17.25" Width="6" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SteelOfStalin.Util.Utilities.Random" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Util.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AkAAAAAAgABAAAAAAADAAhCAYAgIAAAAAhQAAQiAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Util.Formula">
+    <Position X="1.25" Y="20" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAgAAACIAAAAAAAAAAAAAQAAACAAAAAABAgA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.Util.Mathm">
+    <Position X="2.5" Y="17.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAyAAAAAAAgAAACAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.Data&lt;T&gt;">
+    <Position X="24.5" Y="47.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAADAAABCAAAACAAAAAAIAQADBAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.UnitData">
+    <Position X="18.5" Y="52.25" Width="3.25" />
+    <InheritanceLine Type="SteelOfStalin.DataIO.Data&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="26.875" Y="51.751" />
+        <Point X="26.875" Y="51.991" />
+        <Point X="21.99" Y="51.991" />
+        <Point X="21.99" Y="54.25" />
+        <Point X="21.75" Y="54.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAgAAAABAAACAAAACAAAAAAIIAACDACAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.BuildingData">
+    <Position X="17.75" Y="56.5" Width="4" />
+    <InheritanceLine Type="SteelOfStalin.DataIO.Data&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="26.875" Y="51.751" />
+        <Point X="26.875" Y="51.991" />
+        <Point X="21.99" Y="51.991" />
+        <Point X="21.99" Y="58.687" />
+        <Point X="21.75" Y="58.687" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAACAAABCAAAABEIBAACBAACA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.TileData">
+    <Position X="22.5" Y="52.25" Width="3" />
+    <InheritanceLine Type="SteelOfStalin.DataIO.Data&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="26.875" Y="51.751" />
+        <Point X="26.875" Y="51.991" />
+        <Point X="25.74" Y="51.991" />
+        <Point X="25.74" Y="53.75" />
+        <Point X="25.5" Y="53.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAAAgAAAAAAAAAAAAAAAACAAAACAAAAAAIAAAIBAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.CustomizableData">
+    <Position X="22.25" Y="55.75" Width="3.25" />
+    <InheritanceLine Type="SteelOfStalin.DataIO.Data&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="26.875" Y="51.751" />
+        <Point X="26.875" Y="51.991" />
+        <Point X="25.74" Y="51.991" />
+        <Point X="25.74" Y="57.937" />
+        <Point X="25.5" Y="57.937" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAEoAAAAIAAAAAAAAAAASIQAACAAAAAAIAAAABAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.ModuleData">
+    <Position X="26.25" Y="52.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>EBIIgAgAgAAAAABEAAAAACAACKCAACAAAIATAABAAgA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.GunData">
+    <Position X="31" Y="52.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgAAAAAAAAAAAAAAAACAAAgAAAAQAAIAAAABAACA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.DataUtilities">
+    <Position X="0.5" Y="48.75" Width="8.5" />
+    <TypeIdentifier>
+      <HashCode>SQACAkIAAAEAACAUQIEAEAAAAQIAAgAk4AwCIABAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.RpcMessageChunk" BaseTypeListCollapsed="true">
+    <Position X="38.25" Y="52.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAMAAAACBAAAAAAAAAAAAQAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.RpcMessageObject">
+    <Position X="38.25" Y="51" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.NamedMessageObject">
+    <Position X="38.25" Y="48.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAQAAIAAACAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelOfStalin.DataIO.NetworkUtilities">
+    <Position X="43.25" Y="48" Width="10.25" />
+    <TypeIdentifier>
+      <HashCode>AAEQQCQACiAKIQAAHAAAAAgAAQABoAEARcAgBgGADQA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="SteelOfStalin.CustomTypes.Coordinates" BaseTypeListCollapsed="true">
+    <Position X="12.5" Y="7.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgAAAAAAAAAAAAIAAAAAAAAAAYjA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="SteelOfStalin.CustomTypes.CubeCoordinates" BaseTypeListCollapsed="true">
+    <Position X="5.5" Y="7.5" Width="6.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAICAAIEwAkAAAAAAQQAAIAAAAASAAAAYiE=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.315" />
+  </Struct>
+  <Struct Name="SteelOfStalin.CustomTypes.SerializableColor">
+    <Position X="0.5" Y="9.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAgAAAAAEgAAAAAAAAAAAAIAAAAAAKAEAAyA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="SteelOfStalin.Assets.INamedAsset">
+    <Position X="56.25" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Assets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SteelOfStalin.Assets.IOwnableAsset">
+    <Position X="60.25" Y="2" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACIAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\Assets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SteelOfStalin.Assets.Customizables.IOffensiveCustomizable">
+    <Position X="55.5" Y="3.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>CAgAAEAIAAAAACAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SteelOfStalin.Attributes.ModifierType">
+    <Position X="25.75" Y="29.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAACAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Attributes.PathfindingOptimization">
+    <Position X="41.75" Y="24.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Attributes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Buildings.BuildingStatus">
+    <Position X="41.75" Y="15.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAoAAAAIA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Customizables.FirearmType">
+    <Position X="91.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAgAAAAAAAAAIAABA=</HashCode>
+      <FileName>Assets\Scripts\Customizables.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.CustomTypes.Direction">
+    <Position X="3.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAJgCoAAA=</HashCode>
+      <FileName>Assets\Scripts\CustomTypes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.PropConnection">
+    <Position X="46.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAQACAAAAAACBAABAAABAAAAAAAg=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.UnitStatus">
+    <Position X="42" Y="18" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>gAAIAECABAAAAQCEAQAAABAAAIAAgAAEAAAAoAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.AvailableMovementCommands">
+    <Position X="36" Y="12.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACACAAAEAAAAAAQBAAAAAEAAAAACAAAAAAAAAAIA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.AvailableFiringCommands">
+    <Position X="36" Y="10" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAQAAAIAAAAEAAAAAAAQAQAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.AvailableLogisticsCommands">
+    <Position X="41.5" Y="12.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAACAAAAIgAAAAQIAACAAAIAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.AvailableConstructionCommands">
+    <Position X="38.5" Y="10" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAQAAAAAAAAAAAAAgAAACAACAAAA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.AvailableMiscCommands">
+    <Position X="38.75" Y="12.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAEAAAAAAAAQAAAAAAAAAAAAAQAAAAAAgAAAg=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.CommandAssigned">
+    <Position X="53.25" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAAACAAAEAEIgAAAAQJAAKAAEIEAAACwAAQCQAjAAIk=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Units.AutoCommands">
+    <Position X="42" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAQAAAAIA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Tiles.TileType">
+    <Position X="55.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAEACCAAAAYgAAABAgAAAACCAAgCBAKAE=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.Assets.Props.Tiles.Accessibility">
+    <Position X="55.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACCIAAAAAAAAUAABAAAAAAAAAAAAAAQAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Prop.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.DataIO.ExternalFolder">
+    <Position X="0.5" Y="56.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAEAQAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SteelOfStalin.DataIO.NetworkMessageType">
+    <Position X="35.5" Y="48.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAQAIAAAAAAAAAAAAABAAAAAAEAA=</HashCode>
+      <FileName>Assets\Scripts\Util.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="10" />
+</ClassDiagram>

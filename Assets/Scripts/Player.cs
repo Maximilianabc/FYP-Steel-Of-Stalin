@@ -119,6 +119,7 @@ namespace SteelOfStalin
             return sb.ToString();
         }
 
+
         public object Clone()
         {
             Player copy = (Player)MemberwiseClone();
@@ -129,18 +130,18 @@ namespace SteelOfStalin
         public override int GetHashCode() => base.GetHashCode();
         public override string ToString() => Name;
 
-        public static AIPlayer NewDummyTestPlayer() => new AIPlayer()
+        public static AIPlayer NewDummyPlayer() => new AIPlayer()
         {
-            Name = $"dummy_test_{Utilities.Random.Next()}",
+            Name = $"dummy_{Utilities.Random.Next()}",
             SerializableColor = (SerializableColor)new Color((float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble()),
             Resources = (Resources)Resources.TEST.Clone()
         };
 
-        public static IEnumerable<AIPlayer> NewDummyTestPlayers(int count)
+        public static IEnumerable<AIPlayer> NewDummyPlayers(int count)
         {
             for (int i = 0; i < count; i++)
             {
-                yield return NewDummyTestPlayer();
+                yield return NewDummyPlayer();
             }
         }
 
@@ -478,6 +479,7 @@ namespace SteelOfStalin
             yield return new WaitWhile(() => m_self == null);
             gameObject.name = m_self.Name;
             m_isInitialized = true;
+            Debug.Log("Player object initialized");
             yield return null;
         }
 
