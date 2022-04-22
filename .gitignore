@@ -69,5 +69,7 @@ crashlytics-build.properties
 !/[Aa]ssets/[Ss]treaming[Aa]ssets/Saves/test.meta
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump/
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump.meta
+/[Aa]ssets/[Tt]ext[Mm]esh\ [Pp]ro
+/[Aa]ssets/[Tt]ext[Mm]esh\ [Pp]ro.meta
+/**_DoNotShip/
 /[Pp]ackages
-/[Aa]ssets/[Tt]ext[Mm]esh [Pp]ro

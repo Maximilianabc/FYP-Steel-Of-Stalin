@@ -83,6 +83,7 @@ public class BattlesMenu : MonoBehaviour
         bool multiplayer = MenuNavigation.instance.multiplayer;
         selectedBattle.IsSinglePlayer = !multiplayer;
         Game.ActiveBattle = selectedBattle;
+        Game.ActiveBattle.IsSinglePlayer = !multiplayer;
         SceneManager.LoadScene("Loading");
         Game.StartHost();
         

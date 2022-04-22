@@ -36,6 +36,11 @@ namespace SteelOfStalin.CustomTypes
         public Coordinates(int x, int y) : this() => (X, Y) = (x, y);
         public Coordinates(Coordinates another) : this() => (X, Y) = (another.X, another.Y);
 
+        public static int GetDistance(Coordinates c1, Coordinates c2)
+            => CubeCoordinates.GetDistance((CubeCoordinates)c1, (CubeCoordinates)c2);
+        public IEnumerable<Coordinates> GetNeighbours(int distance = 1, bool include_self = false) 
+            => ((CubeCoordinates)this).GetNeighbours(distance, include_self).Select(c => (Coordinates)c);
+
         public object Clone() => new Coordinates(this);
         public override string ToString() => $"({X},{Y})";
         public override bool Equals(object obj) => Equals((Coordinates)obj);
@@ -92,7 +97,7 @@ namespace SteelOfStalin.CustomTypes
         /// </summary>
         /// <param name="distance">The distance from the cube coordinates, inclusive</param>
         /// <returns></returns>
-        public IEnumerable<CubeCoordinates> GetNeigbours(int distance = 1, bool include_self = false)
+        public IEnumerable<CubeCoordinates> GetNeighbours(int distance = 1, bool include_self = false)
         {
             if (include_self)
             {

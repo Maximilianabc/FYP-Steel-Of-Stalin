@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 using System;
+using SteelOfStalin.Assets.Props.Buildings.Units;
 
 namespace SteelOfStalin.Assets.Props.Units
 {
@@ -120,6 +121,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             // TODO FUT Impl.
             return false;
         }
+        public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Barracks;
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { PrimaryFirearm, SecondaryFirearm };
         public override IEnumerable<Module> GetModules() => Enumerable.Empty<Module>();
@@ -210,6 +212,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         }
         public virtual bool CanAssemble() => !IsSuppressed && !IsAssembled;
         public virtual bool CanDisassemble() => !IsSuppressed && IsAssembled;
+        public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Arsenal;
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun };
         public override IEnumerable<Module> GetModules() => new List<Module>() { Gun, Radio };
@@ -290,6 +293,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         public override bool CanCommunicateWith(Prop p) => Radio.Integrity > 0 && base.CanCommunicateWith(p);
         public override bool CanCommunicateWith(Unit communicatee) => Radio.Integrity > 0 && base.CanCommunicateWith(communicatee);
         public override bool CanCommunicateWith(Cities cities) => Radio.Integrity > 0 && base.CanCommunicateWith(cities);
+        public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Arsenal;
 
         public override IEnumerable<Tile> GetReconRange() =>
             Periscope.Integrity > 0
@@ -547,6 +551,7 @@ namespace SteelOfStalin.Assets.Props.Units.Sea
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.VESSEL);
         public override bool CanMove() => base.CanMove() && Carrying.Supplies > 0 && Carrying.Fuel > 0;
+        public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Dockyard;
 
         public override Modifier GetConcealmentPenaltyMove() => Engine.ConcealmentPenaltyMove;
 
@@ -691,6 +696,8 @@ namespace SteelOfStalin.Assets.Props.Units.Air
             // TODO FUT Impl.
             return false;
         }
+        public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Airfield;
+
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
         public override IEnumerable<Module> GetModules()
         {

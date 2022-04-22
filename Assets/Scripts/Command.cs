@@ -11,6 +11,9 @@ using SteelOfStalin.Util;
 using System.Collections.Generic;
 using System.Linq;
 using static SteelOfStalin.Util.Utilities;
+using SteelOfStalin.Assets.Props.Buildings.Units;
+using SteelOfStalin.Assets.Props.Units.Sea;
+using SteelOfStalin.Assets.Props.Units.Air;
 
 /* Symbols:
  * Hold: @
@@ -41,7 +44,7 @@ using static SteelOfStalin.Util.Utilities;
  * Scavenge: |+
  * Assemble: .
  * Disassemble: ..
- */ 
+ */
 namespace SteelOfStalin.Commands
 {
     #region Movement-Related
@@ -67,7 +70,7 @@ namespace SteelOfStalin.Commands
                 Unit.Carrying.Fuel.MinusEquals(fuel);
                 _ = Recorder.Append(Unit.GetResourcesChangeRecord("Fuel", -fuel));
             }
-            _ = Recorder.AppendLine($" @ {Unit.CoOrds}");
+            _ = Recorder.AppendLine($" {Symbol} {Unit.CoOrds}");
         }
     }
     public sealed class Move : Command
@@ -119,15 +122,17 @@ namespace SteelOfStalin.Commands
             {
                 this.Log($"Moved to {dest}. Consumed {supplies} supplies and {fuel} fuel");
                 Unit.CoOrds = new Coordinates(dest);
-                _ = Recorder.AppendLine($" -> {dest}");
+                _ = Recorder.AppendLine($" {Symbol} {dest}");
                 Unit.Status |= UnitStatus.MOVED;
             }
             else
             {
                 this.Log($"Destination {dest} is the same as original coords of unit {Unit}. Only cause should be movement conflict.");
-                _ = Recorder.AppendLine($" -x->");
+                _ = Recorder.AppendLine($" {SpecialSymbols[SpecialCommandResult.MOVE_CONFLICT_NO_MOVE]}");
             }
         }
+
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{string.Join(";", Path.Select(t => t.CoOrds))}";
     }
     public sealed class Merge : Command
     {
@@ -192,7 +197,7 @@ namespace SteelOfStalin.Commands
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon);
             Unit.Status |= UnitStatus.FIRED;
-            _ = Recorder.Append($" ! {Target}");
+            _ = Recorder.Append($" {Symbol} {Target}");
 
             if (Weapon is Gun)
             {
@@ -253,6 +258,8 @@ namespace SteelOfStalin.Commands
             // TODO add module damage
 
         }
+
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{Weapon.Name}";
     }
     public sealed class Suppress : Command
     {
@@ -290,7 +297,7 @@ namespace SteelOfStalin.Commands
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon, false);
             Unit.Status |= UnitStatus.FIRED;
-            _ = Recorder.Append($" !! {Target}");
+            _ = Recorder.Append($" {Symbol} {Target}");
 
             Target.ConsecutiveSuppressedRound++;
             decimal sup = Formula.EffectiveSuppression((Weapon, Target));
@@ -303,6 +310,7 @@ namespace SteelOfStalin.Commands
             }
             _ = Recorder.AppendLine();
         }
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{Weapon.Name}";
     }
     public sealed class Sabotage : Command
     {
@@ -335,7 +343,7 @@ namespace SteelOfStalin.Commands
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon);
             Unit.Status |= UnitStatus.FIRED;
-            _ = Recorder.Append($" ^ {Target}");
+            _ = Recorder.Append($" {Symbol} {Target}");
 
             decimal damage_dealt = Formula.DamageAgainstBuilding(Weapon);
             if (damage_dealt > 0)
@@ -346,6 +354,7 @@ namespace SteelOfStalin.Commands
             }
             _ = Recorder.AppendLine();
         }
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{Weapon.Name}";
     }
     public sealed class Ambush : Command
     {
@@ -369,7 +378,7 @@ namespace SteelOfStalin.Commands
             ConsumeSuppliesStandingStill();
 
             this.Log($"Ambushing");
-            _ = Recorder.AppendLine("!?");
+            _ = Recorder.AppendLine($" {Symbol} {Unit.CoOrds}");
             Unit.Status |= UnitStatus.AMBUSHING;
         }
     }
@@ -496,7 +505,7 @@ namespace SteelOfStalin.Commands
                     e.Carrying.Consume(repair_cost);
                     _ = Recorder.Append(e.GetResourcesChangeRecord(repair_cost));
 
-                    _ = Recorder.Append($" %+ {Target}");
+                    _ = Recorder.Append($" {Symbol} {Target}");
 
                     RepairingTarget.Integrity.PlusEquals(repairing_amount);
                     if (RepairingTarget.Integrity >= integrity_cap)
@@ -519,6 +528,8 @@ namespace SteelOfStalin.Commands
                 return;
             }
         }
+
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{RepairingTarget.Name}";
     }
     public sealed class Reconstruct : Command
     {
@@ -595,9 +606,11 @@ namespace SteelOfStalin.Commands
 
             Target.Status = BuildingStatus.UNDER_CONSTRUCTION;
             Target.ConstructionTimeRemaining = consume.Time.ApplyMod();
-            _ = Recorder.AppendLine($" `^ {Target} {Target.ConstructionTimeRemaining}");
+            _ = Recorder.AppendLine($" {Symbol} {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Fortifying {Target.Name} at {Target.CoOrds} for {Target.ConstructionTimeRemaining} round(s)");
         }
+
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target}";
     }
     public sealed class Construct : Command
     {
@@ -661,9 +674,10 @@ namespace SteelOfStalin.Commands
 
             Target.Initialize(Builder ?? Unit.Owner, Destination, BuildingStatus.UNDER_CONSTRUCTION);
             _ = Map.Instance.AddBuilding(Target);
-            _ = Recorder.AppendLine($" `$ {Target} {Target.ConstructionTimeRemaining}");
+            _ = Recorder.AppendLine($" {Symbol} {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Constructing {Target.Name} at {Destination} for {Target.ConstructionTimeRemaining} round(s)");
         }
+        public override string ToStringBeforeExecution() => base.ToStringBeforeExecution() + (Builder == null ? Unit.ToString() : Builder.ToString()) + $";{Target}";
     }
     public sealed class Demolish : Command
     {
@@ -696,9 +710,10 @@ namespace SteelOfStalin.Commands
             }
 
             Target.Status = BuildingStatus.DESTROYED;
-            _ = Recorder.AppendLine((Unit == null ? Target.Owner.ToString() : Unit.ToString()) + $" `v {Target}");
+            _ = Recorder.AppendLine((Unit == null ? Target.Owner.ToString() : Unit.ToString()) + $" {Symbol} {Target}");
             this.Log($"Demolished {Target.Name} at {Target.CoOrds}");
         }
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target}";
     }
     #endregion
 
@@ -738,6 +753,11 @@ namespace SteelOfStalin.Commands
                 this.LogError("Not enough resources.");
                 return;
             }
+            if (!Unit.CanBeTrainedIn(TrainingGround))
+            {
+                this.LogError($"{Unit} cannot be trained in {TrainingGround}");
+                return;
+            }
 
             Resources consume = Unit.Cost.Base;
             Trainer.ConsumeResources(consume);
@@ -747,11 +767,12 @@ namespace SteelOfStalin.Commands
 
             Unit.Initialize(Trainer, TrainingGround.CoOrds, UnitStatus.IN_QUEUE);
 
-            _ = Recorder.AppendLine($"{Trainer}{Trainer.GetResourcesChangeRecord(consume)} |$ {Unit} {Unit.TrainingTimeRemaining}");
+            _ = Recorder.AppendLine($"{Trainer}{Trainer.GetResourcesChangeRecord(consume)} {Symbol} {Unit} {Unit.TrainingTimeRemaining}");
             _ = Map.Instance.AddUnit(Unit);
 
             this.Log($"Training {Unit}. Time remaining {Unit.TrainingTimeRemaining}");
         }
+        public override string ToStringBeforeExecution() => $"{Trainer} {Symbol} {Unit};{TrainingGround}";
     }
     public sealed class Deploy : Command
     {
@@ -800,7 +821,7 @@ namespace SteelOfStalin.Commands
                 this.LogError($"There is/are unit(s) at the destination {Destination}.");
                 return;
             }
-            if (!TrainingGround.CubeCoOrds.GetNeigbours((int)TrainingGround.DeployRange.ApplyMod()).Any(c => c == (CubeCoordinates)Destination))
+            if (!TrainingGround.CubeCoOrds.GetNeighbours((int)TrainingGround.DeployRange.ApplyMod()).Any(c => c == (CubeCoordinates)Destination))
             {
                 this.LogError($"Destination {Destination} is not in deploy range of training ground");
                 return;
@@ -809,9 +830,11 @@ namespace SteelOfStalin.Commands
             Unit.Status = UnitStatus.ACTIVE;
             Unit.CoOrds = new Coordinates(Destination);
             Unit.SetWeapons(Weapons);
-            _ = Recorder.AppendLine($"{Unit.Owner} |@ {Unit}");
+            _ = Recorder.AppendLine($"{Unit.Owner} {Symbol} {Unit}");
             this.Log($"Deployed {Unit} at {Destination}");
         }
+
+        public override string ToStringBeforeExecution() => $"{Unit} {TrainingGround} {Symbol} {string.Join(";", Weapons.Select(w => w.Name))}";
     }
     public sealed class Rearm : Command
     {
@@ -858,7 +881,7 @@ namespace SteelOfStalin.Commands
 
             if (c.IsFriendly(Unit.Owner))
             {
-                _ = Recorder.Append($" |^ {c}");
+                _ = Recorder.Append($" {SpecialSymbols[SpecialCommandResult.CAPTURE_FRIENDLY]} {c}");
 
                 Attribute morale_cap = ((Cities)Game.TileData[c.Name]).Morale;
 
@@ -876,7 +899,7 @@ namespace SteelOfStalin.Commands
             }
             else
             {
-                _ = Recorder.Append($" |v {c}");
+                _ = Recorder.Append($" {Symbol} {c}");
                 if (c.Morale > 0)
                 {
 
@@ -925,8 +948,12 @@ namespace SteelOfStalin.Commands
                 if (a.CanDisassemble())
                 {
                     a.IsAssembled = false;
-                    _ = Recorder.AppendLine($"{a} ..");
+                    _ = Recorder.AppendLine($"{a} {Symbol}");
                     this.Log("Disassembled");
+                }
+                else
+                {
+                    this.LogWarning("Already disassembled");
                 }
             }
             else
@@ -952,9 +979,13 @@ namespace SteelOfStalin.Commands
             {
                 if (a.CanAssemble())
                 {
-                    a.IsAssembled = false;
-                    _ = Recorder.AppendLine($"{a} .");
+                    a.IsAssembled = true;
+                    _ = Recorder.AppendLine($"{a} {Symbol}");
                     this.Log("Assembled");
+                }
+                else
+                {
+                    this.LogWarning("Already assembled");
                 }
             }
             else
