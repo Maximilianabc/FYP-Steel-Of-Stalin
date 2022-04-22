@@ -286,7 +286,7 @@ namespace SteelOfStalin
         }
 
         void movetonewcity(){
-            if(Cities.Count() < 5){
+            if(Cities.Count() < 4){
                 //get a non occupied cities   
                 var neut = Map.Instance.GetCities(c => c.IsNeutral());
                 //get nearest city from base
@@ -386,8 +386,6 @@ namespace SteelOfStalin
                     avaunits.CommandAssigned = CommandAssigned.MOVE;
                 }
             }
-            //bridge
-            //maybe combine with movement
 
         }
 
@@ -395,7 +393,7 @@ namespace SteelOfStalin
 
         void movement(){
             //get all moveable units
-            if(Cities.Count() > 4){
+            if(Cities.Count() > 3){
                 if(Units.Count() > 10){
                     var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());
                     //get nearest enemy city will fix later
