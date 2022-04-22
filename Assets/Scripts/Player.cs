@@ -395,23 +395,28 @@ namespace SteelOfStalin
 
         void movement(){
             //get all moveable units
-            var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());
-            //get nearest enemy city will fix later
-            var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
-            var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
-            //get number of units may improve later
-            moveable = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(6);
+            if(Cities.Count() > 4){
+                if(Units.Count() > 10){
+                    var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());
+                    //get nearest enemy city will fix later
+                    var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
+                    var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
+                    //get number of units may improve later
+                    moveable = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(6);
 
-            //any enemy spotted
-            // if(Units.Any(c => c.HasSpotted(Map.Instance.GetUnits().Where(c => c.IsHostile())))){
-            //     Map.Instance.GetUnits().Where(c => c is hostile);
-            // }
-            //move to enemy city
-            foreach(var i in moveable){
-                var pathtocity = i.GetPath(i.GetLocatedTile(), nearest);
-                Commands.Add(new Move(i, pathtocity.ToList()));   
-                i.CommandAssigned = CommandAssigned.MOVE;
+                    //any enemy spotted
+                    // if(Units.Any(c => c.HasSpotted(Map.Instance.GetUnits().Where(c => c.IsHostile())))){
+                    //     Map.Instance.GetUnits().Where(c => c is hostile);
+                    // }
+                    //move to enemy city
+                    foreach(var i in moveable){
+                        var pathtocity = i.GetPath(i.GetLocatedTile(), nearest);
+                        Commands.Add(new Move(i, pathtocity.ToList()));   
+                        i.CommandAssigned = CommandAssigned.MOVE;
+                    }
+                }
             }
+            
 
         }
         void combat(){
