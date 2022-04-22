@@ -63,7 +63,8 @@ namespace SteelOfStalin.Util
 
         public static void Log(this Command command, string @event) => Debug.Log($"{command.Unit} has the following event when executing the command {command.Name}: {@event}");
         public static void LogWarning(this INamedAsset asset, string reason, [CallerMemberName] string method_name = "") => Debug.LogWarning($"Warning while executing method {method_name} for {asset}: {reason}");
-        public static void LogError(this Command command, string reason, string explanation = "") => Debug.LogError($"Failed to execute command {command.Name} for unit at {command.Unit}: {reason} {explanation}");
+        public static void LogWarning(this Command command, string reason) => Debug.LogWarning($"Warning received when executing command {command.Name} for unit {command.Unit}: {reason}");
+        public static void LogError(this Command command, string reason, string explanation = "") => Debug.LogError($"Failed to execute command {command.Name} for unit {command.Unit}: {reason} {explanation}");
         public static void LogError(this INamedAsset asset, string reason, [CallerMemberName] string method_name = "") => Debug.LogError($"Failed to execute method {method_name} for {asset}: {reason}");
         public static void LogError(this Phase phase, string reason) => Debug.LogError($"Error when executing phases {phase.GetType().Name}: {reason}");
 
@@ -104,6 +105,7 @@ namespace SteelOfStalin.Util
             Array.Copy(source, index, sliced, 0, length);
             return sliced;
         }
+        public static T ReverseLookup<T, U>(this IDictionary<T, U> dictionary, U lookup) => dictionary.FirstOrDefault(x => x.Value.Equals(lookup)).Key;
 
         public static bool HasAnyOfFlags<T>(this T @enum, T group) where T : Enum => (Convert.ToInt64(@enum) & Convert.ToInt64(group)) != 0;
 

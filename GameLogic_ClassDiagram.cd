@@ -137,7 +137,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SteelOfStalin.BattleController">
-    <Position X="23.5" Y="3.25" Width="1.5" />
+    <Position X="21" Y="11.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\BattleController.cs</FileName>
@@ -160,7 +160,7 @@
   <Class Name="SteelOfStalin.Battle" BaseTypeListCollapsed="true">
     <Position X="113.75" Y="27" Width="4.25" />
     <TypeIdentifier>
-      <HashCode>AgAAmIgQAHAUAwgBA4FBAgYAAEAgBhQAQAQQQEIAAAA=</HashCode>
+      <HashCode>AgAAmIgQAHEUAwgBA4FBAgYAAEAgBhQAQAQQQEIAAAA=</HashCode>
       <FileName>Assets\Scripts\Game.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -211,7 +211,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SteelOfStalin.MenuController">
-    <Position X="23.5" Y="5" Width="1.5" />
+    <Position X="23" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\MenuController.cs</FileName>
@@ -664,10 +664,10 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CameraController">
-    <Position X="19.5" Y="2.5" Width="3.5" />
+    <Position X="21" Y="1" Width="3.5" />
     <TypeIdentifier>
       <HashCode>glQQAAGKACAAECABAoAEoUEAQABgCUwKAQAgAPAAQAA=</HashCode>
-      <FileName>Assets\Scripts\CameraController.cs</FileName>
+      <FileName>Assets\Scripts\UI\CameraController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SteelOfStalin.Commands.Hold" Collapsed="true">
@@ -2310,7 +2310,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SteelOfStalin.CustomTypes.Graph&lt;T&gt;">
-    <Position X="12.25" Y="11.25" Width="5" />
+    <Position X="69.25" Y="53" Width="5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAEAAAAIAAAAAAAAAAAAAAAAAAAEgAAAQAEAAA=</HashCode>
       <FileName>Assets\Scripts\CustomTypes.cs</FileName>
@@ -2324,9 +2324,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SteelOfStalin.CustomTypes.PropEventTrigger">
-    <Position X="33.5" Y="5.5" Width="7.25" />
+    <Position X="33.5" Y="6" Width="7.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAgAAAAQAAAAIAAAAAAACAAAAQAAAAIAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAgAAAAQAAAAIAAAAAAAiAAAAQAAAAYAAAAA=</HashCode>
       <FileName>Assets\Scripts\CustomTypes.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -2519,7 +2519,7 @@
   <Class Name="SteelOfStalin.Assets.Props.PropObject">
     <Position X="35.75" Y="0.5" Width="5" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAACCAEBAABAhAAAAACAAAAAABIBKIIAAAAAA=</HashCode>
+      <HashCode>AAABAACAACCAEDAABAhAAAAACAAAAAAFIBKIIAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Prop.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -3527,8 +3527,113 @@
       <FileName>Assets\Scripts\Util.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="BattlesMenu">
+    <Position X="16.75" Y="5.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>gAQAAAAAACAABAABAIAAAAAAAAAAAACAAACAQABACAA=</HashCode>
+      <FileName>Assets\Scripts\UI\BattlesMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomSlider">
+    <Position X="8.5" Y="4.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAgAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\CustomSlider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FullscreenToggle">
+    <Position X="6.25" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\FullscreenToggle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LobbyMenu">
+    <Position X="18" Y="10" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAQAAgAAAAAAAAQAABAAAQAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\LobbyMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapMenu">
+    <Position X="16.25" Y="1" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AARAEAAEACAAAgAAAABAAAAAIAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\MapMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuNavigation">
+    <Position X="8.75" Y="8" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AARBAAAAACAAAEAIAACBAAABAABEGAAAAAAAAIAIAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\MenuNavigation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProgressBar">
+    <Position X="8.25" Y="1" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAQAAIAAAAgAAAAAAAAAgAAAgAEAAAAIAAgAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\ProgressBar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Resize">
+    <Position X="4.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAiAAAAAAgAAAEIAAEAAAAEQAEAAAABAAABA=</HashCode>
+      <FileName>Assets\Scripts\UI\Resize.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResolutionDropdown">
+    <Position X="6" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\ResolutionDropdown.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tooltip">
+    <Position X="0.5" Y="1" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAIQIACABAAAAAAAAAAAAAABAAAABAAAARAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\Tooltip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainPanel">
+    <Position X="12.75" Y="1" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>UAQIACEUACEAAAgAgARAgCAhAAAEIAABABABIjAAEGA=</HashCode>
+      <FileName>Assets\Scripts\UI\TrainPanel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIUtil">
+    <Position X="4.5" Y="8" Width="3.75" />
+    <NestedTypes>
+      <Struct Name="UIUtil.Resolution" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\UI\UIUtil.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAQAACAAACAAAAAAAAAAAAAAAABAAACCIAAAAACAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\UIUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnitPanel">
+    <Position X="12.75" Y="9.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAggACAAAAgAEAAAAAgAAABEAAAAAEAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\UnitPanel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VolumeSlider">
+    <Position X="6.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\VolumeSlider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="SteelOfStalin.CustomTypes.Coordinates" BaseTypeListCollapsed="true">
-    <Position X="12.5" Y="7.5" Width="4" />
+    <Position X="69.5" Y="49.25" Width="4" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEgAAAAAAAAAAAAIAAAAAAAAAAYjA=</HashCode>
       <FileName>Assets\Scripts\CustomTypes.cs</FileName>
@@ -3536,7 +3641,7 @@
     <Lollipop Position="0.2" />
   </Struct>
   <Struct Name="SteelOfStalin.CustomTypes.CubeCoordinates" BaseTypeListCollapsed="true">
-    <Position X="5.5" Y="7.5" Width="6.5" />
+    <Position X="62.5" Y="49.25" Width="6.5" />
     <TypeIdentifier>
       <HashCode>AAAAAABAAAICAAIEwAkAAAAAAQQAAIAAAAASAAAAYiE=</HashCode>
       <FileName>Assets\Scripts\CustomTypes.cs</FileName>
@@ -3544,7 +3649,7 @@
     <Lollipop Position="0.315" />
   </Struct>
   <Struct Name="SteelOfStalin.CustomTypes.SerializableColor">
-    <Position X="0.5" Y="9.75" Width="4.75" />
+    <Position X="57.5" Y="51.5" Width="4.75" />
     <TypeIdentifier>
       <HashCode>QAAAAAAAAgAAAAAEgAAAAAAAAAAAAIAAAAAAKAEAAyA=</HashCode>
       <FileName>Assets\Scripts\CustomTypes.cs</FileName>
@@ -3600,7 +3705,7 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="SteelOfStalin.CustomTypes.Direction">
-    <Position X="3.5" Y="7.5" Width="1.5" />
+    <Position X="60.5" Y="49.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAJgCoAAA=</HashCode>
       <FileName>Assets\Scripts\CustomTypes.cs</FileName>

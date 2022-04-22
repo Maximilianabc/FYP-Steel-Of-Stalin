@@ -218,7 +218,7 @@ namespace SteelOfStalin.Assets.Props
 
         public virtual int GetDistance(Prop prop) => CubeCoordinates.GetDistance(CubeCoOrds, prop.CubeCoOrds);
         public virtual decimal GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
-        public virtual IEnumerable<Prop> GetNeighboursWithSameType() => CubeCoOrds.GetNeigbours(include_self: false).SelectMany(c => Map.Instance.GetProps(p => p.CubeCoOrds == c && p.GetType() == GetType()));
+        public virtual IEnumerable<Prop> GetNeighboursWithSameType() => CubeCoOrds.GetNeighbours(include_self: false).SelectMany(c => Map.Instance.GetProps(p => p.CubeCoOrds == c && p.GetType() == GetType()));
         public virtual Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
 
         public virtual object Clone()
@@ -569,6 +569,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public virtual bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
         public virtual bool CanCommunicateWith(Unit communicatee) => this != communicatee && GetStraightLineDistance(communicatee) <= Scouting.Communication + communicatee.Scouting.Communication;
         public virtual bool CanCommunicateWith(Cities cities) => GetStraightLineDistance(cities) <= Scouting.Communication + cities.Communication;
+        public abstract bool CanBeTrainedIn(UnitBuilding ub);
 
         // has any tile in range that has hostile units
         public bool HasHostileUnitsInFiringRange(IOffensiveCustomizable weapon) => GetFiringRange(weapon).Where(t => t.HasUnit).Any(t => Map.Instance.GetUnits(t).Any(u => !u.IsFriendly(Owner) && HasSpotted(u)));

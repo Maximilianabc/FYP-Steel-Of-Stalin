@@ -5,11 +5,13 @@ using System.Linq;
 using NUnit.Framework;
 using SteelOfStalin;
 using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.Assets.Props;
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
@@ -36,6 +38,8 @@ public class GameLogicTest
         if (Map.Players.Count < 3)
         {
             Map.Players.AddRange(Player.NewDummyPlayers(3 - Map.Players.Count));
+            Map.SetMetropolisOwners();
+            Map.SetDefaultUnitBuildingsOwners();
         }
     }
 
@@ -45,7 +49,7 @@ public class GameLogicTest
         Coordinates random = new Coordinates(Utilities.Random.Next(100), Utilities.Random.Next(100));
         CubeCoordinates random_cube = (CubeCoordinates)random;
 
-        IEnumerable<CubeCoordinates> cubes = random_cube.GetNeigbours();
+        IEnumerable<CubeCoordinates> cubes = random_cube.GetNeighbours();
         Assert.AreEqual(cubes.Count(), 7);
 
         IEnumerable<CubeCoordinates> expected = new List<CubeCoordinates>()
@@ -387,49 +391,77 @@ public class GameLogicTest
     public void CommandsTest()
     {
         Player p1 = Map.Players[0];
-        Infantry i = UnitData.GetNew<Infantry>();
-        i.SetMeshName();
-        Coordinates start_point = Utilities.Random.NextItem(Map.Instance.GetTiles().Where(t => i.CanAccessTile(t)).Select(t => t.CoOrds));
-        i.Initialize(p1, start_point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
-        i.ChangeFirearm(CustomizableData.GetNew<IOffensiveCustomizable>(i.AvailableFirearms[1]) as Firearm);
+
+        Infantry i = UnitData.GetNew<Infantry>(); 
+        UnitBuilding train_ground = Map.Instance.GetBuildings(p1.Capital.CoOrds).OfType<Barracks>().FirstOrDefault();
+
+        Command train = new Train(i, train_ground, p1);
+        Debug.Log(train.ToStringBeforeExecution());
+        train.Execute();
+        Debug.Log(train.ToStringAfterExecution());
+
+        i.Status = SteelOfStalin.Assets.Props.Units.UnitStatus.CAN_BE_DEPLOYED;
+        List<IOffensiveCustomizable> weapons = new List<IOffensiveCustomizable>()
+        {
+            CustomizableData.GetNew<IOffensiveCustomizable>(i.AvailableFirearms[1]) as Firearm
+        };
+        Coordinates coords = Utilities.Random.NextItem(train_ground.GetDeployableDestinations(i).Select(t => t.CoOrds));
+        Command deploy = new Deploy(i, train_ground, coords, weapons);
+        deploy.Execute();
+        Debug.Log(deploy.ToStringAfterExecution());
 
         Tile end_point = Utilities.Random.NextItem(i.GetMoveRange());
 
         List<Command> commands = new List<Command>();
         Command move = new Move(i, i.GetPath(i.GetLocatedTile(), end_point).ToList());
-        move.Execute();
         commands.Add(move);
 
         Command hold = new Hold(i);
-        hold.Execute();
         commands.Add(hold);
+
+        Command ambush = new Ambush(i);
+        commands.Add(ambush);
 
         Player p2 = Map.Players[1];
         Assault a = UnitData.GetNew<Assault>();
-        a.SetMeshName();
-        a.Initialize(p2, start_point, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        a.Initialize(p2, Utilities.Random.NextItem(coords.GetNeighbours()), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
 
         Command fire = new Fire(i, a, i.PrimaryFirearm);
-        fire.Execute();
         commands.Add(fire);
 
         Command suppress = new Suppress(i, a, i.PrimaryFirearm);
-        suppress.Execute();
         commands.Add(suppress);
 
         Building outpost = BuildingData.GetNew<Outpost>();
-        outpost.SetMeshName();
-        outpost.Initialize(p2, new Coordinates(start_point.X - 1, start_point.Y));
-        Debug.Log(outpost.Durability);
+        outpost.Initialize(p2, new Coordinates(coords.X - 1, coords.Y));
 
         Command sabotage = new Sabotage(i, outpost, i.PrimaryFirearm);
-        sabotage.Execute();
         commands.Add(sabotage);
 
-        foreach (string result in commands.Select(c => c.ToString()))
+        Portable portable = UnitData.GetNew<Portable>();
+        portable.Initialize(p1, Utilities.Random.NextItem(coords.GetNeighbours()), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        portable.SetWeapons(new List<IOffensiveCustomizable>()
         {
-            Debug.Log(result);
-        }
+            CustomizableData.GetNew<IOffensiveCustomizable>(portable.AvailableGuns[0]) as Gun
+        });
+        Command assemble = new Assemble(portable);
+        commands.Add(assemble);
+
+        Command disassemble = new Disassemble(portable);
+        commands.Add(disassemble);
+
+        Debug.Log("Before:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringBeforeExecution())));
+
+        move.Execute();
+        hold.Execute();
+        ambush.Execute();
+        fire.Execute();
+        suppress.Execute();
+        sabotage.Execute();
+        assemble.Execute();
+        disassemble.Execute();
+
+        Debug.Log("After:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringAfterExecution())));
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
