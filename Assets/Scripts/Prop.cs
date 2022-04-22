@@ -257,16 +257,41 @@ namespace SteelOfStalin.Assets.Props
             {
                 gameObject.AddComponent<PropEventTrigger>();
             }
-            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => CameraController.instance.FocusOn(GetClickedObject(data).transform));
+            //TODO: separate all types of prop and implement the menu navigation
+            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI()) {
+                    Prop p = GetClickedProp(data);
+                    if (p is Cities c && c.IsOwn(Battle.Instance.Self))
+                    {
+                        TrainPanel.instance.SetCity(c);
+                    }
+                    else if (p is Unit u)
+                    {
+                        
+                        UnitPanel.instance.SetUnit(u);
+                    }
+                    else {   
+                        UnitPanel.instance.Hide();
+                        DeployPanel.instance.HideAll();
+                    }
+                }
+            });
             Trigger.Subscribe("tooltip_show", EventTriggerType.PointerEnter, (data) => {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetEnteredProp(data);
                     StringBuilder sb = new StringBuilder();
-                    if (p is Tile t)
+                    if (p is Tiles.Boundary b) {
+                        sb.AppendLine(b.Name);
+                        sb.AppendLine(b.CubeCoOrds.ToString());
+                        sb.Append("Impassable");
+                    }
+                    else if (p is Tile t)
                     {
-
                         sb.AppendLine(t.Name);
+                        if (t is Cities c &&c.Owner!=null) {
+                            sb.AppendLine($"Owner: {c.OwnerName}");
+                        }
                         sb.AppendLine(t.CubeCoOrds.ToString());
                         sb.AppendLine($"Concealment Mod: {t.TerrainMod.Concealment.Value}%");
                         sb.AppendLine($"Fuel Mod: {t.TerrainMod.Fuel.Value}%");
@@ -287,6 +312,18 @@ namespace SteelOfStalin.Assets.Props
                 }
             });
             Trigger.Subscribe("tooltip_hide", EventTriggerType.PointerExit, (data) => Tooltip.HideTooltip_Static());
+            Trigger.Subscribe("deploy_tile", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        DeployPanel.instance.DeployUnit(t);
+                    }
+                }
+            },false);
+
+
         }
 
         public virtual void OnMouseDown()

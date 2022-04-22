@@ -32,10 +32,10 @@ public class BattlesMenu : MonoBehaviour
 
     void OnEnable()
     {
-        Reset();
+        ResetBattles();
     }
 
-    public void Reset()
+    public void ResetBattles()
     {
         selectedBattle = null;
         selectedBattleGameObject = null;
@@ -80,7 +80,8 @@ public class BattlesMenu : MonoBehaviour
 
     public void LoadBattle() {
         if (selectedBattle == null) return;
-        bool multiplayer = MenuNavigation.instance.multiplayer;//not used for now
+        bool multiplayer = MenuNavigation.instance.multiplayer;
+        selectedBattle.IsSinglePlayer = !multiplayer;
         Game.ActiveBattle = selectedBattle;
         Game.ActiveBattle.IsSinglePlayer = !multiplayer;
         SceneManager.LoadScene("Loading");

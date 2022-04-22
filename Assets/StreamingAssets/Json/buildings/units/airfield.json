@@ -1,6 +1,6 @@
 {
   "QueueCapacity": {
-    "Value": 10,
+    "Value": 8,
     "Mod": {
       "Type": "FIXED_VALUE",
       "Value": 2

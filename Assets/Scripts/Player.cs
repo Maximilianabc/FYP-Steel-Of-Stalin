@@ -175,9 +175,9 @@ namespace SteelOfStalin
             yield return null;
         }
 
-        private void ChangeReadyStatus(bool ready)
+        public void ChangeReadyStatus(bool ready)
         {
-            if (!m_isInitialized || m_self.IsReady == ready)
+            if (!m_isInitialized)
             {
                 return;
             }
@@ -197,7 +197,7 @@ namespace SteelOfStalin
             ulong sender = @params.Receive.SenderClientId;
             Player player = m_battle.GetPlayer(sender);
             player.IsReady = ready;
-            Debug.Log($"{player} is ready");
+            Debug.Log($"{player} ready status: {ready}");
             UpdateReadyStatusAllClientRpc(ready, player.Name);
         }
     }
