@@ -72,6 +72,7 @@ namespace SteelOfStalin.Assets.Props
         // use CoOrds.ToString() and CubeCoOrds.ToString() directly for printing coords and cube coords
         public string PrintMembers() => Utilities.PrintMembers(this);
 
+        // TODO FUT. Impl. cache as much as possible here, like 
         public virtual void AddToScene()
         {
             string scene = SceneManager.GetActiveScene().name;

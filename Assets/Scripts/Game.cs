@@ -153,6 +153,9 @@ namespace SteelOfStalin
         {
             // TODO FUT. Impl. sanitize the data because it is passed via network
             string player_name = Encoding.UTF8.GetString(connectionData);
+#if UNITY_EDITOR
+            player_name = $"random_{Utilities.Random.Next()}";
+#endif
             Battle current_battle = Battle.Instance;
 
             if (clientId != 0)
@@ -349,6 +352,7 @@ namespace SteelOfStalin
             yield return new WaitWhile(() => !m_isInitialized);
             Debug.Log($"Map {Map.Name} initialized");
             //TODO: add handler for failed async load
+            //TODO FUT. Impl. Cope with async loading
             //AsyncOperation operation = SceneManager.LoadSceneAsync("Game");
             //operation.allowSceneActivation = false;
             //TODO: wait for all players to load the battle for fairness
@@ -368,6 +372,12 @@ namespace SteelOfStalin
             yield return new WaitWhile(() => SceneManager.GetActiveScene()!=SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
             _ = StartCoroutine(GameLoop());
+        }
+        private IEnumerator WaitForAllDataSet(Func<bool> wait_condition)
+        {
+            yield return new WaitWhile(wait_condition);
+            m_isLoaded = true;
+            yield return null;
         }
 
         private void AddPropsToScene()
@@ -506,13 +516,51 @@ namespace SteelOfStalin
         [ClientRpc]
         private void SetAllDataClientRpc(ClientRpcParams @params)
         {
-            _ = StartCoroutine(NetworkUtilities.TrySaveFiles(() => Game.LoadAllAssets(true)));
+            bool dump_loaded = false;
+            bool map_basic_info_loaded = false;
+            bool tiles_set = false;
+            bool units_set = false;
+            bool buildings_set = false;
+            bool rules_set = false;
 
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result => Map = result));
-            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => Map.SetTiles(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetUnits(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetBuildings(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => Rules = result));
+            _ = StartCoroutine(NetworkUtilities.TrySaveFiles(() =>
+            {
+                Game.LoadAllAssets(true);
+                dump_loaded = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result =>
+            {
+                Map = result;
+                map_basic_info_loaded = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => 
+            { 
+                Map.SetTiles(result); 
+                tiles_set = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => 
+            { 
+                Map.SetUnits(result); 
+                units_set = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => 
+            { 
+                Map.SetBuildings(result); 
+                buildings_set = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => 
+            { 
+                Rules = result; 
+                rules_set = true;
+            }));
+
+            // TODO FUT. Impl. add coroutine utilities for simple wait / do coroutines
+            _ = StartCoroutine(WaitForAllDataSet(() => !(dump_loaded || map_basic_info_loaded || tiles_set || units_set || buildings_set || rules_set)));
         }
 
         [ClientRpc]
@@ -573,7 +621,7 @@ namespace SteelOfStalin
         public int Width { get; set; }
         public int Height { get; set; }
 
-        [JsonIgnore] public List<Player> Players { get; set; } = new List<Player>();
+        [JsonIgnore] public List<Player> Players => Battle.Instance.Players;
         [JsonIgnore] public IEnumerable<Prop> AllProps => CombineAll<Prop>(Tiles.Flatten(), Units, Buildings);
 
         protected Tile[][] Tiles { get; set; }
@@ -610,8 +658,6 @@ namespace SteelOfStalin
         public virtual void Load()
         {
             BattleName = Battle.Instance?.Name ?? "test";
-            // must be called from unit tests if Battle.Instance is null
-            Players = Battle.Instance?.Players ?? DeserializeJson<List<Player>>(GetRelativePath(ExternalFolder.SAVES, "test", "players"));
 
             Units = DeserializeJson<List<Unit>>(AppendPath(Folder, "units"));
             foreach (Unit u in Units)
@@ -1466,25 +1512,13 @@ namespace SteelOfStalin
 
         private void PostGenerateProcesses()
         {
-            int i = 0;
-            foreach (Metropolis m in GetCities<Metropolis>())
-            {
-                m.SetOwner(Battle.Instance?.Players[i]);
-                i++;
-            }
+            Debug.Log("Adding default barracks and arsenals");
             foreach (Cities c in GetCities())
             {
                 Barracks barracks = Game.BuildingData.GetNew<Barracks>();
                 Arsenal arsenal = Game.BuildingData.GetNew<Arsenal>();
-
-                barracks.Initialize(c.Owner, new Coordinates(c.CoOrds));
                 barracks.CoOrds = new Coordinates(c.CoOrds);
                 arsenal.CoOrds = new Coordinates(c.CoOrds);
-                if (c.Owner != null)
-                {
-                    barracks.Owner = c.Owner;
-                    arsenal.Owner = c.Owner;
-                }
                 AddBuildings(barracks, arsenal);
             }
         }

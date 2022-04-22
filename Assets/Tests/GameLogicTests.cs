@@ -19,6 +19,7 @@ using SteelOfStalin.DataIO;
 using SteelOfStalin.Util;
 using UnityEngine;
 using UnityEngine.TestTools;
+using static SteelOfStalin.DataIO.DataUtilities;
 
 public class GameLogicTest
 {
@@ -28,6 +29,7 @@ public class GameLogicTest
     public CustomizableData CustomizableData => Game.CustomizableData;
     public BattleRules Rules { get; set; } = new BattleRules();
     public Map Map { get; set; } = new Map();
+    public List<Player> Players { get; set; } = new List<Player>();
 
     [SetUp]
     public void TestSetUp()
@@ -35,11 +37,27 @@ public class GameLogicTest
         Game.LoadAllAssets();
         Rules = DataUtilities.DeserializeJson<BattleRules>(@"Saves\test\rules");
         Map.Load();
-        if (Map.Players.Count < 3)
+        Players = DeserializeJson<List<Player>>(GetRelativePath(ExternalFolder.SAVES, "test", "players"));
+        if (Players.Count < 3)
         {
-            Map.Players.AddRange(Player.NewDummyPlayers(3 - Map.Players.Count));
-            Map.SetMetropolisOwners();
-            Map.SetDefaultUnitBuildingsOwners();
+            Players.AddRange(Player.NewDummyPlayers(3 - Players.Count));
+            int i = 0;
+            foreach (Metropolis m in Map.GetCities<Metropolis>())
+            {
+                m.SetOwner(Players[i]);
+                i++;
+            }
+            IEnumerable<Metropolis> metro = Map.GetCities<Metropolis>();
+            foreach (Metropolis m in metro)
+            {
+                foreach (Building building in Map.Instance.GetBuildings(m.CoOrds))
+                {
+                    if (building is UnitBuilding ub)
+                    {
+                        ub.SetOwner(m.Owner);
+                    }
+                }
+            }
         }
     }
 
@@ -234,7 +252,7 @@ public class GameLogicTest
     [Test]
     public void MapGetByCoordIntTest()
     {
-        Player p1 = Map.Players[0];
+        Player p1 = Players[0];
         Coordinates point = new Coordinates(1,1);
         Coordinates point2 = new Coordinates(2,2);
 
@@ -275,7 +293,7 @@ public class GameLogicTest
     [Test]
     public void MapGetByTypeTest()
     {
-        Player p1 = Map.Players[0];
+        Player p1 = Players[0];
         Coordinates point = new Coordinates(1,1);
         Coordinates point2 = new Coordinates(2,2);
 
@@ -319,7 +337,7 @@ public class GameLogicTest
     [Test]
     public void MapGetCitiesMiscTest()
     {
-        Player p1 = Map.Players[0];
+        Player p1 = Players[0];
         List<Prop> citiesList = Map.GetCities().ToList<Prop>();
         List<Prop> propList = Map.GetProps<Cities>().ToList<Prop>();
         Assert.AreEqual(citiesList, propList);
@@ -334,8 +352,8 @@ public class GameLogicTest
 
     [Test]
     public void UnitOwnershipTest(){
-        Player p1 = Map.Players[0];
-        Player p2 = Map.Players[1];
+        Player p1 = Players[0];
+        Player p2 = Players[1];
         Coordinates point = new Coordinates(0,0);
 
         Infantry i = UnitData.GetNew<Infantry>();
@@ -355,7 +373,7 @@ public class GameLogicTest
 
     [Test]
     public void UnitFunctionTest(){
-        Player p1 = Map.Players[0];
+        Player p1 = Players[0];
 
         Coordinates point1 = new Coordinates(0,0);
         Coordinates point2 = new Coordinates(1,1);
@@ -378,7 +396,7 @@ public class GameLogicTest
     [Test]
     public void GetPathTest()
     {
-        Player p1 = Map.Players[0];
+        Player p1 = Players[0];
         Infantry i = UnitData.GetNew<Infantry>();
         i.SetMeshName();
         i.Initialize(p1, new Coordinates(1, 1), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
@@ -390,7 +408,7 @@ public class GameLogicTest
     [Test]
     public void CommandsTest()
     {
-        Player p1 = Map.Players[0];
+        Player p1 = Players[0];
 
         Infantry i = UnitData.GetNew<Infantry>(); 
         UnitBuilding train_ground = Map.Instance.GetBuildings(p1.Capital.CoOrds).OfType<Barracks>().FirstOrDefault();
@@ -422,7 +440,7 @@ public class GameLogicTest
         Command ambush = new Ambush(i);
         commands.Add(ambush);
 
-        Player p2 = Map.Players[1];
+        Player p2 = Players[1];
         Assault a = UnitData.GetNew<Assault>();
         a.Initialize(p2, Utilities.Random.NextItem(coords.GetNeighbours()), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
 
