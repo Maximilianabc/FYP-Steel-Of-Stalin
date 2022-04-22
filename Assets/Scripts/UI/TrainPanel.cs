@@ -114,11 +114,10 @@ public class TrainPanel : MonoBehaviour
         for (int i = 1; i <= numPage; i++)
         {
             int x = i;
-            GameObject instance = Instantiate(navigationButton);
+            GameObject instance = Instantiate(navigationButton,navigationButtons,false);
             instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = x.ToString();
             instance.GetComponent<Button>().onClick.AddListener(delegate { SetPage(x); });
             instance.name = x.ToString();
-            instance.transform.SetParent(navigationButtons);
         }
         if (numPage >= 1) { 
             SetPage(1);

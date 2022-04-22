@@ -349,21 +349,22 @@ namespace SteelOfStalin
             yield return new WaitWhile(() => !m_isInitialized);
             Debug.Log($"Map {Map.Name} initialized");
             //TODO: add handler for failed async load
-            AsyncOperation operation = SceneManager.LoadSceneAsync("Game");
-            operation.allowSceneActivation = false;
+            //AsyncOperation operation = SceneManager.LoadSceneAsync("Game");
+            //operation.allowSceneActivation = false;
             //TODO: wait for all players to load the battle for fairness
             Debug.Log("Waiting for loading battle");
             yield return new WaitWhile(() => !m_isLoaded);
             Debug.Log($"Battle {Name} loaded");
 
             Debug.Log("Waiting for all players to be connected");
-            yield return new WaitWhile(() => Game.Network.IsClient || Game.ActiveBattle.IsSinglePlayer ? Players.Count != MaxNumPlayers : ConnectedPlayerIDs.Count != MaxNumPlayers);
+            yield return new WaitWhile(() => (Game.Network.IsClient || Game.ActiveBattle.IsSinglePlayer) ? Players.Count != MaxNumPlayers : ConnectedPlayerIDs.Count != MaxNumPlayers);
             Debug.Log("All players connected");
 
             Debug.Log("Waiting for all players to be ready");
             yield return new WaitWhile(() => !AreAllPlayersReadyToStart);
             Debug.Log("All players are ready");
-            operation.allowSceneActivation = true;
+            //operation.allowSceneActivation = true;
+            SceneManager.LoadScene("Game");
             yield return new WaitWhile(() => SceneManager.GetActiveScene()!=SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
             _ = StartCoroutine(GameLoop());
