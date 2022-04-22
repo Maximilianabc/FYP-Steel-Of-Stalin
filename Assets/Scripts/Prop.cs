@@ -284,7 +284,7 @@ namespace SteelOfStalin.Assets.Props
                     StringBuilder sb = new StringBuilder();
                     if (p is Tiles.Boundary b) {
                         sb.AppendLine(b.Name);
-                        sb.AppendLine(b.CubeCoOrds.ToString());
+                        sb.AppendLine(b.CoOrds.ToString());
                         sb.Append("Impassable");
                     }
                     else if (p is Tile t)
@@ -293,7 +293,7 @@ namespace SteelOfStalin.Assets.Props
                         if (t is Cities c &&c.Owner!=null) {
                             sb.AppendLine($"Owner: {c.OwnerName}");
                         }
-                        sb.AppendLine(t.CubeCoOrds.ToString());
+                        sb.AppendLine(t.CoOrds.ToString());
                         sb.AppendLine($"Concealment Mod: {t.TerrainMod.Concealment.Value}%");
                         sb.AppendLine($"Fuel Mod: {t.TerrainMod.Fuel.Value}%");
                         sb.AppendLine($"Supplies Mod: {t.TerrainMod.Supplies.Value}%");

@@ -158,7 +158,7 @@ public class TrainPanel : MonoBehaviour
     {
         cities = Battle.Instance.Map.GetCities(Battle.Instance.Self).ToList();
         citySelection.GetComponent<TMPro.TMP_Dropdown>().ClearOptions();
-        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c=>$"{c.Name} {c.CubeCoOrds}"));
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c=>$"{c.Name} {c.CoOrds}"));
         currentCity = null;
     }
 
