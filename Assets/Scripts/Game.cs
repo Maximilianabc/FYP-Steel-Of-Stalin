@@ -258,8 +258,11 @@ namespace SteelOfStalin
             {
                 CurrentRound = new Round();
                 ActivePlayers.ToList().ForEach(p => p.IsReady = false);
+                Debug.Log("after setting players as not ready");
                 CurrentRound.InitializeRoundStart();
+                Debug.Log("after initializing round start");
                 CurrentRound.CommandPrerequisitesChecking();
+                Debug.Log("CommandPrerequisitesChecking");
                 EnablePlayerInput = true;
                 TimeRemaining = Rules.TimeForEachRound;
                 yield return new WaitForEndOfFrame();

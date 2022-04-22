@@ -60,10 +60,10 @@ public class Resize : MonoBehaviour
         }
         Vector2 resultVector = objectToBeResized.GetComponent<RectTransform>().sizeDelta;
         if (resizeWidth) {
-            resultVector.x = max_x - min_x + paddingLeft + paddingRight;
+            resultVector.x = Mathf.Max(max_x - min_x + paddingLeft + paddingRight,0f);
         }
         if (resizeHeight) {
-            resultVector.y = max_y - min_y + paddingUp + paddingDown;
+            resultVector.y = Mathf.Max(max_y - min_y + paddingUp + paddingDown,0f);
         }
 
         objectToBeResized.GetComponent<RectTransform>().sizeDelta = resultVector;
