@@ -229,6 +229,7 @@ namespace SteelOfStalin
         [JsonIgnore] public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
         [JsonIgnore] public bool AreAllPlayersReadyToStart => Players.All(p => p.IsReady);
         [JsonIgnore] public bool IsServerFull => Game.Network.IsServer && Players.Count >= MaxNumPlayers;
+        [JsonIgnore] public bool AreCapitalsSet { get; private set; } = false;
         [JsonIgnore] public NetworkUtilities NetworkUtilities { get; set; }
 
         private Player m_winner { get; set; } = null;
@@ -400,7 +401,6 @@ namespace SteelOfStalin
             Debug.Log("Post initialization finished");
             yield return null;
         }
-        // TODO add force start option for host even if not all players are ready
         private IEnumerator WaitForGameStart()
         {
             Debug.Log("Waiting for map initialization");
@@ -438,6 +438,28 @@ namespace SteelOfStalin
         {
             yield return null;
         }
+        private IEnumerator SendMapDetailsToClient(ulong id, ClientRpcParams send_params, Action callback)
+        {
+            yield return new WaitWhile(() => !Map.IsLoaded);
+            NetworkUtilities.SendMessageFromHostByRpc(Map.GetTilesUnflatterned(), send_params);
+            // TODO FUT. Impl. send only units and buildings which belong to and currently spotted to the client
+            NetworkUtilities.SendNamedMessage(Map.GetUnits(), id, NetworkMessageType.DATA);
+            NetworkUtilities.SendNamedMessage(Map.GetBuildings(), id, NetworkMessageType.DATA);
+            callback.Invoke();
+            yield return null;
+        }
+        private IEnumerator InvokeClientRpcAfterSendingData(ulong id, ClientRpcParams send_params, Func<bool> wait_flag)
+        {
+            yield return new WaitWhile(wait_flag);
+            Debug.Log($"Sent all data to client (id: {id}, name: {ConnectedPlayerIDs[id]})");
+
+            SetAllDataClientRpc(send_params);
+
+            Debug.Log($"Invoke all client rpc to update player list");
+            NetworkUtilities.SendMessageFromHostByRpc(Players);
+            UpdatePlayerListAllClientRpc(MaxNumPlayers);
+            yield return null;
+        }
 
         private void AddPropsToScene()
         {
@@ -447,6 +469,8 @@ namespace SteelOfStalin
                 Map.SetMetropolisOwners();
                 Map.SetDefaultUnitBuildingsOwners();
             }
+            AreCapitalsSet = true;
+
             foreach (Unit unit in Map.GetUnits())
             {
                 unit.AddToScene();
@@ -544,23 +568,15 @@ namespace SteelOfStalin
             NetworkUtilities.SendDumpFiles(Game.TileData.LocalJsonFilePaths, send_params);
             NetworkUtilities.SendDumpFiles(Game.CustomizableData.LocalJsonFilePaths, send_params);
 
+            // send map info
             NetworkUtilities.SendNamedMessage(Map, id, NetworkMessageType.DATA);
             // NetworkUtilities.SendNamedMessage(Map.GetTilesUnflatterned(), id, NetworkMessageType.DATA);
             // NOTE: if sending a named message that is too long (like whole map), the handle of the reader on client side won't be able to accessed and throws NRE continuously
-            NetworkUtilities.SendMessageFromHostByRpc(Map.GetTilesUnflatterned(), send_params);
-
-            // TODO FUT. Impl. send only units and buildings which belong to and currently spotted to the client
-            NetworkUtilities.SendNamedMessage(Map.GetUnits(), id, NetworkMessageType.DATA);
-            NetworkUtilities.SendNamedMessage(Map.GetBuildings(), id, NetworkMessageType.DATA);
+            bool map_sent = false;
+            _ = StartCoroutine(SendMapDetailsToClient(id, send_params, () => map_sent = true));
             NetworkUtilities.SendNamedMessage(Rules, id, NetworkMessageType.DATA);
 
-            Debug.Log($"Sent all data to client (id: {id}, name: {ConnectedPlayerIDs[id]})");
-
-            SetAllDataClientRpc(send_params);
-
-            Debug.Log($"Invoke all client rpc to update player list");
-            NetworkUtilities.SendMessageFromHostByRpc(Players);
-            UpdatePlayerListAllClientRpc(MaxNumPlayers);
+            _ = StartCoroutine(InvokeClientRpcAfterSendingData(id, send_params, () => !map_sent));
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
@@ -697,6 +713,7 @@ namespace SteelOfStalin
         protected List<Building> Buildings { get; set; } = new List<Building>();
 
         [JsonIgnore] public bool IsInitialized => Tiles != null && Width != 0 && Height != 0;
+        [JsonIgnore] public bool IsLoaded { get; private set; } = false;
         // TODO FUT. Impl. add more validity check
         [JsonIgnore] public bool IsValid => Tiles != null && GetTiles().Count() == Width * Height;
         protected string Folder => GetRelativePath(ExternalFolder.SAVES, BattleName, "map");
@@ -772,6 +789,7 @@ namespace SteelOfStalin
                 t.SetMeshName();
             }
 
+            IsLoaded = true;
             Debug.Log($"Loaded map {Name} for {BattleName}");
         }
 
