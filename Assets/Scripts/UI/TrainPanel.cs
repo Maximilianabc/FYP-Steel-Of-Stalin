@@ -149,7 +149,6 @@ public class TrainPanel : MonoBehaviour
             if (u is Personnel) instance.transform.Find("Banner").GetComponent<Image>().color=barracksColor;
             else if(u is Vehicle || u is Artillery) instance.transform.Find("Banner").GetComponent<Image>().color = arsenalColor;
             instance.GetComponent<Button>().onClick.AddListener(delegate { SelectUnit(u); });
-            Debug.Log("selectUnit" + u.Name +"attached");
         }
         
 
@@ -179,12 +178,15 @@ public class TrainPanel : MonoBehaviour
         transform.Find("dockyard").gameObject.SetActive(false);
         transform.Find("airfield").gameObject.SetActive(false);
         selectedUnitBuilding = null;
+        Debug.Log($"Commands: {Battle.Instance.Self.Commands.Count}");
+        if (Battle.Instance.Self.Commands.Count > 0) Debug.Log(Battle.Instance.Self.Commands[0].Unit.Name);
         foreach (UnitBuilding b in buildings) {
             foreach (Command c in Battle.Instance.Self.Commands) {
                 if (c is Train) {
                     Train train = c as Train;
-                    if (train.TrainingGround == b) {
+                    if (train.TrainingGround.MeshName == b.MeshName) {
                         b.TrainingQueue.Enqueue(train.Unit);
+                        Debug.Log($"{train.Unit.Name} enqueued");
                     }
                 }
             }
@@ -222,7 +224,8 @@ public class TrainPanel : MonoBehaviour
                     if (i == 0) {
                         if (b.TrainingQueue.Count > 0)
                         {
-                            float progress = 1-(float)b.CurrentQueueTime / (float)b.TrainingQueue.ElementAt(0).Cost.Manufacture.Time.Value;
+                            float progress = (float)b.CurrentQueueTime / (float)b.TrainingQueue.ElementAt(0).Cost.Base.Time.Value;
+                            Debug.Log($"Progress:{b.CurrentQueueTime}/{b.TrainingQueue.ElementAt(0).Cost.Base.Time.Value}");
                             t.Find("Queue").Find($"Item{i}").Find("Progress").GetComponent<Image>().fillAmount = progress;
                         }
                         else {
@@ -238,13 +241,32 @@ public class TrainPanel : MonoBehaviour
     }
 
     public void SelectUnit(Unit u) {
-        Debug.Log("unit selected");
-        if (selectedUnitBuilding == null) return;
-        if (u == null) return;
-        if (selectedUnitBuilding.TrainingQueue.Count >= selectedUnitBuilding.QueueCapacity) return;
-        if (!Battle.Instance.Self.HasEnoughResources(u.Cost.Base)) return;
-        if (selectedUnitBuilding is Barracks && !(u is Personnel)) return;
-        if (selectedUnitBuilding is Arsenal && !(u is Vehicle||u is Artillery)) return;
+        if (selectedUnitBuilding == null) {
+            Debug.Log("Unit Building Not Selected");
+            return;
+        }
+
+        if (u == null) {
+            Debug.Log("selectedUnit is null");
+            return;
+        }
+        if (selectedUnitBuilding.TrainingQueue.Count >= selectedUnitBuilding.QueueCapacity) {
+            Debug.Log("Queue is full");
+            return;
+        }
+        //TODO: modify to use estimated resources
+        if (!Battle.Instance.Self.HasEnoughResources(u.Cost.Base)) {
+            Debug.Log("Resources not sufficient");
+            return;
+        }
+        if (selectedUnitBuilding is Barracks && !(u is Personnel)) {
+            Debug.Log($"{u.Name} cannot be trained in barracks");
+            return;
+        }
+        if (selectedUnitBuilding is Arsenal && !(u is Vehicle || u is Artillery)) {
+            Debug.Log($"{u.Name} cannot be trained in arsenal");
+            return;
+        } 
         //TODO: all sorts of checking, prediction of resources consumption
         //maybe only call a function to update the resources 
         Battle.Instance.Self.Commands.Add(new Train((Unit)u.Clone(), selectedUnitBuilding, Battle.Instance.Self));
