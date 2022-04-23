@@ -149,6 +149,7 @@ public class TrainPanel : MonoBehaviour
             if (u is Personnel) instance.transform.Find("Banner").GetComponent<Image>().color=barracksColor;
             else if(u is Vehicle || u is Artillery) instance.transform.Find("Banner").GetComponent<Image>().color = arsenalColor;
             instance.GetComponent<Button>().onClick.AddListener(delegate { SelectUnit(u); });
+            Debug.Log("selectUnit" + u.Name +"attached");
         }
         
 
@@ -237,6 +238,7 @@ public class TrainPanel : MonoBehaviour
     }
 
     public void SelectUnit(Unit u) {
+        Debug.Log("unit selected");
         if (selectedUnitBuilding == null) return;
         if (u == null) return;
         if (selectedUnitBuilding.TrainingQueue.Count >= selectedUnitBuilding.QueueCapacity) return;
