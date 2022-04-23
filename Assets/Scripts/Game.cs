@@ -87,6 +87,8 @@ namespace SteelOfStalin
             Network.StartClient();
         }
 
+        public static void ShutDown() => Network.Shutdown();
+
         public static void LoadAllAssets(bool from_dump = false)
         {
             AssetsLoaded = false;
@@ -151,6 +153,9 @@ namespace SteelOfStalin
         {
             // TODO FUT. Impl. sanitize the data because it is passed via network
             string player_name = Encoding.UTF8.GetString(connectionData);
+#if UNITY_EDITOR
+            player_name = $"random_{Utilities.Random.Next()}";
+#endif
             Battle current_battle = Battle.Instance;
 
             if (clientId != 0)
@@ -217,6 +222,7 @@ namespace SteelOfStalin
         public int TimeRemaining { get; set; }
         public bool EnablePlayerInput { get; private set; } = true;
         public bool IsSinglePlayer { get; private set; }
+        public bool IsEnded => m_winner != null;
 
         [JsonIgnore] public Player Self { get; set; }
         [JsonIgnore] public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
@@ -258,8 +264,11 @@ namespace SteelOfStalin
             {
                 CurrentRound = new Round();
                 ActivePlayers.ToList().ForEach(p => p.IsReady = false);
+                Debug.Log("after setting players as not ready");
                 CurrentRound.InitializeRoundStart();
+                Debug.Log("after initializing round start");
                 CurrentRound.CommandPrerequisitesChecking();
+                Debug.Log("CommandPrerequisitesChecking");
                 EnablePlayerInput = true;
                 TimeRemaining = Rules.TimeForEachRound;
                 yield return new WaitForEndOfFrame();
@@ -283,6 +292,8 @@ namespace SteelOfStalin
                 }
                 EndPlanning();
             }
+            Debug.Log($"Winner is {m_winner}!");
+            Game.Network.Shutdown();
             yield return null;
         }
         private IEnumerator Initialize()
@@ -341,24 +352,32 @@ namespace SteelOfStalin
             yield return new WaitWhile(() => !m_isInitialized);
             Debug.Log($"Map {Map.Name} initialized");
             //TODO: add handler for failed async load
-            AsyncOperation operation = SceneManager.LoadSceneAsync("Game");
-            operation.allowSceneActivation = false;
+            //TODO FUT. Impl. Cope with async loading
+            //AsyncOperation operation = SceneManager.LoadSceneAsync("Game");
+            //operation.allowSceneActivation = false;
             //TODO: wait for all players to load the battle for fairness
             Debug.Log("Waiting for loading battle");
             yield return new WaitWhile(() => !m_isLoaded);
             Debug.Log($"Battle {Name} loaded");
 
             Debug.Log("Waiting for all players to be connected");
-            yield return new WaitWhile(() => Game.Network.IsServer ? ConnectedPlayerIDs.Count != MaxNumPlayers : Players.Count != MaxNumPlayers);
+            yield return new WaitWhile(() => (Game.Network.IsClient || Game.ActiveBattle.IsSinglePlayer) ? Players.Count != MaxNumPlayers : ConnectedPlayerIDs.Count != MaxNumPlayers);
             Debug.Log("All players connected");
 
             Debug.Log("Waiting for all players to be ready");
             yield return new WaitWhile(() => !AreAllPlayersReadyToStart);
             Debug.Log("All players are ready");
-            operation.allowSceneActivation = true;
+            //operation.allowSceneActivation = true;
+            SceneManager.LoadScene("Game");
             yield return new WaitWhile(() => SceneManager.GetActiveScene()!=SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
             _ = StartCoroutine(GameLoop());
+        }
+        private IEnumerator WaitForAllDataSet(Func<bool> wait_condition)
+        {
+            yield return new WaitWhile(wait_condition);
+            m_isLoaded = true;
+            yield return null;
         }
 
         private void AddPropsToScene()
@@ -366,8 +385,8 @@ namespace SteelOfStalin
             IEnumerable<Metropolis> metropolis = Map.GetCities<Metropolis>();
             if (metropolis.All(m => string.IsNullOrEmpty(m.OwnerName)))
             {
-                SetMetropolisOwners();
-                SetDefaultUnitBuildingsOwners();
+                Map.SetMetropolisOwners();
+                Map.SetDefaultUnitBuildingsOwners();
             }
             foreach (Unit unit in Map.GetUnits())
             {
@@ -410,31 +429,9 @@ namespace SteelOfStalin
         public Player GetPlayer(Color color) => Players.Find(p => p.Color == color);
         public Player GetPlayer(ulong id) => Game.Network.IsServer ? GetPlayer(ConnectedPlayerIDs[id]) : null;
 
-        // for host with new generated map
-        public void SetMetropolisOwners()
-        {
-            int i = 0;
-            foreach (Metropolis m in Map.GetCities<Metropolis>())
-            {
-                m.SetOwner(Players[i]);
-                i++;
-            }
-        }
-        public void SetDefaultUnitBuildingsOwners()
-        {
-            IEnumerable<Metropolis> metro = Map.GetCities<Metropolis>();
-            foreach (Metropolis m in metro)
-            {
-                foreach (Building building in Map.Instance.GetBuildings(m.CoOrds))
-                {
-                    if (building is UnitBuilding ub)
-                    {
-                        ub.SetOwner(m.Owner);
-                    }
-                }
-            }
-        }
-        
+        // TODO FUT. Impl. REMOVE THIS IN PRODCUTION, FOR TESTING PURPOSE ONLY
+        public void SetWinner(Player player) => m_winner = player;
+
         public void Save()
         {
             Rules.Save();
@@ -519,13 +516,51 @@ namespace SteelOfStalin
         [ClientRpc]
         private void SetAllDataClientRpc(ClientRpcParams @params)
         {
-            _ = StartCoroutine(NetworkUtilities.TrySaveFiles(() => Game.LoadAllAssets(true)));
+            bool dump_loaded = false;
+            bool map_basic_info_loaded = false;
+            bool tiles_set = false;
+            bool units_set = false;
+            bool buildings_set = false;
+            bool rules_set = false;
 
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result => Map = result));
-            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => Map.SetTiles(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetUnits(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => Map.SetBuildings(result)));
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => Rules = result));
+            _ = StartCoroutine(NetworkUtilities.TrySaveFiles(() =>
+            {
+                Game.LoadAllAssets(true);
+                dump_loaded = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<Map>(m => m.MessageType == NetworkMessageType.DATA, result =>
+            {
+                Map = result;
+                map_basic_info_loaded = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => 
+            { 
+                Map.SetTiles(result); 
+                tiles_set = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => 
+            { 
+                Map.SetUnits(result); 
+                units_set = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => 
+            { 
+                Map.SetBuildings(result); 
+                buildings_set = true;
+            }));
+
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => 
+            { 
+                Rules = result; 
+                rules_set = true;
+            }));
+
+            // TODO FUT. Impl. add coroutine utilities for simple wait / do coroutines
+            _ = StartCoroutine(WaitForAllDataSet(() => !(dump_loaded || map_basic_info_loaded || tiles_set || units_set || buildings_set || rules_set)));
         }
 
         [ClientRpc]
@@ -586,7 +621,7 @@ namespace SteelOfStalin
         public int Width { get; set; }
         public int Height { get; set; }
 
-        [JsonIgnore] public List<Player> Players { get; set; } = new List<Player>();
+        [JsonIgnore] public List<Player> Players => Battle.Instance.Players;
         [JsonIgnore] public IEnumerable<Prop> AllProps => CombineAll<Prop>(Tiles.Flatten(), Units, Buildings);
 
         protected Tile[][] Tiles { get; set; }
@@ -623,8 +658,6 @@ namespace SteelOfStalin
         public virtual void Load()
         {
             BattleName = Battle.Instance?.Name ?? "test";
-            // must be called from unit tests if Battle.Instance is null
-            Players = Battle.Instance?.Players ?? DeserializeJson<List<Player>>(GetRelativePath(ExternalFolder.SAVES, "test", "players"));
 
             Units = DeserializeJson<List<Unit>>(AppendPath(Folder, "units"));
             foreach (Unit u in Units)
@@ -772,6 +805,31 @@ namespace SteelOfStalin
                 return;
             }
             Buildings = buildings.ToList();
+        }
+
+        // for host with new generated map
+        public void SetMetropolisOwners()
+        {
+            int i = 0;
+            foreach (Metropolis m in GetCities<Metropolis>())
+            {
+                m.SetOwner(Players[i]);
+                i++;
+            }
+        }
+        public void SetDefaultUnitBuildingsOwners()
+        {
+            IEnumerable<Metropolis> metro = GetCities<Metropolis>();
+            foreach (Metropolis m in metro)
+            {
+                foreach (Building building in Map.Instance.GetBuildings(m.CoOrds))
+                {
+                    if (building is UnitBuilding ub)
+                    {
+                        ub.SetOwner(m.Owner);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1024,7 +1082,7 @@ namespace SteelOfStalin
         /// </summary>
         /// <param name="c">A CubeCoordinate specifying location of tile</param>
         /// <returns>Neighbouring Tiles</returns>
-        public IEnumerable<Tile> GetNeighbours(CubeCoordinates c, int distance = 1, bool include_self = false) => c.GetNeigbours(distance, include_self).Where(c =>
+        public IEnumerable<Tile> GetNeighbours(CubeCoordinates c, int distance = 1, bool include_self = false) => c.GetNeighbours(distance, include_self).Where(c =>
         {
             Coordinates p = (Coordinates)c;
             return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
@@ -1437,7 +1495,7 @@ namespace SteelOfStalin
                         {
                             continue;
                         }
-                        has_cities_within_range = candidate.GetNeigbours(min_sep).Intersect(m_cities).Any();
+                        has_cities_within_range = candidate.GetNeighbours(min_sep).Intersect(m_cities).Any();
 
                         // be it passing the test or not, it won't be suitable: if it passes, it will be turned into a city, if not then obviously not a suitable tile for any other city generation
                         _ = m_flatLands.Remove(candidate);
@@ -1454,25 +1512,13 @@ namespace SteelOfStalin
 
         private void PostGenerateProcesses()
         {
-            int i = 0;
-            foreach (Metropolis m in GetCities<Metropolis>())
-            {
-                m.SetOwner(Battle.Instance?.Players[i]);
-                i++;
-            }
+            Debug.Log("Adding default barracks and arsenals");
             foreach (Cities c in GetCities())
             {
                 Barracks barracks = Game.BuildingData.GetNew<Barracks>();
                 Arsenal arsenal = Game.BuildingData.GetNew<Arsenal>();
-
-                barracks.Initialize(c.Owner, new Coordinates(c.CoOrds));
                 barracks.CoOrds = new Coordinates(c.CoOrds);
                 arsenal.CoOrds = new Coordinates(c.CoOrds);
-                if (c.Owner != null)
-                {
-                    barracks.Owner = c.Owner;
-                    arsenal.Owner = c.Owner;
-                }
                 AddBuildings(barracks, arsenal);
             }
         }
@@ -1597,6 +1643,16 @@ namespace SteelOfStalin
         }
     }
 
+    public enum SpecialCommandResult
+    {
+        NONE,
+        MOVE_CONFLICT_NO_MOVE,
+        CAPTURE_FRIENDLY,
+        MISSED,
+        EVADED,
+
+    }
+
     public class Command : ICloneable
     {
         public Coordinates Source { get; set; }
@@ -1604,17 +1660,81 @@ namespace SteelOfStalin
         public Unit Unit { get; set; }
 
         [JsonIgnore] public string Name => GetType().Name;
+        [JsonIgnore] public string Symbol => m_symbols[GetType()];
         [JsonIgnore] public StringBuilder Recorder { get; set; } = new StringBuilder();
 
-        public virtual void Execute() { }
-        public virtual string ToStringBeforeExecution() => "";
-        public virtual string ToStringAfterExecution() => Game.Network.IsServer ? Recorder.ToString() : "";
-        public static Command FromStringBeforeExecution(string command_string_without_result)
+        private static Dictionary<Type, string> m_symbols => new Dictionary<Type, string>()
         {
-            return null;
+            [typeof(Hold)] = "@",
+            [typeof(Move)] = "->",
+            [typeof(Merge)] = "&",
+            [typeof(Submerge)] = "=v",
+            [typeof(Surface)] = "=^",
+            [typeof(Land)] = "~v",
+            [typeof(Fire)] = "!",
+            [typeof(Suppress)] = "!!",
+            [typeof(Sabotage)] = "!`",
+            [typeof(Ambush)] = "!?",
+            [typeof(Bombard)] = "!v",
+            [typeof(Aboard)] = "|>",
+            [typeof(Disembark)] = "<|",
+            [typeof(Load)] = "$+",
+            [typeof(Unload)] = "$-",
+            [typeof(Resupply)] = "#+",
+            [typeof(Repair)] = "%+",
+            [typeof(Reconstruct)] = "`+",
+            [typeof(Fortify)] = "`^",
+            [typeof(Construct)] = "`$",
+            [typeof(Demolish)] = "`v",
+            [typeof(Train)] = "|$",
+            [typeof(Deploy)] = "|@",
+            [typeof(Rearm)] = "||",
+            [typeof(Capture)] = "|v",
+            [typeof(Scavenge)] = "|+",
+            [typeof(Assemble)] = ".",
+            [typeof(Disassemble)] = "..",
+        };
+        protected static Dictionary<SpecialCommandResult, string> SpecialSymbols => new Dictionary<SpecialCommandResult, string>()
+        {
+            [SpecialCommandResult.NONE] = "",
+            [SpecialCommandResult.MOVE_CONFLICT_NO_MOVE] = "-x->",
+            [SpecialCommandResult.CAPTURE_FRIENDLY] = "|^",
+            [SpecialCommandResult.MISSED] = "M",
+            [SpecialCommandResult.EVADED] = "E",
+        };
+        public static Dictionary<ulong, List<Command>> CommandsRelatedToPlayer { get; set; } = new Dictionary<ulong, List<Command>>();
+
+        public virtual void Execute() { }
+        public virtual string ToStringBeforeExecution() => $"{Unit} {Symbol} ";
+        public virtual string ToStringAfterExecution() => Recorder.ToString();
+        public virtual void SetParamsFromString(string initiator, string @params) 
+        {
+            Debug.Log($"init: {initiator}");
         }
 
-        public virtual bool BelongsToPlayer(Player p) => Unit != null && Unit.Owner == p;
+        public static Command FromStringBeforeExecution(string command_string_without_result)
+        {
+            Match match = Regex.Match(command_string_without_result, @"^(.*?) ([+\-<>`~!@#$%^&|v.]{1,2}) (.*?)$");
+            if (!match.Success)
+            {
+                Debug.LogWarning($"Command string {command_string_without_result} is not in correct format");
+                return null;
+            }
+
+            string symbol = match.Groups[2].Value;
+            Type command_type = m_symbols.ReverseLookup(symbol);
+            if (command_type == null)
+            {
+                Debug.LogError($"No command with symbol {symbol} found.");
+                return null;
+            }
+
+            Command cmd = (Command)Activator.CreateInstance(command_type);
+            cmd.SetParamsFromString(match.Groups[1].Value, match.Groups[3].Value);
+            return cmd;
+        }
+
+        public virtual bool RelatedToPlayer(Player p) => Unit != null && Unit.Owner == p;
 
         public Command() { }
         public Command(Unit u) => Unit = u;

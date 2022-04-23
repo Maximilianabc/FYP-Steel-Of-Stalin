@@ -12,8 +12,8 @@ public class VolumeSlider : MonoBehaviour
     {
         float playerVolume = (float)Game.Settings.VolumeMusic/100;
         Slider slider = GetComponent<Slider>();
-        slider.value = playerVolume;
-        slider.onValueChanged.AddListener(delegate { UIUtil.instance.SetVolume(GetComponent<Slider>().value); });
+        slider.SetValueWithoutNotify(playerVolume);
+        slider.onValueChanged.AddListener(delegate { UIUtil.instance.SetVolume((byte)Mathf.RoundToInt(GetComponent<Slider>().value*100)); });
 
     }
 

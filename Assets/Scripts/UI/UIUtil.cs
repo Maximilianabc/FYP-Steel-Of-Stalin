@@ -43,10 +43,10 @@ public class UIUtil : MonoBehaviour
     }
 
     //TODO: functionality not throughly tested
-    public void SetVolume(float volume)
+    public void SetVolume(byte volume)
     {
-        AudioListener.volume = volume;
-        Game.Settings.VolumeMusic = (byte)Mathf.RoundToInt(volume * 100);
+        AudioListener.volume = (float)volume/100;
+        Game.Settings.VolumeMusic = volume;
         Game.Settings.Save();
     }
 
@@ -83,13 +83,13 @@ public class UIUtil : MonoBehaviour
     {
         if (!Game.AssetsLoaded)
         {
-            LeanTween.delayedCall(1f, (System.Action)delegate
+            LeanTween.delayedCall(3f, (System.Action)delegate
             {
                 SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));
                 SetFullscreen(Game.Settings.Fullscreen);
                 SetVolume(Game.Settings.VolumeMusic);
                 
-            }).setDestroyOnComplete(true);
+            });
         }
         else {
             SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));

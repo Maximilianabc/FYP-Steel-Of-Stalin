@@ -72,7 +72,7 @@ namespace SteelOfStalin
         public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
             "Money" => $" m:{change:+0.##;-0.##}=>{Resources.Money} ",
-            "Steel'" => $" t:{change:+0.##;-0.##}=>{Resources.Steel} ",
+            "Steel" => $" t:{change:+0.##;-0.##}=>{Resources.Steel} ",
             "Supplies" => $" s:{change:+0.##;-0.##}=>{Resources.Supplies} ",
             "Cartridges" => $" c:{change:+0.##;-0.##}=>{Resources.Cartridges} ",
             "Shells" => $" h:{change:+0.##;-0.##}=>{Resources.Shells} ",
@@ -134,7 +134,8 @@ namespace SteelOfStalin
         {
             Name = $"dummy_{Utilities.Random.Next()}",
             SerializableColor = (SerializableColor)new Color((float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble(), (float)Utilities.Random.NextDouble()),
-            Resources = (Resources)Resources.TEST.Clone()
+            Resources = (Resources)Resources.TEST.Clone(),
+            IsReady = true
         };
 
         public static IEnumerable<AIPlayer> NewDummyPlayers(int count)
@@ -486,9 +487,9 @@ namespace SteelOfStalin
             yield return null;
         }
 
-        private void ChangeReadyStatus(bool ready)
+        public void ChangeReadyStatus(bool ready)
         {
-            if (!m_isInitialized || m_self.IsReady == ready)
+            if (!m_isInitialized)
             {
                 return;
             }
@@ -508,7 +509,7 @@ namespace SteelOfStalin
             ulong sender = @params.Receive.SenderClientId;
             Player player = m_battle.GetPlayer(sender);
             player.IsReady = ready;
-            Debug.Log($"{player} is ready");
+            Debug.Log($"{player} ready status: {ready}");
             UpdateReadyStatusAllClientRpc(ready, player.Name);
         }
     }

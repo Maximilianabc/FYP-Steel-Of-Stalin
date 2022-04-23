@@ -284,7 +284,7 @@ namespace SteelOfStalin.Attributes
                     Debug.LogWarning($"Not enough {shortage.attr}! Have: {shortage.have}, Shortage: {shortage.discrepancy}");
                 }
             }
-            return shortages.Any();
+            return !shortages.Any();
         }
 
         public void Consume(Resources cost)

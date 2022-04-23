@@ -13,12 +13,14 @@ using SteelOfStalin.Assets.Props.Units.Land;
 
 public class UnitPanel : MonoBehaviour
 {
+    public static UnitPanel instance;
     private Unit currentUnit = null;
     private GameObject menu;
     public float animationTime = 0.3f;
 
     private void Awake()
     {
+        instance = this;
         menu = transform.Find("Panel_Right").gameObject;
     }
     // Start is called before the first frame update
@@ -33,7 +35,7 @@ public class UnitPanel : MonoBehaviour
 
     }
 
-    private void SetUnit(Unit u) {
+    public void SetUnit(Unit u) {
         if (menu == null) return;
         GameObject instance;
         currentUnit = u;
@@ -156,9 +158,7 @@ public class UnitPanel : MonoBehaviour
         //StartCoroutine(DelayResize(gameObject,2));
         GetComponent<Resize>().DelayResize(2);
 
-        if (!gameObject.activeSelf) {
-            this.Show();
-        }
+        Show();
 
     }
 
@@ -174,16 +174,15 @@ public class UnitPanel : MonoBehaviour
 
     //TODO: Animation
     public void Show() {
-        gameObject.SetActive(true);
-        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), 0, animationTime).setDestroyOnComplete(true);
-        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), 0, animationTime).setDestroyOnComplete(true);
+        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), 0, animationTime);
+        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), 0, animationTime);
     }
 
     public void Hide() {
-        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime).setDestroyOnComplete(true);
-        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime).setDestroyOnComplete(true);
-        LeanTween.delayedCall(animationTime, (System.Action)delegate { gameObject.SetActive(false); }).setDestroyOnComplete(true);
-        
+        LeanTween.moveX(transform.Find("Panel_Right").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime);
+        LeanTween.moveX(transform.Find("Panel_Right_Background").GetComponent<RectTransform>(), transform.Find("Panel_Right").GetComponent<RectTransform>().sizeDelta.x, animationTime);
+
+
     }
 
 }

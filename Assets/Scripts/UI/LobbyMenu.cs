@@ -13,7 +13,7 @@ public class LobbyMenu : MonoBehaviour
 
     void Awake() {
         menu = transform.Find("Players").gameObject;
-        menuItem = Resources.Load<GameObject>(@"Prefabs\MultiplayerMenuPlayer");
+        menuItem = Game.GameObjects.Find(g=>g.name=="MultiplayerMenuPlayer");
         transform.Find("Ready").GetComponent<Button>().enabled = false;
     }
     // Start is called before the first frame update
@@ -24,7 +24,8 @@ public class LobbyMenu : MonoBehaviour
             transform.Find("Ready").GetComponent<RectTransform>().sizeDelta = new Vector2(
                 transform.Find("Ready").GetComponent<TMPro.TMP_Text>().preferredWidth,
                 transform.Find("Ready").GetComponent<TMPro.TMP_Text>().preferredHeight);
-            Battle.Instance.Self.IsReady = !Battle.Instance.Self.IsReady;  
+            GameObject.Find(Game.Profile.Name).GetComponent<PlayerObject>().ChangeReadyStatus(!Battle.Instance.Self.IsReady);
+            
         });
         transform.Find("Ready").GetComponent<Button>().enabled = true;
 

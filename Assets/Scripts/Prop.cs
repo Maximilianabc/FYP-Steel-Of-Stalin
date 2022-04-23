@@ -72,6 +72,7 @@ namespace SteelOfStalin.Assets.Props
         // use CoOrds.ToString() and CubeCoOrds.ToString() directly for printing coords and cube coords
         public string PrintMembers() => Utilities.PrintMembers(this);
 
+        // TODO FUT. Impl. cache as much as possible here, like 
         public virtual void AddToScene()
         {
             string scene = SceneManager.GetActiveScene().name;
@@ -218,7 +219,7 @@ namespace SteelOfStalin.Assets.Props
 
         public virtual int GetDistance(Prop prop) => CubeCoordinates.GetDistance(CubeCoOrds, prop.CubeCoOrds);
         public virtual decimal GetStraightLineDistance(Prop prop) => CubeCoordinates.GetStraightLineDistance(CubeCoOrds, prop.CubeCoOrds);
-        public virtual IEnumerable<Prop> GetNeighboursWithSameType() => CubeCoOrds.GetNeigbours(include_self: false).SelectMany(c => Map.Instance.GetProps(p => p.CubeCoOrds == c && p.GetType() == GetType()));
+        public virtual IEnumerable<Prop> GetNeighboursWithSameType() => CubeCoOrds.GetNeighbours(include_self: false).SelectMany(c => Map.Instance.GetProps(p => p.CubeCoOrds == c && p.GetType() == GetType()));
         public virtual Tile GetLocatedTile() => Map.Instance.GetTile(CoOrds);
 
         public virtual object Clone()
@@ -257,16 +258,41 @@ namespace SteelOfStalin.Assets.Props
             {
                 gameObject.AddComponent<PropEventTrigger>();
             }
-            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => CameraController.instance.FocusOn(GetClickedObject(data).transform));
+            //TODO: separate all types of prop and implement the menu navigation
+            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI()) {
+                    Prop p = GetClickedProp(data);
+                    if (p is Cities c && c.IsOwn(Battle.Instance.Self))
+                    {
+                        TrainPanel.instance.SetCity(c);
+                    }
+                    else if (p is Unit u)
+                    {
+                        
+                        UnitPanel.instance.SetUnit(u);
+                    }
+                    else {   
+                        UnitPanel.instance.Hide();
+                        DeployPanel.instance.HideAll();
+                    }
+                }
+            });
             Trigger.Subscribe("tooltip_show", EventTriggerType.PointerEnter, (data) => {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetEnteredProp(data);
                     StringBuilder sb = new StringBuilder();
-                    if (p is Tile t)
+                    if (p is Tiles.Boundary b) {
+                        sb.AppendLine(b.Name);
+                        sb.AppendLine(b.CubeCoOrds.ToString());
+                        sb.Append("Impassable");
+                    }
+                    else if (p is Tile t)
                     {
-
                         sb.AppendLine(t.Name);
+                        if (t is Cities c &&c.Owner!=null) {
+                            sb.AppendLine($"Owner: {c.OwnerName}");
+                        }
                         sb.AppendLine(t.CubeCoOrds.ToString());
                         sb.AppendLine($"Concealment Mod: {t.TerrainMod.Concealment.Value}%");
                         sb.AppendLine($"Fuel Mod: {t.TerrainMod.Fuel.Value}%");
@@ -287,6 +313,18 @@ namespace SteelOfStalin.Assets.Props
                 }
             });
             Trigger.Subscribe("tooltip_hide", EventTriggerType.PointerExit, (data) => Tooltip.HideTooltip_Static());
+            Trigger.Subscribe("deploy_tile", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        DeployPanel.instance.DeployUnit(t);
+                    }
+                }
+            },false);
+
+
         }
 
         public virtual void OnMouseDown()
@@ -569,6 +607,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public virtual bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
         public virtual bool CanCommunicateWith(Unit communicatee) => this != communicatee && GetStraightLineDistance(communicatee) <= Scouting.Communication + communicatee.Scouting.Communication;
         public virtual bool CanCommunicateWith(Cities cities) => GetStraightLineDistance(cities) <= Scouting.Communication + cities.Communication;
+        public abstract bool CanBeTrainedIn(UnitBuilding ub);
 
         // has any tile in range that has hostile units
         public bool HasHostileUnitsInFiringRange(IOffensiveCustomizable weapon) => GetFiringRange(weapon).Where(t => t.HasUnit).Any(t => Map.Instance.GetUnits(t).Any(u => !u.IsFriendly(Owner) && HasSpotted(u)));
