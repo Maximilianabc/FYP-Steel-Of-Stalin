@@ -114,6 +114,7 @@ namespace SteelOfStalin.Attributes
 
     public class Attribute : ICloneable
     {
+        // TODO FUT. Impl. Handle attribute with mods and priority of mods (probably form expression during runtime)
         public Modifier Mod { get; set; } = new Modifier();
         public decimal Value { get; set; }
 

@@ -1002,7 +1002,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
         public bool CanCommunicateWith(Cities c) => this != c && GetStraightLineDistance(c) <= Communication + c.Communication;
 
-        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##,-0.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
+        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##;-0.##}=>{Morale.ApplyMod()}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
 
         public abstract override object Clone();
     }
