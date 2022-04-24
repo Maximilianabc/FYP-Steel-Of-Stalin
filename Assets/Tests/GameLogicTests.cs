@@ -386,7 +386,7 @@ public class GameLogicTest
         i.SetMeshName();
         i.Initialize(p1, point1, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
         IEnumerable<SteelOfStalin.Assets.Customizables.IOffensiveCustomizable> weapons = i.GetWeapons();
-        i.SetWeapons(weapons);
+        i.SetWeapons(weapons.ToArray());
 
         Assert.IsTrue(i.CanAccessTile(tile1));
         Assert.IsFalse(i.CanAccessTile(tile2));
@@ -465,7 +465,7 @@ public class GameLogicTest
         portable.SetWeapons(new List<IOffensiveCustomizable>()
         {
             CustomizableData.GetNew<IOffensiveCustomizable>(portable.AvailableGuns[0]) as Gun
-        });
+        }.ToArray());
         Map.AddUnit(portable);
         Command assemble = new Assemble(portable);
         commands.Add(assemble);

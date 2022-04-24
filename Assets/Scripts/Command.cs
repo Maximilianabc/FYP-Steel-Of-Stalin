@@ -1069,7 +1069,7 @@ namespace SteelOfStalin.Commands
 
             Unit.Status = UnitStatus.ACTIVE;
             Unit.CoOrds = new Coordinates(Destination);
-            Unit.SetWeapons(Weapons);
+            Unit.SetWeapons(Weapons.ToArray());
             _ = Recorder.AppendLine($"{Unit.Owner} {Symbol} {Unit}");
             this.Log($"Deployed {Unit} at {Destination}");
         }
