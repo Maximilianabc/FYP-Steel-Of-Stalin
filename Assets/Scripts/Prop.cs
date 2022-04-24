@@ -266,14 +266,17 @@ namespace SteelOfStalin.Assets.Props
                     {
                         TrainPanel.instance.SetCity(c);
                     }
-                    else if (p is Unit u)
-                    {
-                        
+                    else if (p is Unit u) {
                         UnitPanel.instance.SetUnit(u);
+                        if (u.IsOwn(Battle.Instance.Self)) {
+                            CommandPanel.instance.SetUnit(u);
+                        }
                     }
-                    else {   
+                    else
+                    {
                         UnitPanel.instance.Hide();
                         DeployPanel.instance.HideAll();
+                        CommandPanel.instance.Hide();
                     }
                 }
             });
@@ -323,6 +326,47 @@ namespace SteelOfStalin.Assets.Props
                     }
                 }
             },false);
+            Trigger.Subscribe("move_tile", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Move",t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("fire_unit", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Fire", t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("suppress_unit", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Suppress", t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("sabotage_building", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Sabotage", t);
+                    }
+                }
+            }, false);
+
 
 
         }
@@ -1002,7 +1046,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
         public bool CanCommunicateWith(Cities c) => this != c && GetStraightLineDistance(c) <= Communication + c.Communication;
 
-        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##,-0.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
+        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##;-0.##}=>{Morale.ApplyMod()}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
 
         public abstract override object Clone();
     }

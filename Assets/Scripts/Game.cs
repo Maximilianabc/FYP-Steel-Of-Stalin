@@ -230,6 +230,7 @@ namespace SteelOfStalin
         [JsonIgnore] public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
         [JsonIgnore] public bool AreAllPlayersReadyToStart => Players.All(p => p.IsReady);
         [JsonIgnore] public bool IsServerFull => Game.Network.IsServer && Players.Count >= MaxNumPlayers;
+        [JsonIgnore] public bool AreCapitalsSet { get; private set; } = false;
         [JsonIgnore] public NetworkUtilities NetworkUtilities { get; set; }
 
         private Player m_winner { get; set; } = null;
@@ -291,7 +292,62 @@ namespace SteelOfStalin
                         Debug.Log($"Time remaining: {TimeRemaining} second(s)");
                     }
                 }
-                EndPlanning();
+                Debug.Log("End Turn");
+                EnablePlayerInput = false;
+                if (Game.Network.IsServer)
+                {
+                    if (Game.ActiveBattle.IsSinglePlayer)
+                    {
+                        foreach (Player player in Players)
+                        {
+                            CurrentRound.Commands.AddRange(player.Commands);
+                        }
+                        CurrentRound.EndPlanning();
+                        m_winner = CurrentRound.GetWinner();
+                        Rounds.Add(CurrentRound);
+                        CurrentRound.ReadyToProceedToNext = true;
+                    }
+                    else
+                    {
+                        Debug.Log("Waiting for all players to send their commands");
+                        yield return new WaitWhile(() => !CurrentRound.ReadyToExecutePhases);
+                        Debug.Log("Received commands from all players.");
+
+                        CurrentRound.EndPlanning();
+                        m_winner = CurrentRound.GetWinner();
+                        Rounds.Add(CurrentRound);
+                        foreach (Player player in Players)
+                        {
+                            ClientRpcParams @params = NetworkUtilities.GetClientRpcSendParams(ConnectedPlayerIDs.ReverseLookup(player.Name));
+                            List<string> results = CurrentRound.Commands.Where(c => c.RelatedToPlayer(player)).Select(c => c.ToStringAfterExecution()).ToList();
+                            foreach (string result in results)
+                            {
+                                GetCommandResultsClientRpc(result, results.Count, @params);
+                            }
+                            foreach (Unit u in Map.GetUnits(player))
+                            {
+                                GetUnitStatusesClientRpc(u.ToString(), u.Status, @params);
+                            }
+                            foreach (Building b in Map.GetBuildings(player))
+                            {
+                                GetBuildingStatusesClientRpc(b.ToString(), b.Status, @params);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    PlayerObject @object = Self.PlayerObjectComponent;
+                    @object.SendCommandsToServer();
+                }
+
+                Debug.Log("Waiting for proceeding to next round.");
+                yield return new WaitWhile(() => !CurrentRound.ReadyToProceedToNext);
+                Debug.Log("Ready to proceed to next round.");
+
+                CurrentRound.ScreenUpdate();
+                Self.Commands.Clear();
+                RoundNumber++;
             }
             Debug.Log($"Winner is {m_winner}!");
             Game.Network.Shutdown();
@@ -346,7 +402,6 @@ namespace SteelOfStalin
             Debug.Log("Post initialization finished");
             yield return null;
         }
-        // TODO add force start option for host even if not all players are ready
         private IEnumerator WaitForGameStart()
         {
             Debug.Log("Waiting for map initialization");
@@ -380,6 +435,32 @@ namespace SteelOfStalin
             m_isLoaded = true;
             yield return null;
         }
+        private IEnumerator WaitForServerCalculationResults()
+        {
+            yield return null;
+        }
+        private IEnumerator SendMapDetailsToClient(ulong id, ClientRpcParams send_params, Action callback)
+        {
+            yield return new WaitWhile(() => !Map.IsLoaded);
+            NetworkUtilities.SendMessageFromHostByRpc(Map.GetTilesUnflatterned(), send_params);
+            // TODO FUT. Impl. send only units and buildings which belong to and currently spotted to the client
+            NetworkUtilities.SendNamedMessage(Map.GetUnits(), id, NetworkMessageType.DATA);
+            NetworkUtilities.SendNamedMessage(Map.GetBuildings(), id, NetworkMessageType.DATA);
+            callback.Invoke();
+            yield return null;
+        }
+        private IEnumerator InvokeClientRpcAfterSendingData(ulong id, ClientRpcParams send_params, Func<bool> wait_flag)
+        {
+            yield return new WaitWhile(wait_flag);
+            Debug.Log($"Sent all data to client (id: {id}, name: {ConnectedPlayerIDs[id]})");
+
+            SetAllDataClientRpc(send_params);
+
+            Debug.Log($"Invoke all client rpc to update player list");
+            NetworkUtilities.SendMessageFromHostByRpc(Players);
+            UpdatePlayerListAllClientRpc(MaxNumPlayers);
+            yield return null;
+        }
 
         private void AddPropsToScene()
         {
@@ -389,6 +470,8 @@ namespace SteelOfStalin
                 Map.SetMetropolisOwners();
                 Map.SetDefaultUnitBuildingsOwners();
             }
+            AreCapitalsSet = true;
+
             foreach (Unit unit in Map.GetUnits())
             {
                 unit.AddToScene();
@@ -415,15 +498,6 @@ namespace SteelOfStalin
                     ownable_prop.PropObjectComponent.SetColorForChild(GetPlayer(ownable.OwnerName).Color, ownable_prop.Name);
                 }
             }
-        }
-        private void EndPlanning()
-        {
-            Debug.Log("End Turn");
-            EnablePlayerInput = false;
-            CurrentRound.EndPlanning();
-            m_winner = CurrentRound.GetWinner();
-            Rounds.Add(CurrentRound);
-            RoundNumber++;
         }
 
         public Player GetPlayer(string name) => Players.Find(p => p.Name == name);
@@ -495,26 +569,18 @@ namespace SteelOfStalin
             NetworkUtilities.SendDumpFiles(Game.TileData.LocalJsonFilePaths, send_params);
             NetworkUtilities.SendDumpFiles(Game.CustomizableData.LocalJsonFilePaths, send_params);
 
+            // send map info
             NetworkUtilities.SendNamedMessage(Map, id, NetworkMessageType.DATA);
             // NetworkUtilities.SendNamedMessage(Map.GetTilesUnflatterned(), id, NetworkMessageType.DATA);
             // NOTE: if sending a named message that is too long (like whole map), the handle of the reader on client side won't be able to accessed and throws NRE continuously
-            NetworkUtilities.SendMessageFromHostByRpc(Map.GetTilesUnflatterned(), send_params);
-
-            // TODO FUT. Impl. send only units and buildings which belong to and currently spotted to the client
-            NetworkUtilities.SendNamedMessage(Map.GetUnits(), id, NetworkMessageType.DATA);
-            NetworkUtilities.SendNamedMessage(Map.GetBuildings(), id, NetworkMessageType.DATA);
+            bool map_sent = false;
+            _ = StartCoroutine(SendMapDetailsToClient(id, send_params, () => map_sent = true));
             NetworkUtilities.SendNamedMessage(Rules, id, NetworkMessageType.DATA);
 
-            Debug.Log($"Sent all data to client (id: {id}, name: {ConnectedPlayerIDs[id]})");
-
-            SetAllDataClientRpc(send_params);
-
-            Debug.Log($"Invoke all client rpc to update player list");
-            NetworkUtilities.SendMessageFromHostByRpc(Players);
-            UpdatePlayerListAllClientRpc(MaxNumPlayers);
+            _ = StartCoroutine(InvokeClientRpcAfterSendingData(id, send_params, () => !map_sent));
         }
 
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void SetAllDataClientRpc(ClientRpcParams @params)
         {
             bool dump_loaded = false;
@@ -564,7 +630,7 @@ namespace SteelOfStalin
             _ = StartCoroutine(WaitForAllDataSet(() => !(dump_loaded || map_basic_info_loaded || tiles_set || units_set || buildings_set || rules_set)));
         }
 
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void UpdatePlayerListAllClientRpc(int max_num_players)
         {
             _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<List<Player>>(result =>
@@ -576,6 +642,24 @@ namespace SteelOfStalin
                 }
             }));
             MaxNumPlayers = max_num_players;
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void GetCommandResultsClientRpc(string result, int num_to_receive, ClientRpcParams @params)
+        {
+
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void GetUnitStatusesClientRpc(string unit, UnitStatus status, ClientRpcParams @params)
+        {
+            ((Unit)Map.Instance.GetProp(unit)).Status = status;
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void GetBuildingStatusesClientRpc(string building, BuildingStatus status, ClientRpcParams @params)
+        {
+            ((Building)Map.Instance.GetProp(building)).Status = status;
         }
     }
 
@@ -630,6 +714,7 @@ namespace SteelOfStalin
         protected List<Building> Buildings { get; set; } = new List<Building>();
 
         [JsonIgnore] public bool IsInitialized => Tiles != null && Width != 0 && Height != 0;
+        [JsonIgnore] public bool IsLoaded { get; private set; } = false;
         // TODO FUT. Impl. add more validity check
         [JsonIgnore] public bool IsValid => Tiles != null && GetTiles().Count() == Width * Height;
         protected string Folder => GetRelativePath(ExternalFolder.SAVES, BattleName, "map");
@@ -705,6 +790,7 @@ namespace SteelOfStalin
                 t.SetMeshName();
             }
 
+            IsLoaded = true;
             Debug.Log($"Loaded map {Name} for {BattleName}");
         }
 
@@ -955,6 +1041,8 @@ namespace SteelOfStalin
         /// <returns>Prop that shares MeshName with gameObject name</returns>
         public Prop GetProp(GameObject gameObject) => AllProps.Find(p => p.MeshName == gameObject.name);
         
+        public Prop GetProp(string to_string_name) => AllProps.Find(p => p.ToString() == to_string_name);
+
         /// <summary>
         /// Gets all Props from a Coordinate
         /// </summary>
@@ -1098,6 +1186,9 @@ namespace SteelOfStalin
                 ? throw new ArgumentException("Distance must be >= 1.")
                 : GetNeighbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
         
+        public Tile GetRandomNeighbour(CubeCoordinates c, int distance = 1)
+            => GetTile(Utilities.Random.NextItem(c.GetNeighbours(distance)));
+
         /// <summary>
         /// Function querying a tile for unoccupied neighbours
         /// </summary>
@@ -1663,6 +1754,7 @@ namespace SteelOfStalin
         [JsonIgnore] public string Name => GetType().Name;
         [JsonIgnore] public string Symbol => m_symbols[GetType()];
         [JsonIgnore] public StringBuilder Recorder { get; set; } = new StringBuilder();
+        [JsonIgnore] public bool IsValid { get; protected set; }
 
         private static Dictionary<Type, string> m_symbols => new Dictionary<Type, string>()
         {
@@ -1711,8 +1803,14 @@ namespace SteelOfStalin
         public virtual void SetParamsFromString(string initiator, string @params) 
         {
             Debug.Log($"init: {initiator}");
+            Prop prop = Map.Instance.GetProp(initiator);
+            if (prop != null)
+            {
+                Unit = (Unit)prop;
+                Unit.CommandAssigned = (CommandAssigned)Enum.Parse(typeof(CommandAssigned), GetType().Name.ToUpper());
+            }
+            IsValid = true;
         }
-
         public static Command FromStringBeforeExecution(string command_string_without_result)
         {
             Match match = Regex.Match(command_string_without_result, @"^(.*?) ([+\-<>`~!@#$%^&|v.]{1,2}) (.*?)$");
@@ -1734,7 +1832,6 @@ namespace SteelOfStalin
             cmd.SetParamsFromString(match.Groups[1].Value, match.Groups[3].Value);
             return cmd;
         }
-
         public virtual bool RelatedToPlayer(Player p) => Unit != null && Unit.Owner == p;
 
         public Command() { }
@@ -1802,10 +1899,15 @@ namespace SteelOfStalin.Flow
     {
         public int Number { get; set; }
 
-        [JsonIgnore] public List<Player> Players { get; set; }
         public List<Command> Commands { get; set; } = new List<Command>();
         public List<Phase> Phases { get; set; } = new List<Phase>();
         public Planning Planning { get; set; } = new Planning();
+
+        [JsonIgnore] public List<Player> Players { get; set; }
+        // TODO FUT. Impl. think of a better way to check whether all players have sent their commands to server
+        [JsonIgnore] public int NumPlayersCommandReceived { get; set; } = 0;
+        [JsonIgnore] public bool ReadyToExecutePhases => NumPlayersCommandReceived == Players.Count;
+        [JsonIgnore] public bool ReadyToProceedToNext { get; set; } = false;
 
         public Round()
         {
@@ -1947,15 +2049,15 @@ namespace SteelOfStalin.Flow
         public void ScreenUpdate()
         {
             // handle screen update here
-            // not on screen, is active, has coordinates = newly deployed
-            IEnumerable<Unit> newly_deployed_units = Map.Instance.GetUnits(u => u.PropObject == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
-            foreach (Unit u in newly_deployed_units)
+            // not on screen, is active, has coordinates = new (newly deployed / spotted)
+            IEnumerable<Unit> new_units = Map.Instance.GetUnits(u => u.PropObject == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
+            foreach (Unit u in new_units)
             {
                 u.AddToScene();
             }
 
-            IEnumerable<Building> newly_constructed_buildings = Map.Instance.GetBuildings(b => b.PropObject == null && b.Status == BuildingStatus.UNDER_CONSTRUCTION);
-            foreach (Building b in newly_constructed_buildings)
+            IEnumerable<Building> new_buildings = Map.Instance.GetBuildings(b => b.PropObject == null/* && b.Status == BuildingStatus.UNDER_CONSTRUCTION*/);
+            foreach (Building b in new_buildings)
             {
                 b.AddToScene();
             }
@@ -1981,8 +2083,8 @@ namespace SteelOfStalin.Flow
                 new Misc(Commands)
             });
             Phases.ForEach(p => p.Execute());
-            ScreenUpdate();
             Commands.Clear();
+            Players.ForEach(p => p.Commands.Clear());
         }
 
         // output this round to JSON

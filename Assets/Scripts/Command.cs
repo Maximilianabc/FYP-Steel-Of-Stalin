@@ -14,6 +14,9 @@ using static SteelOfStalin.Util.Utilities;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Units.Sea;
 using SteelOfStalin.Assets.Props.Units.Air;
+using UnityEngine;
+using Random = SteelOfStalin.Util.Utilities.Random;
+using Resources = SteelOfStalin.Attributes.Resources;
 
 /* Symbols:
  * Hold: @
@@ -133,6 +136,11 @@ namespace SteelOfStalin.Commands
         }
 
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{string.Join(";", Path.Select(t => t.CoOrds))}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Path = new List<Tile>(Coordinates.FromString(@params).Select(c => Map.Instance.GetTile(c)));
+        }
     }
     public sealed class Merge : Command
     {
@@ -530,6 +538,31 @@ namespace SteelOfStalin.Commands
         }
 
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{RepairingTarget.Name}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            string[] ps = @params.Split(';');
+            if (ps.Length != 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            Target = (Unit)Map.Instance.GetProp(ps[0]);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find unit {ps[0]}");
+                IsValid = false;
+                return;
+            }
+            RepairingTarget = Target.GetRepairableModules().Where(m => m.Name == ps[1]).FirstOrDefault();
+            if (RepairingTarget == null)
+            {
+                this.LogError($"No repairable modules named {ps[1]} on {Target}");
+                IsValid = false;
+                return;
+            }
+        }
     }
     public sealed class Reconstruct : Command
     {
@@ -610,7 +643,26 @@ namespace SteelOfStalin.Commands
             this.Log($"Fortifying {Target.Name} at {Target.CoOrds} for {Target.ConstructionTimeRemaining} round(s)");
         }
 
-        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target}";
+        public override string ToStringBeforeExecution() => Unit != null ? $"{base.ToStringBeforeExecution()}{Target}" : $"{Target.Owner} {Symbol} {Target}";
+
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Target = (Building)Map.Instance.GetProp(@params);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find target {@params}");
+                IsValid = false;
+                return;
+            }
+            Player player = Battle.Instance.GetPlayer(initiator);
+            if (player == null || Target.Owner != player)
+            {
+                this.LogError($"Cannot find player {initiator} or {initiator} is not the owner of {Target}");
+                IsValid = false;
+                return;
+            }
+        }
     }
     public sealed class Construct : Command
     {
@@ -677,7 +729,26 @@ namespace SteelOfStalin.Commands
             _ = Recorder.AppendLine($" {Symbol} {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Constructing {Target.Name} at {Destination} for {Target.ConstructionTimeRemaining} round(s)");
         }
-        public override string ToStringBeforeExecution() => base.ToStringBeforeExecution() + (Builder == null ? Unit.ToString() : Builder.ToString()) + $";{Target}";
+        public override string ToStringBeforeExecution() => (Builder == null ? Unit.ToString() : Builder.ToString()) + $" {Symbol} {Target}";
+
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Target = (Building)Map.Instance.GetProp(@params);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find target {@params}");
+                IsValid = false;
+                return;
+            }
+            Player player = Battle.Instance.GetPlayer(initiator);
+            if (player == null)
+            {
+                this.LogError($"Cannot find player {initiator}");
+                IsValid = false;
+                return;
+            }
+        }
     }
     public sealed class Demolish : Command
     {
@@ -713,7 +784,26 @@ namespace SteelOfStalin.Commands
             _ = Recorder.AppendLine((Unit == null ? Target.Owner.ToString() : Unit.ToString()) + $" {Symbol} {Target}");
             this.Log($"Demolished {Target.Name} at {Target.CoOrds}");
         }
-        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target}";
+        public override string ToStringBeforeExecution() => Unit != null ? $"{base.ToStringBeforeExecution()}{Target}" : $"{Target.Owner} {Symbol} {Target}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Target = (Building)Map.Instance.GetProp(@params);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find target {@params}");
+                IsValid = false;
+                return;
+            }
+            Player player = Battle.Instance.GetPlayer(initiator);
+            if (player == null || Target.Owner != player)
+            {
+                this.LogError($"Cannot find player {initiator} or {initiator} is not the owner of {Target}");
+                IsValid = false;
+                return;
+            }
+        }
+
     }
     #endregion
 
@@ -920,6 +1010,8 @@ namespace SteelOfStalin.Commands
                 }
             }
         }
+
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Unit.GetLocatedTile()}";
     }
     public sealed class Scavenge : Command
     {

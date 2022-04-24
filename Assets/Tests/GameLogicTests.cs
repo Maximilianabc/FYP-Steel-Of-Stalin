@@ -442,7 +442,7 @@ public class GameLogicTest
 
         Player p2 = Players[1];
         Assault a = UnitData.GetNew<Assault>();
-        a.Initialize(p2, Utilities.Random.NextItem(coords.GetNeighbours()), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        a.Initialize(p2, p1.Capital.CoOrds, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
 
         Command fire = new Fire(i, a, i.PrimaryFirearm);
         commands.Add(fire);
@@ -468,6 +468,18 @@ public class GameLogicTest
         Command disassemble = new Disassemble(portable);
         commands.Add(disassemble);
 
+        Command capture = new Capture(a);
+        commands.Add(capture);
+
+        Command move2 = new Move(a, a.GetPath(a.GetLocatedTile(), Map.Instance.GetRandomNeighbour(a.CubeCoOrds)).ToList());
+        commands.Add(move2);
+
+        Command move3 = new Move(i, i.GetPath(i.GetLocatedTile(), p1.Capital).ToList());
+        commands.Add(move3);
+
+        Command capture2 = new Capture(i);
+        commands.Add(capture2);
+
         Debug.Log("Before:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringBeforeExecution())));
 
         move.Execute();
@@ -478,6 +490,10 @@ public class GameLogicTest
         sabotage.Execute();
         assemble.Execute();
         disassemble.Execute();
+        capture.Execute();
+        move2.Execute();
+        move3.Execute();
+        capture2.Execute();
 
         Debug.Log("After:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringAfterExecution())));
     }

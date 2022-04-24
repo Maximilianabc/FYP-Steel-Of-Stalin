@@ -199,6 +199,7 @@ public class DeployPanel : MonoBehaviour
             weapons = selectedUnit.GetWeapons().ToList();
             foreach (IOffensiveCustomizable weapon in weapons)
             {
+                
                 //show weapons
                 GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "DeployPanelWeapon"), customizableParts.transform, false);
                 instance.name = weapon.Name;
@@ -229,7 +230,9 @@ public class DeployPanel : MonoBehaviour
                         sb.AppendLine(weapon.Name);
                         sb.AppendLine($"Range: {weapon.Offense.MinRange.Value}-{weapon.Offense.MaxRange.Value}");
                         sb.AppendLine($"Accuracy: {weapon.Offense.Accuracy.Normal.Value}");
-                        sb.Append($"Damage:{weapon.Offense.Damage.Hard.Value}");
+                        sb.Append($"Hard Damage:{weapon.Offense.Damage.Hard.Value}");
+                        sb.Append($"Soft Damage:{weapon.Offense.Damage.Soft.Value}");
+                        sb.Append($"Destruction Damage:{weapon.Offense.Damage.Destruction.Value}");
                     }
                     else
                     {
