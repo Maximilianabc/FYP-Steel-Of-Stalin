@@ -152,11 +152,17 @@ namespace SteelOfStalin
 
      public class AIPlayer : Player
     {
-        // AI algo goes here
-        //make flag true
-        //no need consume resource
+        public void botflow(){
+            train();
+            supplyunits();
+            movetonewcity();
+            constructoutpost();
+            movement();
+            checkcombat();
+            this.IsReady = true;
+        }
 
-        void train(){
+        public void train(){
             //get training buidling
             var barracks = Buildings.Where(c => c is Barracks);
             var unitbuildings = Buildings.Where(c => c is UnitBuilding);
@@ -168,8 +174,8 @@ namespace SteelOfStalin
                 var building = unitbuildings.Cast<UnitBuilding>();
                 foreach(var c in building){
                     if(c.CanDeploy()){
-                        var typeunit = c.ReadyToDeploy.First();
-                        Commands.Add(new Deploy(typeunit,c,c.CoOrds,typeunit.GetWeapons()));
+                        var readyunit = c.ReadyToDeploy.First();
+                        Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,readyunit.GetWeapons()));
                     }
                 }
             }
@@ -185,14 +191,14 @@ namespace SteelOfStalin
                     var Artiltype = GetAllTrainableUnits().OfType<Artillery>();
                     if(x.CanTrain()){
                         //may be adjusted later
-                        if(rate < 4){
+                        if(rate < 6){
                             //maybe use random?
                             var rand = new System.Random();
                             int num = rand.Next(1,unittype.Count());
 
                             //train priority
                             if(x is Barracks){
-                                if(unittype.Any(c => c is Militia) && Units.Where(c => c is Militia).Count() <= 8){
+                                if(unittype.Any(c => c is Militia) && Units.Where(c => c is Militia).Count() <= 10){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Militia>(),x,this));
                                 }
                                 else if(unittype.Any(c => c is Infantry) && Units.Where(c => c is Infantry).Count() <= 10){
@@ -201,13 +207,13 @@ namespace SteelOfStalin
                                 else if(unittype.Any(c => c is Assault) && Units.Where(c => c is Assault).Count() <= 10){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Assault>(),x,this));
                                 }
-                                else if(unittype.Any(c => c is Support) && Units.Where(c => c is Support).Count() <= 4){
+                                else if(unittype.Any(c => c is Support) && Units.Where(c => c is Support).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Support>(),x,this));
                                 }
-                                else if(unittype.Any(c => c is Mountain) && Units.Where(c => c is Mountain).Count() <= 3){
+                                else if(unittype.Any(c => c is Mountain) && Units.Where(c => c is Mountain).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Mountain>(),x,this));
                                 }
-                                else if(unittype.Any(c => c is Engineer) && Units.Where(c => c is Engineer).Count() <= 3){
+                                else if(unittype.Any(c => c is Engineer) && Units.Where(c => c is Engineer).Count() <= 2){
                                     Commands.Add(new Train(Game.UnitData.GetNew<Engineer>(),x,this));
                                 }
                             }
@@ -235,74 +241,90 @@ namespace SteelOfStalin
                                 }
                             }
                             //vehicles
-                            else if(x is Dockyard){
-                                if(Units.OfType<MotorisedInfantry>().Count() > 5){
-                                     Commands.Add(new Train(Game.UnitData.GetNew<MotorisedInfantry>(),x,this));
-                                }
-                                if(Units.OfType<Utility>().Count() > 5){
-                                     Commands.Add(new Train(Game.UnitData.GetNew<Utility>(),x,this));
-                                }
-                                if(Units.OfType<Carrier>().Count() > 5){
-                                     Commands.Add(new Train(Game.UnitData.GetNew<Carrier>(),x,this));
-                                }
-                                if(Units.OfType<ArmouredCar>().Count() > 5){
-                                     Commands.Add(new Train(Game.UnitData.GetNew<ArmouredCar>(),x,this));
-                                }
-                                if(Units.OfType<TankDestroyer>().Count() > 5){
-                                     Commands.Add(new Train(Game.UnitData.GetNew<TankDestroyer>(),x,this));
-                                }
-                                if(Units.OfType<AssaultGun>().Count() > 5){
-                                     Commands.Add(new Train(Game.UnitData.GetNew<AssaultGun>(),x,this));
-                                }
-                                // GetNew<LightTank>(),
-                                // GetNew<MediumTank>(),
-                                // GetNew<HeavyTank>()
-                            }
-
+                            // else if(x is Dockyard){
+                            //     if(Units.OfType<MotorisedInfantry>().Count() > 5){
+                            //          Commands.Add(new Train(Game.UnitData.GetNew<MotorisedInfantry>(),x,this));
+                            //     }
+                            //     if(Units.OfType<Utility>().Count() > 5){
+                            //          Commands.Add(new Train(Game.UnitData.GetNew<Utility>(),x,this));
+                            //     }
+                            //     if(Units.OfType<Carrier>().Count() > 5){
+                            //          Commands.Add(new Train(Game.UnitData.GetNew<Carrier>(),x,this));
+                            //     }
+                            //     if(Units.OfType<ArmouredCar>().Count() > 5){
+                            //          Commands.Add(new Train(Game.UnitData.GetNew<ArmouredCar>(),x,this));
+                            //     }
+                            //     if(Units.OfType<TankDestroyer>().Count() > 5){
+                            //          Commands.Add(new Train(Game.UnitData.GetNew<TankDestroyer>(),x,this));
+                            //     }
+                            //     if(Units.OfType<AssaultGun>().Count() > 5){
+                            //          Commands.Add(new Train(Game.UnitData.GetNew<AssaultGun>(),x,this));
+                            //     }
+                            //     // GetNew<LightTank>(),
+                            //     // GetNew<MediumTank>(),
+                            //     // GetNew<HeavyTank>()
+                            // }
                         }
-                        //if rate >= 4
+                        //if rate > 6
                         else{
-                        //change the limit
-                        //maybe get the specific type of unit
-
-
+                        //change the limit and priority
+                            if(x is Barracks){
+                                if(unittype.Any(c => c is Infantry) && Units.Where(c => c is Infantry).Count() <= 15){
+                                    Commands.Add(new Train(Game.UnitData.GetNew<Infantry>(),x,this));
+                                }
+                                else if(unittype.Any(c => c is Assault) && Units.Where(c => c is Assault).Count() <= 15){
+                                    Commands.Add(new Train(Game.UnitData.GetNew<Assault>(),x,this));
+                                }
+                                else if(unittype.Any(c => c is Support) && Units.Where(c => c is Support).Count() <= 4){
+                                    Commands.Add(new Train(Game.UnitData.GetNew<Support>(),x,this));
+                                }
+                                else if(unittype.Any(c => c is Mountain) && Units.Where(c => c is Mountain).Count() <= 4){
+                                    Commands.Add(new Train(Game.UnitData.GetNew<Mountain>(),x,this));
+                                }
+                                else if(unittype.Any(c => c is Engineer) && Units.Where(c => c is Engineer).Count() <= 4){
+                                    Commands.Add(new Train(Game.UnitData.GetNew<Engineer>(),x,this));
+                                }
+                            }
 
                         }           
                     }
                 }                 
             }
         }
-        void supplyunits(){
+        public void supplyunits(){
             //check available units
             foreach(var unit in Units){
-                //fuel
-                if(unit.Carrying.Fuel < unit.Capacity.Fuel){
-                    var amount = unit.Capacity.Fuel - unit.Carrying.Fuel;
-                        unit.Carrying.Fuel.PlusEquals(amount);
-                        this.Resources.Fuel.MinusEquals(amount);
- 
-                }
+                var aroundcity = unit.GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(unit.CubeCoOrds,3)).OfType<Barracks>().Count();
+                var aroundoutpost = unit.GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(unit.CubeCoOrds,3)).OfType<Outpost>().Count();
+                if(aroundcity + aroundoutpost >=1){
+                    //fuel
+                    if(unit.Carrying.Fuel < unit.Capacity.Fuel){
+                        var amount = unit.Capacity.Fuel - unit.Carrying.Fuel;
+                            unit.Carrying.Fuel.PlusEquals(amount);
+                            this.Resources.Fuel.MinusEquals(amount);
+                    }
+                }  
             }
 
         }
 
-        void movetonewcity(){
-            if(Cities.Count() < 4){
-                //get a non occupied cities   
-                var neut = Map.Instance.GetCities(c => c.IsNeutral());
+        public void movetonewcity(){
+            //get a non occupied cities  
+            var neut = Map.Instance.GetCities(c => c.IsNeutral());
+            if(neut.Count() > 3){
                 //get nearest city from base
                 var nearest = neut.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
                 //get avaiable units nearest to the newest cities
-                var avaunits = Units.OrderBy(c => Units.First(c => c is Personnel).GetDistance(nearest)).First();
+                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => Units.First(c => c is Personnel).GetDistance(nearest)).First();
                 if(avaunits.GetDistance(nearest) == 0){
                    Commands.Add(new Capture(avaunits));
                    avaunits.CommandAssigned = CommandAssigned.CAPTURE;
-                 }
+                }
                 else{
-                var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
-                 //add commands to units (order a single units to new city)
-                Commands.Add(new Move(avaunits, pathtocity.ToList()));   
-                avaunits.CommandAssigned = CommandAssigned.MOVE;
+                    var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
+                    //add commands to units (order a single units to new city)
+                    Commands.Add(new Move(avaunits, pathtocity.ToList())); 
+                    avaunits.CommandAssigned = CommandAssigned.MOVE;
                 }
             }
 
@@ -310,7 +332,7 @@ namespace SteelOfStalin
 
 
         //build building 
-        void constructbuilding(){
+        public void constructbuilding(){
             //for building in city range
             var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
             int num = 0;
@@ -366,59 +388,100 @@ namespace SteelOfStalin
                 }
             }
         }
-        void constructetc(){
+        public void constructoutpost(){
             //outpost
             var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
             int num = orderedcities.Count();
         
-            if(Buildings.Where(c => c is Outpost).Count() < num){
-                int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num).CoOrds.X) / 2;
-                int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num).CoOrds.Y) / 2;
-                var xycoor = new Coordinates(x,y);
-                var avaunits = Units.OrderBy(c => Units.First(c => c is Personnel).GetDistance(Map.Instance.GetTile(x,y))).First();
+            if(num > 1){
+                int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num -1 ).CoOrds.X) / 2;
+                int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
+                var midtile = Map.Instance.GetTile(x,y);
+                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(midtile)).First();
                 var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), Map.Instance.GetTile(x,y));
 
-                if(avaunits.GetDistance(Map.Instance.GetTile(x,y)) == 0){
-                    Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),xycoor));
-                    avaunits.CommandAssigned = CommandAssigned.CONSTRUCT;
-                }
-                else{
-                    Commands.Add(new Move(avaunits, pathtolocation.ToList()));
-                    avaunits.CommandAssigned = CommandAssigned.MOVE;
-                }
-            }
-
-        }
-
-
-
-        void movement(){
-            //get all moveable units
-            if(Cities.Count() > 3){
-                if(Units.Count() > 10){
-                    var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());
-                    //get nearest enemy city will fix later
-                    var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
-                    var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
-                    //get number of units may improve later
-                    moveable = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(6);
-
-                    //any enemy spotted
-                    // if(Units.Any(c => c.HasSpotted(Map.Instance.GetUnits().Where(c => c.IsHostile())))){
-                    //     Map.Instance.GetUnits().Where(c => c is hostile);
-                    // }
-                    //move to enemy city
-                    foreach(var i in moveable){
-                        var pathtocity = i.GetPath(i.GetLocatedTile(), nearest);
-                        Commands.Add(new Move(i, pathtocity.ToList()));   
-                        i.CommandAssigned = CommandAssigned.MOVE;
+                if(Buildings.Where(b => b.CoOrds.X == midtile.CoOrds.X && b.CoOrds.Y == midtile.CoOrds.Y).Count() < 1){
+                    if(avaunits.GetDistance(Map.Instance.GetTile(x,y)) == 0){
+                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),midtile.CoOrds));
+                        avaunits.CommandAssigned = CommandAssigned.CONSTRUCT;
+                    }
+                    else{
+                        Commands.Add(new Move(avaunits, pathtolocation.ToList()));
+                        avaunits.CommandAssigned = CommandAssigned.MOVE;
                     }
                 }
             }
-            
 
         }
-        void combat(){
+
+
+
+        public void movement(){
+            //get all moveable units
+            if(Cities.Count() > 3){
+                var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());
+                if(Units.Count() > 14 && moveable.Count() > 8){
+                    //get nearest enemy city will fix later
+                    var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
+                    var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
+                    // Map.Instance.GetUnits()
+                    //get number of units may improve later
+                    moveable = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(8);
+
+                    //middle point for outpost
+                    int x = (Cities.Where(c => c is Metropolis).First().CoOrds.X + nearest.CoOrds.X) / 2;
+                    int y = (Cities.Where(c => c is Metropolis).First().CoOrds.Y + nearest.CoOrds.Y) / 2;
+                    var pathtolocation = moveable.First().GetPath(moveable.First().GetLocatedTile(), Map.Instance.GetTile(x,y));
+                    var tileofoutpost = Map.Instance.GetTile(x,y);
+                    //as the first one construct outpost
+                    if(moveable.First().GetDistance(Map.Instance.GetTile(x,y)) == 0){
+                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),Map.Instance.GetTile(x,y).CoOrds));
+                        moveable.First().CommandAssigned = CommandAssigned.CONSTRUCT;
+                    }
+                    else{
+                        foreach(var i in moveable){
+                            pathtolocation = i.GetPath(i.GetLocatedTile(), tileofoutpost);
+                            if(!i.CanAccessTile(tileofoutpost)){
+                                pathtolocation = i.GetPath(i.GetLocatedTile(), i.GetAccessibleNeigbours(tileofoutpost.CubeCoOrds,1).First());
+                                Commands.Add(new Move(i, pathtolocation.ToList()));
+                                i.CommandAssigned = CommandAssigned.MOVE;
+                            }
+                            else{
+                                Commands.Add(new Move(i, pathtolocation.ToList()));
+                                i.CommandAssigned = CommandAssigned.MOVE;
+                            }
+                        }
+                    }
+
+                    //move to enemy city if outpost has been built
+                    if(Buildings.Where(b => b.CoOrds.X == tileofoutpost.CoOrds.X && b.CoOrds.Y == tileofoutpost.CoOrds.Y).Count() >= 1){
+                        foreach(var i in moveable){
+                            //if arrive
+                            if(i.GetDistance(nearest) == 0){
+                                Commands.Add(new Capture(i));
+                                i.CommandAssigned = CommandAssigned.CAPTURE;
+                            }
+                            //if units have not arrived yet
+                            else{
+                                var pathtocity = i.GetPath(i.GetLocatedTile(), nearest.GetLocatedTile());
+                                //if unit already exist inside the tile
+                                if(!i.CanAccessTile(nearest.GetLocatedTile())){
+                                    pathtocity = i.GetPath(i.GetLocatedTile(), i.GetAccessibleNeigbours(nearest.CubeCoOrds,2).First());
+                                    Commands.Add(new Move(i, pathtocity.ToList()));
+                                    i.CommandAssigned = CommandAssigned.MOVE;
+                                }
+                                else{
+                                    Commands.Add(new Move(i, pathtocity.ToList()));   
+                                    i.CommandAssigned = CommandAssigned.MOVE;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public void checkcombat(){
             //if enemy is spotted
             //get the number of enemies unit spotted
             //get number of units equal or more 
@@ -438,18 +501,27 @@ namespace SteelOfStalin
                         }
                         //if more
                         else{
-                            var nearby = ally.GetFriendlyUnitsInRange(ally.GetAccessibleNeigbours(5));
+                            //check nearby in range of 5
+                            var nearby1 = ally.GetFriendlyUnitsInRange(Map.Instance.GetNeighbours(ally.CubeCoOrds,5));
                             //if allied more
-                            if(nearby.Count() >= enemy.Count()){
+                            if(nearby1.Count() >= enemy.Count()){
                                 Commands.Add(new Fire(ally,enemy.First(), weapon));
                                 ally.CommandAssigned = CommandAssigned.FIRE;
                             }
-                            
-                            //if no retreat to nearest ally
                             else{
-                                var pathtoally = ally.GetPath(Map.Instance.GetTile(ally.CoOrds.X,ally.CoOrds.Y), nearby.First().GetLocatedTile());
-                                Commands.Add(new Move(ally,pathtoally.ToList()));
-                                ally.CommandAssigned = CommandAssigned.MOVE;
+                                //if there are ally in range of 10
+                                var nearby2 = ally.GetFriendlyUnitsInRange(Map.Instance.GetNeighbours(ally.CubeCoOrds,8)).OrderBy(c => ally.GetDistance(c));
+                                if(nearby2.Count() > nearby1.Count()){
+                                    var pathtoally = ally.GetPath(Map.Instance.GetTile(ally.CoOrds.X,ally.CoOrds.Y), nearby2.Last().GetLocatedTile());
+                                    Commands.Add(new Move(ally,pathtoally.ToList()));
+                                    ally.CommandAssigned = CommandAssigned.MOVE;
+                                }
+                                //if no ally in range of 8, just attack
+                                else{
+                                    Commands.Add(new Fire(ally,enemy.First(), weapon));
+                                    ally.CommandAssigned = CommandAssigned.FIRE;
+                                }
+                               
                             }
                         }
                     }
