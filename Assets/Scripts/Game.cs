@@ -2094,7 +2094,7 @@ namespace SteelOfStalin.Flow
                 u.AddToScene();
             }
 
-            IEnumerable<Building> new_buildings = Map.Instance.GetBuildings(b => b.PropObject == null/* && b.Status == BuildingStatus.UNDER_CONSTRUCTION*/);
+            IEnumerable<Building> new_buildings = Map.Instance.GetBuildings(b => !(b is Barracks && b is Arsenal) && b.PropObject == null/* && b.Status == BuildingStatus.UNDER_CONSTRUCTION*/);
             foreach (Building b in new_buildings)
             {
                 b.AddToScene();
