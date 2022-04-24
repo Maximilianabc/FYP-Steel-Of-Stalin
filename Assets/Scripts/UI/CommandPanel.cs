@@ -36,10 +36,10 @@ public class CommandPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //testing code
-        Debug.Log(((AvailableMovementCommands)14 & AvailableMovementCommands.MERGE) > 0);
-        Debug.Log(((AvailableMovementCommands)14&AvailableMovementCommands.HOLD)>0);
-        //
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -450,6 +450,7 @@ public class CommandPanel : MonoBehaviour
     }
 
     public void CleanUpTrigger() {
+        if (!isWaitingInput) return;
         foreach (Prop p in triggerProps) {
             p.PropObjectComponent.SetColorForAllChildren(Color.clear);
             PropEventTrigger trigger = p.PropObjectComponent.Trigger;
@@ -459,5 +460,6 @@ public class CommandPanel : MonoBehaviour
             else if (currentCommand == "Sabotage") trigger.SetActive("sabotage_building", false);
             trigger.SetActive("focus", false);
         }
+        isWaitingInput = false;
     }
 }
