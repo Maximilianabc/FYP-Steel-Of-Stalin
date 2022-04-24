@@ -2,12 +2,15 @@
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
   "DefaultPrimary": "carbine",
-  "AvailableFirearms": [
+  "AvailablePrimaryFirearms": [
     "carbine",
     "submachinegun",
     "shotgun",
     "semi_auto_carbine",
-    "assault_rifle",
+    "assault_rifle"
+  ],
+  "AvailableSecondaryFirearms": [
+    "shotgun",
     "automatic_rifle",
     "grenade",
     "flamethrower"

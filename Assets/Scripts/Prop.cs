@@ -559,6 +559,7 @@ namespace SteelOfStalin.Assets.Props.Units
 
         [JsonIgnore] public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
         [JsonIgnore] public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
+        [JsonIgnore] public bool CarryingIsFull => Carrying == Capacity;
 
         public bool IsOwn(Player p) => p != null && Owner == p;
         public bool IsAlly(Player p) => Owner?.Allies.Any(a => a == p) ?? false;
@@ -627,7 +628,7 @@ namespace SteelOfStalin.Assets.Props.Units
             // called from test if Battle.Instance is null
             Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
-        public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
+        public abstract void SetWeapons(params IOffensiveCustomizable[] weapons);
 
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
         public virtual bool CanAccessTile(Tile t)
@@ -778,6 +779,8 @@ namespace SteelOfStalin.Assets.Props.Units
         public abstract IEnumerable<Module> GetModules();
         public IEnumerable<T> GetModules<T>() where T : Module => GetModules()?.OfType<T>();
         public virtual IEnumerable<Module> GetRepairableModules() => GetModules().Where(m => m.Integrity < Game.CustomizableData.Modules[m.Name].Integrity);
+        public abstract void SetModules(params Module[] modules);
+
         public abstract Modifier GetConcealmentPenaltyMove();
 
         public List<Unit> GetAvailableMergeTargets()
@@ -809,9 +812,9 @@ namespace SteelOfStalin.Assets.Props.Units
         public IEnumerable<Building> GetHostileBuildingsInReconRange() => GetHostileBuildingsInRange(GetReconRange());
 
         public decimal GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.ApplyTo(Consumption.Supplies.ApplyMod());
-        public decimal GetSuppliesRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
+        public decimal GetSuppliesRequired(IEnumerable<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
         public decimal GetFuelRequired(Tile t) => t.TerrainMod.Fuel.ApplyTo(Consumption.Fuel.ApplyMod());
-        public decimal GetFuelRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
+        public decimal GetFuelRequired(IEnumerable<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
 
         public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
@@ -1097,6 +1100,8 @@ namespace SteelOfStalin.Assets.Props.Tiles
             DistanceToGoal = CubeCoordinates.GetDistance(CubeCoOrds, end.CubeCoOrds)
         };
 
+        public IEnumerable<Tile> GetNeighbours(int distance = 1, bool include_self = false)
+            => CubeCoOrds.GetNeighbours(distance, include_self).Select(c => Map.Instance.GetTile(c));
         public override Tile GetLocatedTile() => this;
 
         public override bool Equals(object other) => this == (Tile)other;

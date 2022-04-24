@@ -290,7 +290,7 @@ public class DeployPanel : MonoBehaviour
             weaponOptions = null;
             if (selectedUnit is Personnel p)
             {
-                weaponOptions = p.AvailableFirearms.ConvertAll<IOffensiveCustomizable>(s => Game.CustomizableData.GetNewFirearm(s));
+                weaponOptions = p.AvailablePrimaryFirearms.ConvertAll<IOffensiveCustomizable>(s => Game.CustomizableData.GetNewFirearm(s));
             }
             else if (selectedUnit is Artillery a)
             {

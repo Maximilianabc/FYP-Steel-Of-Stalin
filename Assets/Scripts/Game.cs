@@ -38,6 +38,7 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using Resources = SteelOfStalin.Attributes.Resources;
 using System.Threading.Tasks;
+using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 
 namespace SteelOfStalin
 {
@@ -332,6 +333,7 @@ namespace SteelOfStalin
                             {
                                 GetBuildingStatusesClientRpc(b.ToString(), b.Status, @params);
                             }
+                            GetResourcesLeftClientRpc(player.Resources.ToString(), @params);
                         }
                     }
                 }
@@ -660,6 +662,12 @@ namespace SteelOfStalin
         private void GetBuildingStatusesClientRpc(string building, BuildingStatus status, ClientRpcParams @params)
         {
             ((Building)Map.Instance.GetProp(building)).Status = status;
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void GetResourcesLeftClientRpc(string resources, ClientRpcParams @params)
+        {
+
         }
     }
 
@@ -1085,7 +1093,6 @@ namespace SteelOfStalin
         /// <returns>Props of a specific type that match predicate</returns>
         public IEnumerable<T> GetProps<T>(Predicate<T> predicate) where T : Prop => AllProps.OfType<T>().Where(p => predicate(p));
 
-        
         /// <summary>
         /// Gets a Tile from position x, y
         /// </summary>
@@ -1195,7 +1202,6 @@ namespace SteelOfStalin
         /// <param name="c">A CubeCoordinate specifying location of main tile</param>
         /// <returns>If there are unoccupied neighbouring Tiles, returns true, else false </returns>
         public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeighbours(c, distance).Any(t => !t.IsOccupied);
-
         
         public IEnumerable<Unit> GetUnits() => Units;
         public IEnumerable<T> GetUnits<T>() where T : Unit => Units.OfType<T>();
@@ -1237,6 +1243,24 @@ namespace SteelOfStalin
         public IEnumerable<Building> GetBuildings(BuildingStatus status) => Buildings.Where(b => b.Status == status);
         public IEnumerable<Building> GetBuildings(Player player) => Buildings.Where(b => b.Owner == player);
         public IEnumerable<Building> GetBuildings(Predicate<Building> predicate) => Buildings.Where(b => predicate(b));
+
+        #region testing methods
+        public T InitializeNewUnit<T>(Player owner, Coordinates c) where T : Unit
+        {
+            Unit u = Game.UnitData.GetNew<T>();
+            u.Initialize(owner, c, UnitStatus.ACTIVE);
+            _ = AddUnit(u);
+            return (T)u;
+        }
+        public T InitializeNewBuilding<T>(Player owner, Coordinates c) where T : Building
+        {
+            Building b = Game.BuildingData.GetNew<T>();
+            b.Initialize(owner, c, BuildingStatus.ACTIVE);
+            _ = AddBuilding(b);
+            return (T)b;
+
+        }
+        #endregion
 
         public int TileCount(TileType type) => Tiles.Flatten().Where(t => t.Type == type).Count();
         public float TilePercentage(TileType type) => (float)Math.Round(TileCount(type) / (Width * Height) * 100D, 2);
@@ -1437,7 +1461,7 @@ namespace SteelOfStalin
             m_flatLands = Tiles.Flatten().Where(t => t.IsFlatLand).Select(t => t.CubeCoOrds).ToList();
 
             // generate capitals first
-            PickCities(num_player, Math.Max(Width, Height) / 2, max_sep);
+            PickCities(num_player, Math.Max(Width, Height) / num_player, max_sep);
             PickCities(CitiesNum, min_sep, max_sep);
 
             Debug.Log("Overwriting tiles with cities.");
@@ -1797,6 +1821,11 @@ namespace SteelOfStalin
         };
         public static Dictionary<ulong, List<Command>> CommandsRelatedToPlayer { get; set; } = new Dictionary<ulong, List<Command>>();
 
+        public Command() { }
+        public Command(Unit u) => Unit = u;
+        public Command(Unit u, Coordinates src, Coordinates dest) => (Unit, Source, Destination) = (u, src, dest);
+        public Command(Unit u, int srcX, int srcY, int destX, int destY) => (Unit, Source, Destination) = (u, new Coordinates(srcX, srcY), new Coordinates(destX, destY));
+
         public virtual void Execute() { }
         public virtual string ToStringBeforeExecution() => $"{Unit} {Symbol} ";
         public virtual string ToStringAfterExecution() => Recorder.ToString();
@@ -1809,11 +1838,17 @@ namespace SteelOfStalin
                 Unit = (Unit)prop;
                 Unit.CommandAssigned = (CommandAssigned)Enum.Parse(typeof(CommandAssigned), GetType().Name.ToUpper());
             }
+            else if (!(this is Construct || this is Fortify || this is Demolish || this is Reconstruct))
+            {
+                Debug.LogError($"No unit is found with name {initiator}, while it is necessary for {GetType().Name} command");
+                IsValid = false;
+                return;
+            }
             IsValid = true;
         }
         public static Command FromStringBeforeExecution(string command_string_without_result)
         {
-            Match match = Regex.Match(command_string_without_result, @"^(.*?) ([+\-<>`~!@#$%^&|v.]{1,2}) (.*?)$");
+            Match match = Regex.Match(command_string_without_result, @"^(.*?) ([+\-<>`~!?@#$%^&|v.]{1,2}) (.*?)?$");
             if (!match.Success)
             {
                 Debug.LogWarning($"Command string {command_string_without_result} is not in correct format");
@@ -1829,22 +1864,19 @@ namespace SteelOfStalin
             }
 
             Command cmd = (Command)Activator.CreateInstance(command_type);
-            cmd.SetParamsFromString(match.Groups[1].Value, match.Groups[3].Value);
+            string initiator = match.Groups[1].Value;
+            string parameters = match.Groups[3].Value;
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                cmd.SetParamsFromString(initiator, parameters);
+            }
+            else
+            {
+                cmd.IsValid = true;
+            }
             return cmd;
         }
         public virtual bool RelatedToPlayer(Player p) => Unit != null && Unit.Owner == p;
-
-        public Command() { }
-        public Command(Unit u) => Unit = u;
-        public Command(Unit u, Coordinates src, Coordinates dest) => (Unit, Source, Destination) = (u, src, dest);
-        public Command(Unit u, int srcX, int srcY, int destX, int destY) => (Unit, Source, Destination) = (u, new Coordinates(srcX, srcY), new Coordinates(destX, destY));
-
-        public object Clone()
-        {
-            Command copy = (Command)MemberwiseClone();
-            copy.Unit = (Unit)Unit.Clone();
-            return copy;
-        }
 
         protected void ConsumeSuppliesStandingStill()
         {
@@ -1889,6 +1921,13 @@ namespace SteelOfStalin
                 _ = Recorder.Append(Unit.GetResourcesChangeRecord("Fuel", -fuel));
             }
             this.Log($"Consumed {cartridges} cartridges, {shells} shells and {fuel} fuel when firing. Remaining: {Unit.Carrying.Cartridges} cartridges, {Unit.Carrying.Shells} shells and {Unit.Carrying.Fuel} fuel");
+        }
+
+        public object Clone()
+        {
+            Command copy = (Command)MemberwiseClone();
+            copy.Unit = (Unit)Unit.Clone();
+            return copy;
         }
     }
 }
@@ -2085,6 +2124,10 @@ namespace SteelOfStalin.Flow
             Phases.ForEach(p => p.Execute());
             Commands.Clear();
             Players.ForEach(p => p.Commands.Clear());
+            if (Game.ActiveBattle.IsSinglePlayer)
+            {
+                ReadyToProceedToNext = true;
+            }
         }
 
         // output this round to JSON
@@ -2112,7 +2155,7 @@ namespace SteelOfStalin.Flow
     public abstract class Phase : ICloneable
     {
         public List<Command> CommandsForThisPhase { get; set; } = new List<Command>();
-        protected StringBuilder Recorder => new StringBuilder();
+        protected StringBuilder Recorder { get; set; } = new StringBuilder();
         protected string Header => GetType().Name;
 
         // empty ctor for (de)serialization
@@ -2146,6 +2189,11 @@ namespace SteelOfStalin.Flow
             copy.CommandsForThisPhase = CommandsForThisPhase.Select(c => (Command)c.Clone()).ToList();
             return copy;
         }
+        public override string ToString()
+        {
+            RecordPhase();
+            return Recorder.ToString();
+        }
     }
 
     public sealed class Planning : Phase
@@ -2160,7 +2208,67 @@ namespace SteelOfStalin.Flow
 
         public override void Execute()
         {
-            // TODO resolve move conflicts here
+            /* TODO FUT. Impl. handle edge case: path overlapping with conflict and one of the units has no more tiles left in path
+             * e.g. Unit A at tile a moves to tile x, the path contains tile b, where unit B is at
+             * Unit B (at tile b) moves to tile x which is a direct neighbouring tile of tile b
+             * Unit C moves to tile x, priority value: (C > A > B)
+             * after first round conflict resolution, destination of both Unit A and Unit B will be at tile b
+             * at second round conflict resolution, unit B's path should remove one more tile but it doesn't have any left
+             * it will be very likely to throw at m.Path.Take(...) in this case
+             */
+            // move commands with the same destination
+            IEnumerable<IGrouping<Tile, Move>> conflicts = CommandsForThisPhase.OfType<Move>().GroupBy(m => m.Path.Last()).Where(m => m.Count() > 1);
+            Debug.Log($"Conflicts: {conflicts.Count()}");
+
+            int counter = 0; 
+            while (conflicts.Any() && counter < 10) // should be less than 10 recursive conflicts (?)
+            {
+                conflicts
+                    .Select(m =>
+                        m.OrderBy(x => Formula.PriorityValue(x.Unit, 
+                            x.Path.Count() - 2 < 0
+                                ? x.Unit.GetLocatedTile() // no second last tile => only one tile in path
+                                : x.Path.ElementAt(x.Path.Count() - 2))) // sort each group by priority value
+                        .Skip(1)) // skip top one in group as it can occupy the tile
+                    .SelectMany(m => m)
+                    .ToList().ForEach(m => m.Path = m.Path.Take(m.Path.Count() - 1)); // remove the last tile (original destination) from every command remaining
+
+                // repeat until there's no conflict
+                conflicts = CommandsForThisPhase.OfType<Move>()
+                    .Where(m => m.Path.Count() > 0) // added because there maybe move commands with no tile in path left
+                    .GroupBy(m => m.Path.Last())
+                    .Where(m => m.Count() > 1);
+                Debug.Log($"Conflicts remaining: {conflicts.Count()}");
+                counter++;
+            }
+            if (counter >= 50)
+            {
+                this.LogError("Something went wrong in movement conflict resolution: resolution count > 50");
+            }
+
+            // auto resupply if any outpost nearby
+            foreach (Move move in CommandsForThisPhase.OfType<Move>())
+            {
+                if (move.Path.Count() == 0 || move.Unit.CarryingIsFull)
+                {
+                    continue;
+                }
+                foreach (Tile tile in move.Path)
+                {
+                    IEnumerable<Tile> neighbours_have_buildings = tile.GetNeighbours(2).Where(t => t.HasBuilding);
+                    if (!neighbours_have_buildings.Any())
+                    {
+                        continue;
+                    }
+                    foreach (Building b in neighbours_have_buildings.SelectMany(t => Map.Instance.GetBuildings(t.CoOrds)))
+                    {
+                        if (b is Outpost o && o.Owner == move.Unit.Owner)
+                        {
+                            // TODO
+                        }
+                    }
+                }
+            }
 
             base.Execute();
         }

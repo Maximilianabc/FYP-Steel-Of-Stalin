@@ -2,7 +2,7 @@
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
   "DefaultPrimary": "pistol",
-  "AvailableFirearms": [
+  "AvailablePrimaryFirearms": [
     "pistol",
     "revolver",
     "burst_pistol",
@@ -12,6 +12,7 @@
     "shotgun",
     "molotov"
   ],
+  "AvailableSecondaryFirearms": [],
   "CaptureEfficiency": {
     "Value": 25,
     "Mod": {
