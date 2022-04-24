@@ -266,14 +266,17 @@ namespace SteelOfStalin.Assets.Props
                     {
                         TrainPanel.instance.SetCity(c);
                     }
-                    else if (p is Unit u)
-                    {
-                        
+                    else if (p is Unit u) {
                         UnitPanel.instance.SetUnit(u);
+                        if (u.IsOwn(Battle.Instance.Self)) {
+                            CommandPanel.instance.SetUnit(u);
+                        }
                     }
-                    else {   
+                    else
+                    {
                         UnitPanel.instance.Hide();
                         DeployPanel.instance.HideAll();
+                        CommandPanel.instance.Hide();
                     }
                 }
             });
@@ -323,6 +326,47 @@ namespace SteelOfStalin.Assets.Props
                     }
                 }
             },false);
+            Trigger.Subscribe("move_tile", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Move",t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("fire_unit", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Fire", t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("suppress_unit", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Suppress", t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("sabotage_building", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Sabotage", t);
+                    }
+                }
+            }, false);
+
 
 
         }

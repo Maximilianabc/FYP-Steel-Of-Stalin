@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -8,6 +9,11 @@ using UnityEngine.EventSystems;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin;
 using SteelOfStalin.Commands;
+using SteelOfStalin.Assets.Props;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.CustomTypes;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Props.Buildings;
 
 public class CommandPanel : MonoBehaviour
 {
@@ -19,6 +25,9 @@ public class CommandPanel : MonoBehaviour
     private int currentPage;
     private int numPages;
     private bool isWaitingInput = false;
+    private string currentCommand;
+    private List<Prop> triggerProps;
+    private IOffensiveCustomizable currentWeapon;
 
     void Awake()
     {
@@ -43,8 +52,11 @@ public class CommandPanel : MonoBehaviour
     
     }
 
-    public void Hide() { 
-    
+    public void Hide() {
+        CleanUpTrigger();
+        foreach (Transform child in transform) {
+            Destroy(child.gameObject);
+        }
     }
 
 
@@ -53,6 +65,9 @@ public class CommandPanel : MonoBehaviour
         if (!u.IsOwn(Battle.Instance.Self)) return;
         currentUnit = u;
         availableCommands = new List<string>();
+        if (u.CommandAssigned != CommandAssigned.NONE) {
+            Debug.Log("Command Already Assigned");
+        }
         if ((u.AvailableMovementCommands & AvailableMovementCommands.HOLD) > 0) {
             availableCommands.Add("Hold");
         }
@@ -153,7 +168,12 @@ public class CommandPanel : MonoBehaviour
         //    availableCommands.Add("Scavenge");
         //}
         numPages = Mathf.CeilToInt((float)availableCommands.Count / maxIconsInPage);
+        if (numPages == 0) {
+            Debug.Log("No available Commands");
+            return;
+        }
         if (numPages > 2) Debug.LogError("Command panel does not support more than 2 pages");
+        SetPage(1);
     }
 
     public void SetPage(int pageNum) {
@@ -215,10 +235,229 @@ public class CommandPanel : MonoBehaviour
         if (isWaitingInput) {
             CleanUpTrigger();
         }
-        //if(commandString=="")
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+        currentCommand = commandString;
+        if (commandString == "Hold")
+        {
+            Hold hold = new Hold(currentUnit);
+            Battle.Instance.Self.Commands.Add(hold);
+            currentUnit.CommandAssigned |= CommandAssigned.HOLD;
+        }
+        else if (commandString == "Move")
+        {
+            //simple implementation for now
+            //can only control the destination
+            List<Tile> reachableTiles = currentUnit.GetMoveRange().ToList();
+            foreach (Tile t in reachableTiles)
+            {
+                t.PropObjectComponent.SetColorForAllChildren(Color.green);
+                PropEventTrigger trigger = t.PropObjectComponent.Trigger;
+                trigger.SetActive("move_tile", true);
+                trigger.SetActive("focus", false);
+            }
+            triggerProps = reachableTiles.ConvertAll<Prop>(t => t);
+            isWaitingInput = true;
+        }
+        else if (commandString == "Ambush")
+        {
+            Ambush ambush = new Ambush(currentUnit);
+            Battle.Instance.Self.Commands.Add(ambush);
+            currentUnit.CommandAssigned |= CommandAssigned.AMBUSH;
+        }
+        else if (commandString == "Fire" || commandString == "Suppress" || commandString == "Sabotage")
+        {
+            //Fire(Unit u,Unit Target,IOffensiveCustomizable weapon)
+            IEnumerable<IOffensiveCustomizable> weapons = currentUnit.GetWeapons();
+            if (weapons.Count() == 0) return;
+            foreach (IOffensiveCustomizable weapon in weapons)
+            {
+                GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "CommandPanelWeapon"), transform, false);
+                Sprite icon = Game.Icons.Find(i => i.name == weapon.Name);
+                if (icon != null)
+                {
+                    instance.transform.Find("Icon").GetComponent<Image>().sprite = icon;
+                }
+                EventTrigger et = instance.GetComponent<EventTrigger>();
+                et.triggers.Clear();
+                EventTrigger.Entry onEnter = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerEnter,
+                    callback = new EventTrigger.TriggerEvent()
+                };
+                onEnter.callback.AddListener(new UnityAction<BaseEventData>(e =>
+                {
+                    StringBuilder sb = new StringBuilder();
+                    if (weapon != null)
+                    {
+                        sb.AppendLine(weapon.Name);
+                        sb.AppendLine($"Range: {weapon.Offense.MinRange.Value}-{weapon.Offense.MaxRange.Value}");
+                        sb.AppendLine($"Accuracy: {weapon.Offense.Accuracy.Normal.Value}");
+                        sb.AppendLine($"Hard Damage:{weapon.Offense.Damage.Hard.Value}");
+                        sb.AppendLine($"Soft Damage:{weapon.Offense.Damage.Soft.Value}");
+                        sb.Append($"Destruc. Damage:{weapon.Offense.Damage.Destruction.Value}");
+                    }
+                    else
+                    {
+                        sb.Append("Empty");
+                    }
+                    Tooltip.ShowTooltip_Static(sb.ToString());
+                }));
+                et.triggers.Add(onEnter);
+                EventTrigger.Entry onExit = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerExit,
+                    callback = new EventTrigger.TriggerEvent()
+                };
+                onExit.callback.AddListener(new UnityAction<BaseEventData>(e => Tooltip.HideTooltip_Static()));
+                et.triggers.Add(onExit);
+                EventTrigger.Entry onClick = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerClick,
+                    callback = new EventTrigger.TriggerEvent()
+                };
+                onClick.callback.AddListener(new UnityAction<BaseEventData>(e =>
+                {
+                    foreach (Transform child in transform)
+                    {
+                        child.Find("Selected").gameObject.SetActive(false);
+                    }
+                    e.selectedObject.transform.Find("Selected").gameObject.SetActive(true);
+                    SetWeapon(weapon);
+                }));
+
+            }
+            SetWeapon(weapons.First());
+
+
+        }
+        else if (commandString == "Repair")
+        {
+            //Repair(Unit u,Unit target,Module module)
+
+        }
+        else if (commandString == "Resupply") {
+            //Resupply resupply = new Resupply();
+        }
+        else if (commandString == "Construct")
+        {
+            //Construct(unit u,Building target,Coor dest)
+        }
+        else if (commandString == "Demolish")
+        {
+            //Demolish(Unit u,Building target)
+
+        }
+        else if (commandString == "Fortify")
+        {
+            //Fortify(Unit u,Building target)
+        }
+        else if (commandString == "Assemble")
+        {
+            Assemble assemble = new Assemble(currentUnit);
+            Battle.Instance.Self.Commands.Add(assemble);
+            currentUnit.CommandAssigned |= CommandAssigned.ASSEMBLE;
+        }
+        else if (commandString == "Capture")
+        {
+            Capture capture = new Capture(currentUnit);
+            Battle.Instance.Self.Commands.Add(capture);
+            currentUnit.CommandAssigned |= CommandAssigned.CAPTURE;
+        }
+        else if (commandString == "Disassemble")
+        {
+            Disassemble disassemble = new Disassemble(currentUnit);
+            Battle.Instance.Self.Commands.Add(disassemble);
+            currentUnit.CommandAssigned |= CommandAssigned.DISASSEMBLE;
+        }
+
     }
 
-    public void CleanUpTrigger() { 
-        
+    public void ExecuteCommand(string commandString, Prop p) {
+        foreach (Transform child in transform)
+        {
+            child.Find("Selected").gameObject.SetActive(false);
+        }
+        if (currentUnit == null) {
+            Debug.LogWarning("command execution failed");
+            return; 
+        }
+        if (!isWaitingInput) {
+            Debug.LogWarning("command execution failed");
+            return; 
+        }
+        CleanUpTrigger();
+        if (commandString == "Move")
+        {
+            if (p is Tile t)
+            {
+                Move move = new Move(currentUnit, currentUnit.GetPath(currentUnit.GetLocatedTile(), t).ToList());
+                Battle.Instance.Self.Commands.Add(move);
+                currentUnit.CommandAssigned |= CommandAssigned.MOVE;
+            }
+        }
+        else if (commandString == "Fire") {
+            if (p is Unit u) {
+                Fire fire = new Fire(currentUnit, u, currentWeapon);
+                Battle.Instance.Self.Commands.Add(fire);
+                currentUnit.CommandAssigned |= CommandAssigned.FIRE;
+            }
+        }
+        else if (commandString == "Suppress")
+        {
+            if (p is Unit u)
+            {
+                Suppress suppress = new Suppress(currentUnit, u, currentWeapon);
+                Battle.Instance.Self.Commands.Add(suppress);
+                currentUnit.CommandAssigned |= CommandAssigned.SUPPRESS;
+            }
+        }
+        else if (commandString == "Sabotage")
+        {
+            if (p is Building b)
+            {
+                Sabotage sabotage = new Sabotage(currentUnit, b, currentWeapon);
+                Battle.Instance.Self.Commands.Add(sabotage);
+                currentUnit.CommandAssigned |= CommandAssigned.SABOTAGE;
+            }
+        }
+    }
+
+    public void SetWeapon(IOffensiveCustomizable weapon) {
+
+        if (currentUnit == null) return;
+        CleanUpTrigger();
+        currentWeapon = weapon;
+        IEnumerable<Tile> tilesInRange = currentUnit.GetFiringRange(weapon);
+        if (currentCommand == "Fire" || currentCommand == "Suppress")
+        {
+            triggerProps = currentUnit.GetHostileUnitsInFiringRange(weapon).ToList().ConvertAll<Prop>(b => b);
+        }
+        else if (currentCommand == "Sabotage") {
+            triggerProps = currentUnit.GetHostileBuildingsInFiringRange(weapon).ToList().ConvertAll<Prop>(b=>b);
+        }
+        isWaitingInput = true;
+        foreach (Prop p in triggerProps) {
+            p.PropObjectComponent.SetColorForAllChildren(Color.green);
+            PropEventTrigger trigger = p.PropObjectComponent.Trigger;
+            if(currentCommand=="Fire") trigger.SetActive("fire_unit", true);
+            else if(currentCommand=="Suppress") trigger.SetActive("suppress_unit", true);
+            else if (currentCommand == "Sabotage") trigger.SetActive("sabotage_building", true);
+            trigger.SetActive("focus", false);
+        }
+    }
+
+    public void CleanUpTrigger() {
+        foreach (Prop p in triggerProps) {
+            p.PropObjectComponent.SetColorForAllChildren(Color.clear);
+            PropEventTrigger trigger = p.PropObjectComponent.Trigger;
+            if (currentCommand == "Move") trigger.SetActive("move_tile", false);
+            else if (currentCommand == "Fire") trigger.SetActive("fire_unit", false);
+            else if (currentCommand == "Suppress") trigger.SetActive("suppress_unit", false);
+            else if (currentCommand == "Sabotage") trigger.SetActive("sabotage_building", false);
+            trigger.SetActive("focus", false);
+        }
     }
 }
