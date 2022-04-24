@@ -47,6 +47,7 @@ namespace SteelOfStalin.Util
             public static int Next(int max) => m_random.Next(max); 
             public static int Next(int min, int max) => m_random.Next(min, max);
             public static double NextDouble() => m_random.NextDouble();
+            public static decimal NextInRangeSymmetric(decimal range) => range * (decimal)(NextDouble() * 2 - 1);
             public static T NextItem<T>(IEnumerable<T> source) => source.ElementAt(m_random.Next(source.Count()));
         }
         public static List<Color> CommonColors => new List<Color>()
@@ -142,7 +143,6 @@ namespace SteelOfStalin.Util
         }
         public static T GetComponentInSpecificChild<T>(this GameObject parent, string child_name) where T : Component => parent.GetChildByName(child_name)?.GetComponent<T>();
 
-        public static decimal RandomBetweenSymmetricRange(decimal range) => range * (decimal)(Random.NextDouble() * 2 - 1);
         public static string ToPascal(this string input) => Regex.Replace(input, @"(^[a-z])|[_ ]([a-z])", m => m.Value.ToUpper()).Replace("_", "").Replace(" ", "");
         public static string ToSnake(this string input) => Regex.Replace(input, @"(?<!^)([A-Z][a-z]+)", "_$1").ToLower();
         public static string PrintMembers(object invoke_target)
@@ -182,6 +182,56 @@ namespace SteelOfStalin.Util
             decimal r = 1 + 0.6M / Mathm.Pow(input.weapon.Offense.MaxRange.ApplyMod(), 2);
             return 1.4M / Mathm.PI * (Mathm.Acos(d * r * input.distance - 1) - d * r * Mathm.Sqrt(-input.distance * (input.distance - 2 / (d * r))));
         };
+        public static Func<(IOffensiveCustomizable weapon, decimal distance), decimal> PenetrationDropoff => (input) 
+            => input.weapon is Gun g 
+                ? 1 - 0.25M * g.CurrentShell.DropoffModifier.Value * input.distance
+                : 0;
+        public static Func<(Shell shell, decimal ep, decimal r), decimal> DamageDropoffWithResistance => (input) =>
+        {
+            if (input.ep > 2 * input.r || 2 * input.r > input.ep)
+            {
+                // over-penetration or blocked (p > 2r or 2r > p
+                return 0;
+            }
+            else if (input.ep <= 2 * input.r && input.ep >= input.r)
+            {
+                // normal penetration (r <= p <= 2r)
+                return 1;
+            }
+            else if (input.ep < input.r && input.ep >= 2 * input.r)
+            {
+                // TODO FUT. Impl. use different partial pen formula for each shell
+                // partial penetration
+                decimal percent_blocked = (input.r - input.ep) / input.ep;
+                return input.shell is Ap
+                    ? Mathm.Sqrt(1 - Mathm.Pow(percent_blocked, 2))
+                    : 1 - Mathm.Sqrt(1 - Mathm.Pow(percent_blocked - 1, 2));
+            }
+            return 0;
+        };
+        public static Func<(Shell shell, decimal ep, decimal r), decimal> ModuleDamageDropoffWithResistance => (input) =>
+        {
+            if (input.ep > 2 * input.r || 2 * input.r > input.ep)
+            {
+                // over-penetration or blocked (p > 2r or 2r > p
+                return 0;
+            }
+            else if (input.ep <= 2 * input.r && input.ep >= input.r)
+            {
+                // normal penetration (r <= p <= 2r)
+                return 1;
+            }
+            else if (input.ep < input.r && input.ep >= 2 * input.r)
+            {
+                // TODO FUT. Impl. use different partial pen formula for each shell
+                // partial penetration
+                decimal percent_blocked = (input.r - input.ep) / input.ep;
+                return input.shell is Ap
+                    ? 1M / (1 + Mathm.Pow(Mathm.E, 12 * (percent_blocked - 0.5M)))
+                    : Mathm.Sqrt(1 - Mathm.Pow(percent_blocked, 2));
+            }
+            return 0;
+        };
         public static Func<(Attribute soft, Attribute hard, decimal multiplier, Attribute hardness), decimal> DamageWithHardness => (input) =>
         {
             decimal soft_damage = input.soft * input.multiplier * (1 - input.hardness);
@@ -197,7 +247,7 @@ namespace SteelOfStalin.Util
             decimal final_accuracy = accuracy.Normal.ApplyMod() + accuracy.Deviation.ApplyDeviation();
             decimal dropoff = input.weapon is Gun ? 1 : DamageDropoff((input.weapon, input.distance));
             decimal damage_multiplier = (1 + damage.Deviation.ApplyDeviation()) * (1 - defense.Evasion) * dropoff;
-            return DamageWithHardness((damage.Soft, damage.Hard, damage_multiplier, defense.Hardness));
+            return final_accuracy * DamageWithHardness((damage.Soft, damage.Hard, damage_multiplier, defense.Hardness));
         };
         public static Func<(IOffensiveCustomizable weapon, Unit defender, decimal distance), decimal> DamageAgainstZeroResistance => (input) =>
         {
@@ -207,6 +257,43 @@ namespace SteelOfStalin.Util
             decimal dropoff = input.weapon is Gun ? 1 : DamageDropoff((input.weapon, input.distance));
             decimal damage_multiplier = 0.25M * (1 + damage.Deviation.ApplyDeviation()) * dropoff;
             return DamageWithHardness((damage.Soft, damage.Hard, damage_multiplier, defense.Hardness));
+        };
+        public static Func<(IOffensiveCustomizable weapon, Unit defender, decimal distance), decimal> DamageWithoutPenetrationAgainstResistance => (input) =>
+        {
+            Offense offense = input.weapon.Offense;
+            Damage damage = offense.Damage;
+            Defense defense = input.defender.Defense;
+
+            decimal dropoff = DamageDropoff((input.weapon, input.distance));
+            decimal final_accuracy = offense.Accuracy.Normal.ApplyMod() + offense.Accuracy.Deviation.ApplyDeviation();
+            decimal damage_multiplier = (1 + damage.Deviation.ApplyDeviation()) * dropoff * (1 - defense.Evasion) * (1 - defense.Hardness);
+            return final_accuracy * damage_multiplier * offense.Damage.Soft;
+        };
+        public static Func<(IOffensiveCustomizable weapon, Unit defender, decimal distance), decimal> DamageAgainstPenetratedTargets => (input) =>
+        {
+            if (input.weapon is Gun g)
+            {
+                decimal effective_pen = EffectivePenetration((input.weapon, input.distance));
+                decimal damage_multiplier = DamageDropoffWithResistance((g.CurrentShell, effective_pen, input.defender.Defense.Resistance.ApplyMod()));
+                return g.Offense.Damage.Hard * damage_multiplier;
+            }
+            else
+            {
+                return 0;
+            }
+        };
+        public static Func<(IOffensiveCustomizable weapon, Unit defender, decimal distance), decimal> ModuleDamageAgainstPenetratedTargets => (input) =>
+        {
+            if (input.weapon is Gun g)
+            {
+                decimal effective_pen = EffectivePenetration((input.weapon, input.distance));
+                decimal damage_multiplier = ModuleDamageDropoffWithResistance((g.CurrentShell, effective_pen, input.defender.Defense.Resistance.ApplyMod()));
+                return g.Offense.Damage.Hard * damage_multiplier;
+            }
+            else
+            {
+                return 0;
+            }
         };
         public static Func<(IOffensiveCustomizable weapon, Unit defender), decimal> EffectiveSuppression => (input) =>
         {
@@ -227,7 +314,25 @@ namespace SteelOfStalin.Util
 
             return determinant > 0 ? 1.1M * (1 - 1 / Mathm.PI * Mathm.Acos(acos) - suppress * Mathm.Sqrt(determinant)) : 1.1M;
         };
+        public static Func<(IOffensiveCustomizable weapon, decimal distance), decimal> EffectivePenetration => (input) =>
+        {
+            if (input.weapon is Gun g)
+            {
+                decimal dropoff = PenetrationDropoff((g, input.distance));
+                decimal pen_multiplier = g.CurrentShell.PenetrationCoefficient.ApplyTo(Utilities.Random.NextInRangeSymmetric(g.CurrentShell.PenetrationDeviation.Value));
+                return g.Offense.Damage.Penetration * pen_multiplier;
+            }
+            else
+            {
+                return 0;
+            }
+        };
         public static Func<IOffensiveCustomizable, decimal> DamageAgainstBuilding => (weapon) => weapon.Offense.Damage.Destruction * weapon.Offense.Damage.Deviation.ApplyDeviation();
+        public static Func<Unit, Tile, decimal> PriorityValue => (unit, second_last) =>
+        {
+            Maneuverability m = unit.Maneuverability;
+            return second_last.TerrainMod.Mobility.ApplyTo(m.Mobility) / (m.Size * m.Weight);
+        };
         public static Func<(decimal observer_recon, decimal observer_detect, decimal observee_conceal, decimal distance), bool> VisualSpotting => (input) =>
         {
             if (input.distance > input.observer_recon || input.observer_recon <= 0.5M)
@@ -251,6 +356,7 @@ namespace SteelOfStalin.Util
 
     public static class Mathm
     {
+        public const decimal E = (decimal)Math.E;
         public const decimal PI = (decimal)Math.PI;
         public static decimal Pow(decimal x, decimal y) => (decimal)Math.Pow((double)x, (double)y);
         public static decimal Log(decimal d) => (decimal)Math.Log((double)d);

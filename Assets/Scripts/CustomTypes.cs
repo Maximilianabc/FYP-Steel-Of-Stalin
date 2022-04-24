@@ -40,6 +40,19 @@ namespace SteelOfStalin.CustomTypes
             => CubeCoordinates.GetDistance((CubeCoordinates)c1, (CubeCoordinates)c2);
         public IEnumerable<Coordinates> GetNeighbours(int distance = 1, bool include_self = false) 
             => ((CubeCoordinates)this).GetNeighbours(distance, include_self).Select(c => (Coordinates)c);
+        public static IEnumerable<Coordinates> FromString(string coords_string)
+        {
+            foreach (string coords in coords_string.Split(';'))
+            {
+                Match match = Regex.Match(coords, @"^\((\d+),(\d+)\)$");
+                if (!match.Success)
+                {
+                    Debug.LogError($"Coords string {coords} is not in correct format");
+                    yield break;
+                }
+                yield return new Coordinates(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+            }
+        }
 
         public object Clone() => new Coordinates(this);
         public override string ToString() => $"({X},{Y})";

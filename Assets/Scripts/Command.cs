@@ -14,6 +14,9 @@ using static SteelOfStalin.Util.Utilities;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Units.Sea;
 using SteelOfStalin.Assets.Props.Units.Air;
+using UnityEngine;
+using Random = SteelOfStalin.Util.Utilities.Random;
+using Resources = SteelOfStalin.Attributes.Resources;
 
 /* Symbols:
  * Hold: @
@@ -75,10 +78,10 @@ namespace SteelOfStalin.Commands
     }
     public sealed class Move : Command
     {
-        public List<Tile> Path { get; set; } // exclude source, last tile must be destination
+        public IEnumerable<Tile> Path { get; set; } // exclude source, last tile must be destination
 
         public Move() : base() { }
-        public Move(Unit u, List<Tile> path) : base(u) => Path = path;
+        public Move(Unit u, IEnumerable<Tile> path) : base(u) => Path = path;
 
         // resolve move conflicts at moving phase
         public override void Execute()
@@ -88,13 +91,16 @@ namespace SteelOfStalin.Commands
                 this.LogError("Unit is null");
                 return;
             }
-            if (Path == null || Path.Count == 0)
-            {
-                this.LogError("Path is null or empty");
-                return;
-            }
 
             _ = Recorder.Append(Unit.ToString());
+
+            if (!Path.Any())
+            {
+                this.Log("Path is empty. Only cause should be movement conflict and only one tile in original path.");
+                ConsumeSuppliesStandingStill();
+                _ = Recorder.AppendLine($" {SpecialSymbols[SpecialCommandResult.MOVE_CONFLICT_NO_MOVE]}");
+                return;
+            }
 
             decimal supplies = Unit.GetSuppliesRequired(Path);
             decimal fuel = Unit.GetFuelRequired(Path);
@@ -125,14 +131,15 @@ namespace SteelOfStalin.Commands
                 _ = Recorder.AppendLine($" {Symbol} {dest}");
                 Unit.Status |= UnitStatus.MOVED;
             }
-            else
-            {
-                this.Log($"Destination {dest} is the same as original coords of unit {Unit}. Only cause should be movement conflict.");
-                _ = Recorder.AppendLine($" {SpecialSymbols[SpecialCommandResult.MOVE_CONFLICT_NO_MOVE]}");
-            }
         }
 
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{string.Join(";", Path.Select(t => t.CoOrds))}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Path = new List<Tile>(Coordinates.FromString(@params).Select(c => Map.Instance.GetTile(c)));
+            IsValid = Path.Any();
+        }
     }
     public sealed class Merge : Command
     {
@@ -216,15 +223,46 @@ namespace SteelOfStalin.Commands
             {
                 if (Target.Defense.Resistance > 0)
                 {
-                    // TODO introduce shell mechanics and then return to this part
                     if (Weapon is Gun)
                     {
                         // gun vs arty or vehicles
+                        decimal effective_penetration = Formula.EffectivePenetration((Weapon, distance));
+                        if (effective_penetration > 2 * Target.Defense.Resistance)
+                        {
+                            this.Log($"Overpenetration");
+                            _ = Recorder.AppendLine(" P");
+                            return;
+                        }
+                        else if (2 * Target.Defense.Resistance > effective_penetration)
+                        {
+                            this.Log($"Target {Target} blocked the attack.");
+                            _ = Recorder.AppendLine(" B");
+                            return;
+                        }
+                        else
+                        {
+                            damage_dealt = Formula.DamageAgainstPenetratedTargets((Weapon, Target, distance));
+                            decimal module_damage_dealt = Formula.ModuleDamageAgainstPenetratedTargets((Weapon, Target, distance));
+
+                            if (module_damage_dealt > 0)
+                            {
+                                // TODO FUT. Impl. consider take damage change of modules as well
+                                Module damaged_module = Utilities.Random.NextItem(Target.GetModules());
+                                damaged_module.Integrity.MinusEquals(module_damage_dealt);
+                                if (damaged_module.Integrity < 0)
+                                {
+                                    damaged_module.Integrity.Value = 0;
+                                }
+                                this.Log($"Inflicted {module_damage_dealt} damage to module {damaged_module.Name} on target {Target}.");
+                                _ = Recorder.Append(damaged_module.GetIntegrityChangeRecord(-module_damage_dealt));
+                            }
+                        }
 
                     }
                     else
                     {
                         // firearm or MG vs arty or vehicles
+                        damage_dealt = Formula.DamageWithoutPenetrationAgainstResistance((Weapon, Target, distance));
                     }
                 }
                 else
@@ -254,12 +292,35 @@ namespace SteelOfStalin.Commands
                 this.Log($"Inflicted {damage_dealt} damage to target {Target}.");
                 _ = Recorder.AppendLine(Target.GetStrengthChangeRecord(-damage_dealt));
             }
-
-            // TODO add module damage
-
         }
 
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{Weapon.Name}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            string[] ps = @params.Split(';');
+            if (ps.Length != 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            Target = (Unit)Map.Instance.GetProp(ps[0]);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find unit {ps[0]}");
+                IsValid = false;
+                return;
+            }
+            Weapon = Unit.GetWeapons().Where(w => w.Name == ps[1]).FirstOrDefault();
+            if (Weapon == null)
+            {
+                this.LogError($"{Unit} does not have weapon named {ps[1]}");
+                IsValid = false;
+                return;
+            }
+        }
+        public override bool RelatedToPlayer(Player p) => (Target != null && Target.Owner == p) || base.RelatedToPlayer(p);
     }
     public sealed class Suppress : Command
     {
@@ -311,6 +372,32 @@ namespace SteelOfStalin.Commands
             _ = Recorder.AppendLine();
         }
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{Weapon.Name}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            string[] ps = @params.Split(';');
+            if (ps.Length != 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            Target = (Unit)Map.Instance.GetProp(ps[0]);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find unit {ps[0]}");
+                IsValid = false;
+                return;
+            }
+            Weapon = Unit.GetWeapons().Where(w => w.Name == ps[1]).FirstOrDefault();
+            if (Weapon == null)
+            {
+                this.LogError($"{Unit} does not have weapon named {ps[1]}");
+                IsValid = false;
+                return;
+            }
+        }
+        public override bool RelatedToPlayer(Player p) => (Target != null && Target.Owner == p) || base.RelatedToPlayer(p);
     }
     public sealed class Sabotage : Command
     {
@@ -355,6 +442,32 @@ namespace SteelOfStalin.Commands
             _ = Recorder.AppendLine();
         }
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{Weapon.Name}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            string[] ps = @params.Split(';');
+            if (ps.Length != 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            Target = (Building)Map.Instance.GetProp(ps[0]);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find building {ps[0]}");
+                IsValid = false;
+                return;
+            }
+            Weapon = Unit.GetWeapons().Where(w => w.Name == ps[1]).FirstOrDefault();
+            if (Weapon == null)
+            {
+                this.LogError($"{Unit} does not have weapon named {ps[1]}");
+                IsValid = false;
+                return;
+            }
+        }
+        public override bool RelatedToPlayer(Player p) => (Target != null && Target.Owner == p) || base.RelatedToPlayer(p);
     }
     public sealed class Ambush : Command
     {
@@ -530,6 +643,32 @@ namespace SteelOfStalin.Commands
         }
 
         public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target};{RepairingTarget.Name}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            string[] ps = @params.Split(';');
+            if (ps.Length != 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            Target = (Unit)Map.Instance.GetProp(ps[0]);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find unit {ps[0]}");
+                IsValid = false;
+                return;
+            }
+            RepairingTarget = Target.GetRepairableModules().Where(m => m.Name == ps[1]).FirstOrDefault();
+            if (RepairingTarget == null)
+            {
+                this.LogError($"No repairable modules named {ps[1]} on {Target}");
+                IsValid = false;
+                return;
+            }
+        }
+        public override bool RelatedToPlayer(Player p) => (Target != null && Target.Owner == p) || base.RelatedToPlayer(p);
     }
     public sealed class Reconstruct : Command
     {
@@ -610,7 +749,26 @@ namespace SteelOfStalin.Commands
             this.Log($"Fortifying {Target.Name} at {Target.CoOrds} for {Target.ConstructionTimeRemaining} round(s)");
         }
 
-        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target}";
+        public override string ToStringBeforeExecution() => Unit != null ? $"{base.ToStringBeforeExecution()}{Target}" : $"{Target.Owner} {Symbol} {Target}";
+
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Target = (Building)Map.Instance.GetProp(@params);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find target {@params}");
+                IsValid = false;
+                return;
+            }
+            Player player = Battle.Instance.GetPlayer(initiator);
+            if (player == null || Target.Owner != player)
+            {
+                this.LogError($"Cannot find player {initiator} or {initiator} is not the owner of {Target}");
+                IsValid = false;
+                return;
+            }
+        }
     }
     public sealed class Construct : Command
     {
@@ -677,7 +835,26 @@ namespace SteelOfStalin.Commands
             _ = Recorder.AppendLine($" {Symbol} {Target} {Target.ConstructionTimeRemaining}");
             this.Log($"Constructing {Target.Name} at {Destination} for {Target.ConstructionTimeRemaining} round(s)");
         }
-        public override string ToStringBeforeExecution() => base.ToStringBeforeExecution() + (Builder == null ? Unit.ToString() : Builder.ToString()) + $";{Target}";
+        public override string ToStringBeforeExecution() => (Builder == null ? Unit.ToString() : Builder.ToString()) + $" {Symbol} {Target}";
+
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Target = (Building)Map.Instance.GetProp(@params);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find target {@params}");
+                IsValid = false;
+                return;
+            }
+            Builder = Battle.Instance.GetPlayer(initiator);
+            if (Builder == null)
+            {
+                this.LogError($"Cannot find player {initiator}");
+                IsValid = false;
+                return;
+            }
+        }
     }
     public sealed class Demolish : Command
     {
@@ -713,7 +890,26 @@ namespace SteelOfStalin.Commands
             _ = Recorder.AppendLine((Unit == null ? Target.Owner.ToString() : Unit.ToString()) + $" {Symbol} {Target}");
             this.Log($"Demolished {Target.Name} at {Target.CoOrds}");
         }
-        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{Target}";
+        public override string ToStringBeforeExecution() => Unit != null ? $"{base.ToStringBeforeExecution()}{Target}" : $"{Target.Owner} {Symbol} {Target}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Target = (Building)Map.Instance.GetProp(@params);
+            if (Target == null)
+            {
+                this.LogError($"Cannot find target {@params}");
+                IsValid = false;
+                return;
+            }
+            Player player = Battle.Instance.GetPlayer(initiator);
+            if (player == null || Target.Owner != player)
+            {
+                this.LogError($"Cannot find player {initiator} or {initiator} is not the owner of {Target}");
+                IsValid = false;
+                return;
+            }
+        }
+
     }
     #endregion
 
@@ -758,6 +954,11 @@ namespace SteelOfStalin.Commands
                 this.LogError($"{Unit} cannot be trained in {TrainingGround}");
                 return;
             }
+            if (TrainingGround.Owner != Trainer)
+            {
+                this.LogError($"{TrainingGround} is not owned by {Trainer}");
+                return;
+            }
 
             Resources consume = Unit.Cost.Base;
             Trainer.ConsumeResources(consume);
@@ -773,6 +974,39 @@ namespace SteelOfStalin.Commands
             this.Log($"Training {Unit}. Time remaining {Unit.TrainingTimeRemaining}");
         }
         public override string ToStringBeforeExecution() => $"{Trainer} {Symbol} {Unit};{TrainingGround}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+            Player player = Battle.Instance.GetPlayer(initiator);
+            if (player == null)
+            {
+                this.LogError($"Cannot find player {initiator}");
+                IsValid = false;
+                return;
+            }
+            string[] ps = @params.Split(';');
+            if (ps.Length != 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            Unit = (Unit)Map.Instance.GetProp(ps[0]);
+            if (Unit == null)
+            {
+                this.LogError($"Cannot find unit {ps[0]}");
+                IsValid = false;
+                return;
+            }
+            TrainingGround = (UnitBuilding)Map.Instance.GetProp(ps[1]);
+            if (TrainingGround == null)
+            {
+                this.LogError($"Cannot find unit building {ps[1]}");
+                IsValid = false;
+                return;
+            }
+        }
+        public override bool RelatedToPlayer(Player p) => Trainer != null && Trainer == p && TrainingGround.Owner == p;
     }
     public sealed class Deploy : Command
     {
@@ -780,7 +1014,7 @@ namespace SteelOfStalin.Commands
         public IEnumerable<IOffensiveCustomizable> Weapons { get; set; }
 
         public Deploy() : base() { }
-        public Deploy(Unit u, UnitBuilding training, Coordinates dest, IEnumerable<IOffensiveCustomizable> weapons) : base(u, default, dest) => (TrainingGround, Weapons)= (training, weapons);
+        public Deploy(Unit u, UnitBuilding training, Coordinates dest, IEnumerable<IOffensiveCustomizable> weapons) : base(u, default, dest) => (TrainingGround, Weapons) = (training, weapons);
         // public Deploy(Unit u, Coordinates src, Coordinates dest, UnitBuilding training) : base(u, src, dest) => TrainingGround = training;
         // public Deploy(Unit u, int srcX, int srcY, int destX, int destY, UnitBuilding training) : base(u, new Coordinates(srcX, srcY), new Coordinates(destX, destY)) => TrainingGround = training;
 
@@ -818,12 +1052,18 @@ namespace SteelOfStalin.Commands
             }
             if (Map.Instance.GetUnits(Destination).Any(u => u.IsOfSameCategory(Unit)))
             {
-                this.LogError($"There is/are unit(s) at the destination {Destination}.");
+                // TODO maybe record this one and send back to client
+                this.LogWarning($"There is/are unit(s) at the destination {Destination}.");
                 return;
             }
             if (!TrainingGround.CubeCoOrds.GetNeighbours((int)TrainingGround.DeployRange.ApplyMod()).Any(c => c == (CubeCoordinates)Destination))
             {
                 this.LogError($"Destination {Destination} is not in deploy range of training ground");
+                return;
+            }
+            if (TrainingGround.Owner != Unit.Owner)
+            {
+                this.LogError($"{TrainingGround}'s owner {TrainingGround.Owner} does not own {Unit} (owner: {Unit.Owner}");
                 return;
             }
 
@@ -834,7 +1074,34 @@ namespace SteelOfStalin.Commands
             this.Log($"Deployed {Unit} at {Destination}");
         }
 
-        public override string ToStringBeforeExecution() => $"{Unit} {TrainingGround} {Symbol} {string.Join(";", Weapons.Select(w => w.Name))}";
+        public override string ToStringBeforeExecution() => $"{base.ToStringBeforeExecution()}{TrainingGround};{string.Join(";", Weapons.Select(w => w.Name))}";
+        public override void SetParamsFromString(string initiator, string @params)
+        {
+            base.SetParamsFromString(initiator, @params);
+
+            string[] ps = @params.Split(';');
+            if (ps.Length < 2)
+            {
+                this.LogError($"params ({@params}) length mismatched, expected: at least 2, actual: {ps.Length}");
+                IsValid = false;
+                return;
+            }
+            TrainingGround = (UnitBuilding)Map.Instance.GetProp(ps[0]);
+            if (TrainingGround == null)
+            {
+                this.LogError($"Cannot find unit building {ps[1]}");
+                IsValid = false;
+                return;
+            }
+            Weapons = ps.Skip(1).Select(s => Game.CustomizableData.GetNew<IOffensiveCustomizable>(s) as IOffensiveCustomizable);
+            if (Weapons.Count() != ps.Length - 1)
+            {
+                this.LogError($"At least of the following weapons not found: {string.Join(";", ps.Skip(1))}");
+                IsValid = false;
+                return;
+            }
+        }
+        public override bool RelatedToPlayer(Player p) => base.RelatedToPlayer(p) && TrainingGround.Owner == p && Unit.Owner == p;
     }
     public sealed class Rearm : Command
     {
@@ -920,6 +1187,7 @@ namespace SteelOfStalin.Commands
                 }
             }
         }
+        public override bool RelatedToPlayer(Player p) => (Unit.GetLocatedTile() is Cities city && city.Owner == p) || base.RelatedToPlayer(p);
     }
     public sealed class Scavenge : Command
     {

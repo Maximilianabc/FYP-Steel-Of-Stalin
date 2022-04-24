@@ -2,12 +2,14 @@
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
   "DefaultPrimary": "rifle",
-  "AvailableFirearms": [
+  "AvailablePrimaryFirearms": [
     "rifle",
     "semi_auto_rifle",
     "battle_rifle",
     "assault_rifle",
-    "scoped_rifle",
+    "scoped_rifle"
+  ],
+  "AvailableSecondaryFirearms": [
     "automatic_rifle",
     "light_machinegun",
     "grenade",

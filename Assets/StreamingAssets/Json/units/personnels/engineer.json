@@ -9,12 +9,17 @@
   "PrimaryFirearm": null,
   "SecondaryFirearm": null,
   "DefaultPrimary": "submachinegun",
-  "AvailableFirearms": [
+  "AvailablePrimaryFirearms": [
     "submachinegun",
-    "flamethrower",
     "carbine",
+    "assault_rifle",
+    "shotgun"
+  ],
+  "AvailableSecondaryFirearms": [
     "shotgun",
-    "molotov"
+    "molotov",
+    "grenade",
+    "flamethrower"
   ],
   "CaptureEfficiency": {
     "Value": 20,
