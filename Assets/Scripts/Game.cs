@@ -227,6 +227,7 @@ namespace SteelOfStalin
         public bool IsEnded => m_winner != null;
 
         [JsonIgnore] public Player Self { get; set; }
+        [JsonIgnore] public IEnumerable<AIPlayer> Bots => Players.OfType<AIPlayer>();
         [JsonIgnore] public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
         [JsonIgnore] public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
         [JsonIgnore] public bool AreAllPlayersReadyToStart => Players.All(p => p.IsReady);
@@ -281,18 +282,36 @@ namespace SteelOfStalin
                 {
                     Debug.Log("No time limit. Wait for all players ready to continue");
                 }
+                
+                // TODO FUT. Impl. add bots for multi
+                // TODO FUT. Impl. bot flows should be running in parallel with players' decisions to ensure fairness
+                if (Game.ActiveBattle.IsSinglePlayer)
+                {
+                    foreach (AIPlayer bot in Bots)
+                    {
+                        Debug.Log("Execute bot flow");
+                        bot.Botflow();
+                    }
+                }
 
                 int counter = 0;
-                while (counter < Rules.TimeForEachRound && !AreAllPlayersReady)
+                if (!unlimited_time)
                 {
-                    yield return new WaitForSeconds(1);
-                    if (!unlimited_time)
+                    while (counter < Rules.TimeForEachRound && !AreAllPlayersReady)
                     {
+                        yield return new WaitForSeconds(1);
                         counter += 1;
                         TimeRemaining--;
                         Debug.Log($"Time remaining: {TimeRemaining} second(s)");
                     }
                 }
+                else
+                {
+                    Debug.Log("Waiting for all players to be ready");
+                    yield return new WaitWhile(() => !AreAllPlayersReady);
+                    Debug.Log("All players are ready");
+                }
+
                 Debug.Log("End Turn");
                 EnablePlayerInput = false;
                 if (Game.Network.IsServer)
@@ -457,7 +476,7 @@ namespace SteelOfStalin
             Debug.Log("All players are ready");
             //operation.allowSceneActivation = true;
             SceneManager.LoadScene("Game");
-            yield return new WaitWhile(() => SceneManager.GetActiveScene()!=SceneManager.GetSceneByName("Game"));
+            yield return new WaitWhile(() => SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
             _ = StartCoroutine(GameLoop());
         }
@@ -509,7 +528,7 @@ namespace SteelOfStalin
             if (metropolis.All(m => string.IsNullOrEmpty(m.OwnerName)))
             {
                 Map.SetMetropolisOwners();
-                Map.SetDefaultUnitBuildingsOwners();
+                Map.InitializeDefaultUnitBuildings();
             }
             AreCapitalsSet = true;
 
@@ -771,7 +790,7 @@ namespace SteelOfStalin
         public bool DestroyedUnitsCanBeScavenged { get; set; }
         public bool AllowUniversalQueue { get; set; }
 
-        public Resources StartingResources { get; set; } = new Resources();
+        public Resources StartingResources { get; set; } = (Resources)Resources.TEST.Clone();
 
         public BattleRules() { }
 
@@ -985,7 +1004,7 @@ namespace SteelOfStalin
                 i++;
             }
         }
-        public void SetDefaultUnitBuildingsOwners()
+        public void InitializeDefaultUnitBuildings()
         {
             IEnumerable<Metropolis> metro = GetCities<Metropolis>();
             foreach (Metropolis m in metro)
@@ -994,7 +1013,7 @@ namespace SteelOfStalin
                 {
                     if (building is UnitBuilding ub)
                     {
-                        ub.SetOwner(m.Owner);
+                        ub.Initialize(m.Owner, m.CoOrds);
                     }
                 }
             }
@@ -1288,7 +1307,7 @@ namespace SteelOfStalin
                 return Enumerable.Empty<Unit>();
             }
 
-            List<Unit> units = Units.Where(u => u.CoOrds.X == t.CoOrds.X && u.CoOrds.Y == t.CoOrds.Y).ToList();
+            List<Unit> units = Units.Where(u => u.Status.HasAnyOfFlags(UnitStatus.IN_FIELD) && u.CoOrds.X == t.CoOrds.X && u.CoOrds.Y == t.CoOrds.Y).ToList();
             if (units.Count > 2 || (units.Count == 2 && units[0].IsOfSameCategory(units[1])))
             {
                 Debug.LogError($"Illegal stacking of units found at {t}!");
@@ -2188,16 +2207,16 @@ namespace SteelOfStalin.Flow
         public void EndPlanning()
         {
             // add Hold command for any units that aren't assigned command
-            Map.Instance.GetUnits(u => (u.Status != UnitStatus.IN_QUEUE || u.Status != UnitStatus.CAN_BE_DEPLOYED) && u.CommandAssigned == CommandAssigned.NONE).ToList().ForEach(u => Commands.Add(new Hold(u)));
+            Map.Instance.GetUnits(u => u.Status.HasAnyOfFlags(UnitStatus.IN_FIELD) && u.CommandAssigned == CommandAssigned.NONE).ToList().ForEach(u => Commands.Add(new Hold(u)));
             Phases.AddRange(new Phase[]
             {
                 new Firing(Commands),
                 new Moving(Commands),
                 new CounterAttacking(),
-                new Constructing(Commands),
-                new Training(Commands),
                 new Spotting(),
                 new Signaling(),
+                new Constructing(Commands),
+                new Training(Commands),
                 new Misc(Commands)
             });
             Phases.ForEach(p => p.Execute());
@@ -2546,27 +2565,30 @@ namespace SteelOfStalin.Flow
         {
             Map.Instance.GetBuildings<UnitBuilding>().Where(ub => ub.Status == BuildingStatus.ACTIVE).ToList().ForEach(ub =>
             {
-                UnitBuilding b = (UnitBuilding)ub;
-                while (b.TrainingQueue.Count > 0)
+                foreach (Unit u in ub.TrainingQueue)
+                {
+                    u.TrainingTimeRemaining -= 1;
+                }
+
+                while (ub.TrainingQueue.Count > 0)
                 {
                     // retrieve the first unit in queue without removing it from the queue
-                    Unit queueing = b.TrainingQueue.Peek();
-                    queueing.TrainingTimeRemaining -= 1;
+                    Unit queueing = ub.TrainingQueue.Peek();
 
                     if (queueing.TrainingTimeRemaining <= 0)
                     {
                         queueing.TrainingTimeRemaining = 0;
 
                         // if capacity is reached, no more units will be ready to be deployed
-                        if (b.ReadyToDeploy.Count < b.QueueCapacity)
+                        if (ub.ReadyToDeploy.Count < ub.QueueCapacity)
                         {
                             // retrieve the first unit in queue and remove it from the queue
-                            Unit ready = b.TrainingQueue.Dequeue();
+                            Unit ready = ub.TrainingQueue.Dequeue();
 
                             // change its status
                             ready.Status = UnitStatus.CAN_BE_DEPLOYED;
                             // add it to deploy list
-                            b.ReadyToDeploy.Add(ready);
+                            ub.ReadyToDeploy.Add(ready);
                         }
                         continue;
                     }

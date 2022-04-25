@@ -386,7 +386,7 @@ public class GameLogicTest
         i.SetMeshName();
         i.Initialize(p1, point1, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
         IEnumerable<SteelOfStalin.Assets.Customizables.IOffensiveCustomizable> weapons = i.GetWeapons();
-        i.SetWeapons(weapons.ToArray());
+        i.SetWeapons(weapons);
 
         Assert.IsTrue(i.CanAccessTile(tile1));
         Assert.IsFalse(i.CanAccessTile(tile2));

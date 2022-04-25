@@ -156,17 +156,17 @@ namespace SteelOfStalin
 
      public class AIPlayer : Player
     {
-        public void botflow(){
-            train();
-            supplyunits();
-            movetonewcity();
-            constructoutpost();
+        public void Botflow(){
+            Train();
+            Supplyunits();
+            Movetonewcity();
+            Constructoutpost();
             movement();
-            checkcombat();
+            Checkcombat();
             this.IsReady = true;
         }
 
-        public void train(){
+        public void Train(){
             //get training buidling
             var barracks = Buildings.Where(c => c is Barracks);
             var unitbuildings = Buildings.Where(c => c is UnitBuilding);
@@ -295,7 +295,7 @@ namespace SteelOfStalin
                 }                 
             }
         }
-        public void supplyunits(){
+        public void Supplyunits(){
             //check available units
             foreach(var unit in Units){
                 var aroundcity = unit.GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(unit.CubeCoOrds,3)).OfType<Barracks>().Count();
@@ -312,7 +312,7 @@ namespace SteelOfStalin
 
         }
 
-        public void movetonewcity(){
+        public void Movetonewcity(){
             //get a non occupied cities  
             var neut = Map.Instance.GetCities(c => c.IsNeutral());
             if(neut.Count() > 3){
@@ -339,7 +339,7 @@ namespace SteelOfStalin
 
 
         //build building 
-        public void constructbuilding(){
+        public void Constructbuilding(){
             //for building in city range
             var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
             int num = 0;
@@ -395,7 +395,7 @@ namespace SteelOfStalin
                 }
             }
         }
-        public void constructoutpost(){
+        public void Constructoutpost(){
             //outpost
             var orderedcities = Cities.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c));
             int num = orderedcities.Count();
@@ -491,7 +491,7 @@ namespace SteelOfStalin
                 }
             }
         }
-        public void checkcombat(){
+        public void Checkcombat(){
             //if enemy is spotted
             //get the number of enemies unit spotted
             //get number of units equal or more 

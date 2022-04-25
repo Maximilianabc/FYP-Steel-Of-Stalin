@@ -9,10 +9,12 @@
     "machine_pistol",
     "submachinegun",
     "carbine",
+    "shotgun"
+  ],
+  "AvailableSecondaryFirearms": [
     "shotgun",
     "molotov"
   ],
-  "AvailableSecondaryFirearms": [],
   "CaptureEfficiency": {
     "Value": 25,
     "Mod": {

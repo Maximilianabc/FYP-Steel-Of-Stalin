@@ -6,74 +6,44 @@
   "AllowUniversalQueue": false,
   "StartingResources": {
     "Money": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Steel": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Supplies": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Cartridges": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Shells": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Fuel": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "RareMetal": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Manpower": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Power": {
-      "Value": 99999,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     },
     "Time": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+      "Mod": null,
+      "Value": 99999
     }
   }
 }

@@ -1076,10 +1076,16 @@ namespace SteelOfStalin.Commands
                 this.LogError($"{TrainingGround}'s owner {TrainingGround.Owner} does not own {Unit} (owner: {Unit.Owner}");
                 return;
             }
+            if (!TrainingGround.ReadyToDeploy.Contains(Unit))
+            {
+                this.LogError($"{TrainingGround}'s deploy queue does not contain {Unit}");
+                return;
+            }
 
             Unit.Status = UnitStatus.ACTIVE;
             Unit.CoOrds = new Coordinates(Destination);
-            Unit.SetWeapons(Weapons.ToArray());
+            Unit.SetWeapons(Weapons);
+            _ = TrainingGround.ReadyToDeploy.Remove(Unit);
             _ = Recorder.AppendLine($"{Unit.Owner} {Symbol} {Unit}");
             this.Log($"Deployed {Unit} at {Destination}");
         }

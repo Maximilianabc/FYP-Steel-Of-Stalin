@@ -177,8 +177,7 @@ namespace SteelOfStalin.Assets.Props.Buildings.Infrastructures
     }
     public sealed class Outpost : Infrastructure
     {
-        public Resources Capacity { get; set; } = new Resources();
-
+        public Resources Capacity { get; set; }
         public Outpost() : base() { }
         public Outpost(Outpost another) : base(another) => Capacity = (Resources)another.Capacity.Clone();
         public override object Clone() => new Outpost(this);

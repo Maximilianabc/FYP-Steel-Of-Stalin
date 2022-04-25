@@ -223,7 +223,19 @@ namespace SteelOfStalin.Attributes
             Power = new Attribute(99999),
             Time = new Attribute(99999)
         };
-
+        internal static Resources START => new Resources()
+        {
+            Money = new Attribute(20000),
+            Steel = new Attribute(10000),
+            Supplies = new Attribute(5000),
+            Cartridges = new Attribute(2500),
+            Shells = new Attribute(1000),
+            Fuel = new Attribute(2000),
+            RareMetal = new Attribute(500),
+            Manpower = new Attribute(10000),
+            Power = new Attribute(0),
+            Time = new Attribute(0)
+        };
         [JsonIgnore] public IEnumerable<Attribute> All => Utilities.CombineAll(Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Time);
         [JsonIgnore] public bool IsZero => All.All(a => a.Value == 0);
 

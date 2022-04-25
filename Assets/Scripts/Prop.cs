@@ -414,7 +414,7 @@ namespace SteelOfStalin.Assets.Props.Units
         DISCONNECTED = 1 << 8,
         WRECKED = 1 << 9,
         DESTROYED = 1 << 10,
-        IN_FIELD = ~IN_QUEUE & ~CAN_BE_DEPLOYED & ~WRECKED & ~DESTROYED,
+        IN_FIELD = ~IN_QUEUE & ~CAN_BE_DEPLOYED & ~WRECKED & ~DESTROYED & ~NONE,
         IMMOBILE = SUPPRESSED | AMBUSHING | CONSTRUCTING | DISCONNECTED,
         ALL = ~0
     }
