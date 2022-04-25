@@ -315,19 +315,22 @@ namespace SteelOfStalin
                 //get nearest city from base
                 var nearest = neut.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
                 //get avaiable units nearest to the newest cities
-                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => Units.First(c => c is Personnel).GetDistance(nearest)).First();
-                if(avaunits.GetDistance(nearest) == 0){
-                   Commands.Add(new Capture(avaunits));
-                   avaunits.CommandAssigned = CommandAssigned.CAPTURE;
-                }
-                else{
-                    var pathtocity = avaunits.GetPath(avaunits.GetLocatedTile(), nearest);
-                    //add commands to units (order a single units to new city)
-                    Commands.Add(new Move(avaunits, pathtocity.ToList())); 
-                    avaunits.CommandAssigned = CommandAssigned.MOVE;
+                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(nearest));
+
+                if(avaunits.Count() >= 1){             
+                    var first = avaunits.First();
+                    if(first.GetDistance(nearest) == 0){
+                        Commands.Add(new Capture(first));
+                        first.CommandAssigned = CommandAssigned.CAPTURE;
+                    }
+                    else{
+                        var pathtocity = first.GetPath(first.GetLocatedTile(), nearest);
+                        //add commands to units (order a single units to new city)
+                        Commands.Add(new Move(first, pathtocity.ToList())); 
+                        first.CommandAssigned = CommandAssigned.MOVE;
+                    }
                 }
             }
-
         }
 
 
@@ -420,41 +423,45 @@ namespace SteelOfStalin
             //get all moveable units
             if(Cities.Count() > 3){
                 var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());
-                if(Units.Count() > 14 && moveable.Count() > 8){
-                    //get nearest enemy city will fix later
+                if(Units.Count() > 12 && moveable.Count() > 8){
+                    //get nearest enemy city
                     var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
                     var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
                     // Map.Instance.GetUnits()
+
                     //get number of units may improve later
-                    moveable = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(8);
+                    var selected = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(8);
 
                     //middle point for outpost
-                    int x = (Cities.Where(c => c is Metropolis).First().CoOrds.X + nearest.CoOrds.X) / 2;
-                    int y = (Cities.Where(c => c is Metropolis).First().CoOrds.Y + nearest.CoOrds.Y) / 2;
-                    var pathtolocation = moveable.First().GetPath(moveable.First().GetLocatedTile(), Map.Instance.GetTile(x,y));
-                    var tileofoutpost = Map.Instance.GetTile(x,y);
-                    //as the first one construct outpost
-                    if(moveable.First().GetDistance(Map.Instance.GetTile(x,y)) == 0){
-                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),Map.Instance.GetTile(x,y).CoOrds));
-                        moveable.First().CommandAssigned = CommandAssigned.CONSTRUCT;
+                    var path = selected.First().GetPath(selected.First().GetLocatedTile(), nearest.GetLocatedTile());
+                    int middle = path.Count()/2;
+                    // int x = (Cities.Where(c => c is Metropolis).First().CoOrds.X + nearest.CoOrds.X) / 2;
+                    // int y = (Cities.Where(c => c is Metropolis).First().CoOrds.Y + nearest.CoOrds.Y) / 2;
+                    var tileofoutpost = path.ElementAt(middle);
+
+                    //as the first one, construct outpost
+                    if(selected.First().GetDistance(tileofoutpost) == 0){
+                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),tileofoutpost.CoOrds));
+                        selected.First().CommandAssigned = CommandAssigned.CONSTRUCT;
                     }
                     else{
-                        foreach(var i in moveable){
-                            pathtolocation = i.GetPath(i.GetLocatedTile(), tileofoutpost);
+                        foreach(var i in selected){
+                            var pathtooutpost = i.GetPath(i.GetLocatedTile(), tileofoutpost);
                             if(!i.CanAccessTile(tileofoutpost)){
-                                pathtolocation = i.GetPath(i.GetLocatedTile(), i.GetAccessibleNeigbours(tileofoutpost.CubeCoOrds,1).First());
-                                Commands.Add(new Move(i, pathtolocation.ToList()));
+                                var newpathtooutpost = i.GetPath(i.GetLocatedTile(), i.GetAccessibleNeigbours(tileofoutpost.CubeCoOrds,1).First());
+                                Commands.Add(new Move(i, newpathtooutpost.ToList()));
                                 i.CommandAssigned = CommandAssigned.MOVE;
                             }
                             else{
-                                Commands.Add(new Move(i, pathtolocation.ToList()));
+                                Commands.Add(new Move(i, pathtooutpost.ToList()));
                                 i.CommandAssigned = CommandAssigned.MOVE;
                             }
                         }
                     }
 
                     //move to enemy city if outpost has been built
-                    if(Buildings.Where(b => b.CoOrds.X == tileofoutpost.CoOrds.X && b.CoOrds.Y == tileofoutpost.CoOrds.Y).Count() >= 1){
+                    var outpost = Buildings.Where(b => b.CoOrds.X == tileofoutpost.CoOrds.X && b.CoOrds.Y == tileofoutpost.CoOrds.Y);
+                    if(outpost.Count() >= 1){
                         foreach(var i in moveable){
                             //if arrive
                             if(i.GetDistance(nearest) == 0){
@@ -474,7 +481,6 @@ namespace SteelOfStalin
                                     Commands.Add(new Move(i, pathtocity.ToList()));   
                                     i.CommandAssigned = CommandAssigned.MOVE;
                                 }
-
                             }
                         }
                     }
