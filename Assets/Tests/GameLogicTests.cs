@@ -11,11 +11,13 @@ using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
+using SteelOfStalin.Flow;
 using SteelOfStalin.Util;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -384,7 +386,7 @@ public class GameLogicTest
         i.SetMeshName();
         i.Initialize(p1, point1, SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
         IEnumerable<SteelOfStalin.Assets.Customizables.IOffensiveCustomizable> weapons = i.GetWeapons();
-        i.SetWeapons(weapons);
+        i.SetWeapons(weapons.ToArray());
 
         Assert.IsTrue(i.CanAccessTile(tile1));
         Assert.IsFalse(i.CanAccessTile(tile2));
@@ -408,6 +410,8 @@ public class GameLogicTest
     [Test]
     public void CommandsTest()
     {
+        LogAssert.ignoreFailingMessages = true;
+
         Player p1 = Players[0];
 
         Infantry i = UnitData.GetNew<Infantry>(); 
@@ -418,10 +422,10 @@ public class GameLogicTest
         train.Execute();
         Debug.Log(train.ToStringAfterExecution());
 
-        i.Status = SteelOfStalin.Assets.Props.Units.UnitStatus.CAN_BE_DEPLOYED;
+        i.Status = UnitStatus.CAN_BE_DEPLOYED;
         List<IOffensiveCustomizable> weapons = new List<IOffensiveCustomizable>()
         {
-            CustomizableData.GetNew<IOffensiveCustomizable>(i.AvailableFirearms[1]) as Firearm
+            CustomizableData.GetNew<IOffensiveCustomizable>(i.AvailablePrimaryFirearms[1]) as Firearm
         };
         Coordinates coords = Utilities.Random.NextItem(train_ground.GetDeployableDestinations(i).Select(t => t.CoOrds));
         Command deploy = new Deploy(i, train_ground, coords, weapons);
@@ -441,9 +445,8 @@ public class GameLogicTest
         commands.Add(ambush);
 
         Player p2 = Players[1];
-        Assault a = UnitData.GetNew<Assault>();
-        a.Initialize(p2, Utilities.Random.NextItem(coords.GetNeighbours()), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
-
+        Assault a = Map.InitializeNewUnit<Assault>(p2, p1.Capital.CoOrds);
+        
         Command fire = new Fire(i, a, i.PrimaryFirearm);
         commands.Add(fire);
 
@@ -452,22 +455,36 @@ public class GameLogicTest
 
         Building outpost = BuildingData.GetNew<Outpost>();
         outpost.Initialize(p2, new Coordinates(coords.X - 1, coords.Y));
+        Map.AddBuilding(outpost);
 
         Command sabotage = new Sabotage(i, outpost, i.PrimaryFirearm);
         commands.Add(sabotage);
 
         Portable portable = UnitData.GetNew<Portable>();
-        portable.Initialize(p1, Utilities.Random.NextItem(coords.GetNeighbours()), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        portable.Initialize(p1, Utilities.Random.NextItem(coords.GetNeighbours()), UnitStatus.ACTIVE);
         portable.SetWeapons(new List<IOffensiveCustomizable>()
         {
             CustomizableData.GetNew<IOffensiveCustomizable>(portable.AvailableGuns[0]) as Gun
-        });
+        }.ToArray());
+        Map.AddUnit(portable);
         Command assemble = new Assemble(portable);
         commands.Add(assemble);
 
         Command disassemble = new Disassemble(portable);
         commands.Add(disassemble);
 
+        Command capture = new Capture(a);
+        commands.Add(capture);
+
+        Command move2 = new Move(a, a.GetPath(a.GetLocatedTile(), Map.Instance.GetRandomNeighbour(a.CubeCoOrds)).ToList());
+        commands.Add(move2);
+
+        Command move3 = new Move(i, i.GetPath(i.GetLocatedTile(), p1.Capital).ToList());
+        commands.Add(move3);
+
+        Command capture2 = new Capture(i);
+        commands.Add(capture2);
+        /*
         Debug.Log("Before:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringBeforeExecution())));
 
         move.Execute();
@@ -478,8 +495,32 @@ public class GameLogicTest
         sabotage.Execute();
         assemble.Execute();
         disassemble.Execute();
+        capture.Execute();
+        move2.Execute();
+        move3.Execute();
+        capture2.Execute();
 
         Debug.Log("After:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringAfterExecution())));
+        */
+        foreach (string cmd in commands.Select(c => c.ToStringBeforeExecution()))
+        {
+            Debug.Log($"{cmd}: {Command.FromStringBeforeExecution(cmd)?.IsValid}");
+        }
+    }
+
+    [Test]
+    public void MoveConflictSimpleTest()
+    {
+        Moving move_phase = new Moving();
+        Infantry i = Map.InitializeNewUnit<Infantry>(Players[0], new Coordinates(1, 1));
+        Assault a = Map.InitializeNewUnit<Assault>(Players[1], new Coordinates(1, 3));
+        move_phase.CommandsForThisPhase.AddRange(new Move[]
+        {
+            new Move(i, i.GetPath(i.GetLocatedTile(), Map.GetTile(new Coordinates(1, 2)))),
+            new Move(a, a.GetPath(a.GetLocatedTile(), Map.GetTile(new Coordinates(1, 2))))
+        });
+        move_phase.Execute();
+        Debug.Log(move_phase.ToString());
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use

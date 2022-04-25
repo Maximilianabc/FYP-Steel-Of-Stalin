@@ -11,7 +11,8 @@ public class ResolutionDropdown : MonoBehaviour
     {
         //TODO: Deserialized from files
         List<UIUtil.Resolution> resolutions = new List<UIUtil.Resolution> { 
-            new UIUtil.Resolution(1366, 768), new UIUtil.Resolution(1600, 900), new UIUtil.Resolution(1920, 1080), new UIUtil.Resolution(2560, 1440) 
+
+            new UIUtil.Resolution(1280,720), new UIUtil.Resolution(1366, 768), new UIUtil.Resolution(1600, 900), new UIUtil.Resolution(1920, 1080), new UIUtil.Resolution(2560, 1440) 
         };
 
         TMPro.TMP_Dropdown dropdown = GetComponent<TMPro.TMP_Dropdown>();

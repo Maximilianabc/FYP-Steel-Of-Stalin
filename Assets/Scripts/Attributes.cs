@@ -114,6 +114,7 @@ namespace SteelOfStalin.Attributes
 
     public class Attribute : ICloneable
     {
+        // TODO FUT. Impl. Handle attribute with mods and priority of mods (probably form expression during runtime)
         public Modifier Mod { get; set; } = new Modifier();
         public decimal Value { get; set; }
 
@@ -121,7 +122,7 @@ namespace SteelOfStalin.Attributes
         public Attribute(decimal value, Modifier mod = null) => (Value, Mod) = (value, mod);
 
         public decimal ApplyMod() => (Mod == null || Mod == default) ? Value : Mod.ApplyTo(Value);
-        public decimal ApplyDeviation() => Utilities.RandomBetweenSymmetricRange(ApplyMod());
+        public decimal ApplyDeviation() => Utilities.Random.NextInRangeSymmetric(ApplyMod());
 
         public void PlusEquals(decimal value) => Value = ApplyMod() + value;
         public void PlusEquals(Attribute attribute) => Value = ApplyMod() + attribute.ApplyMod();
@@ -143,7 +144,8 @@ namespace SteelOfStalin.Attributes
         }
         public override bool Equals(object obj) => this == (Attribute)obj;
         public override int GetHashCode() => (Mod, Value).GetHashCode();
-        public override string ToString() => (Mod == null || Mod == default(Modifier)) ? ApplyMod().ToString() : $"{Value} ({Mod})";
+        public override string ToString() => (Mod == null || Mod == default(Modifier)) ? ApplyMod().ToString() : $"{ApplyMod()} ({Mod})";
+        public string ValueToString() => ApplyMod().ToString();
 
         public static decimal operator +(Attribute a, Attribute b) => a.ApplyMod() + b.ApplyMod();
         public static decimal operator +(Attribute b) => +b.ApplyMod();
@@ -240,6 +242,17 @@ namespace SteelOfStalin.Attributes
         public object Clone() => new Resources(this);
         public override bool Equals(object obj) => this == (Resources)obj;
         public override int GetHashCode() => (Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Power, Time).GetHashCode();
+        public override string ToString() => string.Join(";", 
+            Money.ValueToString(), 
+            Steel.ValueToString(), 
+            Supplies.ValueToString(), 
+            Cartridges.ValueToString(), 
+            Shells.ValueToString(), 
+            Fuel.ValueToString(), 
+            RareMetal.ValueToString(), 
+            Manpower.ValueToString(), 
+            Power.ValueToString(), 
+            Time.ValueToString());
 
         // omit comparison for time intentionally, cuz it's meaningless (won't have insufficient "time")
         public bool HasEnoughResources(Resources need, bool print_discrepancy = true)

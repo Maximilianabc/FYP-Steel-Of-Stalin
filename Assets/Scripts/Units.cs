@@ -19,7 +19,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Ground() : base() { }
         public Ground(Ground another) : base(another) { }
         public abstract override object Clone();
-        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
+        public abstract override void SetWeapons(params IOffensiveCustomizable[] weapons);
         public abstract override IEnumerable<Module> GetModules();
 
         public override bool CanMove() => base.CanMove() && HasEnoughResourcesForMoving();
@@ -47,7 +47,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Naval() : base() { }
         public Naval(Naval another) : base(another) { }
         public abstract override object Clone();
-        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
+        public abstract override void SetWeapons(params IOffensiveCustomizable[] weapons);
         public abstract override IEnumerable<Module> GetModules();
     }
 
@@ -56,7 +56,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Aerial() : base() { }
         public Aerial(Aerial another) : base(another) { }
         public abstract override object Clone();
-        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
+        public abstract override void SetWeapons(params IOffensiveCustomizable[] weapons);
         public abstract override IEnumerable<Module> GetModules();
     }
 }
@@ -68,23 +68,25 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         public Firearm PrimaryFirearm { get; set; }
         public Firearm SecondaryFirearm { get; set; }
         public string DefaultPrimary { get; set; }
-        public List<string> AvailableFirearms { get; set; } = new List<string>();
+        public List<string> AvailablePrimaryFirearms { get; set; } = new List<string>();
+        public List<string> AvailableSecondaryFirearms { get; set; } = new List<string>();
         public Attribute CaptureEfficiency { get; set; } = new Attribute();
 
         public Personnel() : base() { }
         public Personnel(Personnel another) : base(another)
-            => (PrimaryFirearm, SecondaryFirearm, DefaultPrimary, AvailableFirearms, CaptureEfficiency)
+            => (PrimaryFirearm, SecondaryFirearm, DefaultPrimary, AvailablePrimaryFirearms, AvailableSecondaryFirearms, CaptureEfficiency)
             = ((Firearm)another.PrimaryFirearm?.Clone(),
                (Firearm)another.SecondaryFirearm?.Clone(),
                another.DefaultPrimary,
-               new List<string>(another.AvailableFirearms),
+               new List<string>(another.AvailablePrimaryFirearms),
+               new List<string>(another.AvailableSecondaryFirearms),
                (Attribute)another.CaptureEfficiency?.Clone());
 
-        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
         {
-            if (!weapons.Any())
+            if (weapons.Length > 2 || weapons.Length == 0)
             {
-                this.LogError("weapons is empty");
+                this.LogError($"Weapons length mismatch. Expected: [1,2]. Actual: {weapons.Length}");
                 return;
             }
             if (!weapons.All(w => w is Firearm))
@@ -93,10 +95,10 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 return;
             }
 
-            ChangeFirearm((Firearm)weapons.First());
-            if (weapons.Count() > 1)
+            ChangeFirearm((Firearm)weapons[0]);
+            if (weapons.Length > 1)
             {
-                ChangeFirearm((Firearm)weapons.ElementAt(1), false);
+                ChangeFirearm((Firearm)weapons[1], false);
             }
         }
 
@@ -126,6 +128,8 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { PrimaryFirearm, SecondaryFirearm };
         public override IEnumerable<Module> GetModules() => Enumerable.Empty<Module>();
         public override IEnumerable<Module> GetRepairableModules() => Enumerable.Empty<Module>();
+        public override void SetModules(params Module[] modules) { }
+
         public override Modifier GetConcealmentPenaltyMove() => SecondaryFirearm == null ? PrimaryFirearm.ConcealmentPenaltyMove : Modifier.Min(PrimaryFirearm.ConcealmentPenaltyMove, SecondaryFirearm.ConcealmentPenaltyMove);
 
         // false for secondary
@@ -136,7 +140,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 this.LogError("Firearm is null.");
                 return;
             }
-            if (!AvailableFirearms.Contains(firearm.Name))
+            if (!(AvailablePrimaryFirearms.Contains(firearm.Name) || AvailableSecondaryFirearms.Contains(firearm.Name)))
             {
                 this.LogError($"Firearm {firearm.Name} is not available for unit {Name}.");
                 return;
@@ -178,7 +182,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                (Gun)another.Gun?.Clone(),
                (Radio)another.Radio?.Clone());
 
-        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
         {
             if (!weapons.Any())
             {
@@ -187,7 +191,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             }
             if (!(weapons.First() is Gun))
             {
-                this.LogError("Only guns can be assigned to artilleries");
+                this.LogError("Only guns can be assigned as weapon to artilleries");
                 return;
             }
             ChangeGun((Gun)weapons.First());
@@ -216,6 +220,32 @@ namespace SteelOfStalin.Assets.Props.Units.Land
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun };
         public override IEnumerable<Module> GetModules() => new List<Module>() { Gun, Radio };
+        public override void SetModules(params Module[] modules)
+        {
+            if (modules.Length > 2)
+            {
+                this.LogError($"Modules length mismatch. Expected: at most 2. Actual: {modules.Length}");
+                return;
+            }
+            if (!modules.All(m => m is Gun || m is Radio))
+            {
+                this.LogError("Invalid module type found. Artilleries only have a gun and a radio.");
+                return;
+            }
+            foreach (Module module in modules)
+            {
+                if (module is Gun g)
+                {
+                    Gun = g;
+                    continue;
+                }
+                if (module is Radio r)
+                {
+                    Radio = r;
+                }
+            }
+        }
+
         public override Modifier GetConcealmentPenaltyMove() => Gun.ConcealmentPenaltyMove;
 
         public virtual void ChangeGun(Gun gun)
@@ -261,7 +291,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 (FuelTank)another.FuelTank?.Clone(),
                 (AmmoRack)another.AmmoRack?.Clone());
 
-        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
         {
             if (!weapons.Any())
             {
@@ -270,7 +300,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             }
             if (!weapons.All(w => w is Gun || w is HeavyMachineGun))
             {
-                this.LogError("Only guns and heavy machine guns can be assigned to vehicles");
+                this.LogError("Only guns and heavy machine guns can be assigned as weapons to vehicles");
                 return;
             }
 
@@ -316,11 +346,63 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             modules.AddRange(HeavyMachineGuns);
             return modules;
         }
+        public override void SetModules(params Module[] modules)
+        {
+            foreach (Module module in modules)
+            {
+                if (module is Gun g)
+                {
+                    Guns.Add(g);
+                    continue;
+                }
+                if (module is HeavyMachineGun hmg)
+                {
+                    HeavyMachineGuns.Add(hmg);
+                    continue;
+                }
+                if (module is Engine e)
+                {
+                    Engine = e;
+                    continue;
+                }
+                if (module is Suspension s)
+                {
+                    Suspension = s;
+                    continue;
+                }
+                if (module is Radio r)
+                {
+                    Radio = r;
+                    continue;
+                }
+                if (module is Periscope p)
+                {
+                    Periscope = p;
+                    continue;
+                }
+                if (module is FuelTank f)
+                {
+                    FuelTank = f;
+                    continue;
+                }
+                if (module is AmmoRack a)
+                {
+                    AmmoRack = a;
+                    continue;
+                }
+                this.LogWarning($"Invalid module type {module.GetType().Name} found");
+            }
+        }
+
         public override Modifier GetConcealmentPenaltyMove() => Engine.ConcealmentPenaltyMove;
 
-        public void ChangeArmaments(Module module)
+        public void ChangeArmaments(params IOffensiveCustomizable[] weapon)
         {
-            // TODO FUT Impl.
+            // TODO FUT. Impl. find a way to identify the specific gun/HMG to be replaced
+        }
+        public void ChangeModule(Module module)
+        {
+            // TODO FUT. Impl.
         }
     }
 }
@@ -543,7 +625,7 @@ namespace SteelOfStalin.Assets.Props.Units.Sea
                 (Radar)another.Radar?.Clone(),
                 another.Altitude);
 
-        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
         {
             // TODO FUT. Impl.
         }
@@ -572,6 +654,10 @@ namespace SteelOfStalin.Assets.Props.Units.Sea
             modules.AddRange(Guns);
             modules.AddRange(HeavyMachineGuns);
             return modules;
+        }
+        public override void SetModules(params Module[] modules)
+        {
+            // TODO FUT. Impl.
         }
     }
 
@@ -683,7 +769,7 @@ namespace SteelOfStalin.Assets.Props.Units.Air
                (LandingGear)another.LandingGear?.Clone(),
                (Radar)another.Radar?.Clone());
 
-        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
+        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
         {
             // TODO FUT. Impl.
         }
@@ -716,6 +802,10 @@ namespace SteelOfStalin.Assets.Props.Units.Air
             modules.AddRange(Guns);
             modules.AddRange(HeavyMachineGuns);
             return modules;
+        }
+        public override void SetModules(params Module[] modules)
+        {
+            // TODO FUT. Impl.
         }
 
         public override Modifier GetConcealmentPenaltyMove() => null; // TODO FUT. Impl.

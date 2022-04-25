@@ -539,6 +539,7 @@ namespace SteelOfStalin
     public class PlayerObject : NetworkBehaviour
     {
         public bool IsAI => m_self is AIPlayer;
+
         private Battle m_battle => Battle.Instance;
         private Player m_self => m_battle.Self;
         private bool m_isInitialized { get; set; } = false;
@@ -574,14 +575,28 @@ namespace SteelOfStalin
             m_self.IsReady = ready;
             UpdateReadyStatusServerRpc(ready, NetworkUtilities.GetServerRpcParams());
         }
+
+        public void SendCommandsToServer()
+        {
+            List<string> commands = m_self.Commands.Select(c => c.ToStringBeforeExecution()).ToList();
+            if (commands.Count == 0)
+            {
+                ReceiveCommandsServerRpc("", 0, NetworkUtilities.GetServerRpcParams());
+                return;
+            }
+            foreach (string command in commands)
+            {
+                ReceiveCommandsServerRpc(command, commands.Count, NetworkUtilities.GetServerRpcParams());
+            }
+        }
         
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void UpdateReadyStatusAllClientRpc(bool ready, string player_name)
         {
             m_battle.GetPlayer(player_name).IsReady = ready;
         }
-        
-        [ServerRpc(RequireOwnership = false)]
+
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void UpdateReadyStatusServerRpc(bool ready, ServerRpcParams @params)
         {
             ulong sender = @params.Receive.SenderClientId;
@@ -589,6 +604,30 @@ namespace SteelOfStalin
             player.IsReady = ready;
             Debug.Log($"{player} ready status: {ready}");
             UpdateReadyStatusAllClientRpc(ready, player.Name);
+        }
+
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        private void ReceiveCommandsServerRpc(string command, int num_to_send, ServerRpcParams @params)
+        {
+            ulong sender = @params.Receive.SenderClientId;
+            Player player = m_battle.GetPlayer(sender);
+
+            Command cmd = Command.FromStringBeforeExecution(command);
+            if (cmd == null)
+            {
+                Debug.LogError($"Failed to parse command {command}");
+            }
+            if (!cmd.IsValid)
+            {
+                Debug.LogWarning($"Command {command} is invalid");
+            }
+            player.Commands.Add(cmd);
+            if (player.Commands.Count == num_to_send)
+            {
+                Debug.Log($"Receive all commands ({num_to_send} in total) from player {player}");
+                Battle.Instance.CurrentRound.Commands.AddRange(player.Commands.Where(c => c != null && c.IsValid));
+                Battle.Instance.CurrentRound.NumPlayersCommandReceived++;
+            }
         }
     }
 }

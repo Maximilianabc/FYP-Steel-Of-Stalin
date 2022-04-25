@@ -266,14 +266,17 @@ namespace SteelOfStalin.Assets.Props
                     {
                         TrainPanel.instance.SetCity(c);
                     }
-                    else if (p is Unit u)
-                    {
-                        
+                    else if (p is Unit u) {
                         UnitPanel.instance.SetUnit(u);
+                        if (u.IsOwn(Battle.Instance.Self)) {
+                            CommandPanel.instance.SetUnit(u);
+                        }
                     }
-                    else {   
+                    else
+                    {
                         UnitPanel.instance.Hide();
                         DeployPanel.instance.HideAll();
+                        CommandPanel.instance.Hide();
                     }
                 }
             });
@@ -284,7 +287,7 @@ namespace SteelOfStalin.Assets.Props
                     StringBuilder sb = new StringBuilder();
                     if (p is Tiles.Boundary b) {
                         sb.AppendLine(b.Name);
-                        sb.AppendLine(b.CubeCoOrds.ToString());
+                        sb.AppendLine(b.CoOrds.ToString());
                         sb.Append("Impassable");
                     }
                     else if (p is Tile t)
@@ -293,7 +296,7 @@ namespace SteelOfStalin.Assets.Props
                         if (t is Cities c &&c.Owner!=null) {
                             sb.AppendLine($"Owner: {c.OwnerName}");
                         }
-                        sb.AppendLine(t.CubeCoOrds.ToString());
+                        sb.AppendLine(t.CoOrds.ToString());
                         sb.AppendLine($"Concealment Mod: {t.TerrainMod.Concealment.Value}%");
                         sb.AppendLine($"Fuel Mod: {t.TerrainMod.Fuel.Value}%");
                         sb.AppendLine($"Supplies Mod: {t.TerrainMod.Supplies.Value}%");
@@ -323,6 +326,47 @@ namespace SteelOfStalin.Assets.Props
                     }
                 }
             },false);
+            Trigger.Subscribe("move_tile", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Move",t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("fire_unit", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Fire", t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("suppress_unit", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Suppress", t);
+                    }
+                }
+            }, false);
+            Trigger.Subscribe("sabotage_building", EventTriggerType.PointerClick, (data) => {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
+                    Prop p = GetClickedProp(data);
+                    if (p is Tile t)
+                    {
+                        CommandPanel.instance.ExecuteCommand("Sabotage", t);
+                    }
+                }
+            }, false);
+
 
 
         }
@@ -515,6 +559,7 @@ namespace SteelOfStalin.Assets.Props.Units
 
         [JsonIgnore] public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
         [JsonIgnore] public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
+        [JsonIgnore] public bool CarryingIsFull => Carrying == Capacity;
 
         public bool IsOwn(Player p) => p != null && Owner == p;
         public bool IsAlly(Player p) => Owner?.Allies.Any(a => a == p) ?? false;
@@ -583,7 +628,7 @@ namespace SteelOfStalin.Assets.Props.Units
             // called from test if Battle.Instance is null
             Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
-        public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
+        public abstract void SetWeapons(params IOffensiveCustomizable[] weapons);
 
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
         public virtual bool CanAccessTile(Tile t)
@@ -734,6 +779,8 @@ namespace SteelOfStalin.Assets.Props.Units
         public abstract IEnumerable<Module> GetModules();
         public IEnumerable<T> GetModules<T>() where T : Module => GetModules()?.OfType<T>();
         public virtual IEnumerable<Module> GetRepairableModules() => GetModules().Where(m => m.Integrity < Game.CustomizableData.Modules[m.Name].Integrity);
+        public abstract void SetModules(params Module[] modules);
+
         public abstract Modifier GetConcealmentPenaltyMove();
 
         public List<Unit> GetAvailableMergeTargets()
@@ -765,9 +812,9 @@ namespace SteelOfStalin.Assets.Props.Units
         public IEnumerable<Building> GetHostileBuildingsInReconRange() => GetHostileBuildingsInRange(GetReconRange());
 
         public decimal GetSuppliesRequired(Tile t) => t.TerrainMod.Supplies.ApplyTo(Consumption.Supplies.ApplyMod());
-        public decimal GetSuppliesRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
+        public decimal GetSuppliesRequired(IEnumerable<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetSuppliesRequired(t)).Sum(); // if last tile of path is where the unit at, no supplies or fuel is consumed (i.e. cannot move due to move conflict)
         public decimal GetFuelRequired(Tile t) => t.TerrainMod.Fuel.ApplyTo(Consumption.Fuel.ApplyMod());
-        public decimal GetFuelRequired(List<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
+        public decimal GetFuelRequired(IEnumerable<Tile> path) => path.Last().CoOrds == CoOrds ? 0 : path.Select(t => GetFuelRequired(t)).Sum();
 
         public string GetResourcesChangeRecord(string res, decimal change) => res switch
         {
@@ -1002,7 +1049,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public bool CanCommunicateWith(Unit u) => GetStraightLineDistance(u) <= Communication + u.Scouting.Communication;
         public bool CanCommunicateWith(Cities c) => this != c && GetStraightLineDistance(c) <= Communication + c.Communication;
 
-        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##,-0.##}=>{Morale}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
+        public string GetMoraleChangeRecord(decimal change) => $" m:{change:+0.##;-0.##}=>{Morale.ApplyMod()}/{((Cities)Game.TileData[Name]).Morale.ApplyMod()}";
 
         public abstract override object Clone();
     }
@@ -1053,6 +1100,8 @@ namespace SteelOfStalin.Assets.Props.Tiles
             DistanceToGoal = CubeCoordinates.GetDistance(CubeCoOrds, end.CubeCoOrds)
         };
 
+        public IEnumerable<Tile> GetNeighbours(int distance = 1, bool include_self = false)
+            => CubeCoOrds.GetNeighbours(distance, include_self).Select(c => Map.Instance.GetTile(c));
         public override Tile GetLocatedTile() => this;
 
         public override bool Equals(object other) => this == (Tile)other;
