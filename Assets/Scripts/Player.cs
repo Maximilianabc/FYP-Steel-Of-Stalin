@@ -9,7 +9,9 @@ using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
+using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Firearms;
+using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
@@ -175,7 +177,82 @@ namespace SteelOfStalin
                 foreach(var c in building){
                     if(c.CanDeploy()){
                         var readyunit = c.ReadyToDeploy.First();
-                        Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,readyunit.GetWeapons()));
+                        List<IOffensiveCustomizable> weapon= new List<IOffensiveCustomizable>();
+
+                        if(readyunit is Militia){
+                            var primary = c.ReadyToDeploy.OfType<Militia>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Infantry){
+                            var primary = c.ReadyToDeploy.OfType<Infantry>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Assault){
+                            var primary = c.ReadyToDeploy.OfType<Assault>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+
+                        }
+                        if(readyunit is Support){
+                            var primary = c.ReadyToDeploy.OfType<Support>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Mountain){
+                            var primary = c.ReadyToDeploy.OfType<Mountain>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Engineer){
+                            var primary = c.ReadyToDeploy.OfType<Engineer>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Portable){
+                            var available = c.ReadyToDeploy.OfType<Portable>().First().AvailableGuns;
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(available.First()) as Gun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));   
+                        }
+                        if(readyunit is DirectFire){
+                            var available = c.ReadyToDeploy.OfType<DirectFire>().First().AvailableGuns;
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(available.First()) as Gun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));   
+                        }
+                        if(readyunit is AntiTank){
+                            var available = c.ReadyToDeploy.OfType<AntiTank>().First().AvailableGuns;
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(available.First()) as Gun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));   
+                        }
+                        if(readyunit is HeavySupport){
+                            var available = c.ReadyToDeploy.OfType<HeavySupport>().First().AvailableGuns;
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(available.First()) as Gun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));   
+                        }
+                        if(readyunit is SelfPropelled){
+                            var available = c.ReadyToDeploy.OfType<SelfPropelled>().First().AvailableGuns;
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(available.First()) as Gun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));   
+                        }
                     }
                 }
             }
@@ -311,8 +388,6 @@ namespace SteelOfStalin
                             unit.Carrying.Fuel.PlusEquals(amount);
                             this.Resources.Fuel.MinusEquals(amount);
                     }
-
-                    
                 }  
             }
 
