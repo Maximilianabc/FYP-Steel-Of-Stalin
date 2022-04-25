@@ -40,6 +40,10 @@ namespace SteelOfStalin
         public List<Command> Commands { get; set; } = new List<Command>();
         public bool IsReady { get; set; } = false;
 
+        // TODO FUT Impl. find a better way to handle this, probably with enum
+        [JsonIgnore] public int CommandsProcessed { get; set; } = 0;
+        [JsonIgnore] public bool AllCommandsProcessed { get; set; } = false;
+
         [JsonIgnore] public bool IsDefeated => !Cities.Any(c => c.Durability > 0);
         [JsonIgnore] public Color Color => (Color)SerializableColor;
         [JsonIgnore] public IEnumerable<Unit> Units => Map.Instance.GetUnits(this);
@@ -192,11 +196,13 @@ namespace SteelOfStalin
             if (commands.Count == 0)
             {
                 ReceiveCommandsServerRpc("", 0, NetworkUtilities.GetServerRpcParams());
-                return;
             }
-            foreach (string command in commands)
+            else
             {
-                ReceiveCommandsServerRpc(command, commands.Count, NetworkUtilities.GetServerRpcParams());
+                foreach (string command in commands)
+                {
+                    ReceiveCommandsServerRpc(command, commands.Count, NetworkUtilities.GetServerRpcParams());
+                }
             }
         }
         
@@ -222,16 +228,20 @@ namespace SteelOfStalin
             ulong sender = @params.Receive.SenderClientId;
             Player player = m_battle.GetPlayer(sender);
 
-            Command cmd = Command.FromStringBeforeExecution(command);
-            if (cmd == null)
+            if (!string.IsNullOrEmpty(command))
             {
-                Debug.LogError($"Failed to parse command {command}");
+                Command cmd = Command.FromStringBeforeExecution(command);
+                if (cmd == null)
+                {
+                    Debug.LogError($"Failed to parse command {command}");
+                }
+                if (!cmd.IsValid)
+                {
+                    Debug.LogWarning($"Command {command} is invalid");
+                }
+                player.Commands.Add(cmd);
             }
-            if (!cmd.IsValid)
-            {
-                Debug.LogWarning($"Command {command} is invalid");
-            }
-            player.Commands.Add(cmd);
+
             if (player.Commands.Count == num_to_send)
             {
                 Debug.Log($"Receive all commands ({num_to_send} in total) from player {player}");

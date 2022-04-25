@@ -416,7 +416,8 @@ namespace SteelOfStalin.CustomTypes
                 throw new JsonException("There is no property with name \"Name\"");
             }
 
-            string child_type_name = Utilities.ToPascal(Regex.Replace(prop_properties[prop_name].ToString(), @"_[a-f0-9]{32}", ""));
+            // TODO FUT. Impl. separate class name and name of the asset
+            string child_type_name = Regex.Replace(prop_properties[prop_name].ToString(), @"(?:small|medium|large)_(?!tank)", "").ToPascal();
             Type child_type = m_Types.Find(t => t.Name == child_type_name);
             if (child_type == null)
             {

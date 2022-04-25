@@ -310,6 +310,8 @@ namespace SteelOfStalin
                     }
                     else
                     {
+                        CurrentRound.Commands.AddRange(Self.Commands);
+                        CurrentRound.NumPlayersCommandReceived++;
                         Debug.Log("Waiting for all players to send their commands");
                         yield return new WaitWhile(() => !CurrentRound.ReadyToExecutePhases);
                         Debug.Log("Received commands from all players.");
@@ -321,26 +323,54 @@ namespace SteelOfStalin
                         {
                             ClientRpcParams @params = NetworkUtilities.GetClientRpcSendParams(ConnectedPlayerIDs.ReverseLookup(player.Name));
                             List<string> results = CurrentRound.Commands.Where(c => c.RelatedToPlayer(player)).Select(c => c.ToStringAfterExecution()).ToList();
-                            foreach (string result in results)
+
+                            // TODO FUT. Impl. consider having separating client rpcs for empty result/units/buildings
+                            if (results.Count == 0)
                             {
-                                GetCommandResultsClientRpc(result, results.Count, @params);
+                                GetCommandResultsClientRpc("", 0, @params);
                             }
-                            foreach (Unit u in Map.GetUnits(player))
+                            else
                             {
-                                GetUnitStatusesClientRpc(u.ToString(), u.Status, @params);
+                                foreach (string result in results)
+                                {
+                                    GetCommandResultsClientRpc(result, results.Count, @params);
+                                }
                             }
-                            foreach (Building b in Map.GetBuildings(player))
+
+                            IEnumerable<Unit> units = Map.GetUnits(player);
+                            if (!units.Any())
                             {
-                                GetBuildingStatusesClientRpc(b.ToString(), b.Status, @params);
+                                GetUnitStatusesClientRpc("", 0, @params);
+                            }
+                            else
+                            {
+                                foreach (Unit u in units)
+                                {
+                                    GetUnitStatusesClientRpc(u.ToString(), u.Status, @params);
+                                }
+                            }
+
+                            IEnumerable<Building> buildings = Map.GetBuildings(player);
+                            if (!buildings.Any())
+                            {
+                                GetBuildingStatusesClientRpc("", 0, @params);
+                            }
+                            else
+                            {
+                                foreach (Building b in buildings)
+                                {
+                                    GetBuildingStatusesClientRpc(b.ToString(), b.Status, @params);
+                                }
                             }
                             GetResourcesLeftClientRpc(player.Resources.ToString(), @params);
                         }
+                        CurrentRound.NumPlayersReadyToProceed++;
                     }
                 }
                 else
                 {
-                    PlayerObject @object = Self.PlayerObjectComponent;
-                    @object.SendCommandsToServer();
+                    Self.PlayerObjectComponent.SendCommandsToServer();
+                    _ = StartCoroutine(WaitForServerCalculationResults());
                 }
 
                 Debug.Log("Waiting for proceeding to next round.");
@@ -439,6 +469,15 @@ namespace SteelOfStalin
         }
         private IEnumerator WaitForServerCalculationResults()
         {
+            Debug.Log("Waiting for all command results to be processed");
+            yield return new WaitWhile(() => !Self.AllCommandsProcessed);
+            Debug.Log("All commands processed");
+
+            Self.CommandsProcessed = 0;
+            Self.AllCommandsProcessed = false;
+
+            SignifyReadyProceedServerRpc(NetworkUtilities.GetServerRpcParams());
+
             yield return null;
         }
         private IEnumerator SendMapDetailsToClient(ulong id, ClientRpcParams send_params, Action callback)
@@ -649,25 +688,59 @@ namespace SteelOfStalin
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void GetCommandResultsClientRpc(string result, int num_to_receive, ClientRpcParams @params)
         {
-
+            Debug.Log($"Command result {result} received.");
+            if (!string.IsNullOrEmpty(result))
+            {
+                // TODO apply changes from commands
+                Self.CommandsProcessed++;
+            }
+            if (Self.CommandsProcessed == num_to_receive)
+            {
+                Self.AllCommandsProcessed = true;
+            }
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void GetUnitStatusesClientRpc(string unit, UnitStatus status, ClientRpcParams @params)
         {
-            ((Unit)Map.Instance.GetProp(unit)).Status = status;
+            if (!string.IsNullOrEmpty(unit))
+            {
+                ((Unit)Map.Instance.GetProp(unit)).Status = status;
+            }
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void GetBuildingStatusesClientRpc(string building, BuildingStatus status, ClientRpcParams @params)
         {
-            ((Building)Map.Instance.GetProp(building)).Status = status;
+            if (!string.IsNullOrEmpty(building))
+            {
+                ((Building)Map.Instance.GetProp(building)).Status = status;
+            }
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void GetResourcesLeftClientRpc(string resources, ClientRpcParams @params)
         {
+            Debug.Log("Updated resources received");
+            Self.Resources.UpdateFromString(resources);
+        }
 
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void ProceedToNextRoundPushClientRpc()
+        {
+            CurrentRound.ReadyToProceedToNext = true;
+        }
+
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        private void SignifyReadyProceedServerRpc(ServerRpcParams @params)
+        {
+            Debug.Log($"player {ConnectedPlayerIDs[@params.Receive.SenderClientId]} ready to proceed");
+            CurrentRound.NumPlayersReadyToProceed++;
+            if (CurrentRound.NumPlayersReadyToProceed == ConnectedPlayerIDs.Count)
+            {
+                CurrentRound.ReadyToProceedToNext = true;
+                ProceedToNextRoundPushClientRpc();
+            }
         }
     }
 
@@ -1943,9 +2016,10 @@ namespace SteelOfStalin.Flow
         public Planning Planning { get; set; } = new Planning();
 
         [JsonIgnore] public List<Player> Players { get; set; }
-        // TODO FUT. Impl. think of a better way to check whether all players have sent their commands to server
+        // TODO FUT. Impl. think of a better way to check whether all players have sent their commands to server (probably using enum to indicate status of each client)
         [JsonIgnore] public int NumPlayersCommandReceived { get; set; } = 0;
         [JsonIgnore] public bool ReadyToExecutePhases => NumPlayersCommandReceived == Players.Count;
+        [JsonIgnore] public int NumPlayersReadyToProceed { get; set; } = 0;
         [JsonIgnore] public bool ReadyToProceedToNext { get; set; } = false;
 
         public Round()
@@ -2076,6 +2150,11 @@ namespace SteelOfStalin.Flow
         public void AddAutoCommands()
         {
             // TODO FUT. Impl.
+        }
+
+        public void AmbushStatusHandling()
+        {
+            // TODO
         }
 
         public Player GetWinner()
@@ -2350,7 +2429,7 @@ namespace SteelOfStalin.Flow
                         }
                         if (h.Status.HasFlag(UnitStatus.FIRED))
                         {
-                            // TODO
+                            observee_conceal = h.GetConcealmentPenaltyFire().ApplyTo(observee_conceal);
                         }
 
                         if (Formula.VisualSpotting((observer_recon, observer_detect, observee_conceal, st_line_distance)))
@@ -2368,7 +2447,7 @@ namespace SteelOfStalin.Flow
                             u.BuildingsInSight.Add(b);
                         }
                     });
-                    // TODO add acousting ranging logic
+                    // TODO FUT Impl. add acousting ranging logic
                 }
                 else
                 {
@@ -2433,28 +2512,26 @@ namespace SteelOfStalin.Flow
             Map.Instance.GetBuildings(BuildingStatus.UNDER_CONSTRUCTION).ToList().ForEach(b =>
             {
                 b.ConstructionTimeRemaining -= 1;
-                if (b.ConstructionTimeRemaining < 0)
+                if (b.ConstructionTimeRemaining > 0)
                 {
-                    b.ConstructionTimeRemaining = 0;
-                    b.Level += 1;
-                    b.Status = BuildingStatus.ACTIVE;
-                    b.BuilderLocation = new Coordinates(-1, -1);
-
-                    if (b.Level > 1)
-                    {
-                        // fortification complete
-                        // TODO FUT Impl. apply mod for other attributes as well
-                        b.Durability.PlusEquals(Game.BuildingData.All.Find(o => o.Name == b.Name).Durability.ApplyMod());
-                    }
-                    else
-                    {
-                        // TODO instantiate the building
-                    }
+                    return;
                 }
-                if (b.BuilderLocation != null && b.BuilderLocation != default)
+                b.ConstructionTimeRemaining = 0;
+                b.Level += 1;
+                b.Status = BuildingStatus.ACTIVE;
+                b.BuilderLocation = new Coordinates(-1, -1);
+
+                if (b.Level > 1)
+                {
+                    // fortification complete
+                    // TODO FUT Impl. apply mod for other attributes as well
+                    b.Durability.PlusEquals(Game.BuildingData.All.Find(o => o.Name == b.Name).Durability.ApplyMod());
+                }
+                if (b.BuilderLocation != default)
                 {
                     // remove the constructing flag for the builder of this building
                     Map.Instance.GetUnits(b.BuilderLocation).Where(u => u is Personnel && u.Owner == b.Owner).ToList().ForEach(p => p.Status &= ~UnitStatus.CONSTRUCTING);
+                    b.BuilderLocation = default;
                 }
             });
             base.Execute();
@@ -2510,6 +2587,8 @@ namespace SteelOfStalin.Flow
             base.Execute();
             CalculateMorale();
             AddDestroyedFlags();
+            // reset weapon fired
+            Map.Instance.GetUnits(u => u.WeaponFired != null).ToList().ForEach(u => u.WeaponFired = null);
             Battle.Instance.Players.ForEach(p => p.ProduceResources());
         }
 

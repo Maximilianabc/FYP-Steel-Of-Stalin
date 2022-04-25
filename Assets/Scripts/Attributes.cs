@@ -3,8 +3,10 @@ using SteelOfStalin.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace SteelOfStalin.Attributes
@@ -253,6 +255,35 @@ namespace SteelOfStalin.Attributes
             Manpower.ValueToString(), 
             Power.ValueToString(), 
             Time.ValueToString());
+        public void UpdateFromString(string res_string)
+        {
+            MatchCollection mc = Regex.Matches(res_string, @"(\d+\.?\d*)");
+            if (mc.Count != 10)
+            {
+                Debug.LogError($"Failed to parse resources from string {res_string}. Expected match collection length: 10. Actual {mc.Count}");
+                return;
+            }
+
+            /* note: order of properties retrieved by GetProperties is not guaranteed 
+             * as stated in https://docs.microsoft.com/en-us/dotnet/api/system.type.getproperties?view=net-6.0
+             * but so far it is in correct order
+             * TODO FUT Impl. find a way to make this independent on the order
+             */ 
+            int i = 0;
+            foreach (PropertyInfo prop in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.PropertyType == typeof(Attribute)))
+            {
+                if (decimal.TryParse(mc[i].Value, out decimal value))
+                {
+                    object prop_object = prop.GetValue(this);
+                    typeof(Attribute).GetProperty("Value").SetValue(prop_object, value);
+                }
+                else
+                {
+                    Debug.LogError($"Failed to parse {prop.Name} from match {mc[i].Value}");
+                }
+                i++;
+            }
+        }
 
         // omit comparison for time intentionally, cuz it's meaningless (won't have insufficient "time")
         public bool HasEnoughResources(Resources need, bool print_discrepancy = true)

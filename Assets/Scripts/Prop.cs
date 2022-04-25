@@ -628,7 +628,8 @@ namespace SteelOfStalin.Assets.Props.Units
             // called from test if Battle.Instance is null
             Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
-        public abstract void SetWeapons(params IOffensiveCustomizable[] weapons);
+        public void SetWeapons(params IOffensiveCustomizable[] weapons) => SetWeapons(weapons);
+        public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
 
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)
         public virtual bool CanAccessTile(Tile t)
@@ -782,6 +783,15 @@ namespace SteelOfStalin.Assets.Props.Units
         public abstract void SetModules(params Module[] modules);
 
         public abstract Modifier GetConcealmentPenaltyMove();
+        public Modifier GetConcealmentPenaltyFire()
+        {
+            if (WeaponFired == null)
+            {
+                this.LogWarning("WeaponFired is not set.");
+                return null;
+            }
+            return WeaponFired.ConcealmentPenaltyFire;
+        }
 
         public List<Unit> GetAvailableMergeTargets()
         {
