@@ -19,7 +19,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Ground() : base() { }
         public Ground(Ground another) : base(another) { }
         public abstract override object Clone();
-        public abstract override void SetWeapons(params IOffensiveCustomizable[] weapons);
+        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
         public abstract override IEnumerable<Module> GetModules();
 
         public override bool CanMove() => base.CanMove() && HasEnoughResourcesForMoving();
@@ -47,7 +47,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Naval() : base() { }
         public Naval(Naval another) : base(another) { }
         public abstract override object Clone();
-        public abstract override void SetWeapons(params IOffensiveCustomizable[] weapons);
+        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
         public abstract override IEnumerable<Module> GetModules();
     }
 
@@ -56,7 +56,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public Aerial() : base() { }
         public Aerial(Aerial another) : base(another) { }
         public abstract override object Clone();
-        public abstract override void SetWeapons(params IOffensiveCustomizable[] weapons);
+        public abstract override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
         public abstract override IEnumerable<Module> GetModules();
     }
 }
@@ -82,11 +82,11 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                new List<string>(another.AvailableSecondaryFirearms),
                (Attribute)another.CaptureEfficiency?.Clone());
 
-        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
         {
-            if (weapons.Length > 2 || weapons.Length == 0)
+            if (!weapons.Any() || weapons.Count() > 2 )
             {
-                this.LogError($"Weapons length mismatch. Expected: [1,2]. Actual: {weapons.Length}");
+                this.LogError($"Weapons length mismatch. Expected: [1,2]. Actual: {weapons.Count()}");
                 return;
             }
             if (!weapons.All(w => w is Firearm))
@@ -95,10 +95,10 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 return;
             }
 
-            ChangeFirearm((Firearm)weapons[0]);
-            if (weapons.Length > 1)
+            ChangeFirearm((Firearm)weapons.ElementAt(0));
+            if (weapons.Count() > 1)
             {
-                ChangeFirearm((Firearm)weapons[1], false);
+                ChangeFirearm((Firearm)weapons.ElementAt(1), false);
             }
         }
 
@@ -182,7 +182,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                (Gun)another.Gun?.Clone(),
                (Radio)another.Radio?.Clone());
 
-        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
         {
             if (!weapons.Any())
             {
@@ -217,6 +217,13 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         public virtual bool CanAssemble() => !IsSuppressed && !IsAssembled;
         public virtual bool CanDisassemble() => !IsSuppressed && IsAssembled;
         public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Arsenal;
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            // TODO FUT. Impl. have a set of default modules for non-historical units, set them all here, same for other sub-cats except Personnels
+            Radio = Game.CustomizableData.GetNew<Radio>();
+        }
 
         public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun };
         public override IEnumerable<Module> GetModules() => new List<Module>() { Gun, Radio };
@@ -291,7 +298,13 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 (FuelTank)another.FuelTank?.Clone(),
                 (AmmoRack)another.AmmoRack?.Clone());
 
-        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Radio = Game.CustomizableData.GetNew<Radio>();
+        }
+
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
         {
             if (!weapons.Any())
             {
@@ -522,6 +535,17 @@ namespace SteelOfStalin.Assets.Props.Units.Land.Vehicles
     {
         public MotorisedInfantry() : base() { }
         public MotorisedInfantry(MotorisedInfantry another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("small_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("small_suspension");
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("small_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("small_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("small_ammo_rack");
+        }
+
         public override object Clone() => new MotorisedInfantry(this);
     }
     public class Utility : Vehicle
@@ -530,6 +554,17 @@ namespace SteelOfStalin.Assets.Props.Units.Land.Vehicles
 
         public Utility() : base() { }
         public Utility(Utility another) : base(another) => LoadLimit = (LoadLimit)another.LoadLimit.Clone();
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("small_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("small_suspension"); // TODO add Wheels module
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("small_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("small_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("small_ammo_rack");
+        }
+
         public override object Clone() => new Utility(this);
     }
     public class Carrier : Vehicle
@@ -544,36 +579,102 @@ namespace SteelOfStalin.Assets.Props.Units.Land.Vehicles
     {
         public ArmouredCar() : base() { }
         public ArmouredCar(ArmouredCar another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("small_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("small_suspension"); // TODO add Wheels module
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("small_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("medium_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("medium_ammo_rack");
+        }
+
         public override object Clone() => new ArmouredCar(this);
     }
     public class TankDestroyer : Vehicle
     {
         public TankDestroyer() : base() { }
         public TankDestroyer(TankDestroyer another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("medium_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("medium_suspension");
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("medium_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("medium_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("medium_ammo_rack");
+        }
+
         public override object Clone() => new TankDestroyer(this);
     }
     public class AssaultGun : Vehicle
     {
         public AssaultGun() : base() { }
         public AssaultGun(AssaultGun another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("large_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("medium_suspension");
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("medium_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("large_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("medium_ammo_rack");
+        }
+
         public override object Clone() => new AssaultGun(this);
     }
     public class LightTank : Vehicle
     {
         public LightTank() : base() { }
         public LightTank(LightTank another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("small_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("small_suspension");
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("medium_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("medium_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("medium_ammo_rack");
+        }
+
         public override object Clone() => new LightTank(this);
     }
     public class MediumTank : Vehicle
     {
         public MediumTank() : base() { }
         public MediumTank(MediumTank another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("medium_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("medium_suspension");
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("medium_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("large_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("large_ammo_rack");
+        }
+
         public override object Clone() => new MediumTank(this);
     }
     public class HeavyTank : Vehicle
     {
         public HeavyTank() : base() { }
         public HeavyTank(HeavyTank another) : base(another) { }
+
+        public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
+        {
+            base.Initialize(owner, coordinates, status);
+            Engine = (Engine)Game.CustomizableData.GetNew<Engine>("large_engine");
+            Suspension = (Suspension)Game.CustomizableData.GetNew<Suspension>("large_suspension");
+            Periscope = (Periscope)Game.CustomizableData.GetNew<Periscope>("large_periscope");
+            FuelTank = (FuelTank)Game.CustomizableData.GetNew<FuelTank>("large_fuel_tank");
+            AmmoRack = (AmmoRack)Game.CustomizableData.GetNew<AmmoRack>("large_ammo_rack");
+        }
+
         public override object Clone() => new HeavyTank(this);
     }
     public class ArmouredTrain : Vehicle
@@ -625,7 +726,7 @@ namespace SteelOfStalin.Assets.Props.Units.Sea
                 (Radar)another.Radar?.Clone(),
                 another.Altitude);
 
-        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
         {
             // TODO FUT. Impl.
         }
@@ -769,7 +870,7 @@ namespace SteelOfStalin.Assets.Props.Units.Air
                (LandingGear)another.LandingGear?.Clone(),
                (Radar)another.Radar?.Clone());
 
-        public override void SetWeapons(params IOffensiveCustomizable[] weapons)
+        public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
         {
             // TODO FUT. Impl.
         }

@@ -1,85 +1,51 @@
 {
-  "Capacity": {
-    "Money": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Steel": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Supplies": {
-      "Value": 1000,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Cartridges": {
-      "Value": 100,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Shells": {
-      "Value": 100,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Fuel": {
-      "Value": 1000,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "RareMetal": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Manpower": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Power": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Time": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
+  "Horsepower": {
+    "Value": 300,
+    "Mod": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
     }
   },
-  "OwnerName": "",
-  "BuilderLocation": {
-    "X": 0,
-    "Y": 0
+  "FuelConsumption": {
+    "Value": 3,
+    "Mod": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    }
   },
-  "Status": "NONE",
-  "Level": 0,
-  "MaxLevel": 0,
-  "Size": 0,
+  "ConcealmentPenaltyMove": {
+    "Type": "PERCENTAGE",
+    "Value": -0.2
+  },
+  "Integrity": {
+    "Value": 300,
+    "Mod": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    }
+  },
+  "Weight": {
+    "Value": 0,
+    "Mod": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    }
+  },
+  "FunctionalThreshold": {
+    "Value": 0,
+    "Mod": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    }
+  },
+  "TakeDamageChance": {
+    "Value": 0,
+    "Mod": {
+      "Type": "FIXED_VALUE",
+      "Value": 0
+    }
+  },
+  "Name": "large_engine",
   "Cost": {
     "Base": {
       "Money": {
@@ -97,7 +63,7 @@
         }
       },
       "Supplies": {
-        "Value": 50,
+        "Value": 0,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
@@ -146,7 +112,7 @@
         }
       },
       "Time": {
-        "Value": 3,
+        "Value": 0,
         "Mod": {
           "Type": "FIXED_VALUE",
           "Value": 0
@@ -589,50 +555,5 @@
       "Type": "FIXED_VALUE",
       "Value": 0
     }
-  },
-  "Durability": {
-    "Value": 1000,
-    "Mod": {
-      "Type": "FIXED_VALUE",
-      "Value": 0
-    }
-  },
-  "Scouting": {
-    "Reconnaissance": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Concealment": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Detection": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    },
-    "Communication": {
-      "Value": 0,
-      "Mod": {
-        "Type": "FIXED_VALUE",
-        "Value": 0
-      }
-    }
-  },
-  "DestroyTerrainOnBuilt": true,
-  "ConstructionTimeRemaining": 0,
-  "Name": "outpost",
-  "MeshName": "",
-  "CoOrds": {
-    "X": 0,
-    "Y": 0
   }
 }

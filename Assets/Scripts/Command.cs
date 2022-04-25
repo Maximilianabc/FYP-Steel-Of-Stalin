@@ -203,7 +203,10 @@ namespace SteelOfStalin.Commands
             _ = Recorder.Append(Unit.ToString());
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon);
+
+            Unit.WeaponFired = Weapon;
             Unit.Status |= UnitStatus.FIRED;
+
             _ = Recorder.Append($" {Symbol} {Target}");
 
             if (Weapon is Gun)
@@ -357,7 +360,10 @@ namespace SteelOfStalin.Commands
             _ = Recorder.Append(Unit.ToString());
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon, false);
+
+            Unit.WeaponFired = Weapon;
             Unit.Status |= UnitStatus.FIRED;
+
             _ = Recorder.Append($" {Symbol} {Target}");
 
             Target.ConsecutiveSuppressedRound++;
@@ -429,7 +435,10 @@ namespace SteelOfStalin.Commands
             _ = Recorder.Append(Unit.ToString());
             ConsumeSuppliesStandingStill();
             ConsumeAmmoFiring(Weapon);
+
+            Unit.WeaponFired = Weapon;
             Unit.Status |= UnitStatus.FIRED;
+
             _ = Recorder.Append($" {Symbol} {Target}");
 
             decimal damage_dealt = Formula.DamageAgainstBuilding(Weapon);
@@ -469,12 +478,13 @@ namespace SteelOfStalin.Commands
         }
         public override bool RelatedToPlayer(Player p) => (Target != null && Target.Owner == p) || base.RelatedToPlayer(p);
     }
+    // handle units with ambusing status before the start of planning phase of next round
     public sealed class Ambush : Command
     {
         public Ambush() : base() { }
         public Ambush(Unit u) : base(u) { }
 
-        // TODO handle units with ambusing status before the start of planning phase of next round
+        // TODO FUT. Impl. add cancel for Ambush
         public override void Execute()
         {
             if (Unit == null)
@@ -1113,6 +1123,8 @@ namespace SteelOfStalin.Commands
         }
     }
     #endregion
+
+    // TODO FUT Impl. add Spot command for active spotting
 
     public sealed class Capture : Command
     {
