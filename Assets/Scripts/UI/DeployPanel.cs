@@ -85,7 +85,7 @@ public class DeployPanel : MonoBehaviour
     {
         cities = Battle.Instance.Map.GetCities(Battle.Instance.Self).ToList();
         citySelection.GetComponent<TMPro.TMP_Dropdown>().ClearOptions();
-        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c => $"{c.Name} {c.CubeCoOrds}"));
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c => $"{c.Name} {c.CoOrds}"));
         currentCity = null;
     }
 
@@ -197,8 +197,10 @@ public class DeployPanel : MonoBehaviour
         if (selectedUnit != null) {
             weapons = new List<IOffensiveCustomizable>();
             weapons = selectedUnit.GetWeapons().ToList();
-            foreach (IOffensiveCustomizable weapon in weapons)
+
+            for(int i=0;i<weapons.Count;i++)
             {
+                IOffensiveCustomizable weapon = weapons[i];
                 //show weapons
                 GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "DeployPanelWeapon"), customizableParts.transform, false);
                 instance.name = weapon.Name;
@@ -229,7 +231,9 @@ public class DeployPanel : MonoBehaviour
                         sb.AppendLine(weapon.Name);
                         sb.AppendLine($"Range: {weapon.Offense.MinRange.Value}-{weapon.Offense.MaxRange.Value}");
                         sb.AppendLine($"Accuracy: {weapon.Offense.Accuracy.Normal.Value}");
-                        sb.Append($"Damage:{weapon.Offense.Damage.Hard.Value}");
+                        sb.Append($"Hard Damage:{weapon.Offense.Damage.Hard.Value}");
+                        sb.Append($"Soft Damage:{weapon.Offense.Damage.Soft.Value}");
+                        sb.Append($"Destruction Damage:{weapon.Offense.Damage.Destruction.Value}");
                     }
                     else
                     {
@@ -251,7 +255,7 @@ public class DeployPanel : MonoBehaviour
                     eventID = EventTriggerType.PointerClick,
                     callback = new EventTrigger.TriggerEvent()
                 };
-                onClick.callback.AddListener(new UnityAction<BaseEventData>(e => SelectWeapon(weapon)));
+                onClick.callback.AddListener(new UnityAction<BaseEventData>(e => SelectWeapon(weapon,i)));
                 //Reset selected visual indicator 
                 foreach (Transform child in customizableParts.transform)
                 {
@@ -259,10 +263,10 @@ public class DeployPanel : MonoBehaviour
                 }
             }
         }            
-        RedrawWeaponOptions();
+        RedrawWeaponOptions(-1);
     }
 
-    public void SelectWeapon(IOffensiveCustomizable weapon) {
+    public void SelectWeapon(IOffensiveCustomizable weapon,int index) {
         if (selectedUnit == null) return;
         selectedWeapon = weapon;
         //reset selected visual indicator
@@ -272,13 +276,13 @@ public class DeployPanel : MonoBehaviour
         customizableParts.transform.Find(weapon.Name).Find("Selected").gameObject.SetActive(true);
 
         //draw all options
-        RedrawWeaponOptions();
+        RedrawWeaponOptions(index);
 
 
         
     }
 
-    public void RedrawWeaponOptions() {
+    public void RedrawWeaponOptions(int index) {
         foreach (Transform child in customizableOptions.transform)
         {
             Destroy(child.gameObject);
@@ -287,7 +291,17 @@ public class DeployPanel : MonoBehaviour
             weaponOptions = null;
             if (selectedUnit is Personnel p)
             {
-                weaponOptions = p.AvailablePrimaryFirearms.ConvertAll<IOffensiveCustomizable>(s => Game.CustomizableData.GetNewFirearm(s));
+                if (index == 0)
+                {
+                    weaponOptions = p.AvailablePrimaryFirearms.ConvertAll<IOffensiveCustomizable>(s => (IOffensiveCustomizable)Game.CustomizableData.GetNewFirearm(s));
+                }
+                else if (index == 1)
+                {
+                    weaponOptions = p.AvailableSecondaryFirearms.ConvertAll<IOffensiveCustomizable>(s => (IOffensiveCustomizable)Game.CustomizableData.GetNewFirearm(s));
+                }
+                else {
+                    Debug.LogError("undefined weapons");
+                }
             }
             else if (selectedUnit is Artillery a)
             {
@@ -355,8 +369,7 @@ public class DeployPanel : MonoBehaviour
                     onClick.callback.AddListener(new UnityAction<BaseEventData>(e => {
                         //handle weaponOption being chosen
                         if (selectedUnit == null) return;
-                        weapons.Remove(selectedWeapon);
-                        weapons.Add(weaponOption);
+                        weapons[index] = weaponOption;
                         RedrawCustomizablePart();
                     }));
 

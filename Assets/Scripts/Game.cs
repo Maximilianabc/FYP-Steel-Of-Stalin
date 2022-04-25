@@ -141,6 +141,9 @@ namespace SteelOfStalin
             if (StreamingAssetExists("profile.json"))
             {
                 Profile = DeserializeJson<PlayerProfile>("profile");
+#if UNITY_EDITOR
+                Profile.Name = $"random_{Utilities.Random.Next()}";
+#endif
             }
             else
             {
@@ -154,9 +157,7 @@ namespace SteelOfStalin
         {
             // TODO FUT. Impl. sanitize the data because it is passed via network
             string player_name = Encoding.UTF8.GetString(connectionData);
-#if UNITY_EDITOR
-            player_name = $"random_{Utilities.Random.Next()}";
-#endif
+
             Battle current_battle = Battle.Instance;
 
             if (clientId != 0)
@@ -2094,7 +2095,7 @@ namespace SteelOfStalin.Flow
                 u.AddToScene();
             }
 
-            IEnumerable<Building> new_buildings = Map.Instance.GetBuildings(b => !(b is Barracks && b is Arsenal) && b.PropObject == null/* && b.Status == BuildingStatus.UNDER_CONSTRUCTION*/);
+            IEnumerable<Building> new_buildings = Map.Instance.GetBuildings(b => !(b is Barracks || b is Arsenal) && b.PropObject == null/* && b.Status == BuildingStatus.UNDER_CONSTRUCTION*/);
             foreach (Building b in new_buildings)
             {
                 b.AddToScene();
