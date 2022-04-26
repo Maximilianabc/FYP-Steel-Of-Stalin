@@ -698,7 +698,7 @@ namespace SteelOfStalin.Assets.Props.Units
         {
             if (weapon == null)
             {
-                this.LogError("weapon is null");
+                //this.LogError("weapon is null");
                 return Enumerable.Empty<Tile>();
             }
 

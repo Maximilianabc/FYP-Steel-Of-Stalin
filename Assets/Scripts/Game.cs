@@ -293,6 +293,7 @@ namespace SteelOfStalin
                         bot.Botflow();
                     }
                 }
+                UIUtil.instance.RoundStartUIUpdate();
 
                 int counter = 0;
                 if (!unlimited_time)
@@ -311,7 +312,7 @@ namespace SteelOfStalin
                     yield return new WaitWhile(() => !AreAllPlayersReady);
                     Debug.Log("All players are ready");
                 }
-
+                UIUtil.instance.RoundEndUIUpdate();
                 Debug.Log("End Turn");
                 EnablePlayerInput = false;
                 if (Game.Network.IsServer)
@@ -402,6 +403,7 @@ namespace SteelOfStalin
             }
             Debug.Log($"Winner is {m_winner}!");
             Game.Network.Shutdown();
+            SceneManager.LoadScene("Menu");
             yield return null;
         }
         private IEnumerator Initialize()

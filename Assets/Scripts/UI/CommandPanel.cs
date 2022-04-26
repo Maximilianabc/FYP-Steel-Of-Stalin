@@ -61,6 +61,7 @@ public class CommandPanel : MonoBehaviour
 
 
     public void SetUnit(Unit u) {
+        if (!UIUtil.instance.isListenToUIEvent) return;
         if (u == null) return;
         if (!u.IsOwn(Battle.Instance.Self)) return;
         currentUnit = u;

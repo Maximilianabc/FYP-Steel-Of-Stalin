@@ -91,6 +91,7 @@ public class DeployPanel : MonoBehaviour
 
     public void SetCity(Cities city)
     {
+        if (!UIUtil.instance.isListenToUIEvent) return;
         ResetCity();
         currentCity = city;
         CameraController.instance.FocusOn(city.PropObject.transform);

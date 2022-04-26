@@ -65,13 +65,6 @@ public class TrainPanel : MonoBehaviour
             if (currentCity == null) return;
             DeployPanel.instance.SetCity(currentCity);
         });
-        //should be handled after round start
-        LeanTween.delayedCall(0.2f, (System.Action)delegate
-        {
-            SetCity(Battle.Instance.Self.Capital);
-        });
-
-
 
     }
 
@@ -163,6 +156,7 @@ public class TrainPanel : MonoBehaviour
     }
 
     public void SetCity(Cities city) {
+        if (!UIUtil.instance.isListenToUIEvent) return;
         ResetCity();
         currentCity = city;
         CameraController.instance.FocusOn(city.PropObject.transform);

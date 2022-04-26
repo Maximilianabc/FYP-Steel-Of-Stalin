@@ -110,4 +110,17 @@ public class UIUtil : MonoBehaviour
         Application.Quit();
     }
 
+    public void RoundStartUIUpdate() {
+        TrainPanel.instance.SetCity(Battle.Instance.Self.Capital);
+        ResourcesPanel.instance.SetResources(Battle.Instance.Self.Resources);
+    }
+
+    public void RoundEndUIUpdate() {
+        TrainPanel.instance.HideAll();
+        UnitPanel.instance.Hide();
+        CommandPanel.instance.Hide();
+    }
+
+    public bool isListenToUIEvent => Battle.Instance != null && !Battle.Instance.Self.IsReady && Battle.Instance.EnablePlayerInput;
+
 }
