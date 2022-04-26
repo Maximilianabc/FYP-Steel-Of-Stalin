@@ -934,6 +934,7 @@ namespace SteelOfStalin.Commands
 
         public override void Execute()
         {
+            Debug.Log("Train command executing");
             if (TrainingGround == null)
             {
                 this.LogError("Training ground is null.");

@@ -106,12 +106,13 @@ public class DeployPanel : MonoBehaviour
         deployableUnits = new List<Unit>();
         foreach (UnitBuilding b in buildings)
         {
+            Debug.Log($"{b.Name}:{b.ReadyToDeploy.Count},{b.Status}");
             foreach (Command c in Battle.Instance.Self.Commands)
             {
                 if (c is Deploy)
                 {
                     Deploy deploy = c as Deploy;
-                    if (deploy.TrainingGround == b)
+                    if (deploy.TrainingGround.MeshName == b.MeshName)
                     {
                         //remove units from deployable units
                         b.ReadyToDeploy.Remove(deploy.Unit);                      
@@ -120,6 +121,8 @@ public class DeployPanel : MonoBehaviour
             }
             deployableUnits.AddRange(b.ReadyToDeploy);
         }
+        Debug.Log($"buildings count:{buildings.Count}");
+        Debug.Log($"deployable units count:{deployableUnits.Count}");
 
 
         Transform unitListItems = unitList.transform.Find("UnitListItems");
@@ -184,6 +187,7 @@ public class DeployPanel : MonoBehaviour
     {
         if (selectedUnit == u) return;
         selectedUnit = u;
+        weapons = null;
         RedrawCustomizablePart();
 
     }
@@ -195,24 +199,50 @@ public class DeployPanel : MonoBehaviour
         }
         //only clean up if no unitselected
         if (selectedUnit != null) {
-            weapons = new List<IOffensiveCustomizable>();
-            weapons = selectedUnit.GetWeapons().ToList();
+            //update weapons only if a new unit is selected
+            if(weapons==null)weapons = selectedUnit.GetWeapons().ToList();
 
             for(int i=0;i<weapons.Count;i++)
             {
+                //initialize default weapons
+                if (weapons[i] == null) {
+                    if (selectedUnit is Personnel p)
+                    {
+                        if (i == 0)
+                        {
+                            weapons[i] = Game.CustomizableData.GetNewFirearm(p.DefaultPrimary);
+                        }
+                    }
+                    else if (selectedUnit is Vehicle v)
+                    {
+                        weapons[i] = (IOffensiveCustomizable)Game.CustomizableData.GetNewModule(v.DefaultMainArmament);
+                    }
+                    else if (selectedUnit is Artillery a) {
+                        weapons[i] = (IOffensiveCustomizable)Game.CustomizableData.GetNewModule(a.DefaultGun);
+                    }
+                }
                 IOffensiveCustomizable weapon = weapons[i];
                 //show weapons
                 GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "DeployPanelWeapon"), customizableParts.transform, false);
-                instance.name = weapon.Name;
-                Sprite icon = Game.Icons.Find(s => s.name == weapon.Name);
-                if (icon != null)
+                if (weapon != null)
                 {
-                    instance.transform.Find("Icon").GetComponent<Image>().sprite = icon;
+                    instance.name = weapon.Name;
+                    Sprite icon = Game.Icons.Find(s => s.name == weapon.Name);
+                    if (icon != null)
+                    {
+                        instance.transform.Find("Icon").GetComponent<Image>().sprite = icon;
+                    }
+                    else
+                    {
+                        instance.transform.Find("Icon").GetComponent<Image>().sprite = transparent;
+                    }
                 }
-                else
-                {
+                else {
+                    instance.name = "Empty";
                     instance.transform.Find("Icon").GetComponent<Image>().sprite = transparent;
                 }
+                
+                     
                 if (instance.GetComponent<EventTrigger>() == null)
                 {
                     instance.AddComponent<EventTrigger>();
@@ -231,8 +261,8 @@ public class DeployPanel : MonoBehaviour
                         sb.AppendLine(weapon.Name);
                         sb.AppendLine($"Range: {weapon.Offense.MinRange.Value}-{weapon.Offense.MaxRange.Value}");
                         sb.AppendLine($"Accuracy: {weapon.Offense.Accuracy.Normal.Value}");
-                        sb.Append($"Hard Damage:{weapon.Offense.Damage.Hard.Value}");
-                        sb.Append($"Soft Damage:{weapon.Offense.Damage.Soft.Value}");
+                        sb.AppendLine($"Hard Damage:{weapon.Offense.Damage.Hard.Value}");
+                        sb.AppendLine($"Soft Damage:{weapon.Offense.Damage.Soft.Value}");
                         sb.Append($"Destruction Damage:{weapon.Offense.Damage.Destruction.Value}");
                     }
                     else
@@ -255,15 +285,20 @@ public class DeployPanel : MonoBehaviour
                     eventID = EventTriggerType.PointerClick,
                     callback = new EventTrigger.TriggerEvent()
                 };
-                onClick.callback.AddListener(new UnityAction<BaseEventData>(e => SelectWeapon(weapon,i)));
+                int x = i;
+                onClick.callback.AddListener(new UnityAction<BaseEventData>(e => SelectWeapon(weapon,x)));
+                et.triggers.Add(onClick);
                 //Reset selected visual indicator 
                 foreach (Transform child in customizableParts.transform)
                 {
                     child.Find("Selected").gameObject.SetActive(false);
                 }
             }
-        }            
-        RedrawWeaponOptions(-1);
+        }
+        foreach (Transform child in customizableOptions.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     public void SelectWeapon(IOffensiveCustomizable weapon,int index) {
@@ -273,7 +308,7 @@ public class DeployPanel : MonoBehaviour
         foreach (Transform child in customizableParts.transform) {
             child.Find("Selected").gameObject.SetActive(false);
         }
-        customizableParts.transform.Find(weapon.Name).Find("Selected").gameObject.SetActive(true);
+        customizableParts.transform.GetChild(index).Find("Selected").gameObject.SetActive(true);
 
         //draw all options
         RedrawWeaponOptions(index);
@@ -298,6 +333,7 @@ public class DeployPanel : MonoBehaviour
                 else if (index == 1)
                 {
                     weaponOptions = p.AvailableSecondaryFirearms.ConvertAll<IOffensiveCustomizable>(s => (IOffensiveCustomizable)Game.CustomizableData.GetNewFirearm(s));
+                    weaponOptions.Insert(0, null);
                 }
                 else {
                     Debug.LogError("undefined weapons");
@@ -316,10 +352,16 @@ public class DeployPanel : MonoBehaviour
                     GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "DeployPanelWeaponOptions"), customizableOptions.transform, false);
                     //TODO: avoid using null as part of the logic for IOffensiveCustomizable, possible solution: create wrapper class for IOffensiveCustomizable
                     instance.name = weaponOption != null ? weaponOption.Name : "Empty";
-                    Sprite icon = Game.Icons.Find(s => s.name == weaponOption.Name);
-                    if (icon != null)
-                    {
-                        instance.transform.Find("Icon").GetComponent<Image>().sprite = icon;
+                    if (weaponOption != null) {
+                        Sprite icon = Game.Icons.Find(s => s.name == weaponOption.Name);
+                        if (icon != null)
+                        {
+                            instance.transform.Find("Icon").GetComponent<Image>().sprite = icon;
+                        }
+                        else
+                        {
+                            instance.transform.Find("Icon").GetComponent<Image>().sprite = transparent;
+                        }
                     }
                     else
                     {
@@ -347,7 +389,6 @@ public class DeployPanel : MonoBehaviour
                         }
                         else
                         {
-                            Debug.LogError("weaponOption cannot be null, check initilization of availableFirearm or availableGun");
                             sb.Append("Empty");
                         }
                         Tooltip.ShowTooltip_Static(sb.ToString());
@@ -372,6 +413,7 @@ public class DeployPanel : MonoBehaviour
                         weapons[index] = weaponOption;
                         RedrawCustomizablePart();
                     }));
+                    et.triggers.Add(onClick);
 
                 }
             }
@@ -398,12 +440,10 @@ public class DeployPanel : MonoBehaviour
         if (selectedUnit == null) {
             Debug.Log("Unit not set");
             return;
-        } 
-        foreach (IOffensiveCustomizable weapon in weapons) {
-            if (weapon == null) {
-                Debug.Log("some weapons are empty");
-                return;
-            }
+        }
+        if (weapons == null) {
+            Debug.Log("weapons not set");
+            return;
         }
         UnitBuilding unitBuilding = buildings.Find(u => u.ReadyToDeploy.Contains(selectedUnit));
         destinationTiles =unitBuilding.GetDeployableDestinations(selectedUnit).ToList();
@@ -417,7 +457,7 @@ public class DeployPanel : MonoBehaviour
             return;
         }
         foreach (Tile t in destinationTiles) {
-            t.PropObjectComponent.SetColorForAllChildren(Color.green);
+            t.PropObjectComponent.Highlight();
             PropEventTrigger trigger=t.PropObjectComponent.Trigger;
             trigger.SetActive("deploy_tile", true);
             trigger.SetActive("focus", false);           
@@ -432,14 +472,10 @@ public class DeployPanel : MonoBehaviour
             Debug.Log("Unit not set");
             return;
         }
-        foreach (IOffensiveCustomizable weapon in weapons)
-        {
-            if (weapon == null)
-            {
-                Debug.Log("some weapons are empty");
-                return;
-            }
+        if (weapons == null) {
+            Debug.Log("Weapons not set");
         }
+        weapons.RemoveAll(w => w == null);
         UnitBuilding unitBuilding = buildings.Find(u => u.ReadyToDeploy.Contains(selectedUnit));
         Deploy deploy = new Deploy(selectedUnit, unitBuilding, t.CoOrds, weapons);
         Battle.Instance.Self.Commands.Add(deploy);
@@ -449,16 +485,13 @@ public class DeployPanel : MonoBehaviour
         //TODO: add animation?
     }
 
-    public void CancelDeploy() {
-        CleanUpTrigger();
-    }
 
     public void CleanUpTrigger() {
         if (!isWaitingInput) return;
         if (destinationTiles == null || destinationTiles.Count < 1) return;
         foreach (Tile t in destinationTiles)
         {
-            t.PropObjectComponent.SetColorForAllChildren(Color.clear);
+            t.PropObjectComponent.RestoreHighlight();
             PropEventTrigger trigger = t.PropObjectComponent.Trigger;
             trigger.SetActive("deploy_tile", false);
             trigger.SetActive("focus", true);

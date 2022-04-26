@@ -253,7 +253,7 @@ public class CommandPanel : MonoBehaviour
             List<Tile> reachableTiles = currentUnit.GetMoveRange().ToList();
             foreach (Tile t in reachableTiles)
             {
-                t.PropObjectComponent.SetColorForAllChildren(Color.green);
+                t.PropObjectComponent.Highlight();
                 PropEventTrigger trigger = t.PropObjectComponent.Trigger;
                 trigger.SetActive("move_tile", true);
                 trigger.SetActive("focus", false);
@@ -270,8 +270,9 @@ public class CommandPanel : MonoBehaviour
         else if (commandString == "Fire" || commandString == "Suppress" || commandString == "Sabotage")
         {
             //Fire(Unit u,Unit Target,IOffensiveCustomizable weapon)
-            IEnumerable<IOffensiveCustomizable> weapons = currentUnit.GetWeapons();
+            IEnumerable<IOffensiveCustomizable> weapons = currentUnit.GetWeapons().Where(w=>w!=null);
             if (weapons.Count() == 0) return;
+            
             foreach (IOffensiveCustomizable weapon in weapons)
             {
                 GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "CommandPanelWeapon"), transform, false);
@@ -327,6 +328,7 @@ public class CommandPanel : MonoBehaviour
                     e.selectedObject.transform.Find("Selected").gameObject.SetActive(true);
                     SetWeapon(weapon);
                 }));
+                et.triggers.Add(onClick);
 
             }
             SetWeapon(weapons.First());
@@ -440,7 +442,7 @@ public class CommandPanel : MonoBehaviour
         }
         isWaitingInput = true;
         foreach (Prop p in triggerProps) {
-            p.PropObjectComponent.SetColorForAllChildren(Color.green);
+            p.PropObjectComponent.Highlight();
             PropEventTrigger trigger = p.PropObjectComponent.Trigger;
             if(currentCommand=="Fire") trigger.SetActive("fire_unit", true);
             else if(currentCommand=="Suppress") trigger.SetActive("suppress_unit", true);
@@ -452,7 +454,8 @@ public class CommandPanel : MonoBehaviour
     public void CleanUpTrigger() {
         if (!isWaitingInput) return;
         foreach (Prop p in triggerProps) {
-            p.PropObjectComponent.SetColorForAllChildren(Color.clear);
+
+            p.PropObjectComponent.RestoreHighlight();
             PropEventTrigger trigger = p.PropObjectComponent.Trigger;
             if (currentCommand == "Move") trigger.SetActive("move_tile", false);
             else if (currentCommand == "Fire") trigger.SetActive("fire_unit", false);

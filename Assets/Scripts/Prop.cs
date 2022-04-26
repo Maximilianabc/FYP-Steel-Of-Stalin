@@ -240,6 +240,8 @@ namespace SteelOfStalin.Assets.Props
         public AudioClip AudioOnFire { get; set; }
         public AudioClip AudioOnMove { get; set; }
 
+        public List<Material> RendererMaterials { get; set; }
+
         public PropEventTrigger Trigger => GetComponent<PropEventTrigger>();
 
         public string PrintOnScreenCoOrds() => $"({gameObject.transform.position.x},{gameObject.transform.position.y},{gameObject.transform.position.z})";
@@ -393,6 +395,21 @@ namespace SteelOfStalin.Assets.Props
         }
 
         public void SetColorForAllChildren(Color color) => GetComponentsInChildren<MeshRenderer>().ToList().ForEach(mr => mr.material.SetColor("_BaseColor", color));
+
+        public void Highlight() {
+            Color highlightColor = Color.green;
+            RendererMaterials = GetComponentsInChildren<MeshRenderer>().ToList().ConvertAll<Material>(mr =>new Material(mr.material));
+            SetColorForAllChildren(highlightColor);
+        }
+
+        public void RestoreHighlight() {
+            List<MeshRenderer> renderers = GetComponentsInChildren<MeshRenderer>().ToList();
+            if (RendererMaterials == null) return;
+            if (RendererMaterials.Count != renderers.Count) return;
+            for (int i = 0; i < renderers.Count; i++) {
+                renderers[i].material=RendererMaterials[i]; 
+            }
+        }
     }
 }
 
