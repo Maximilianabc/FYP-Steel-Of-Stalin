@@ -434,13 +434,16 @@ namespace SteelOfStalin
             int num = orderedcities.Count();
         
             if(num > 1){
-                int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num -1 ).CoOrds.X) / 2;
-                int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
-                var midtile = Map.Instance.GetTile(x,y);
-                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(midtile)).First();
-                var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), Map.Instance.GetTile(x,y));
+                // int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num -1 ).CoOrds.X) / 2;
+                // int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
+                // var midtile = Map.Instance.GetTile(x,y);
+                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(orderedcities.ElementAt(num-1))).First();
+                var path = avaunits.GetPath(avaunits.GetLocatedTile, orderedcities.ElementAt(num-1).GetLocatedTile);
+                int middle = path.Count()/2;
+                var tileofoutpost = path.ElementAt(middle);
+                var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), tileofoutpost);
 
-                if(Buildings.Where(b => b.CoOrds.X == midtile.CoOrds.X && b.CoOrds.Y == midtile.CoOrds.Y).Count() < 1){
+                if(Buildings.Where(b => b.CoOrds.X == tileofoutpost.CoOrds.X && b.CoOrds.Y == tileofoutpost.CoOrds.Y).Count() <= 1){
                     if(avaunits.GetDistance(Map.Instance.GetTile(x,y)) == 0){
                         Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),midtile.CoOrds));
                         avaunits.CommandAssigned = CommandAssigned.CONSTRUCT;
