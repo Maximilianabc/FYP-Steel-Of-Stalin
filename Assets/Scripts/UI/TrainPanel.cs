@@ -266,10 +266,11 @@ public class TrainPanel : MonoBehaviour
         if (selectedUnitBuilding is Arsenal && !(u is Vehicle || u is Artillery)) {
             Debug.Log($"{u.Name} cannot be trained in arsenal");
             return;
-        } 
+        }
         //TODO: all sorts of checking, prediction of resources consumption
         //maybe only call a function to update the resources 
-        Battle.Instance.Self.Commands.Add(new Train((Unit)u.Clone(), selectedUnitBuilding, Battle.Instance.Self));
+        UnitBuilding ub = Map.Instance.GetBuildings<UnitBuilding>().Where(ub => ub.ToString() == selectedUnitBuilding.ToString()).FirstOrDefault();
+        Battle.Instance.Self.Commands.Add(new Train((Unit)u.Clone(), ub, Battle.Instance.Self));
         RedrawQueues();
     }
 
