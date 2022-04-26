@@ -438,14 +438,14 @@ namespace SteelOfStalin
                 // int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
                 // var midtile = Map.Instance.GetTile(x,y);
                 var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(orderedcities.ElementAt(num-1))).First();
-                var path = avaunits.GetPath(avaunits.GetLocatedTile, orderedcities.ElementAt(num-1).GetLocatedTile);
+                var path = avaunits.GetPath(avaunits.GetLocatedTile(), orderedcities.ElementAt(num-1).GetLocatedTile());
                 int middle = path.Count()/2;
                 var tileofoutpost = path.ElementAt(middle);
                 var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), tileofoutpost);
 
                 if(Buildings.Where(b => b.CoOrds.X == tileofoutpost.CoOrds.X && b.CoOrds.Y == tileofoutpost.CoOrds.Y).Count() <= 1){
-                    if(avaunits.GetDistance(Map.Instance.GetTile(x,y)) == 0){
-                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),midtile.CoOrds));
+                    if(avaunits.GetDistance(tileofoutpost) == 0){
+                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),tileofoutpost.CoOrds));
                         avaunits.CommandAssigned = CommandAssigned.CONSTRUCT;
                     }
                     else{
