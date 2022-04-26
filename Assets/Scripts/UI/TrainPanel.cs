@@ -248,17 +248,19 @@ public class TrainPanel : MonoBehaviour
             Debug.Log("Queue is full");
             return;
         }
-        //TODO: modify to use estimated resources
-        if (!Battle.Instance.Self.HasEnoughResources(u.Cost.Base)) {
-            Debug.Log("Resources not sufficient");
-            return;
-        }
+
         if (selectedUnitBuilding is Barracks && !(u is Personnel)) {
             Debug.Log($"{u.Name} cannot be trained in barracks");
             return;
         }
         if (selectedUnitBuilding is Arsenal && !(u is Vehicle || u is Artillery)) {
             Debug.Log($"{u.Name} cannot be trained in arsenal");
+            return;
+        }
+
+        if (!ResourcesPanel.instance.Consume(u.Cost.Base))
+        {
+            Debug.Log("Resources not sufficient");
             return;
         }
         //TODO: all sorts of checking, prediction of resources consumption
