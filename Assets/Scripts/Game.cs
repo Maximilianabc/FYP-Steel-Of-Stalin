@@ -2467,6 +2467,7 @@ namespace SteelOfStalin.Flow
 
         public override void Execute()
         {
+            base.Execute();
             Map.Instance.GetBuildings<UnitBuilding>().Where(ub => ub.Status == BuildingStatus.ACTIVE).ToList().ForEach(ub =>
             {
                 UnitBuilding b = (UnitBuilding)ub;
@@ -2496,7 +2497,7 @@ namespace SteelOfStalin.Flow
                     break;
                 }
             });
-            base.Execute();
+            
         }
     }
     public sealed class Misc : Phase
