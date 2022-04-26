@@ -438,7 +438,7 @@ namespace SteelOfStalin
                 // int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
                 // var midtile = Map.Instance.GetTile(x,y);
                 var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(orderedcities.ElementAt(num-1))).First();
-                var path = avaunits.GetPath(avaunits.GetLocatedTile(), orderedcities.ElementAt(num-1).GetLocatedTile());
+                var path = avaunits.GetPath(orderedcities.ElementAt(num-2).GetLocatedTile(), orderedcities.ElementAt(num-1).GetLocatedTile());
                 int middle = path.Count()/2;
                 var tileofoutpost = path.ElementAt(middle);
                 var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), tileofoutpost);
@@ -467,13 +467,13 @@ namespace SteelOfStalin
                     //get nearest enemy city
                     var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
                     var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
-                    // Map.Instance.GetUnits()
+                    var metro = Cities.Where(c => c is Metropolis).First();
 
                     //get number of units may improve later
                     var selected = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(8);
 
                     //middle point for outpost
-                    var path = selected.First().GetPath(selected.First().GetLocatedTile(), nearest.GetLocatedTile());
+                    var path = selected.First().GetPath(metro.GetLocatedTile(), nearest.GetLocatedTile());
                     int middle = path.Count()/2;
                     // int x = (Cities.Where(c => c is Metropolis).First().CoOrds.X + nearest.CoOrds.X) / 2;
                     // int y = (Cities.Where(c => c is Metropolis).First().CoOrds.Y + nearest.CoOrds.Y) / 2;
