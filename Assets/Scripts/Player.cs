@@ -333,7 +333,7 @@ namespace SteelOfStalin
                             this.Resources.Fuel.MinusEquals(amount);
                     }
                     //setweapons
-                    unit.SetWeapons(unit.GetWeapons().ToArray());
+                    // unit.SetWeapons(unit.GetWeapons().ToArray());
                     //ammo
                     if(unit.Carrying.Cartridges < unit.Capacity.Cartridges){
                         var amount = unit.Capacity.Cartridges - unit.Carrying.Cartridges;
