@@ -157,19 +157,24 @@ namespace SteelOfStalin
      public class AIPlayer : Player
     {
         public void Botflow(){
-            Train();
-            Supplyunits();
-            Movetonewcity();
-            Constructoutpost();
-            movement();
-            Checkcombat();
+            try
+            {
+                Train();
+                Supplyunits();
+                Movetonewcity();
+                Constructoutpost();
+                movement();
+                Checkcombat();
+            }
+            catch (Exception) { Debug.LogWarning("something wrong in bot algorithm"); }
+
             this.IsReady = true;
         }
 
         public void Train(){
             //get training buidling
-            var barracks = Buildings.Where(c => c is Barracks);
-            var unitbuildings = Buildings.Where(c => c is UnitBuilding);
+            var barracks = Buildings.Where(c => c is Barracks &&c.IsOwn(this));
+            var unitbuildings = Buildings.Where(c => c is UnitBuilding&& c.IsOwn(this));
             //check number of resources generated
             var rate = Cities.Where(c => !c.IsDestroyed).Count();
 

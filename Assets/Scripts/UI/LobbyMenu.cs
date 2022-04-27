@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using SteelOfStalin;
 
 public class LobbyMenu : MonoBehaviour
@@ -10,11 +11,13 @@ public class LobbyMenu : MonoBehaviour
     private List<Player> listPlayers;
     private GameObject menu;
     private GameObject menuItem;
+    private GameObject buttonBack;
 
     void Awake() {
         menu = transform.Find("Players").gameObject;
         menuItem = Game.GameObjects.Find(g=>g.name=="MultiplayerMenuPlayer");
         transform.Find("Ready").GetComponent<Button>().enabled = false;
+        buttonBack = transform.Find("BackButton").gameObject;
     }
     // Start is called before the first frame update
     void Start()
@@ -28,6 +31,10 @@ public class LobbyMenu : MonoBehaviour
             
         });
         transform.Find("Ready").GetComponent<Button>().enabled = true;
+        buttonBack.GetComponent<Button>().onClick.AddListener(delegate {
+            Game.ShutDown();
+            SceneManager.LoadScene("Menu");
+        });
 
     }
 

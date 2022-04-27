@@ -36,6 +36,7 @@ public class UnitPanel : MonoBehaviour
     }
 
     public void SetUnit(Unit u) {
+        if (!UIUtil.instance.isListenToUIEvent) return;
         if (menu == null) return;
         GameObject instance;
         currentUnit = u;

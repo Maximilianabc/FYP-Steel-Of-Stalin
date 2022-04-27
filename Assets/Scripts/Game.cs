@@ -39,12 +39,14 @@ using Debug = UnityEngine.Debug;
 using Resources = SteelOfStalin.Attributes.Resources;
 using System.Threading.Tasks;
 using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
+using System.Threading;
 
 namespace SteelOfStalin
 {
     //Contains all information of the game itself
     public class Game : MonoBehaviour
     {
+        public static Game Instance { get; private set; }
         // Handles scenes (un)loading using Unity.SceneManager directly (all of its methods are static)
         public static GameSettings Settings { get; set; } = new GameSettings();
         public static List<GameObject> GameObjects { get; set; } = new List<GameObject>();
@@ -64,6 +66,7 @@ namespace SteelOfStalin
         public static CustomizableData CustomizableData { get; set; } = new CustomizableData();
 
         public static bool AssetsLoaded { get; private set; }
+        public static bool NeedReloadBattleObjects { get; set; } = true;
 
         public void Start()
         {
@@ -72,6 +75,7 @@ namespace SteelOfStalin
             LoadProfile();
             LoadSettings();
             Network.ConnectionApprovalCallback += ApprovalCheck;
+            Instance = this;
         }
 
         public static void StartHost() => Network.StartHost();
@@ -88,7 +92,40 @@ namespace SteelOfStalin
             Network.StartClient();
         }
 
-        public static void ShutDown() => Network.Shutdown();
+        public static void ShutDown()
+        {
+            NeedReloadBattleObjects = false;
+
+            GameObject network = GameObject.Find("network");
+            GameObject battle = GameObject.Find("battle");
+            GameObject network_util = GameObject.Find("network_util");
+            GameObject player = GameObject.Find(Game.Profile.Name);
+
+            if (network != null)
+            {
+                DestroyImmediate(network);
+            }
+            if (battle != null)
+            {
+                Battle.Instance.CancelTokenSource.Cancel();
+                battle.GetComponent<Battle>().StopAllCoroutines();
+                DestroyImmediate(battle.gameObject);
+            }
+            if (network_util != null)
+            {
+                network_util.GetComponent<NetworkUtilities>().StopAllCoroutines();
+                DestroyImmediate(network_util.gameObject);
+            }
+            if (player != null)
+            {
+                DestroyImmediate(player);
+            }
+            _ = Instance.StartCoroutine(WaitForObjectsDestroy(() =>
+            {
+                Network.Shutdown();
+                NeedReloadBattleObjects = true;
+            }));
+        }
 
         public static void LoadAllAssets(bool from_dump = false)
         {
@@ -194,6 +231,15 @@ namespace SteelOfStalin
                 callback(false, null, true, null, null);
             }
         }
+
+        private static IEnumerator WaitForObjectsDestroy(Action callback)
+        {
+            Debug.Log("Waiting for battle and network_util to be destroyed");
+            yield return new WaitWhile(() => GameObject.Find("battle") != null);
+            yield return new WaitWhile(() => GameObject.Find("network_util") != null);
+            Debug.Log("battle and network_util destroyed");
+            callback.Invoke();
+        }
     }
 
     public class GameSettings
@@ -226,6 +272,8 @@ namespace SteelOfStalin
         public bool IsSinglePlayer { get; private set; }
         public bool IsEnded => m_winner != null;
 
+        private bool m_abort { get; set; }
+
         [JsonIgnore] public Player Self { get; set; }
         [JsonIgnore] public IEnumerable<AIPlayer> Bots => Players.OfType<AIPlayer>();
         [JsonIgnore] public IEnumerable<Player> ActivePlayers => Players.Where(p => !p.IsDefeated);
@@ -234,6 +282,8 @@ namespace SteelOfStalin
         [JsonIgnore] public bool IsServerFull => Game.Network.IsServer && Players.Count >= MaxNumPlayers;
         [JsonIgnore] public bool AreCapitalsSet { get; private set; } = false;
         [JsonIgnore] public NetworkUtilities NetworkUtilities { get; set; }
+
+        [JsonIgnore] public CancellationTokenSource CancelTokenSource { get; set; } = new CancellationTokenSource();
 
         private Player m_winner { get; set; } = null;
         private bool m_isInitialized => Players.Count > 0 && Map.IsInitialized;
@@ -293,6 +343,7 @@ namespace SteelOfStalin
                         bot.Botflow();
                     }
                 }
+                UIUtil.instance.RoundStartUIUpdate();
 
                 int counter = 0;
                 if (!unlimited_time)
@@ -311,7 +362,7 @@ namespace SteelOfStalin
                     yield return new WaitWhile(() => !AreAllPlayersReady);
                     Debug.Log("All players are ready");
                 }
-
+                UIUtil.instance.RoundEndUIUpdate();
                 Debug.Log("End Turn");
                 EnablePlayerInput = false;
                 if (Game.Network.IsServer)
@@ -402,6 +453,7 @@ namespace SteelOfStalin
             }
             Debug.Log($"Winner is {m_winner}!");
             Game.Network.Shutdown();
+            SceneManager.LoadScene("Menu");
             yield return null;
         }
         private IEnumerator Initialize()
@@ -419,9 +471,16 @@ namespace SteelOfStalin
                 Map.Width = info.MapWidth;
                 Map.Height = info.MapHeight;
                 IsSinglePlayer = info.IsSinglePlayer;
-
-                _ = Task.Run(() => Load());
-                _ = StartCoroutine(HostPostInitialization());
+                LoadTask();
+                if (!m_abort)
+                {
+                    _ = StartCoroutine(HostPostInitialization());
+                }
+                else
+                {
+                    Debug.Log("Abort");
+                    yield break;
+                }
             }
             else if (Game.Network.IsClient)
             {
@@ -522,6 +581,23 @@ namespace SteelOfStalin
             yield return null;
         }
 
+        private async void LoadTask()
+        {
+            Task load_task = Task.Run(() => Load(), CancelTokenSource.Token);
+            try
+            {
+                await load_task;
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log("Load cancelled");
+                m_abort = true;
+            }
+            finally
+            {
+                CancelTokenSource.Dispose();
+            }
+        }
         private void AddPropsToScene()
         {
             IEnumerable<Metropolis> metropolis = Map.GetCities<Metropolis>();
@@ -576,6 +652,7 @@ namespace SteelOfStalin
         }
         public void Load()
         {
+            CancelTokenSource.Token.ThrowIfCancellationRequested();
 
             if (!StreamingAssetExists(AppendPath(m_folder, "rules.json")))
             {
@@ -604,6 +681,8 @@ namespace SteelOfStalin
                     }
                 }
             }
+
+            CancelTokenSource.Token.ThrowIfCancellationRequested();
 
             Map.Load();
             Debug.Log($"Loaded battle {Name}");
@@ -845,6 +924,7 @@ namespace SteelOfStalin
         {
             BattleName = Battle.Instance?.Name ?? "test";
 
+            Battle.Instance.CancelTokenSource.Token.ThrowIfCancellationRequested();
             Units = DeserializeJson<List<Unit>>(AppendPath(Folder, "units"));
             foreach (Unit u in Units)
             {
@@ -859,6 +939,7 @@ namespace SteelOfStalin
                 }
             }
 
+            Battle.Instance.CancelTokenSource.Token.ThrowIfCancellationRequested();
             Buildings = DeserializeJson<List<Building>>(AppendPath(Folder, "buildings"));
             foreach (Building b in Buildings)
             {
@@ -877,6 +958,7 @@ namespace SteelOfStalin
             Tiles = new Tile[Width][];
             for (int i = 0; i < Width; i++)
             {
+                Battle.Instance.CancelTokenSource.Token.ThrowIfCancellationRequested();
                 // TODO handle FileIO exceptions for all IO operations
                 // TODO FUT. Impl. regenerate map files by reading the stats.txt in case any map files corrupted (e.g. edge of map is not boundary etc.)
                 Tiles[i] = DeserializeJson<List<Tile>>(AppendPath(TileFolder, $"map_{i}")).ToArray();

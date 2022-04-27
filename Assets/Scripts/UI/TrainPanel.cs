@@ -65,13 +65,6 @@ public class TrainPanel : MonoBehaviour
             if (currentCity == null) return;
             DeployPanel.instance.SetCity(currentCity);
         });
-        //should be handled after round start
-        LeanTween.delayedCall(0.2f, (System.Action)delegate
-        {
-            SetCity(Battle.Instance.Self.Capital);
-        });
-
-
 
     }
 
@@ -163,6 +156,7 @@ public class TrainPanel : MonoBehaviour
     }
 
     public void SetCity(Cities city) {
+        if (!UIUtil.instance.isListenToUIEvent) return;
         ResetCity();
         currentCity = city;
         CameraController.instance.FocusOn(city.PropObject.transform);
@@ -254,17 +248,19 @@ public class TrainPanel : MonoBehaviour
             Debug.Log("Queue is full");
             return;
         }
-        //TODO: modify to use estimated resources
-        if (!Battle.Instance.Self.HasEnoughResources(u.Cost.Base)) {
-            Debug.Log("Resources not sufficient");
-            return;
-        }
+
         if (selectedUnitBuilding is Barracks && !(u is Personnel)) {
             Debug.Log($"{u.Name} cannot be trained in barracks");
             return;
         }
         if (selectedUnitBuilding is Arsenal && !(u is Vehicle || u is Artillery)) {
             Debug.Log($"{u.Name} cannot be trained in arsenal");
+            return;
+        }
+
+        if (!ResourcesPanel.instance.Consume(u.Cost.Base))
+        {
+            Debug.Log("Resources not sufficient");
             return;
         }
         //TODO: all sorts of checking, prediction of resources consumption
