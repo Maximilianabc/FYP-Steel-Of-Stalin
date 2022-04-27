@@ -1,4 +1,6 @@
 using SteelOfStalin.DataIO;
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace SteelOfStalin
@@ -19,64 +21,66 @@ namespace SteelOfStalin
                 DontDestroyOnLoad(gameInstance);
             }
 
-            if (GameObject.Find("network") != null) {
-                Destroy(GameObject.Find("network"));
-            }
-            GameObject network = Resources.Load<GameObject>(@"Prefabs\network");
-            GameObject network_instance = Instantiate(network);
-            network_instance.name = "network";
-            DontDestroyOnLoad(network_instance);
-
-            if (GameObject.Find("network_util") != null) {
-                GameObject.Find("network_util").GetComponent<NetworkUtilities>().StopAllCoroutines();
-                Destroy(GameObject.Find("network_util"));
-            }
-            GameObject network_util = Resources.Load<GameObject>(@"Prefabs\network_util");
-            GameObject network_util_instance = Instantiate(network_util);
-            network_util_instance.name = "network_util";
-            if (network_util_instance.GetComponent<NetworkUtilities>() == null)
+            if (GameObject.Find("network") == null)
             {
-                network_util_instance.AddComponent<NetworkUtilities>();
+                GameObject network = Resources.Load<GameObject>(@"Prefabs\network");
+                GameObject network_instance = Instantiate(network);
+                network_instance.name = "network";
+                DontDestroyOnLoad(network_instance);
             }
-            DontDestroyOnLoad(network_util_instance);
 
-            if (GameObject.Find("UI_util") == null) {
+
+            if (GameObject.Find("UI_util") == null)
+            {
                 GameObject UI_util = Resources.Load<GameObject>(@"Prefabs\UI_util");
                 GameObject UI_util_instance = Instantiate(UI_util);
                 UI_util_instance.name = "UI_util";
                 DontDestroyOnLoad(UI_util_instance);
             }
 
-            if (GameObject.Find("battle") != null) {
-                GameObject.Find("battle").GetComponent<Battle>().StopAllCoroutines();
-                Destroy(GameObject.Find("battle"));
-            }
-            GameObject battle = Resources.Load<GameObject>(@"Prefabs\battle");
-            GameObject battle_instance = Instantiate(battle);
-            if (battle_instance.GetComponent<Battle>() == null)
-            {
-                battle_instance.AddComponent<Battle>();
-            }
-            battle_instance.name = "battle";
-            DontDestroyOnLoad(battle_instance);
-
-            if (Game.Profile != null && !string.IsNullOrEmpty(Game.Profile.Name) && GameObject.Find("Game.Profile.Name") != null) {
-                Destroy(GameObject.Find("Game.Profile.Name"));
-            }
-            GameObject player = Resources.Load<GameObject>(@"Prefabs\player");
-            GameObject player_instance = Instantiate(player);
-            if (player_instance.GetComponent<PlayerObject>() == null)
-            {
-                player_instance.AddComponent<PlayerObject>();
-            }
-            DontDestroyOnLoad(player_instance);
-
-            Destroy(gameObject);
+            _ = StartCoroutine(ReloadBattleRelatedObjects(() => Destroy(gameObject)));
         }
 
-        private void Update()
+        private IEnumerator ReloadBattleRelatedObjects(Action action)
         {
+            yield return new WaitWhile(() => GameObject.Find("game") == null);
+            yield return new WaitWhile(() => !Game.NeedReloadBattleObjects);
 
+            if (GameObject.Find("network_util") == null)
+            {
+                GameObject network_util = Resources.Load<GameObject>(@"Prefabs\network_util");
+                GameObject network_util_instance = Instantiate(network_util);
+                network_util_instance.name = "network_util";
+                if (network_util_instance.GetComponent<NetworkUtilities>() == null)
+                {
+                    network_util_instance.AddComponent<NetworkUtilities>();
+                }
+                DontDestroyOnLoad(network_util_instance);
+            }
+
+            if (GameObject.Find("battle") == null)
+            {
+                GameObject battle = Resources.Load<GameObject>(@"Prefabs\battle");
+                GameObject battle_instance = Instantiate(battle);
+                if (battle_instance.GetComponent<Battle>() == null)
+                {
+                    battle_instance.AddComponent<Battle>();
+                }
+                battle_instance.name = "battle";
+                DontDestroyOnLoad(battle_instance);
+            }
+
+            if (Game.Profile != null && !string.IsNullOrEmpty(Game.Profile.Name) && GameObject.Find(Game.Profile.Name) == null)
+            {
+                GameObject player = Resources.Load<GameObject>(@"Prefabs\player");
+                GameObject player_instance = Instantiate(player);
+                if (player_instance.GetComponent<PlayerObject>() == null)
+                {
+                    player_instance.AddComponent<PlayerObject>();
+                }
+                DontDestroyOnLoad(player_instance);
+            }
+            yield return null;
         }
     }
 }
