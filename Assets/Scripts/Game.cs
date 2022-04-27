@@ -96,10 +96,15 @@ namespace SteelOfStalin
         {
             NeedReloadBattleObjects = false;
 
+            GameObject network = GameObject.Find("network");
             GameObject battle = GameObject.Find("battle");
             GameObject network_util = GameObject.Find("network_util");
             GameObject player = GameObject.Find(Game.Profile.Name);
 
+            if (network != null)
+            {
+                DestroyImmediate(network);
+            }
             if (battle != null)
             {
                 Battle.Instance.CancelTokenSource.Cancel();
