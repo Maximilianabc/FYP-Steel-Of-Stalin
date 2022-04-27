@@ -9,7 +9,10 @@ using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
+using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Firearms;
+using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Shells;
 using SteelOfStalin.Commands;
 using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
@@ -184,7 +187,33 @@ namespace SteelOfStalin
                 foreach(var c in building){
                     if(c.CanDeploy()){
                         var readyunit = c.ReadyToDeploy.First();
-                        Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,readyunit.GetWeapons()));
+                        List<IOffensiveCustomizable> weapon= new List<IOffensiveCustomizable>();
+
+                        if(readyunit is Personnel){
+                            var primary = c.ReadyToDeploy.OfType<Personnel>().First().AvailablePrimaryFirearms;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Artillery){
+                            var primary = c.ReadyToDeploy.OfType<Artillery>().First().AvailableGuns;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Gun);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Gun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+                        if(readyunit is Vehicle){
+                            var primary = c.ReadyToDeploy.OfType<Vehicle>().First().AvailableMainArmaments;
+                            //from several firearms assign random?
+                            int random = Utilities.Random.Next(0, primary.Count()); 
+                            // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as HeavyMachineGun);
+                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as HeavyMachineGun);
+                            Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
+                        }
+
                     }
                 }
             }
@@ -312,6 +341,14 @@ namespace SteelOfStalin
                             unit.Carrying.Fuel.PlusEquals(amount);
                             this.Resources.Fuel.MinusEquals(amount);
                     }
+                    //setweapons
+                    // unit.SetWeapons(unit.GetWeapons().ToArray());
+                    //ammo
+                    if(unit.Carrying.Cartridges < unit.Capacity.Cartridges){
+                        var amount = unit.Capacity.Cartridges - unit.Carrying.Cartridges;
+                            unit.Carrying.Fuel.PlusEquals(amount);
+                            this.Resources.Fuel.MinusEquals(amount);
+                    }
                 }  
             }
 
@@ -406,15 +443,18 @@ namespace SteelOfStalin
             int num = orderedcities.Count();
         
             if(num > 1){
-                int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num -1 ).CoOrds.X) / 2;
-                int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
-                var midtile = Map.Instance.GetTile(x,y);
-                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(midtile)).First();
-                var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), Map.Instance.GetTile(x,y));
+                // int x = (orderedcities.First().CoOrds.X + orderedcities.ElementAt(num -1 ).CoOrds.X) / 2;
+                // int y = (orderedcities.First().CoOrds.Y + orderedcities.ElementAt(num - 1).CoOrds.Y) / 2;
+                // var midtile = Map.Instance.GetTile(x,y);
+                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(orderedcities.ElementAt(num-1))).First();
+                var path = avaunits.GetPath(orderedcities.ElementAt(num-2).GetLocatedTile(), orderedcities.ElementAt(num-1).GetLocatedTile());
+                int middle = path.Count()/2;
+                var tileofoutpost = path.ElementAt(middle);
+                var pathtolocation = avaunits.GetPath(avaunits.GetLocatedTile(), tileofoutpost);
 
-                if(Buildings.Where(b => b.CoOrds.X == midtile.CoOrds.X && b.CoOrds.Y == midtile.CoOrds.Y).Count() < 1){
-                    if(avaunits.GetDistance(Map.Instance.GetTile(x,y)) == 0){
-                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),midtile.CoOrds));
+                if(Buildings.Where(b => b.CoOrds.X == tileofoutpost.CoOrds.X && b.CoOrds.Y == tileofoutpost.CoOrds.Y).Count() <= 1){
+                    if(avaunits.GetDistance(tileofoutpost) == 0){
+                        Commands.Add(new Construct(this,Game.BuildingData.GetNew<Outpost>(),tileofoutpost.CoOrds));
                         avaunits.CommandAssigned = CommandAssigned.CONSTRUCT;
                     }
                     else{
@@ -436,13 +476,13 @@ namespace SteelOfStalin
                     //get nearest enemy city
                     var enemy = Map.Instance.GetCities().Where(c => c.IsHostile(this));
                     var nearest = enemy.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
-                    // Map.Instance.GetUnits()
+                    var metro = Cities.Where(c => c is Metropolis).First();
 
                     //get number of units may improve later
                     var selected = moveable.Where(c => c is Personnel).OrderBy(c => c.GetDistance(nearest)).Take(8);
 
                     //middle point for outpost
-                    var path = selected.First().GetPath(selected.First().GetLocatedTile(), nearest.GetLocatedTile());
+                    var path = selected.First().GetPath(metro.GetLocatedTile(), nearest.GetLocatedTile());
                     int middle = path.Count()/2;
                     // int x = (Cities.Where(c => c is Metropolis).First().CoOrds.X + nearest.CoOrds.X) / 2;
                     // int y = (Cities.Where(c => c is Metropolis).First().CoOrds.Y + nearest.CoOrds.Y) / 2;
