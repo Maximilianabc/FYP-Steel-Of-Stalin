@@ -88,13 +88,27 @@ public class UIUtil : MonoBehaviour
                 SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));
                 SetFullscreen(Game.Settings.Fullscreen);
                 SetVolume(Game.Settings.VolumeMusic);
-                
+                AudioSource bgm = gameObject.AddComponent<AudioSource>();
+                AudioClip clip=Game.AudioClips.Find(a => a.name == "RiseAndFall");
+                if (clip != null) {
+                    bgm.clip = clip;
+                    bgm.loop = true;
+                    bgm.Play();
+                }
             });
         }
         else {
             SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));
             SetFullscreen(Game.Settings.Fullscreen);
             SetVolume(Game.Settings.VolumeMusic);
+            AudioSource bgm = gameObject.AddComponent<AudioSource>();
+            AudioClip clip = Game.AudioClips.Find(a => a.name == "RiseAndFall");
+            if (clip != null)
+            {
+                bgm.clip = clip;
+                bgm.loop = true;
+                bgm.Play();
+            }
         }
     }
 

@@ -20,7 +20,7 @@ namespace SteelOfStalin
             }
 
             if (GameObject.Find("network") != null) {
-                //Destroy(GameObject.Find("network"));
+                Destroy(GameObject.Find("network"));
             }
             GameObject network = Resources.Load<GameObject>(@"Prefabs\network");
             GameObject network_instance = Instantiate(network);
@@ -28,8 +28,8 @@ namespace SteelOfStalin
             DontDestroyOnLoad(network_instance);
 
             if (GameObject.Find("network_util") != null) {
-                //GameObject.Find("network_util").GetComponent<NetworkUtilities>().StopAllCoroutines();
-                //Destroy(GameObject.Find("network_util"));
+                GameObject.Find("network_util").GetComponent<NetworkUtilities>().StopAllCoroutines();
+                Destroy(GameObject.Find("network_util"));
             }
             GameObject network_util = Resources.Load<GameObject>(@"Prefabs\network_util");
             GameObject network_util_instance = Instantiate(network_util);
@@ -40,7 +40,7 @@ namespace SteelOfStalin
             }
             DontDestroyOnLoad(network_util_instance);
 
-            if (GameObject.Find("UI_util") != null) {
+            if (GameObject.Find("UI_util") == null) {
                 GameObject UI_util = Resources.Load<GameObject>(@"Prefabs\UI_util");
                 GameObject UI_util_instance = Instantiate(UI_util);
                 UI_util_instance.name = "UI_util";
@@ -49,7 +49,7 @@ namespace SteelOfStalin
 
             if (GameObject.Find("battle") != null) {
                 GameObject.Find("battle").GetComponent<Battle>().StopAllCoroutines();
-                //Destroy(GameObject.Find("battle"));
+                Destroy(GameObject.Find("battle"));
             }
             GameObject battle = Resources.Load<GameObject>(@"Prefabs\battle");
             GameObject battle_instance = Instantiate(battle);
@@ -61,7 +61,7 @@ namespace SteelOfStalin
             DontDestroyOnLoad(battle_instance);
 
             if (Game.Profile != null && !string.IsNullOrEmpty(Game.Profile.Name) && GameObject.Find("Game.Profile.Name") != null) {
-                //Destroy(GameObject.Find("Game.Profile.Name"));
+                Destroy(GameObject.Find("Game.Profile.Name"));
             }
             GameObject player = Resources.Load<GameObject>(@"Prefabs\player");
             GameObject player_instance = Instantiate(player);
