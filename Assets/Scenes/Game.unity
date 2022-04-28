@@ -21637,14 +21637,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce50ae6b8033c240b88a968dac0cdbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToBeResized: {fileID: 0}
-  parentOfContent: {fileID: 0}
+  objectToBeResized: {fileID: 127758010}
+  parentOfContent: {fileID: 127758010}
   paddingLeft: 10
   paddingRight: 10
   paddingUp: 10
   paddingDown: 10
   resizeWidth: 0
-  resizeHeight: 0
+  resizeHeight: 1
 --- !u!1 &1437241444
 GameObject:
   m_ObjectHideFlags: 0
@@ -25111,14 +25111,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce50ae6b8033c240b88a968dac0cdbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToBeResized: {fileID: 0}
-  parentOfContent: {fileID: 0}
+  objectToBeResized: {fileID: 1700623268}
+  parentOfContent: {fileID: 1700623268}
   paddingLeft: 10
   paddingRight: 10
   paddingUp: 10
   paddingDown: 10
   resizeWidth: 0
-  resizeHeight: 0
+  resizeHeight: 1
 --- !u!114 &1700623271
 MonoBehaviour:
   m_ObjectHideFlags: 0

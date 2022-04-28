@@ -57,16 +57,15 @@ public class UnitPanel : MonoBehaviour
         if (unitModules != null) {
             foreach (Module module in unitModules)
             {
-                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"));
+                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelAttribute"), modules.transform,false);
                 instance.name = module.Name;
-                instance.transform.SetParent(modules.transform);
                 instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = module.Name;
                 instance.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)Game.CustomizableData.Modules[module.Name].Integrity.Value), Mathf.RoundToInt((float)module.Integrity.Value));
             }
         }
         //modules.GetComponent<Resize>().DoResize();
         //StartCoroutine(DelayResize(modules,1));
-        modules.GetComponent<Resize>().DelayResize(1);
+        if(unitModules != null && unitModules.Count != 0) modules.GetComponent<Resize>().DelayResize(1);
 
         GameObject carrying = menu.transform.Find("Carrying").gameObject;
         foreach (Transform child in carrying.transform)
@@ -107,17 +106,20 @@ public class UnitPanel : MonoBehaviour
         if (unitWeapons != null) {
             foreach (IOffensiveCustomizable weapon in unitWeapons)
             {
-                instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelWeapon"),weapons.transform,false);
-                instance.name = weapon.Name;
-                instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = weapon.Name;
-                instance.transform.Find("Soft").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Soft.Value).ToString();
-                instance.transform.Find("Hard").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Hard.Value).ToString();
-                instance.transform.Find("Destruct.").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Destruction.Value).ToString();
+                if (weapon != null) {
+                    instance = Instantiate(Resources.Load<GameObject>(@"Prefabs\UnitPanelWeapon"), weapons.transform, false);
+                    instance.name = weapon.Name;
+                    instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = weapon.Name;
+                    instance.transform.Find("Soft").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Soft.Value).ToString();
+                    instance.transform.Find("Hard").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Hard.Value).ToString();
+                    instance.transform.Find("Destruct.").GetComponent<TMPro.TMP_Text>().text = Mathf.RoundToInt((float)weapon.Offense.Damage.Destruction.Value).ToString();
+                }
             }
         }
+               
         //weapons.GetComponent<Resize>().DoResize();
         //StartCoroutine(DelayResize(weapons,1));
-        weapons.GetComponent<Resize>().DelayResize(1);
+        if(unitWeapons != null && unitWeapons.Count != 0)weapons.GetComponent<Resize>().DelayResize(1);
 
         GameObject guns = menu.transform.Find("Guns").gameObject;
         foreach (Transform child in guns.transform)
