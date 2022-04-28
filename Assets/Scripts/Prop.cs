@@ -393,6 +393,11 @@ namespace SteelOfStalin.Assets.Props
             if (mr == null)
             {
                 mr = gameObject.GetComponentInSpecificChild<MeshRenderer>(child_name);
+                if (mr == null)
+                {
+                    Debug.LogError($"Cannot find {child_name} in gameobject {name}");
+                    return;
+                }
             }
             // note: use _Color if not using HDRP
             mr.material.SetColor("_BaseColor", color);

@@ -110,7 +110,10 @@ namespace SteelOfStalin
             }
             if (battle != null)
             {
-                Battle.Instance.CancelTokenSource.Cancel();
+                if (!Battle.Instance.CancelTokenDisposed)
+                {
+                    Battle.Instance.CancelTokenSource.Cancel();
+                }
                 battle.GetComponent<Battle>().StopAllCoroutines();
                 DestroyImmediate(battle.gameObject);
             }
@@ -285,10 +288,10 @@ namespace SteelOfStalin
         [JsonIgnore] public bool AreAllPlayersReady => ActivePlayers.All(p => p.IsReady);
         [JsonIgnore] public bool AreAllPlayersReadyToStart => Players.All(p => p.IsReady);
         [JsonIgnore] public bool IsServerFull => Game.Network.IsServer && Players.Count >= MaxNumPlayers;
-        [JsonIgnore] public bool AreCapitalsSet { get; private set; } = false;
         [JsonIgnore] public NetworkUtilities NetworkUtilities { get; set; }
 
         [JsonIgnore] public CancellationTokenSource CancelTokenSource { get; set; } = new CancellationTokenSource();
+        [JsonIgnore] public bool CancelTokenDisposed { get; private set; } = false;
 
         private Player m_winner { get; set; } = null;
         private bool m_isInitialized => Players.Count > 0 && Map.IsInitialized;
@@ -314,6 +317,11 @@ namespace SteelOfStalin
             Instance = this;
             NetworkUtilities = FindObjectOfType<NetworkUtilities>();
             _ = StartCoroutine(Initialize());
+        }
+        public override void OnDestroy()
+        {
+            Map.ResetInstance();
+            base.OnDestroy();
         }
 
         private IEnumerator GameLoop()
@@ -603,6 +611,7 @@ namespace SteelOfStalin
             finally
             {
                 CancelTokenSource.Dispose();
+                CancelTokenDisposed = true;
             }
         }
         private void AddPropsToScene()
@@ -613,10 +622,20 @@ namespace SteelOfStalin
                 Map.SetMetropolisOwners();
                 Map.InitializeDefaultUnitBuildings();
             }
-            AreCapitalsSet = true;
-
-            foreach (Unit unit in Map.GetUnits())
+            foreach (Player player in Players)
             {
+                IEnumerable<Cities> cities = Map.Instance.GetCities(player);
+                Debug.Log($"{player.Name}: {cities.Count()}");
+                Debug.Log($"Capital: {player.Capital}");
+            }
+
+            foreach (Unit unit in Map.GetUnits(u => u.Status.HasAnyOfFlags(UnitStatus.IN_FIELD)))
+            {
+                // skip showing bots' units if they aren't in sight
+                if (Game.ActiveBattle.IsSinglePlayer && !Self.GetAllUnitsInSight().Contains(unit) && unit.Owner != Self)
+                {
+                    continue;
+                }
                 unit.AddToScene();
             }
             foreach (Building building in Map.GetBuildings(b => !(b is Barracks) && !(b is Arsenal)))
@@ -626,20 +645,6 @@ namespace SteelOfStalin
             foreach (Tile tile in Map.GetTiles())
             {
                 tile.AddToScene();
-            }
-            foreach (IOwnableAsset ownable in Map.GetProps(p => p is IOwnableAsset))
-            {
-                if (!(ownable is Barracks) && !(ownable is Arsenal) && !string.IsNullOrEmpty(ownable.OwnerName))
-                {
-                    Prop ownable_prop = ((Prop)ownable);
-                    GameObject ownable_object = ownable_prop.PropObject;
-                    if (ownable_object == null)
-                    {
-                        Debug.LogError($"Cannot get object {ownable_prop.MeshName} on screen");
-                        continue;
-                    }
-                    ownable_prop.PropObjectComponent.SetColorForChild(GetPlayer(ownable.OwnerName).Color, ownable_prop.Name);
-                }
             }
         }
 
@@ -686,6 +691,18 @@ namespace SteelOfStalin
                         Players.Add(ai);
                         Debug.Log($"Added bot {ai.Name} to Players");
                     }
+                }
+            }
+            else
+            {
+                Player self = GetPlayer(Game.Profile.Name);
+                if (self == null)
+                {
+                    Debug.LogError($"Cannot find self (profile name: {Game.Profile.Name}) in Players");
+                }
+                else
+                {
+                    Self = self;
                 }
             }
 
@@ -886,7 +903,18 @@ namespace SteelOfStalin
 
     public class Map : ICloneable, INamedAsset
     {
-        public static Map Instance { get; private set; }
+        private static Map _instance;
+        public static Map Instance 
+        {
+            get => _instance;
+            private set
+            {
+                if (_instance == null)
+                {
+                    _instance = value;
+                }
+            }
+        }
         public string Name { get; set; }
         public string BattleName { get; set; } = "test";
         public int Width { get; set; }
@@ -910,6 +938,8 @@ namespace SteelOfStalin
         public Map(int width, int height) => (Width, Height, BattleName, Instance) = (width, height, Battle.Instance?.Name ?? "test", this);
         // for new battle
         public Map(int width, int height, string battle_name, string name) => (Width, Height, BattleName, Name, Instance) = (width, height, battle_name, name, this);
+
+        public void ResetInstance() => Instance = null;
 
         public virtual void Save()
         {
@@ -1098,7 +1128,7 @@ namespace SteelOfStalin
             IEnumerable<Metropolis> metro = GetCities<Metropolis>();
             foreach (Metropolis m in metro)
             {
-                foreach (Building building in Map.Instance.GetBuildings(m.CoOrds))
+                foreach (Building building in GetBuildings(m.CoOrds))
                 {
                     if (building is UnitBuilding ub)
                     {
