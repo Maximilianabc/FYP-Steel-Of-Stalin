@@ -176,7 +176,7 @@ public class DeployPanel : MonoBehaviour
         {
             GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "UnitListItem"), unitList.transform.Find("UnitListItems"), false);
             instance.transform.Find("Icon").GetComponent<Image>().sprite = Game.Icons.Find(I => I.name == u.Name);
-            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = u.Name;
+            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = u.Name.Replace('_', ' ');
             if (u is Personnel || u is Artillery) instance.transform.Find("Banner").GetComponent<Image>().color = barracksColor;
             else if (u is Vehicle) instance.transform.Find("Banner").GetComponent<Image>().color = arsenalColor;
             //TODO: air and sea units
@@ -259,7 +259,7 @@ public class DeployPanel : MonoBehaviour
                     StringBuilder sb = new StringBuilder();
                     if (weapon != null)
                     {
-                        sb.AppendLine(weapon.Name);
+                        sb.AppendLine(weapon.Name.Replace('_', ' '));
                         sb.AppendLine($"Range: {weapon.Offense.MinRange.Value}-{weapon.Offense.MaxRange.Value}");
                         sb.AppendLine($"Accuracy: {weapon.Offense.Accuracy.Normal.Value}");
                         sb.AppendLine($"Hard Damage:{weapon.Offense.Damage.Hard.Value}");

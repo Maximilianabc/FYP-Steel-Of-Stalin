@@ -41,7 +41,7 @@ public class UnitPanel : MonoBehaviour
         GameObject instance;
         currentUnit = u;
         GameObject unitTitle = menu.transform.Find("Text_UnitTitle").gameObject;
-        unitTitle.GetComponent<TMPro.TMP_Text>().text = u.Name;
+        unitTitle.GetComponent<TMPro.TMP_Text>().text = u.Name.Replace('_', ' ');
         GameObject strength = menu.transform.Find("Strength").gameObject;
         strength.transform.Find("ProgressBar").GetComponent<ProgressBar>().SetProgressBarValue(Mathf.RoundToInt((float)Game.UnitData[u.Name].Defense.Strength.Value),Mathf.RoundToInt((float)u.Defense.Strength.Value));
         GameObject morale = menu.transform.Find("Morale").gameObject;
