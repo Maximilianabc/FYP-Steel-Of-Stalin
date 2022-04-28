@@ -40,6 +40,9 @@ using Resources = SteelOfStalin.Attributes.Resources;
 using System.Threading.Tasks;
 using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using System.Threading;
+#if UNITY_EDITOR
+using ParrelSync;
+#endif
 
 namespace SteelOfStalin
 {
@@ -179,7 +182,10 @@ namespace SteelOfStalin
             {
                 Profile = DeserializeJson<PlayerProfile>("profile");
 #if UNITY_EDITOR
-                Profile.Name = $"random_{Utilities.Random.Next()}";
+                if (ClonesManager.IsClone())
+                {
+                    Profile.Name = $"random_{Utilities.Random.Next()}";
+                }
 #endif
             }
             else
@@ -194,7 +200,6 @@ namespace SteelOfStalin
         {
             // TODO FUT. Impl. sanitize the data because it is passed via network
             string player_name = Encoding.UTF8.GetString(connectionData);
-
             Battle current_battle = Battle.Instance;
 
             if (clientId != 0)
@@ -2270,6 +2275,11 @@ namespace SteelOfStalin.Flow
             // handle screen update here
             // not on screen, is active, has coordinates = new (newly deployed / spotted)
             IEnumerable<Unit> new_units = Map.Instance.GetUnits(u => u.PropObject == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
+            if (Game.ActiveBattle.IsSinglePlayer)
+            {
+                Player self = Battle.Instance.Self;
+                new_units = new_units.Where(u => u.Owner == self).Concat(self.GetAllUnitsInSight());
+            }
             foreach (Unit u in new_units)
             {
                 u.AddToScene();

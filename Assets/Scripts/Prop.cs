@@ -76,7 +76,6 @@ namespace SteelOfStalin.Assets.Props
         public virtual void AddToScene()
         {
             string scene = SceneManager.GetActiveScene().name;
-            // TODO add a loading scene
             if (scene != "Game" && scene != "Loading")
             {
                 Debug.LogError($"Cannot add gameobject to scene: Current scene ({scene}) is neither Game nor Loading.");
@@ -121,6 +120,11 @@ namespace SteelOfStalin.Assets.Props
                 SetMeshName();
             }
             cloned.name = MeshName;
+
+            if (this is IOwnableAsset ownable && !string.IsNullOrEmpty(ownable.OwnerName))
+            {
+                PropObjectComponent.SetColorForAllChildren(ownable.Owner.Color);
+            }
         }
         public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(PropObject);
         public Vector3 CalculateOnScreenCoordinates() => new Vector3(2 * HEX_APOTHEM * CoOrds.X * (float)Math.Cos(Math.PI / 6), 0, 2 * HEX_APOTHEM * (CoOrds.Y + (CoOrds.X % 2 == 1 ? 0.5F : 0)));
@@ -394,7 +398,11 @@ namespace SteelOfStalin.Assets.Props
             mr.material.SetColor("_BaseColor", color);
         }
 
-        public void SetColorForAllChildren(Color color) => GetComponentsInChildren<MeshRenderer>().ToList().ForEach(mr => mr.material.SetColor("_BaseColor", color));
+        public void SetColorForAllChildren(Color color)
+        {
+            GetComponentsInChildren<MeshRenderer>().ToList().ForEach(mr => mr.material.SetColor("_BaseColor", color));
+            GetComponentsInChildren<SkinnedMeshRenderer>().ToList().ForEach(mr => mr.material.SetColor("_BaseColor", color));
+        }
 
         public void Highlight() {
             Color highlightColor = Color.green;

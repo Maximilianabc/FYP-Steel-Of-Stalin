@@ -1,5 +1,5 @@
 {
-  "TimeForEachRound": 10,
+  "TimeForEachRound": -1,
   "IsFogOfWar": true,
   "RequireSignalConnection": true,
   "DestroyedUnitsCanBeScavenged": false,

@@ -9,7 +9,6 @@ using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
-using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Firearms;
 using SteelOfStalin.Assets.Customizables.Modules;
 using SteelOfStalin.Assets.Customizables.Shells;
@@ -166,7 +165,7 @@ namespace SteelOfStalin
                 Supplyunits();
                 Movetonewcity();
                 Constructoutpost();
-                movement();
+                Movement();
                 Checkcombat();
             }
             catch (Exception) { Debug.LogWarning("something wrong in bot algorithm"); }
@@ -189,28 +188,28 @@ namespace SteelOfStalin
                         var readyunit = c.ReadyToDeploy.First();
                         List<IOffensiveCustomizable> weapon= new List<IOffensiveCustomizable>();
 
-                        if(readyunit is Personnel){
-                            var primary = c.ReadyToDeploy.OfType<Personnel>().First().AvailablePrimaryFirearms;
+                        if(readyunit is Personnel p){
+                            var primary = p.AvailablePrimaryFirearms;
                             //from several firearms assign random?
                             int random = Utilities.Random.Next(0, primary.Count()); 
                             // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Firearm);
-                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
+                            weapon.Add(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Firearm);
                             Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
                         }
-                        if(readyunit is Artillery){
-                            var primary = c.ReadyToDeploy.OfType<Artillery>().First().AvailableGuns;
+                        if(readyunit is Artillery a){
+                            var primary = a.AvailableGuns;
                             //from several firearms assign random?
                             int random = Utilities.Random.Next(0, primary.Count()); 
                             // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as Gun);
-                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Gun);
+                            weapon.Add(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as Gun);
                             Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
                         }
-                        if(readyunit is Vehicle){
-                            var primary = c.ReadyToDeploy.OfType<Vehicle>().First().AvailableMainArmaments;
+                        if(readyunit is Vehicle v){
+                            var primary = v.AvailableMainArmaments;
                             //from several firearms assign random?
                             int random = Utilities.Random.Next(0, primary.Count()); 
                             // weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary[random]) as HeavyMachineGun);
-                            weapon.Append(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as HeavyMachineGun);
+                            weapon.Add(Game.CustomizableData.GetNew<IOffensiveCustomizable>(primary.First()) as HeavyMachineGun);
                             Commands.Add(new Deploy(readyunit,c,c.GetDeployableDestinations(readyunit).First().CoOrds,weapon));
                         }
 
@@ -361,7 +360,7 @@ namespace SteelOfStalin
                 //get nearest city from base
                 var nearest = neut.OrderBy(c => Cities.First(c => c is Metropolis).GetDistance(c)).First();
                 //get avaiable units nearest to the newest cities
-                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).OrderBy(c => c.GetDistance(nearest));
+                var avaunits = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE && c.CanMove()).OrderBy(c => c.GetDistance(nearest));
 
                 if(avaunits.Count() >= 1){             
                     var first = avaunits.First();
@@ -468,7 +467,7 @@ namespace SteelOfStalin
 
 
 
-        public void movement(){
+        public void Movement(){
             //get all moveable units
             if(Cities.Count() > 3){
                 var moveable = Units.Where(c => c.CommandAssigned == CommandAssigned.NONE).Where(c => c.CanMove());

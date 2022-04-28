@@ -477,7 +477,7 @@ public class DeployPanel : MonoBehaviour
             Debug.Log("Weapons not set");
         }
         weapons.RemoveAll(w => w == null);
-        UnitBuilding unitBuilding = buildings.Find(u => u.ReadyToDeploy.Contains(selectedUnit));
+        UnitBuilding unitBuilding = Battle.Instance.Map.GetBuildings<UnitBuilding>().ToList().Find(u => u.ReadyToDeploy.Contains(selectedUnit));
         Deploy deploy = new Deploy(selectedUnit, unitBuilding, t.CoOrds, weapons);
         Battle.Instance.Self.Commands.Add(deploy);
         selectedUnit = null;
