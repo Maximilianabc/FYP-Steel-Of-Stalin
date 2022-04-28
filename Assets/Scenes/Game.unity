@@ -5885,7 +5885,6 @@ GameObject:
   - component: {fileID: 346377746}
   - component: {fileID: 346377745}
   - component: {fileID: 346377744}
-  - component: {fileID: 346377747}
   m_Layer: 5
   m_Name: Button_Options
   m_TagString: Untagged
@@ -5994,18 +5993,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 346377742}
   m_CullTransparentMesh: 1
---- !u!114 &346377747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 346377742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98fdf0486502ded4f84298b87198fb7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &348325878
 GameObject:
   m_ObjectHideFlags: 0
@@ -21650,14 +21637,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce50ae6b8033c240b88a968dac0cdbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToBeResized: {fileID: 0}
-  parentOfContent: {fileID: 0}
+  objectToBeResized: {fileID: 127758010}
+  parentOfContent: {fileID: 127758010}
   paddingLeft: 10
   paddingRight: 10
   paddingUp: 10
   paddingDown: 10
   resizeWidth: 0
-  resizeHeight: 0
+  resizeHeight: 1
 --- !u!1 &1437241444
 GameObject:
   m_ObjectHideFlags: 0
@@ -25124,14 +25111,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce50ae6b8033c240b88a968dac0cdbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToBeResized: {fileID: 0}
-  parentOfContent: {fileID: 0}
+  objectToBeResized: {fileID: 1700623268}
+  parentOfContent: {fileID: 1700623268}
   paddingLeft: 10
   paddingRight: 10
   paddingUp: 10
   paddingDown: 10
   resizeWidth: 0
-  resizeHeight: 0
+  resizeHeight: 1
 --- !u!114 &1700623271
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -50,6 +50,7 @@ public class ResourcesPanel : MonoBehaviour
             Game.ShutDown();
             SceneManager.LoadScene("Menu");
         });
+        if (Battle.Instance.Rules.TimeForEachRound < 0) timeDisplay.gameObject.SetActive(false);
     }
 
     // Update is called once per frame

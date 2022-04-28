@@ -542,6 +542,8 @@ namespace SteelOfStalin
             SceneManager.LoadScene("Game");
             yield return new WaitWhile(() => SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
+            CameraController.instance.maxX = Battle.Instance.Map.Width * Prop.HEX_APOTHEM *2*(Mathf.Sqrt(3)/2);
+            CameraController.instance.maxZ = Battle.Instance.Map.Height * Prop.HEX_APOTHEM *2;
             _ = StartCoroutine(GameLoop());
         }
         private IEnumerator WaitForAllDataSet(Func<bool> wait_condition)
