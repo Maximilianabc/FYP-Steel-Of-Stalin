@@ -104,7 +104,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
 
         public abstract override object Clone();
         public override bool CanAccessTile(Tile t) => base.CanAccessTile(t) && t.Accessibility.HasFlag(Accessibility.PERSONNEL);
-        public virtual bool CanCapture() => !IsSuppressed && GetLocatedTile().IsCity;
+        public virtual bool CanCapture() => IsInField && !IsSuppressed && GetLocatedTile().IsCity;
         public virtual bool CanAboard()
         {
             // TODO FUT Impl.
@@ -115,9 +115,9 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             // TODO FUT Impl.
             return false;
         }
-        public virtual bool CanFortify() => GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0 && b.Level < b.MaxLevel && Carrying.HasEnoughResources(b.Cost.Fortification, false));
-        public virtual bool CanConstruct() => Game.BuildingData.All.Any(b => Carrying.HasEnoughResources(b.Cost.Base, false));
-        public virtual bool CanDemolish() => GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0);
+        public virtual bool CanFortify() => IsInField && GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0 && b.Level < b.MaxLevel && Carrying.HasEnoughResources(b.Cost.Fortification, false));
+        public virtual bool CanConstruct() => IsInField && Game.BuildingData.All.Any(b => Carrying.HasEnoughResources(b.Cost.Base, false));
+        public virtual bool CanDemolish() => IsInField && GetFriendlyBuildingsInRange(Map.Instance.GetNeighbours(CubeCoOrds)).Any(b => b.Status == BuildingStatus.ACTIVE && b.Level > 0);
         public virtual bool CanScavenge()
         {
             // TODO FUT Impl.
@@ -214,8 +214,8 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             // TODO FUT Impl.
             return false;
         }
-        public virtual bool CanAssemble() => !IsSuppressed && !IsAssembled;
-        public virtual bool CanDisassemble() => !IsSuppressed && IsAssembled;
+        public virtual bool CanAssemble() => IsInField && !IsSuppressed && !IsAssembled;
+        public virtual bool CanDisassemble() => IsInField && !IsSuppressed && IsAssembled;
         public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Arsenal;
 
         public override void Initialize(Player owner, Coordinates coordinates, UnitStatus status)
@@ -332,7 +332,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
 
         // TODO FUT Impl. consider malfunction chance when conrresponding modules' integrities drop below their functioning thresholds
         public override bool CanMove() => Engine.Integrity > 0 && Suspension.Integrity > 0 && FuelTank.Integrity > 0 && base.CanMove();
-        public override bool CanFire() => ((Guns.Any(g => g.Integrity > 0 && g.CannonBreech.Integrity > 0)) || HeavyMachineGuns.Any(mg => mg.Integrity > 0)) && base.CanFire();
+        public override bool CanFire() => (Guns.Any(g => g.Integrity > 0 && g.CannonBreech.Integrity > 0) || HeavyMachineGuns.Any(mg => mg.Integrity > 0)) && base.CanFire();
         public override bool CanCommunicateWith(Prop p) => Radio.Integrity > 0 && base.CanCommunicateWith(p);
         public override bool CanCommunicateWith(Unit communicatee) => Radio.Integrity > 0 && base.CanCommunicateWith(communicatee);
         public override bool CanCommunicateWith(Cities cities) => Radio.Integrity > 0 && base.CanCommunicateWith(cities);

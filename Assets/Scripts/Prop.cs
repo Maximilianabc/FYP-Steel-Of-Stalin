@@ -574,6 +574,7 @@ namespace SteelOfStalin.Assets.Props.Units
         public int ConsecutiveSuppressedRound { get; set; } = 0;
         public decimal TrainingTimeRemaining { get; set; } = 0;
 
+        [JsonIgnore] public bool IsInField => Status.HasAnyOfFlags(UnitStatus.IN_FIELD);
         [JsonIgnore] public bool IsSuppressed => Status.HasFlag(UnitStatus.SUPPRESSED);
         [JsonIgnore] public bool IsConstructing => Status.HasFlag(UnitStatus.CONSTRUCTING);
         [JsonIgnore] public bool CarryingIsFull => Carrying == Capacity;
@@ -656,20 +657,20 @@ namespace SteelOfStalin.Assets.Props.Units
             // TODO FUT Impl. consider altitude of the units as well
             return !units.Any() || !units.Any(u => IsOfSameCategory(u));
         }
-        public virtual bool CanMove() => GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod()).Any();
+        public virtual bool CanMove() => IsInField && GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod()).Any();
         public virtual bool CanMerge()
         {
             // TODO FUT Impl. 
             return false;
         }
-        public virtual bool CanFire() => GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w));
-        public virtual bool CanSabotage() => GetWeapons().Any(w => HasHostileBuildingsInFiringRange(w) && HasEnoughAmmo(w));
+        public virtual bool CanFire() => IsInField && GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w));
+        public virtual bool CanSabotage() => IsInField && GetWeapons().Any(w => HasHostileBuildingsInFiringRange(w) && HasEnoughAmmo(w));
         // can be fired upon = can be suppressed
-        public virtual bool CanSuppress() => GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w, false));
-        public virtual bool CanAmbush() => !Status.HasFlag(UnitStatus.AMBUSHING) && GetWeapons().Any(w => HasEnoughAmmo(w));
-        public virtual bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));
-        public virtual bool CanCommunicateWith(Unit communicatee) => this != communicatee && GetStraightLineDistance(communicatee) <= Scouting.Communication + communicatee.Scouting.Communication;
-        public virtual bool CanCommunicateWith(Cities cities) => GetStraightLineDistance(cities) <= Scouting.Communication + cities.Communication;
+        public virtual bool CanSuppress() => IsInField && GetWeapons().Any(w => HasHostileUnitsInFiringRange(w) && HasEnoughAmmo(w, false));
+        public virtual bool CanAmbush() => IsInField && !Status.HasFlag(UnitStatus.AMBUSHING) && GetWeapons().Any(w => HasEnoughAmmo(w));
+        public virtual bool CanCommunicateWith(Prop p) => IsInField && (p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c)));
+        public virtual bool CanCommunicateWith(Unit communicatee) => IsInField && this != communicatee && GetStraightLineDistance(communicatee) <= Scouting.Communication + communicatee.Scouting.Communication;
+        public virtual bool CanCommunicateWith(Cities cities) => IsInField && GetStraightLineDistance(cities) <= Scouting.Communication + cities.Communication;
         public abstract bool CanBeTrainedIn(UnitBuilding ub);
 
         // has any tile in range that has hostile units
