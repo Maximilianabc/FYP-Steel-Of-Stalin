@@ -680,7 +680,7 @@ namespace SteelOfStalin.Assets.Props.Units
             // called from test if Battle.Instance is null
             Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
         }
-        public void SetWeapons(params IOffensiveCustomizable[] weapons) => SetWeapons(weapons);
+        public void SetWeapons(params IOffensiveCustomizable[] weapons) => SetWeapons(new List<IOffensiveCustomizable>(weapons));
         public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
 
         // TODO FUT Impl. handle same type but different altitude (e.g. planes at and above airfield)

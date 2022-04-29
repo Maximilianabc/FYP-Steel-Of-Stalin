@@ -366,7 +366,6 @@ namespace SteelOfStalin
                         yield return new WaitForSeconds(1);
                         counter += 1;
                         TimeRemaining--;
-                        Debug.Log($"Time remaining: {TimeRemaining} second(s)");
                     }
                 }
                 else
@@ -961,7 +960,7 @@ namespace SteelOfStalin
         {
             BattleName = Battle.Instance?.Name ?? "test";
 
-            Battle.Instance.CancelTokenSource.Token.ThrowIfCancellationRequested();
+            Battle.Instance?.CancelTokenSource.Token.ThrowIfCancellationRequested();
             Units = DeserializeJson<List<Unit>>(AppendPath(Folder, "units"));
             foreach (Unit u in Units)
             {
@@ -976,7 +975,7 @@ namespace SteelOfStalin
                 }
             }
 
-            Battle.Instance.CancelTokenSource.Token.ThrowIfCancellationRequested();
+            Battle.Instance?.CancelTokenSource.Token.ThrowIfCancellationRequested();
             Buildings = DeserializeJson<List<Building>>(AppendPath(Folder, "buildings"));
             foreach (Building b in Buildings)
             {
@@ -995,7 +994,7 @@ namespace SteelOfStalin
             Tiles = new Tile[Width][];
             for (int i = 0; i < Width; i++)
             {
-                Battle.Instance.CancelTokenSource.Token.ThrowIfCancellationRequested();
+                Battle.Instance?.CancelTokenSource.Token.ThrowIfCancellationRequested();
                 // TODO handle FileIO exceptions for all IO operations
                 // TODO FUT. Impl. regenerate map files by reading the stats.txt in case any map files corrupted (e.g. edge of map is not boundary etc.)
                 Tiles[i] = DeserializeJson<List<Tile>>(AppendPath(TileFolder, $"map_{i}")).ToArray();
@@ -2177,6 +2176,7 @@ namespace SteelOfStalin.Flow
             u.AvailableMiscCommands = AvailableMiscCommands.NONE;
             // all active units should be able to hold at round start
             u.AvailableMovementCommands = AvailableMovementCommands.HOLD;
+            u.CommandAssigned = CommandAssigned.NONE;
         });
 
         public void CommandPrerequisitesChecking()
@@ -2305,6 +2305,17 @@ namespace SteelOfStalin.Flow
 
         public void ScreenUpdate()
         {
+            if (Battle.Instance.Rules.IsFogOfWar)
+            {
+                // remove any unit objects that aren't belong to self first
+                foreach (Unit u in Map.Instance.GetUnits().Except(Battle.Instance.Self.Units))
+                {
+                    if (u.PropObject != null)
+                    {
+                        u.PropObject.SetActive(false);
+                    }
+                }
+            }
             // handle screen update here
             // not on screen, is active, has coordinates = new (newly deployed / spotted)
             IEnumerable<Unit> new_units = Map.Instance.GetUnits(u => u.PropObject == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
@@ -2315,7 +2326,14 @@ namespace SteelOfStalin.Flow
             }
             foreach (Unit u in new_units)
             {
-                u.AddToScene();
+                if (u.PropObject == null)
+                {
+                    u.AddToScene();
+                }
+                else
+                {
+                    u.PropObject.SetActive(true);
+                }
             }
 
             IEnumerable<Building> new_buildings = Map.Instance.GetBuildings(b => !(b is Barracks || b is Arsenal) && b.PropObject == null/* && b.Status == BuildingStatus.UNDER_CONSTRUCTION*/);
@@ -2328,9 +2346,16 @@ namespace SteelOfStalin.Flow
             destroyed_unit.ToList().ForEach(u => u.RemoveFromScene());
             Map.Instance.RemoveUnits(destroyed_unit);
 
-            foreach (Prop p in Map.Instance.AllProps)
+            foreach (Unit u in Map.Instance.GetUnits())
             {
-                p.UpdateOnScreenLocation();
+                u.UpdateOnScreenLocation();
+            }
+            foreach (Cities cities in Map.Instance.GetCities())
+            {
+                if (cities.Owner != null && !string.IsNullOrEmpty(cities.Owner.Name))
+                {
+                    cities.PropObjectComponent.SetColorForAllChildren(cities.Owner.Color);
+                }
             }
         }
 

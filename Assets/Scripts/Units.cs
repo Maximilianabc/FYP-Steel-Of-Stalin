@@ -153,7 +153,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             // changing primary but firearm is not a primary, or changing secondary but firearm is not a secondary
             if ((primary && !firearm.FirearmType.HasFlag(FirearmType.PRIMARY)) || (!primary && !firearm.FirearmType.HasFlag(FirearmType.SECONDARY)))
             {
-                this.LogError("Firearm type mismatch.");
+                this.LogError($"Firearm type mismatch: {firearm.Name} is not a " + (primary ? "primary" : "secondary") + " weapon");
                 return;
             }
 
