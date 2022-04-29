@@ -253,6 +253,7 @@ namespace SteelOfStalin.Assets.Props
         public AudioClip AudioOnMove { get; set; }
 
         public List<Material> RendererMaterials { get; set; }
+        public List<Material> SkinRendererMaterials { get; set; }
 
         public PropEventTrigger Trigger => GetComponent<PropEventTrigger>();
 
@@ -354,9 +355,9 @@ namespace SteelOfStalin.Assets.Props
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
-                    if (p is Tile t)
+                    if (p is Unit u)
                     {
-                        CommandPanel.instance.ExecuteCommand("Fire", t);
+                        CommandPanel.instance.ExecuteCommand("Fire", u);
                     }
                 }
             }, false);
@@ -364,9 +365,9 @@ namespace SteelOfStalin.Assets.Props
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
-                    if (p is Tile t)
+                    if (p is Unit u)
                     {
-                        CommandPanel.instance.ExecuteCommand("Suppress", t);
+                        CommandPanel.instance.ExecuteCommand("Suppress", u);
                     }
                 }
             }, false);
@@ -420,6 +421,7 @@ namespace SteelOfStalin.Assets.Props
         public void Highlight() {
             Color highlightColor = Color.green;
             RendererMaterials = GetComponentsInChildren<MeshRenderer>().ToList().ConvertAll<Material>(mr =>new Material(mr.material));
+            SkinRendererMaterials= GetComponentsInChildren<SkinnedMeshRenderer>().ToList().ConvertAll<Material>(mr => new Material(mr.material));
             SetColorForAllChildren(highlightColor);
         }
 
@@ -430,6 +432,16 @@ namespace SteelOfStalin.Assets.Props
             for (int i = 0; i < renderers.Count; i++) {
                 renderers[i].material=RendererMaterials[i]; 
             }
+            List<SkinnedMeshRenderer> skinRenderers = GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
+            if (SkinRendererMaterials == null) return;
+            if (SkinRendererMaterials.Count != skinRenderers.Count) return;
+            Debug.Log("!!!");
+            for (int i = 0; i < skinRenderers.Count; i++)
+            {
+                skinRenderers[i].material = SkinRendererMaterials[i];
+            }
+
+
         }
     }
 }

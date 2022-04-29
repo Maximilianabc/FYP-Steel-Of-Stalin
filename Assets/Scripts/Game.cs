@@ -2168,7 +2168,8 @@ namespace SteelOfStalin.Flow
 
         // Remove fired and moved flags from all units
         public void InitializeRoundStart() => Map.Instance.GetUnits(UnitStatus.ACTIVE).ToList().ForEach(u => 
-        { 
+        {
+            u.CommandAssigned = CommandAssigned.NONE;
             u.Status &= ~(UnitStatus.MOVED | UnitStatus.FIRED);
             u.AvailableConstructionCommands = AvailableConstructionCommands.NONE;
             u.AvailableFiringCommands = AvailableFiringCommands.NONE;

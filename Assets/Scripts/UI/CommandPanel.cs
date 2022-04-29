@@ -68,6 +68,7 @@ public class CommandPanel : MonoBehaviour
         availableCommands = new List<string>();
         if (u.CommandAssigned != CommandAssigned.NONE) {
             Debug.Log("Command Already Assigned");
+            return;
         }
         if ((u.AvailableMovementCommands & AvailableMovementCommands.HOLD) > 0) {
             availableCommands.Add("Hold");
@@ -245,13 +246,18 @@ public class CommandPanel : MonoBehaviour
         {
             Hold hold = new Hold(currentUnit);
             Battle.Instance.Self.Commands.Add(hold);
-            currentUnit.CommandAssigned |= CommandAssigned.HOLD;
+            currentUnit.CommandAssigned = CommandAssigned.HOLD;
         }
         else if (commandString == "Move")
         {
             //simple implementation for now
             //can only control the destination
             List<Tile> reachableTiles = currentUnit.GetMoveRange().ToList();
+            foreach (Command c in Battle.Instance.Self.Commands) {
+                if (c is Deploy || c is Move) {
+                    reachableTiles.RemoveAll(t => t.CoOrds == c.Destination);
+                }
+            }
             foreach (Tile t in reachableTiles)
             {
                 t.PropObjectComponent.Highlight();
@@ -266,7 +272,7 @@ public class CommandPanel : MonoBehaviour
         {
             Ambush ambush = new Ambush(currentUnit);
             Battle.Instance.Self.Commands.Add(ambush);
-            currentUnit.CommandAssigned |= CommandAssigned.AMBUSH;
+            currentUnit.CommandAssigned = CommandAssigned.AMBUSH;
         }
         else if (commandString == "Fire" || commandString == "Suppress" || commandString == "Sabotage")
         {
@@ -332,7 +338,12 @@ public class CommandPanel : MonoBehaviour
                 et.triggers.Add(onClick);
 
             }
-            SetWeapon(weapons.First());
+            //foreach (Transform child in transform)
+            //{
+            //    child.Find("Selected").gameObject.SetActive(false);
+            //}
+            //transform.GetChild(0).Find("Selected").gameObject.SetActive(true);
+            //SetWeapon(weapons.First());
 
 
         }
@@ -361,28 +372,24 @@ public class CommandPanel : MonoBehaviour
         {
             Assemble assemble = new Assemble(currentUnit);
             Battle.Instance.Self.Commands.Add(assemble);
-            currentUnit.CommandAssigned |= CommandAssigned.ASSEMBLE;
+            currentUnit.CommandAssigned = CommandAssigned.ASSEMBLE;
         }
         else if (commandString == "Capture")
         {
             Capture capture = new Capture(currentUnit);
             Battle.Instance.Self.Commands.Add(capture);
-            currentUnit.CommandAssigned |= CommandAssigned.CAPTURE;
+            currentUnit.CommandAssigned = CommandAssigned.CAPTURE;
         }
         else if (commandString == "Disassemble")
         {
             Disassemble disassemble = new Disassemble(currentUnit);
             Battle.Instance.Self.Commands.Add(disassemble);
-            currentUnit.CommandAssigned |= CommandAssigned.DISASSEMBLE;
+            currentUnit.CommandAssigned = CommandAssigned.DISASSEMBLE;
         }
 
     }
 
     public void ExecuteCommand(string commandString, Prop p) {
-        foreach (Transform child in transform)
-        {
-            child.Find("Selected").gameObject.SetActive(false);
-        }
         if (currentUnit == null) {
             Debug.LogWarning("command execution failed");
             return; 
@@ -398,14 +405,14 @@ public class CommandPanel : MonoBehaviour
             {
                 Move move = new Move(currentUnit, currentUnit.GetPath(currentUnit.GetLocatedTile(), t).ToList());
                 Battle.Instance.Self.Commands.Add(move);
-                currentUnit.CommandAssigned |= CommandAssigned.MOVE;
+                currentUnit.CommandAssigned = CommandAssigned.MOVE;
             }
         }
         else if (commandString == "Fire") {
             if (p is Unit u) {
                 Fire fire = new Fire(currentUnit, u, currentWeapon);
                 Battle.Instance.Self.Commands.Add(fire);
-                currentUnit.CommandAssigned |= CommandAssigned.FIRE;
+                currentUnit.CommandAssigned = CommandAssigned.FIRE;
             }
         }
         else if (commandString == "Suppress")
@@ -414,7 +421,7 @@ public class CommandPanel : MonoBehaviour
             {
                 Suppress suppress = new Suppress(currentUnit, u, currentWeapon);
                 Battle.Instance.Self.Commands.Add(suppress);
-                currentUnit.CommandAssigned |= CommandAssigned.SUPPRESS;
+                currentUnit.CommandAssigned = CommandAssigned.SUPPRESS;
             }
         }
         else if (commandString == "Sabotage")
@@ -423,7 +430,7 @@ public class CommandPanel : MonoBehaviour
             {
                 Sabotage sabotage = new Sabotage(currentUnit, b, currentWeapon);
                 Battle.Instance.Self.Commands.Add(sabotage);
-                currentUnit.CommandAssigned |= CommandAssigned.SABOTAGE;
+                currentUnit.CommandAssigned = CommandAssigned.SABOTAGE;
             }
         }
     }
