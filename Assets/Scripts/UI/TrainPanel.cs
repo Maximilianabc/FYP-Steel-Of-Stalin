@@ -138,7 +138,7 @@ public class TrainPanel : MonoBehaviour
         foreach (Unit u in unitsSubList) {
             GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "UnitListItem"), unitList.transform.Find("UnitListItems"),false);
             instance.transform.Find("Icon").GetComponent<Image>().sprite = Game.Icons.Find(I => I.name == u.Name);
-            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = u.Name;
+            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = u.Name.Replace('_',' ');
             if (u is Personnel) instance.transform.Find("Banner").GetComponent<Image>().color=barracksColor;
             else if(u is Vehicle || u is Artillery) instance.transform.Find("Banner").GetComponent<Image>().color = arsenalColor;
             instance.GetComponent<Button>().onClick.AddListener(delegate { SelectUnit(u); });
