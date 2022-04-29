@@ -52,6 +52,7 @@ public class GameLogicTest
             IEnumerable<Metropolis> metro = Map.GetCities<Metropolis>();
             foreach (Metropolis m in metro)
             {
+                Debug.Log(m.CoOrds);
                 foreach (Building building in Map.Instance.GetBuildings(m.CoOrds))
                 {
                     if (building is UnitBuilding ub)
@@ -484,6 +485,16 @@ public class GameLogicTest
 
         Command capture2 = new Capture(i);
         commands.Add(capture2);
+        Command capture3 = new Capture(i);
+        commands.Add(capture3);
+        Command capture4 = new Capture(i);
+        commands.Add(capture4);
+        Command capture5 = new Capture(i);
+        commands.Add(capture5);
+        Command capture6 = new Capture(i);
+        commands.Add(capture6);
+        Command capture7 = new Capture(i);
+        commands.Add(capture7);
         /*
         Debug.Log("Before:\n" + string.Join(Environment.NewLine, commands.Select(c => c.ToStringBeforeExecution())));
 
@@ -506,6 +517,18 @@ public class GameLogicTest
         {
             Debug.Log($"{cmd}: {Command.FromStringBeforeExecution(cmd)?.IsValid}");
         }
+    }
+
+    [Test]
+    public void CaptureTest()
+    {
+        Assault a = Map.InitializeNewUnit<Assault>(Players[0], Players[1].Capital.CoOrds);
+        new Capture(a).Execute();
+        new Capture(a).Execute();
+        new Capture(a).Execute();
+        new Capture(a).Execute();
+        new Capture(a).Execute();
+        new Capture(a).Execute();
     }
 
     [Test]

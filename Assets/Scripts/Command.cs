@@ -1197,12 +1197,12 @@ namespace SteelOfStalin.Commands
                     _ = Recorder.Append(c.GetMoraleChangeRecord(-morale));
                     this.Log($"Decreased morale of {c} by {morale}");
                 }
-                if (c.Morale == 0 && c.Owner != Unit.Owner)
+                if (c.Morale <= 0 && c.Owner != Unit.Owner)
                 {
                     Player original = c.Owner;
-                    c.Owner = Unit.Owner;
-                    _ = Recorder.Append($"({original}=>{Unit.Owner})");
-                    this.Log($"City's owner changed from {original} to {Unit.Owner}");
+                    c.SetOwner(Unit.Owner);
+                    _ = Recorder.Append($"({original}=>{c.Owner})");
+                    this.Log($"City's owner changed from {original} to {c.Owner}");
                 }
             }
         }
