@@ -25,6 +25,7 @@ public class MenuNavigation : MonoBehaviour
         navigationStack.Push(mainMenu);
         mainMenu.transform.Find("Menu").Find("Play").GetComponent<Button>().onClick.AddListener(delegate { NavigateTo(singleMultiSelectionMenu); });
         mainMenu.transform.Find("Menu").Find("Options").GetComponent<Button>().onClick.AddListener(delegate { NavigateTo(optionMenu); });
+        mainMenu.transform.Find("Menu").Find("Quit").GetComponent<Button>().onClick.AddListener(delegate { UIUtil.instance.Exit(); });
         optionMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack(); });
         singleMultiSelectionMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack(); });
         singleMultiSelectionMenu.transform.Find("Controller").Find("Button_Singleplayer").GetComponent<Button>().onClick.AddListener(delegate { NavigateTo(battlesMenu); multiplayer = false; });
