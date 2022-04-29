@@ -472,8 +472,8 @@ namespace SteelOfStalin
                 RoundNumber++;
             }
             Debug.Log($"Winner is {m_winner}!");
-            GameObject.Find("Canvas_EndGame").SetActive(true);
-            GameObject.Find("Canvas_EndGame").transform.Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+            GameObject instance=Instantiate(Game.GameObjects.Find(g => g.name == "Canvas_EndGame"));
+            instance.transform.Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
             {
                 Game.ShutDown();
                 SceneManager.LoadScene("Menu");
