@@ -48,7 +48,7 @@ namespace SteelOfStalin
         public Resources Resources { get; set; } = new Resources();
         public List<Player> Allies { get; set; } = new List<Player>(); // TODO FUT. Impl. Ally system (historical, designated before battle starts / unknown handshake)
         public List<Command> Commands { get; set; } = new List<Command>();
-        public bool IsReady { get; set; } = false;
+        [JsonIgnore] public bool IsReady { get; set; } = false;
 
         // TODO FUT Impl. find a better way to handle this, probably with enum
         [JsonIgnore] public int CommandsProcessed { get; set; } = 0;

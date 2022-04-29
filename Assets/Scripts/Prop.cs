@@ -310,6 +310,7 @@ namespace SteelOfStalin.Assets.Props
                         sb.AppendLine(t.Name);
                         if (t is Cities c &&c.Owner!=null) {
                             sb.AppendLine($"Owner: {c.OwnerName}");
+                            sb.AppendLine($"Morale: {c.Morale.ApplyMod()}");
                         }
                         sb.AppendLine(t.CoOrds.ToString());
                         sb.AppendLine($"Concealment Mod: {t.TerrainMod.Concealment.Value}%");
@@ -1084,7 +1085,7 @@ namespace SteelOfStalin.Assets.Props.Tiles
                (Attribute)another.Morale.Clone());
 
         public bool IsOwn(Player p) => Owner == p;
-        public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
+        public bool IsAlly(Player p) => Owner != null && Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p) && !IsNeutral();

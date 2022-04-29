@@ -160,7 +160,7 @@ public class TrainPanel : MonoBehaviour
         ResetCity();
         currentCity = city;
         CameraController.instance.FocusOn(city.PropObject.transform);
-        citySelection.GetComponent<TMPro.TMP_Dropdown>().SetValueWithoutNotify(cities.IndexOf(city));
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().SetValueWithoutNotify(cities.FindIndex(c=>c.MeshName==city.MeshName));
         RedrawQueues();
         Show();
     }
