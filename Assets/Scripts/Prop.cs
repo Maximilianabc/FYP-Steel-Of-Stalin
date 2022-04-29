@@ -436,7 +436,6 @@ namespace SteelOfStalin.Assets.Props
             List<SkinnedMeshRenderer> skinRenderers = GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
             if (SkinRendererMaterials == null) return;
             if (SkinRendererMaterials.Count != skinRenderers.Count) return;
-            Debug.Log("!!!");
             for (int i = 0; i < skinRenderers.Count; i++)
             {
                 skinRenderers[i].material = SkinRendererMaterials[i];
