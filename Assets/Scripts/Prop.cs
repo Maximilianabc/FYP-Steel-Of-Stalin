@@ -128,6 +128,14 @@ namespace SteelOfStalin.Assets.Props
         }
         public virtual void RemoveFromScene() => UnityEngine.Object.Destroy(PropObject);
         public Vector3 CalculateOnScreenCoordinates() => new Vector3(2 * HEX_APOTHEM * CoOrds.X * (float)Math.Cos(Math.PI / 6), 0, 2 * HEX_APOTHEM * (CoOrds.Y + (CoOrds.X % 2 == 1 ? 0.5F : 0)));
+        public virtual void UpdateOnScreenLocation()
+        {
+            if (PropObject != null)
+            {
+                PropObject.transform.position = CalculateOnScreenCoordinates();
+            }
+        }
+
         public void SetMeshName()
         {
             if (string.IsNullOrEmpty(MeshName))
@@ -670,7 +678,7 @@ namespace SteelOfStalin.Assets.Props.Units
             // TODO FUT Impl. consider altitude of the units as well
             return !units.Any() || !units.Any(u => IsOfSameCategory(u));
         }
-        public virtual bool CanMove() => IsInField && GetAccessibleNeigbours((int)Maneuverability.Speed.ApplyMod()).Any();
+        public virtual bool CanMove() => IsInField && GetMoveRange().Any();
         public virtual bool CanMerge()
         {
             // TODO FUT Impl. 
@@ -960,7 +968,7 @@ namespace SteelOfStalin.Assets.Props.Buildings
                another.ConstructionTimeRemaining);
 
         public bool IsOwn(Player p) => Owner == p;
-        public bool IsAlly(Player p) => Owner.Allies.Any(a => a == p);
+        public bool IsAlly(Player p) => Owner != null && Owner.Allies.Any(a => a == p);
         public bool IsFriendly(Player p) => IsAlly(p) || IsOwn(p);
         // public bool IsNeutral() => Owner == null;
         public bool IsHostile(Player p) => !IsFriendly(p); /*&& !IsNeutral();*/

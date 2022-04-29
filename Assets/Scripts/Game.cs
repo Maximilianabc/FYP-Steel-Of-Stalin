@@ -887,7 +887,7 @@ namespace SteelOfStalin
     // Contains different rules of the battle, like how much time is allowed for each round etc.
     public class BattleRules
     {
-        public int TimeForEachRound { get; set; } = 10; // in seconds, -1 means unlimited
+        public int TimeForEachRound { get; set; } = 120; // in seconds, -1 means unlimited
         public bool IsFogOfWar { get; set; } = true;
         public bool RequireSignalConnection { get; set; } = true;
         public bool DestroyedUnitsCanBeScavenged { get; set; }
@@ -2307,7 +2307,7 @@ namespace SteelOfStalin.Flow
             // handle screen update here
             // not on screen, is active, has coordinates = new (newly deployed / spotted)
             IEnumerable<Unit> new_units = Map.Instance.GetUnits(u => u.PropObject == null && u.Status.HasFlag(UnitStatus.ACTIVE) && u.CoOrds != default);
-            if (Game.ActiveBattle.IsSinglePlayer)
+            if (Game.ActiveBattle.IsSinglePlayer && Battle.Instance.Rules.IsFogOfWar)
             {
                 Player self = Battle.Instance.Self;
                 new_units = new_units.Where(u => u.Owner == self).Concat(self.GetAllUnitsInSight());
@@ -2326,6 +2326,11 @@ namespace SteelOfStalin.Flow
             IEnumerable<Unit> destroyed_unit = Map.Instance.GetUnits(UnitStatus.DESTROYED);
             destroyed_unit.ToList().ForEach(u => u.RemoveFromScene());
             Map.Instance.RemoveUnits(destroyed_unit);
+
+            foreach (Prop p in Map.Instance.AllProps)
+            {
+                p.UpdateOnScreenLocation();
+            }
         }
 
         public void EndPlanning()
@@ -2447,7 +2452,7 @@ namespace SteelOfStalin.Flow
             {
                 conflicts
                     .Select(m =>
-                        m.OrderBy(x => Formula.PriorityValue(x.Unit, 
+                        m.OrderByDescending(x => Formula.PriorityValue(x.Unit, 
                             x.Path.Count() - 2 < 0
                                 ? x.Unit.GetLocatedTile() // no second last tile => only one tile in path
                                 : x.Path.ElementAt(x.Path.Count() - 2))) // sort each group by priority value

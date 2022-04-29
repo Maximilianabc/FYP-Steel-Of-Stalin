@@ -25,9 +25,14 @@ namespace SteelOfStalin.Assets.Props.Units
         public override bool CanMove() => base.CanMove() && HasEnoughResourcesForMoving();
         public virtual bool HasEnoughResourcesForMoving()
         {
+            IEnumerable<Tile> neighbours = GetAccessibleNeigbours();
+            if (!neighbours.Any())
+            {
+                this.LogWarning("No direct accessible negibours (within 1 tile range)");
+                return false;
+            }
             if (Consumption.Fuel > 0)
             {
-                IEnumerable<Tile> neighbours = GetAccessibleNeigbours();
                 IEnumerable<(decimal supplies, decimal fuel)> consumption_pairs = neighbours.Select(n => (n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies), n.TerrainMod.Fuel.ApplyTo(Consumption.Fuel)));
                 (decimal supplies, decimal fuel) cheapest_supplies = consumption_pairs.OrderBy(c => c.supplies).First();
                 (decimal supplies, decimal fuel) cheapest_fuel = consumption_pairs.OrderBy(c => c.fuel).First();
@@ -37,7 +42,7 @@ namespace SteelOfStalin.Assets.Props.Units
             }
             else
             {
-                return Carrying.Supplies >= GetAccessibleNeigbours().Select(n => n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies)).OrderBy(c => c).First();
+                return Carrying.Supplies >= neighbours.Select(n => n.TerrainMod.Supplies.ApplyTo(Consumption.Supplies)).OrderBy(c => c).First();
             }
         }
     }
