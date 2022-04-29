@@ -939,7 +939,8 @@ namespace SteelOfStalin
             get => _instance;
             private set
             {
-                if (_instance == null)
+                //TODO: Future Implementation
+                if (_instance == null||value==null)
                 {
                     _instance = value;
                 }
