@@ -293,7 +293,7 @@ namespace SteelOfStalin
         [JsonIgnore] public CancellationTokenSource CancelTokenSource { get; set; } = new CancellationTokenSource();
         [JsonIgnore] public bool CancelTokenDisposed { get; private set; } = false;
 
-        private Player m_winner { get; set; } = null;
+        public Player m_winner { get; private set; } = null;
         private bool m_isInitialized => Players.Count > 0 && Map.IsInitialized;
         private bool m_isLoaded = false;
         private string m_folder => AppendPath(FolderNames[ExternalFolder.SAVES], Name);
@@ -464,8 +464,13 @@ namespace SteelOfStalin
                 RoundNumber++;
             }
             Debug.Log($"Winner is {m_winner}!");
-            Game.Network.Shutdown();
-            SceneManager.LoadScene("Menu");
+            GameObject.Find("Canvas_EndGame").SetActive(true);
+            GameObject.Find("Canvas_EndGame").transform.Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+            {
+                Game.Network.Shutdown();
+                SceneManager.LoadScene("Menu");
+            });
+            
             yield return null;
         }
         private IEnumerator Initialize()
