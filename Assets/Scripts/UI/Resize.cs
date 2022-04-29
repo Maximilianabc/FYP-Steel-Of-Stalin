@@ -81,6 +81,7 @@ public class Resize : MonoBehaviour
         {
             DoResize();
         }
+        yield return null;
     }
 
 }
