@@ -70,7 +70,8 @@ namespace SteelOfStalin
                 DontDestroyOnLoad(battle_instance);
             }
 
-            if (Game.Profile != null && !string.IsNullOrEmpty(Game.Profile.Name) && GameObject.Find(Game.Profile.Name) == null)
+            yield return new WaitWhile(() => string.IsNullOrEmpty(Game.Profile.Name));
+            if (GameObject.Find(Game.Profile.Name) == null)
             {
                 GameObject player = Resources.Load<GameObject>(@"Prefabs\player");
                 GameObject player_instance = Instantiate(player);
