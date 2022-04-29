@@ -1,6 +1,7 @@
 using SteelOfStalin.DataIO;
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SteelOfStalin
@@ -21,15 +22,6 @@ namespace SteelOfStalin
                 DontDestroyOnLoad(gameInstance);
             }
 
-            if (GameObject.Find("network") == null)
-            {
-                GameObject network = Resources.Load<GameObject>(@"Prefabs\network");
-                GameObject network_instance = Instantiate(network);
-                network_instance.name = "network";
-                DontDestroyOnLoad(network_instance);
-            }
-
-
             if (GameObject.Find("UI_util") == null)
             {
                 GameObject UI_util = Resources.Load<GameObject>(@"Prefabs\UI_util");
@@ -45,6 +37,16 @@ namespace SteelOfStalin
         {
             yield return new WaitWhile(() => GameObject.Find("game") == null);
             yield return new WaitWhile(() => !Game.NeedReloadBattleObjects);
+
+            if (GameObject.Find("network") == null)
+            {
+                GameObject network = Resources.Load<GameObject>(@"Prefabs\network");
+                GameObject network_instance = Instantiate(network);
+                network_instance.name = "network";
+                DontDestroyOnLoad(network_instance);
+            }
+            Game.Network.ConnectionApprovalCallback -= Game.ApprovalCheck;
+            Game.Network.ConnectionApprovalCallback += Game.ApprovalCheck;
 
             if (GameObject.Find("network_util") == null)
             {
@@ -68,6 +70,7 @@ namespace SteelOfStalin
                 }
                 battle_instance.name = "battle";
                 DontDestroyOnLoad(battle_instance);
+                Debug.Log("battle instantiated");
             }
 
             yield return new WaitWhile(() => string.IsNullOrEmpty(Game.Profile.Name));
@@ -81,6 +84,7 @@ namespace SteelOfStalin
                 }
                 DontDestroyOnLoad(player_instance);
             }
+            action.Invoke();
             yield return null;
         }
     }

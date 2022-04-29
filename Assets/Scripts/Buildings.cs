@@ -11,8 +11,8 @@ namespace SteelOfStalin.Assets.Props.Buildings
     public abstract class UnitBuilding : Building
     {
         public Attribute QueueCapacity { get; set; } = new Attribute(8);
-        public Queue<Unit> TrainingQueue { get; set; } = new Queue<Unit>();
-        public List<Unit> ReadyToDeploy { get; set; } = new List<Unit>();
+        [JsonIgnore] public Queue<Unit> TrainingQueue { get; set; } = new Queue<Unit>();
+        [JsonIgnore] public List<Unit> ReadyToDeploy { get; set; } = new List<Unit>();
         public Attribute DeployRange { get; set; } = new Attribute(1);
 
         [JsonIgnore] public decimal CurrentQueueTime => TrainingQueue.LastOrDefault()?.TrainingTimeRemaining ?? 0;

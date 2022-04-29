@@ -678,7 +678,13 @@ namespace SteelOfStalin.Assets.Props.Units
                 return;
             }
             // called from test if Battle.Instance is null
-            Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
+            Player owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
+            if (owner == null)
+            {
+                this.LogWarning($"Cannot find player {OwnerName}");
+                return;
+            }
+            Owner = owner;
         }
         public void SetWeapons(params IOffensiveCustomizable[] weapons) => SetWeapons(new List<IOffensiveCustomizable>(weapons));
         public abstract void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons);
@@ -760,7 +766,7 @@ namespace SteelOfStalin.Assets.Props.Units
             }
             if (!CanAccessTile(end))
             {
-                this.LogError("This unit cannot access the destination");
+                this.LogError($"This unit cannot access the destination {end}");
                 return Enumerable.Empty<Tile>();
             }
 
@@ -1105,6 +1111,21 @@ namespace SteelOfStalin.Assets.Props.Tiles
             }
             // called from test if Battle.Instance is null
             Owner = Battle.Instance?.GetPlayer(OwnerName) ?? Map.Instance.Players.Find(p => p.Name == OwnerName);
+        }
+        public void ChangeOwner(Player newOwner)
+        {
+            if (newOwner == null)
+            {
+                this.LogError("New owner is null");
+                return;
+            }
+            SetOwner(newOwner);
+            Map.Instance.GetBuildings<UnitBuilding>(CoOrds).ToList().ForEach(ub =>
+            {
+                ub.TrainingQueue.Clear();
+                ub.ReadyToDeploy.Clear();
+                ub.SetOwner(newOwner);
+            });
         }
 
         public bool CanCommunicateWith(Prop p) => p is Unit u ? CanCommunicateWith(u) : (p is Cities c && CanCommunicateWith(c));

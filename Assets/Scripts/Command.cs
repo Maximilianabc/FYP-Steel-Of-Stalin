@@ -1200,7 +1200,7 @@ namespace SteelOfStalin.Commands
                 if (c.Morale <= 0 && c.Owner != Unit.Owner)
                 {
                     Player original = c.Owner;
-                    c.SetOwner(Unit.Owner);
+                    c.ChangeOwner(Unit.Owner);
                     _ = Recorder.Append($"({original}=>{c.Owner})");
                     this.Log($"City's owner changed from {original} to {c.Owner}");
                 }
