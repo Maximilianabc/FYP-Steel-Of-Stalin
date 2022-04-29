@@ -49,7 +49,7 @@ public class BattlesMenu : MonoBehaviour
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Battle Name: {bi.Name}");
             sb.AppendLine($"Map Name: {bi.MapName}");
-            sb.AppendLine($"Map Size: {bi.MapWidth}×{bi.MapHeight}");
+            sb.AppendLine($"Map Size: {bi.MapWidth}\u00D7{bi.MapHeight}");
             sb.AppendLine($"Num of Players: {bi.MaxNumPlayers}");
 
             instance.transform.Find("TextContent").GetComponent<TMPro.TMP_Text>().text=sb.ToString();
