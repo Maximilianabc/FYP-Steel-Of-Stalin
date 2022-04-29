@@ -47,7 +47,8 @@ namespace SteelOfStalin
         public SerializableColor SerializableColor { get; set; }
         public Resources Resources { get; set; } = new Resources();
         public List<Player> Allies { get; set; } = new List<Player>(); // TODO FUT. Impl. Ally system (historical, designated before battle starts / unknown handshake)
-        public List<Command> Commands { get; set; } = new List<Command>();
+        // TODO FUT. Impl. store commands strings when save game
+        [JsonIgnore] public List<Command> Commands { get; set; } = new List<Command>();
         [JsonIgnore] public bool IsReady { get; set; } = false;
 
         // TODO FUT Impl. find a better way to handle this, probably with enum
@@ -125,7 +126,6 @@ namespace SteelOfStalin
             return sb.ToString();
         }
 
-
         public object Clone()
         {
             Player copy = (Player)MemberwiseClone();
@@ -156,8 +156,21 @@ namespace SteelOfStalin
         public static bool operator !=(Player p1, Player p2) => !(p1?.Name == p2?.Name && p1?.Color == p2?.Color);
     }
 
-     public class AIPlayer : Player
+    public class AIPlayer : Player
     {
+        public bool IsAI { get; set; } = true;
+
+        public AIPlayer() { }
+        public AIPlayer(Player player)
+        {
+            Name = player.Name;
+            SerializableColor = player.SerializableColor;
+            Resources = (Resources)player.Resources.Clone();
+            Allies = new List<Player>(player.Allies);
+            Commands = new List<Command>(player.Commands);
+            IsReady = true;
+        }
+
         public void Botflow(){
             try
             {

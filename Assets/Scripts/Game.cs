@@ -77,7 +77,6 @@ namespace SteelOfStalin
             LoadBattleInfos();
             LoadProfile();
             LoadSettings();
-            Network.ConnectionApprovalCallback += ApprovalCheck;
             Instance = this;
         }
 
@@ -106,6 +105,7 @@ namespace SteelOfStalin
 
             if (network != null)
             {
+                Network.Shutdown();
                 DestroyImmediate(network);
             }
             if (battle != null)
@@ -115,20 +115,20 @@ namespace SteelOfStalin
                     Battle.Instance.CancelTokenSource.Cancel();
                 }
                 battle.GetComponent<Battle>().StopAllCoroutines();
-                DestroyImmediate(battle.gameObject);
+                DestroyImmediate(battle);
             }
             if (network_util != null)
             {
                 network_util.GetComponent<NetworkUtilities>().StopAllCoroutines();
-                DestroyImmediate(network_util.gameObject);
+                DestroyImmediate(network_util);
             }
             if (player != null)
             {
                 DestroyImmediate(player);
             }
-            _ = Instance.StartCoroutine(WaitForObjectsDestroy(() =>
+            _ = Instance.StartCoroutine(WaitForNetworkObjectsDestroy(() =>
             {
-                Network.Shutdown();
+                Debug.Log(Game.Network == null);
                 NeedReloadBattleObjects = true;
             }));
         }
@@ -240,12 +240,14 @@ namespace SteelOfStalin
             }
         }
 
-        private static IEnumerator WaitForObjectsDestroy(Action callback)
+        private static IEnumerator WaitForNetworkObjectsDestroy(Action callback)
         {
-            Debug.Log("Waiting for battle and network_util to be destroyed");
+            Debug.Log("Waiting for network objects to be destroyed");
+            yield return new WaitWhile(() => GameObject.Find("network") != null);
             yield return new WaitWhile(() => GameObject.Find("battle") != null);
             yield return new WaitWhile(() => GameObject.Find("network_util") != null);
-            Debug.Log("battle and network_util destroyed");
+            yield return new WaitWhile(() => GameObject.Find(Game.Profile.Name) != null);
+            Debug.Log("Network objects destroyed");
             callback.Invoke();
         }
     }
@@ -272,7 +274,7 @@ namespace SteelOfStalin
         public BattleRules Rules { get; set; } = new BattleRules();
         public int MaxNumPlayers { get; set; }
 
-        public List<Round> Rounds = new List<Round>();
+        public List<Round> Rounds { get; set; } = new List<Round>();
         public Round CurrentRound { get; set; }
         public int RoundNumber { get; set; } = 1;
         public int TimeRemaining { get; set; }
@@ -377,7 +379,7 @@ namespace SteelOfStalin
                 UIUtil.instance.RoundEndUIUpdate();
                 Debug.Log("End Turn");
                 EnablePlayerInput = false;
-                if (Game.Network.IsServer)
+                if (Game.Network.IsHost)
                 {
                     if (Game.ActiveBattle.IsSinglePlayer)
                     {
@@ -449,10 +451,16 @@ namespace SteelOfStalin
                         CurrentRound.NumPlayersReadyToProceed++;
                     }
                 }
-                else
+                else if (Game.Network.IsClient)
                 {
                     Self.PlayerObjectComponent.SendCommandsToServer();
                     _ = StartCoroutine(WaitForServerCalculationResults());
+                }
+                else
+                {
+                    Debug.Log($"{Game.Network.IsHost} {Game.Network.IsClient}");
+                    Debug.LogError("Something went wrong: NetworkManager is neither host nor client.");
+                    yield break;
                 }
 
                 Debug.Log("Waiting for proceeding to next round.");
@@ -464,10 +472,12 @@ namespace SteelOfStalin
                 RoundNumber++;
             }
             Debug.Log($"Winner is {m_winner}!");
+            
+            SceneManager.LoadScene("Menu");
             GameObject.Find("Canvas_EndGame").SetActive(true);
             GameObject.Find("Canvas_EndGame").transform.Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
             {
-                Game.Network.Shutdown();
+                Game.ShutDown();
                 SceneManager.LoadScene("Menu");
             });
             
@@ -632,7 +642,6 @@ namespace SteelOfStalin
                 Debug.Log($"{player.Name}: {cities.Count()}");
                 Debug.Log($"Capital: {player.Capital}");
             }
-
             foreach (Unit unit in Map.GetUnits(u => u.Status.HasAnyOfFlags(UnitStatus.IN_FIELD)))
             {
                 // skip showing bots' units if they aren't in sight
@@ -664,6 +673,7 @@ namespace SteelOfStalin
             Rules.Save();
             Players.SerializeJson(AppendPath(m_folder, "players"));
             Map.Save();
+            Rounds.SerializeJson(AppendPath(m_folder, "rounds"));
             Debug.Log($"Saved battle {Name}");
         }
         public void Load()
@@ -675,8 +685,15 @@ namespace SteelOfStalin
                 Rules.Save();
             }
             Rules = DeserializeJson<BattleRules>(AppendPath(m_folder, "rules"));
-
             Players = DeserializeJson<List<Player>>(AppendPath(m_folder, "players"));
+
+            if (!StreamingAssetExists(AppendPath(m_folder, "rounds.json")))
+            {
+                Rounds.SerializeJson(AppendPath(m_folder, "rounds"));
+            }
+            Rounds = DeserializeJson<List<Round>>(AppendPath(m_folder, "rounds"));
+            RoundNumber = Rounds.Count + 1;
+
             if (Players.Count == 0)
             {
                 Self = new Player()
@@ -707,6 +724,17 @@ namespace SteelOfStalin
                 else
                 {
                     Self = self;
+                    List<AIPlayer> ais = new List<AIPlayer>();
+                    Players.ForEach(p =>
+                    {
+                        if (p != self)
+                        {
+                            ais.Add(new AIPlayer(p));
+                        }
+                    });
+                    Players.Clear();
+                    Players.Add(self);
+                    Players.AddRange(ais);
                 }
             }
 
@@ -967,30 +995,9 @@ namespace SteelOfStalin
 
             Battle.Instance?.CancelTokenSource.Token.ThrowIfCancellationRequested();
             Units = DeserializeJson<List<Unit>>(AppendPath(Folder, "units"));
-            foreach (Unit u in Units)
-            {
-                u.SetMeshName();
-                if (!string.IsNullOrEmpty(u.OwnerName))
-                {
-                    u.SetOwnerFromName();
-                }
-                else
-                {
-                    Debug.LogWarning($"Unit {u} does not have an owner");
-                }
-            }
 
             Battle.Instance?.CancelTokenSource.Token.ThrowIfCancellationRequested();
             Buildings = DeserializeJson<List<Building>>(AppendPath(Folder, "buildings"));
-            foreach (Building b in Buildings)
-            {
-                b.SetMeshName();
-                if (!string.IsNullOrEmpty(b.OwnerName))
-                {
-                    b.SetOwnerFromName();
-                }
-                // building can have no owners (e.g. unit buildings in neutral cities)
-            }
 
             if (Width == 0 || Height == 0)
             {
@@ -1011,6 +1018,100 @@ namespace SteelOfStalin
                     c.SetOwnerFromName();
                 }
                 t.SetMeshName();
+            }
+
+            foreach (Unit u in Units)
+            {
+                u.SetMeshName();
+                if (!string.IsNullOrEmpty(u.OwnerName))
+                {
+                    u.SetOwnerFromName();
+                }
+                else
+                {
+                    Debug.LogWarning($"Unit {u} does not have an owner");
+                }
+            }
+            // TODO FUT. Impl. extract as a method
+            foreach (Unit in_queue in GetUnits(UnitStatus.IN_QUEUE))
+            {
+                IEnumerable<UnitBuilding> ub = GetBuildings<UnitBuilding>(in_queue.CoOrds);
+                if (!ub.Any())
+                {
+                    Debug.LogError($"No unit buildings found for {in_queue}, whose status is IN_QUEUE");
+                    continue;
+                }
+                if (in_queue is Personnel p)
+                {
+                    Barracks b = ub.OfType<Barracks>().FirstOrDefault();
+                    if (b == null)
+                    {
+                        Debug.LogError($"No barracks found for personnel {p}, whose status is IN_QUEUE");
+                        continue;
+                    }
+                    b.TrainingQueue.Enqueue(p);
+                }
+                else if (in_queue is Artillery a || in_queue is Vehicle v)
+                {
+                    Arsenal ar = ub.OfType<Arsenal>().FirstOrDefault();
+                    if (ar == null)
+                    {
+                        Debug.LogError($"No arsenals found for {in_queue}, whose status is IN_QUEUE");
+                        continue;
+                    }
+                    ar.TrainingQueue.Enqueue(in_queue);
+                }
+                else
+                {
+                    // TODO FUT. Impl. add naval and aerial units
+                }
+            }
+            foreach (Unit ready in GetUnits(UnitStatus.CAN_BE_DEPLOYED))
+            {
+                IEnumerable<UnitBuilding> ub = GetBuildings<UnitBuilding>(ready.CoOrds);
+                if (!ub.Any())
+                {
+                    Debug.LogError($"No unit buildings found for {ready}, whose status is IN_QUEUE");
+                    continue;
+                }
+                if (ready is Personnel p)
+                {
+                    Barracks b = ub.OfType<Barracks>().FirstOrDefault();
+                    if (b == null)
+                    {
+                        Debug.LogError($"No barracks found for personnel {p}, whose status is IN_QUEUE");
+                        continue;
+                    }
+                    b.ReadyToDeploy.Add(p);
+                }
+                else if (ready is Artillery a || ready is Vehicle v)
+                {
+                    Arsenal ar = ub.OfType<Arsenal>().FirstOrDefault();
+                    if (ar == null)
+                    {
+                        Debug.LogError($"No arsenals found for {ready}, whose status is IN_QUEUE");
+                        continue;
+                    }
+                    ar.ReadyToDeploy.Add(ready);
+                }
+                else
+                {
+                    // TODO FUT. Impl. add naval and aerial units
+                }
+            }
+
+            foreach (Building b in Buildings)
+            {
+                b.SetMeshName();
+                if (!string.IsNullOrEmpty(b.OwnerName))
+                {
+                    b.SetOwnerFromName();
+                }
+                // building can have no owners (e.g. unit buildings in neutral cities)
+                if (b is UnitBuilding ub)
+                {
+                    ub.TrainingQueue = new Queue<Unit>(ub.TrainingQueue.OrderBy(u => u.TrainingTimeRemaining));
+                }
             }
 
             IsLoaded = true;
@@ -1443,6 +1544,7 @@ namespace SteelOfStalin
 
         public IEnumerable<Building> GetBuildings() => Buildings;
         public IEnumerable<T> GetBuildings<T>() where T : Building => Buildings.OfType<T>();
+        public IEnumerable<T> GetBuildings<T>(Coordinates p) where T : Building => GetBuildings<T>().Where(b => b.CoOrds == p);
         public IEnumerable<Building> GetBuildings(Coordinates p) => GetBuildings(GetTile(p));
         public IEnumerable<Building> GetBuildings(IEnumerable<Coordinates> coordinates) => coordinates.SelectMany(c => GetBuildings(c));
         public IEnumerable<Building> GetBuildings(Tile t)
@@ -2153,9 +2255,9 @@ namespace SteelOfStalin.Flow
     {
         public int Number { get; set; }
 
-        public List<Command> Commands { get; set; } = new List<Command>();
-        public List<Phase> Phases { get; set; } = new List<Phase>();
-        public Planning Planning { get; set; } = new Planning();
+        [JsonIgnore] public List<Command> Commands { get; set; } = new List<Command>();
+        [JsonIgnore] public List<Phase> Phases { get; set; } = new List<Phase>();
+        [JsonIgnore] public Planning Planning { get; set; } = new Planning();
 
         [JsonIgnore] public List<Player> Players { get; set; }
         // TODO FUT. Impl. think of a better way to check whether all players have sent their commands to server (probably using enum to indicate status of each client)
