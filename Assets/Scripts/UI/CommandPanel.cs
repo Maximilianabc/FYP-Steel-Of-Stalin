@@ -462,7 +462,7 @@ public class CommandPanel : MonoBehaviour
             else if (currentCommand == "Fire") trigger.SetActive("fire_unit", false);
             else if (currentCommand == "Suppress") trigger.SetActive("suppress_unit", false);
             else if (currentCommand == "Sabotage") trigger.SetActive("sabotage_building", false);
-            trigger.SetActive("focus", false);
+            trigger.SetActive("focus", true);
         }
         isWaitingInput = false;
     }
