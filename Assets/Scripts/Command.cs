@@ -1,20 +1,17 @@
-﻿using SteelOfStalin.Attributes;
-using SteelOfStalin.Assets.Customizables;
+﻿using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Modules;
-using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
 using SteelOfStalin.Assets.Props.Units.Land.Personnels;
+using SteelOfStalin.Attributes;
+using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Util;
 using System.Collections.Generic;
 using System.Linq;
-using static SteelOfStalin.Util.Utilities;
-using SteelOfStalin.Assets.Props.Buildings.Units;
-using SteelOfStalin.Assets.Props.Units.Sea;
-using SteelOfStalin.Assets.Props.Units.Air;
 using UnityEngine;
+using static SteelOfStalin.Util.Utilities;
 using Random = SteelOfStalin.Util.Utilities.Random;
 using Resources = SteelOfStalin.Attributes.Resources;
 

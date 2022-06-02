@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Events;
 
 public class CameraController : MonoBehaviour
 {
@@ -39,8 +35,9 @@ public class CameraController : MonoBehaviour
 
     private bool dragStart;
     private bool rotateStart;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         instance = this;
         newPosition = transform.position;
@@ -52,7 +49,7 @@ public class CameraController : MonoBehaviour
 
     }
 
-    void Update()
+    private void Update()
     {
         if (mouseControlEnabled) HandleMouseInput();
         if (keyboardControlEnabled) HandleKeyboardInput();
@@ -62,19 +59,22 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
 
         HandleMovement();
     }
 
-    void HandleMouseInput() {
-        bool mouseOnUI=UIUtil.instance.isBlockedByUI();
+    private void HandleMouseInput()
+    {
+        bool mouseOnUI = UIUtil.instance.isBlockedByUI();
 
-        if (!mouseOnUI&&Input.mouseScrollDelta.y != 0) {
-            newZoom -= Input.mouseScrollDelta.y * zoomAmount*5f;
+        if (!mouseOnUI && Input.mouseScrollDelta.y != 0)
+        {
+            newZoom -= Input.mouseScrollDelta.y * zoomAmount * 5f;
         }
-        if (!mouseOnUI && Input.GetMouseButtonDown(0)) {
+        if (!mouseOnUI && Input.GetMouseButtonDown(0))
+        {
             dragStart = true;
             Plane plane = new Plane(Vector3.up, Vector3.zero);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -83,7 +83,8 @@ public class CameraController : MonoBehaviour
                 dragStartPosition = ray.GetPoint(entry);
             }
         }
-        if (dragStart&&Input.GetMouseButton(0)) {
+        if (dragStart && Input.GetMouseButton(0))
+        {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (plane.Raycast(ray, out float entry))
@@ -92,27 +93,32 @@ public class CameraController : MonoBehaviour
                 newPosition = transform.position + dragStartPosition - dragCurrentPosition;
             }
         }
-        if (Input.GetMouseButtonUp(0)) {
+        if (Input.GetMouseButtonUp(0))
+        {
             dragStart = false;
         }
 
-        if (!mouseOnUI && Input.GetMouseButtonDown(1)) {
+        if (!mouseOnUI && Input.GetMouseButtonDown(1))
+        {
             rotateStart = true;
             rotateStartPosition = Input.mousePosition;
         }
-        if (rotateStart&&Input.GetMouseButton(1)) {
+        if (rotateStart && Input.GetMouseButton(1))
+        {
             rotateCurrentPosition = Input.mousePosition;
             Vector3 difference = rotateCurrentPosition - rotateStartPosition;
             rotateStartPosition = rotateCurrentPosition;
-            newRotation *= Quaternion.Euler(Vector3.up * (difference.x/5f) * rotationAmount);
-            newCameraAngle += (difference.y/5f)*(-cameraAngleAmount);
+            newRotation *= Quaternion.Euler(Vector3.up * (difference.x / 5f) * rotationAmount);
+            newCameraAngle += (difference.y / 5f) * (-cameraAngleAmount);
         }
-        if (Input.GetMouseButtonUp(1)) {
+        if (Input.GetMouseButtonUp(1))
+        {
             rotateStart = false;
         }
     }
 
-    void HandleKeyboardInput() {
+    private void HandleKeyboardInput()
+    {
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             movementSpeed = fastSpeed;
@@ -163,7 +169,8 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void HandleMovement() {
+    private void HandleMovement()
+    {
         newCameraAngle = Mathf.Clamp(newCameraAngle, minCameraAngle, maxCameraAngle);
         newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
         newPosition.z = Mathf.Clamp(newPosition.z, minZ, maxZ);
@@ -173,7 +180,8 @@ public class CameraController : MonoBehaviour
         {
             transform.position = newPosition;
         }
-        else {
+        else
+        {
             transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
         }
 
@@ -181,7 +189,8 @@ public class CameraController : MonoBehaviour
         {
             transform.rotation = newRotation;
         }
-        else {
+        else
+        {
             transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
         }
 
@@ -189,26 +198,30 @@ public class CameraController : MonoBehaviour
         {
             cameraTransform.localRotation = Quaternion.AngleAxis(newCameraAngle, Vector3.right);
         }
-        else {
+        else
+        {
             cameraTransform.localRotation = Quaternion.Lerp(cameraTransform.localRotation, Quaternion.AngleAxis(newCameraAngle, Vector3.right), Time.deltaTime * movementTime);
         }
 
         //calculate camera position by localrotation and distance of camera
-        cameraTransform.localPosition = Mathf.Lerp(cameraTransform.localPosition.magnitude, newZoom, Time.deltaTime * movementTime)*(cameraTransform.localRotation * -Vector3.forward);
+        cameraTransform.localPosition = Mathf.Lerp(cameraTransform.localPosition.magnitude, newZoom, Time.deltaTime * movementTime) * (cameraTransform.localRotation * -Vector3.forward);
 
 
 
     }
 
-    public void FocusOn(Transform transform) {
+    public void FocusOn(Transform transform)
+    {
         newPosition = transform.position;
     }
 
-    public void FollowTransform(Transform transform) {
+    public void FollowTransform(Transform transform)
+    {
         followTransform = transform;
     }
 
-    public void UnfollowTransform() {
+    public void UnfollowTransform()
+    {
         followTransform = null;
     }
 }

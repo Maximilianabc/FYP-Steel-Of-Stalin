@@ -1,18 +1,16 @@
-using System.Collections;
+using SteelOfStalin;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using SteelOfStalin;
 
 public class ResolutionDropdown : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         //TODO: Deserialized from files
-        List<UIUtil.Resolution> resolutions = new List<UIUtil.Resolution> { 
+        List<UIUtil.Resolution> resolutions = new List<UIUtil.Resolution> {
 
-            new UIUtil.Resolution(1280,720), new UIUtil.Resolution(1366, 768), new UIUtil.Resolution(1600, 900), new UIUtil.Resolution(1920, 1080), new UIUtil.Resolution(2560, 1440) 
+            new UIUtil.Resolution(1280,720), new UIUtil.Resolution(1366, 768), new UIUtil.Resolution(1600, 900), new UIUtil.Resolution(1920, 1080), new UIUtil.Resolution(2560, 1440)
         };
 
         TMPro.TMP_Dropdown dropdown = GetComponent<TMPro.TMP_Dropdown>();
@@ -23,9 +21,9 @@ public class ResolutionDropdown : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
 

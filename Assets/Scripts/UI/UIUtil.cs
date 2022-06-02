@@ -1,10 +1,7 @@
-using System.Collections;
+using SteelOfStalin;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using SteelOfStalin;
 
 public class UIUtil : MonoBehaviour
 {
@@ -21,7 +18,7 @@ public class UIUtil : MonoBehaviour
         public readonly int y;
         public static implicit operator string(Resolution resolution)
         {
-            return $"{resolution.x} กั {resolution.y}";
+            return $"{resolution.x} \u00D7 {resolution.y}";
         }
         public override bool Equals(object obj)
         {
@@ -45,7 +42,7 @@ public class UIUtil : MonoBehaviour
     //TODO: functionality not throughly tested
     public void SetVolume(byte volume)
     {
-        AudioListener.volume = (float)volume/100;
+        AudioListener.volume = (float)volume / 100;
         Game.Settings.VolumeMusic = volume;
         Game.Settings.Save();
     }
@@ -57,7 +54,8 @@ public class UIUtil : MonoBehaviour
         Game.Settings.Save();
     }
 
-    public bool isBlockedByUI() {
+    public bool isBlockedByUI()
+    {
         bool mouseOnUI = false;
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
         List<RaycastResult> raycastResults = new List<RaycastResult>();
@@ -73,13 +71,13 @@ public class UIUtil : MonoBehaviour
         return mouseOnUI;
     }
 
-    void Awake()
+    private void Awake()
     {
         instance = this;
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         if (!Game.AssetsLoaded)
         {
@@ -89,15 +87,17 @@ public class UIUtil : MonoBehaviour
                 SetFullscreen(Game.Settings.Fullscreen);
                 SetVolume(Game.Settings.VolumeMusic);
                 AudioSource bgm = gameObject.AddComponent<AudioSource>();
-                AudioClip clip=Game.AudioClips.Find(a => a.name == "RiseAndFall");
-                if (clip != null) {
+                AudioClip clip = Game.AudioClips.Find(a => a.name == "RiseAndFall");
+                if (clip != null)
+                {
                     bgm.clip = clip;
                     bgm.loop = true;
                     bgm.Play();
                 }
             });
         }
-        else {
+        else
+        {
             SetScreenResolution(new Resolution(Game.Settings.ResolutionX, Game.Settings.ResolutionY));
             SetFullscreen(Game.Settings.Fullscreen);
             SetVolume(Game.Settings.VolumeMusic);
@@ -113,23 +113,26 @@ public class UIUtil : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
-    
 
-    public void Exit() {
+
+    public void Exit()
+    {
         Application.Quit();
     }
 
-    public void RoundStartUIUpdate() {
+    public void RoundStartUIUpdate()
+    {
         TrainPanel.instance.SetCity(Battle.Instance.Self.Capital);
         ResourcesPanel.instance.SetResources(Battle.Instance.Self.Resources);
     }
 
-    public void RoundEndUIUpdate() {
+    public void RoundEndUIUpdate()
+    {
         TrainPanel.instance.HideAll();
         UnitPanel.instance.Hide();
         CommandPanel.instance.Hide();

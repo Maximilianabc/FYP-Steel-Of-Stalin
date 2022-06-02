@@ -1,26 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using SteelOfStalin;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.DataIO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class MapMenu : MonoBehaviour
 {
-    RandomMap map;
-    Task taskMapGen;
+    private RandomMap map;
+    private Task taskMapGen;
     public Vector2 maxMapPreviewSize;
     public GameObject subMenu;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (taskMapGen != null && taskMapGen.IsCompleted && !taskMapGen.IsFaulted && !taskMapGen.IsCanceled)
         {
@@ -33,16 +33,19 @@ public class MapMenu : MonoBehaviour
             transform.Find("LoadingMessage").gameObject.SetActive(false);
             Debug.Log("Visualized");
         }
-        else if (taskMapGen != null && taskMapGen.IsCompleted && taskMapGen.IsFaulted) {
+        else if (taskMapGen != null && taskMapGen.IsCompleted && taskMapGen.IsFaulted)
+        {
             //retry if error occurred
-            Debug.LogError("Map Generation Faulted,"+taskMapGen.Exception.InnerException.Message);
+            Debug.LogError("Map Generation Faulted," + taskMapGen.Exception.InnerException.Message);
             GenerateMap();
         }
     }
 
 
-    public void GenerateMap() {
-        if (taskMapGen != null && !taskMapGen.IsCompleted) {
+    public void GenerateMap()
+    {
+        if (taskMapGen != null && !taskMapGen.IsCompleted)
+        {
             return;
         }
         transform.Find("MapPreview").gameObject.SetActive(false);
@@ -50,16 +53,16 @@ public class MapMenu : MonoBehaviour
         int width = Mathf.RoundToInt(transform.Find("WidthSlider").GetComponent<Slider>().value);
         int height = Mathf.RoundToInt(transform.Find("HeightSlider").GetComponent<Slider>().value);
         int numPlayers = Mathf.RoundToInt(transform.Find("PlayerSlider").GetComponent<Slider>().value);
-        try {
-            taskMapGen=GenerateMap(width, height, numPlayers);
+        try
+        {
+            taskMapGen = GenerateMap(width, height, numPlayers);
         }
-        catch (System.Exception ex){ Debug.LogError(ex.Message); }
-        
+        catch (System.Exception ex) { Debug.LogError(ex.Message); }
+
     }
 
-
-
-    async Task GenerateMap(int width,int height,int numPlayers) {
+    private async Task GenerateMap(int width, int height, int numPlayers)
+    {
         await Task.Run(() =>
         {
             map = new RandomMap(width, height, numPlayers, "myBattle", "myMap"); // TODO add input from player in UI for both battle name and map name
@@ -67,7 +70,8 @@ public class MapMenu : MonoBehaviour
         });
     }
 
-    public void CreateNewBattle() {
+    public void CreateNewBattle()
+    {
         if (map == null) return;
         map.Save();
         BattleRules battleRules = new BattleRules();
@@ -77,16 +81,18 @@ public class MapMenu : MonoBehaviour
 
 
         //TODO: change numPLayers to real count
-        Game.BattleInfos.Add(new BattleInfo(map.BattleName, map.Name, map.Width, map.Height, map.TileCount(TileType.METROPOLIS),new BattleRules()));
+        Game.BattleInfos.Add(new BattleInfo(map.BattleName, map.Name, map.Width, map.Height, map.TileCount(TileType.METROPOLIS), new BattleRules()));
     }
 
 
-    public void CreateNewBattleOnClickHandler() {
+    public void CreateNewBattleOnClickHandler()
+    {
         if (map == null) return;
         subMenu.SetActive(true);
     }
 
-    public void SubmitNameOnClickHandler() {
+    public void SubmitNameOnClickHandler()
+    {
         string battleName = subMenu.transform.Find("MessageBox").Find("InputField_BattleName").GetComponent<TMPro.TMP_InputField>().text;
         string mapName = subMenu.transform.Find("MessageBox").Find("InputField_MapName").GetComponent<TMPro.TMP_InputField>().text;
         if (battleName == "" || mapName == "") return;

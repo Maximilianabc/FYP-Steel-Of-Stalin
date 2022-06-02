@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using SteelOfStalin;
 using SteelOfStalin.Assets.Customizables;
@@ -19,6 +15,10 @@ using SteelOfStalin.CustomTypes;
 using SteelOfStalin.DataIO;
 using SteelOfStalin.Flow;
 using SteelOfStalin.Util;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.TestTools;
 using static SteelOfStalin.DataIO.DataUtilities;
@@ -236,7 +236,7 @@ public class GameLogicTest
         Barracks b = BuildingData.GetNew<Barracks>();
         Arsenal a = BuildingData.GetNew<Arsenal>();
         b.SetMeshName();
-        Assert.IsNotNull(b);        
+        Assert.IsNotNull(b);
 
         Assert.IsTrue(Map.AddBuilding(b));
         Assert.IsFalse(Map.AddBuilding(null));
@@ -246,7 +246,7 @@ public class GameLogicTest
         Assert.IsFalse(Map.RemoveBuilding(null));
         Assert.IsTrue(Map.RemoveBuilding(b));
 
-        Building[] buildArr = {a,b};
+        Building[] buildArr = { a, b };
         Map.AddBuildings(buildArr);
         Assert.IsTrue(Map.GetBuildings().Contains(a));
         Assert.IsTrue(Map.GetBuildings().Contains(b));
@@ -256,13 +256,13 @@ public class GameLogicTest
     public void MapGetByCoordIntTest()
     {
         Player p1 = Players[0];
-        Coordinates point = new Coordinates(1,1);
-        Coordinates point2 = new Coordinates(2,2);
+        Coordinates point = new Coordinates(1, 1);
+        Coordinates point2 = new Coordinates(2, 2);
 
         Infantry i = UnitData.GetNew<Infantry>();
         i.SetMeshName();
         Assert.IsNotNull(i);
-        i.Initialize(p1, new Coordinates(1,1), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        i.Initialize(p1, new Coordinates(1, 1), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
 
         List<Prop> tileList = new List<Prop>();
         tileList.Add(Map.GetTile(point));
@@ -290,20 +290,20 @@ public class GameLogicTest
         Assert.AreEqual(propsList, tileList);
 
         propsList = Map.GetProps<Tile>(point).ToList<Prop>();
-        Assert.AreEqual(propsList, tileList);        
+        Assert.AreEqual(propsList, tileList);
     }
 
     [Test]
     public void MapGetByTypeTest()
     {
         Player p1 = Players[0];
-        Coordinates point = new Coordinates(1,1);
-        Coordinates point2 = new Coordinates(2,2);
+        Coordinates point = new Coordinates(1, 1);
+        Coordinates point2 = new Coordinates(2, 2);
 
         Infantry i = UnitData.GetNew<Infantry>();
         i.SetMeshName();
         Assert.IsNotNull(i);
-        i.Initialize(p1, new Coordinates(1,1), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
+        i.Initialize(p1, new Coordinates(1, 1), SteelOfStalin.Assets.Props.Units.UnitStatus.ACTIVE);
 
         Barracks b = BuildingData.GetNew<Barracks>();
         Map.AddBuilding(b);
@@ -315,7 +315,7 @@ public class GameLogicTest
         List<Prop> unitList = Map.GetUnits<Infantry>().ToList<Prop>();
         List<Prop> propList2 = Map.GetProps<Infantry>().ToList<Prop>();
         Assert.AreEqual(unitList, propList2);
-        
+
         List<Prop> suburbList = Map.GetCities<Suburb>().ToList<Prop>();
         List<Prop> propList3 = Map.GetProps<Suburb>().ToList<Prop>();
         Assert.AreEqual(suburbList, propList3);
@@ -354,10 +354,11 @@ public class GameLogicTest
     }
 
     [Test]
-    public void UnitOwnershipTest(){
+    public void UnitOwnershipTest()
+    {
         Player p1 = Players[0];
         Player p2 = Players[1];
-        Coordinates point = new Coordinates(0,0);
+        Coordinates point = new Coordinates(0, 0);
 
         Infantry i = UnitData.GetNew<Infantry>();
         i.SetMeshName();
@@ -375,11 +376,12 @@ public class GameLogicTest
     }
 
     [Test]
-    public void UnitFunctionTest(){
+    public void UnitFunctionTest()
+    {
         Player p1 = Players[0];
 
-        Coordinates point1 = new Coordinates(0,0);
-        Coordinates point2 = new Coordinates(1,1);
+        Coordinates point1 = new Coordinates(0, 0);
+        Coordinates point2 = new Coordinates(1, 1);
         Tile tile1 = Map.GetTile(point1);
         Tile tile2 = Map.GetTile(point2);
 
@@ -415,7 +417,7 @@ public class GameLogicTest
 
         Player p1 = Players[0];
 
-        Infantry i = UnitData.GetNew<Infantry>(); 
+        Infantry i = UnitData.GetNew<Infantry>();
         UnitBuilding train_ground = Map.Instance.GetBuildings(p1.Capital.CoOrds).OfType<Barracks>().FirstOrDefault();
 
         Command train = new Train(i, train_ground, p1);
@@ -447,7 +449,7 @@ public class GameLogicTest
 
         Player p2 = Players[1];
         Assault a = Map.InitializeNewUnit<Assault>(p2, p1.Capital.CoOrds);
-        
+
         Command fire = new Fire(i, a, i.PrimaryFirearm);
         commands.Add(fire);
 

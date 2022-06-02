@@ -1,8 +1,7 @@
-using System.Collections;
+using SteelOfStalin;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using SteelOfStalin;
 
 public class MenuNavigation : MonoBehaviour
 {
@@ -17,8 +16,9 @@ public class MenuNavigation : MonoBehaviour
     public GameObject battlesMenu;
     public GameObject profileMenu;
     public bool multiplayer;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         instance = this;
         navigationStack = new Stack<GameObject>();
@@ -37,17 +37,19 @@ public class MenuNavigation : MonoBehaviour
         IPMenu.transform.Find("MessageBoxIP").Find("CancelButton").GetComponent<Button>().onClick.AddListener(delegate { IPMenu.SetActive(false); });
         battlesMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack(); });
         battlesMenu.transform.Find("Battles").Find("Viewport").Find("Content").Find("Save_Add").GetComponent<Button>().onClick.AddListener(delegate { NavigateTo(mapMenu); });
-        mapMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack();});
-        profileMenu.transform.Find("SubmitButton").GetComponent<Button>().onClick.AddListener(delegate { 
+        mapMenu.transform.Find("BackButton").GetComponent<Button>().onClick.AddListener(delegate { NavigateBack(); });
+        profileMenu.transform.Find("SubmitButton").GetComponent<Button>().onClick.AddListener(delegate
+        {
             NavigateBack();
             Game.Profile.Name = profileMenu.transform.Find("InputField_ProfileName").GetComponent<TMPro.TMP_InputField>().text;
             Game.Profile.Save();
-            });
+        });
         if (!Game.AssetsLoaded)
         {
             LeanTween.delayedCall(1f, (System.Action)delegate
             {
-                if (string.IsNullOrEmpty(Game.Profile.Name)) {
+                if (string.IsNullOrEmpty(Game.Profile.Name))
+                {
                     NavigateTo(profileMenu);
                 }
             }).setDestroyOnComplete(true);
@@ -63,9 +65,9 @@ public class MenuNavigation : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
     public void NavigateTo(GameObject menu)

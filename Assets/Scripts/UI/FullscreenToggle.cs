@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using SteelOfStalin;
 using UnityEngine;
 using UnityEngine.UI;
-using SteelOfStalin;
 
 public class FullscreenToggle : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Toggle toggle = GetComponent<Toggle>();
         toggle.isOn = Game.Settings.Fullscreen;
@@ -16,9 +14,9 @@ public class FullscreenToggle : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
 }

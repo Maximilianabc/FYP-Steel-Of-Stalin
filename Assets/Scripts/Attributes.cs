@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -93,17 +92,17 @@ namespace SteelOfStalin.Attributes
         public override bool Equals(object obj) => this == (TerrainModifier)obj;
         public override int GetHashCode() => (Recon, Concealment, Supplies, Fuel, Mobility).GetHashCode();
 
-        public static bool operator ==(TerrainModifier a, TerrainModifier b) 
-            => a.Recon == b.Recon 
-            && a.Concealment == b.Concealment 
-            && a.Supplies == b.Supplies 
-            && a.Fuel == b.Fuel 
+        public static bool operator ==(TerrainModifier a, TerrainModifier b)
+            => a.Recon == b.Recon
+            && a.Concealment == b.Concealment
+            && a.Supplies == b.Supplies
+            && a.Fuel == b.Fuel
             && a.Mobility == b.Mobility;
         public static bool operator !=(TerrainModifier a, TerrainModifier b)
-            => !(a.Recon == b.Recon 
-            && a.Concealment == b.Concealment 
-            && a.Supplies == b.Supplies 
-            && a.Fuel == b.Fuel 
+            => !(a.Recon == b.Recon
+            && a.Concealment == b.Concealment
+            && a.Supplies == b.Supplies
+            && a.Fuel == b.Fuel
             && a.Mobility == b.Mobility);
     }
 
@@ -256,16 +255,16 @@ namespace SteelOfStalin.Attributes
         public object Clone() => new Resources(this);
         public override bool Equals(object obj) => this == (Resources)obj;
         public override int GetHashCode() => (Money, Steel, Supplies, Cartridges, Shells, Fuel, RareMetal, Manpower, Power, Time).GetHashCode();
-        public override string ToString() => string.Join(";", 
-            Money.ValueToString(), 
-            Steel.ValueToString(), 
-            Supplies.ValueToString(), 
-            Cartridges.ValueToString(), 
-            Shells.ValueToString(), 
-            Fuel.ValueToString(), 
-            RareMetal.ValueToString(), 
-            Manpower.ValueToString(), 
-            Power.ValueToString(), 
+        public override string ToString() => string.Join(";",
+            Money.ValueToString(),
+            Steel.ValueToString(),
+            Supplies.ValueToString(),
+            Cartridges.ValueToString(),
+            Shells.ValueToString(),
+            Fuel.ValueToString(),
+            RareMetal.ValueToString(),
+            Manpower.ValueToString(),
+            Power.ValueToString(),
             Time.ValueToString());
         public void UpdateFromString(string res_string)
         {
@@ -280,7 +279,7 @@ namespace SteelOfStalin.Attributes
              * as stated in https://docs.microsoft.com/en-us/dotnet/api/system.type.getproperties?view=net-6.0
              * but so far it is in correct order
              * TODO FUT Impl. find a way to make this independent on the order
-             */ 
+             */
             int i = 0;
             foreach (PropertyInfo prop in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.PropertyType == typeof(Attribute)))
             {
@@ -367,15 +366,15 @@ namespace SteelOfStalin.Attributes
         }
 
         public static bool operator ==(Resources a, Resources b)
-            => a?.Money == b?.Money 
-            && a?.Steel == b?.Steel 
-            && a?.Supplies == b?.Supplies 
-            && a?.Cartridges == b?.Cartridges 
-            && a?.Shells == b?.Shells 
-            && a?.Fuel == b?.Fuel 
-            && a?.RareMetal == b?.RareMetal 
-            && a?.Manpower == b?.Manpower 
-            && a?.Power == b?.Power 
+            => a?.Money == b?.Money
+            && a?.Steel == b?.Steel
+            && a?.Supplies == b?.Supplies
+            && a?.Cartridges == b?.Cartridges
+            && a?.Shells == b?.Shells
+            && a?.Fuel == b?.Fuel
+            && a?.RareMetal == b?.RareMetal
+            && a?.Manpower == b?.Manpower
+            && a?.Power == b?.Power
             && a?.Time == b?.Time;
         public static bool operator !=(Resources a, Resources b)
             => !(a?.Money == b?.Money
@@ -420,13 +419,13 @@ namespace SteelOfStalin.Attributes
         public override int GetHashCode() => (Base, Research, Repair, Fortification, Manufacture, Maintenance, Recycling, CostModifier).GetHashCode();
 
         public static bool operator ==(Cost a, Cost b)
-            => a.Base == b.Base 
-            && a.Research == b.Research 
-            && a.Repair == b.Repair 
-            && a.Fortification == b.Fortification 
-            && a.Manufacture == b.Manufacture 
-            && a.Maintenance == b.Maintenance 
-            && a.Recycling == b.Recycling 
+            => a.Base == b.Base
+            && a.Research == b.Research
+            && a.Repair == b.Repair
+            && a.Fortification == b.Fortification
+            && a.Manufacture == b.Manufacture
+            && a.Maintenance == b.Maintenance
+            && a.Recycling == b.Recycling
             && a.CostModifier == b.CostModifier;
         public static bool operator !=(Cost a, Cost b)
             => !(a.Base == b.Base
@@ -493,12 +492,12 @@ namespace SteelOfStalin.Attributes
         public override bool Equals(object obj) => this == (Defense)obj;
         public override int GetHashCode() => (Strength, Resistance, Evasion, Hardness, Integrity, Suppression).GetHashCode();
 
-        public static bool operator ==(Defense a, Defense b) 
-            => a.Strength == b.Strength 
-            && a.Resistance == b.Resistance 
-            && a.Evasion == b.Evasion 
-            && a.Hardness == b.Hardness 
-            && a.Integrity == b.Integrity 
+        public static bool operator ==(Defense a, Defense b)
+            => a.Strength == b.Strength
+            && a.Resistance == b.Resistance
+            && a.Evasion == b.Evasion
+            && a.Hardness == b.Hardness
+            && a.Integrity == b.Integrity
             && a.Suppression == b.Suppression;
         public static bool operator !=(Defense a, Defense b)
             => !(a.Strength == b.Strength
@@ -554,16 +553,16 @@ namespace SteelOfStalin.Attributes
         public override bool Equals(object obj) => this == (Offense)obj;
         public override int GetHashCode() => (Handling, Damage, Accuracy, AOE, Suppression, MinRange, MaxRange, IsDirectFire).GetHashCode();
 
-        public static bool operator ==(Offense a, Offense b) 
-            => a.Handling == b.Handling 
-            && a.Damage == b.Damage 
-            && a.Accuracy == b.Accuracy 
-            && a.AOE == b.AOE 
-            && a.Suppression == b.Suppression 
-            && a.MinRange == b.MinRange 
-            && a.MaxRange == b.MaxRange 
+        public static bool operator ==(Offense a, Offense b)
+            => a.Handling == b.Handling
+            && a.Damage == b.Damage
+            && a.Accuracy == b.Accuracy
+            && a.AOE == b.AOE
+            && a.Suppression == b.Suppression
+            && a.MinRange == b.MinRange
+            && a.MaxRange == b.MaxRange
             && a.IsDirectFire == b.IsDirectFire;
-        public static bool operator !=(Offense a, Offense b) 
+        public static bool operator !=(Offense a, Offense b)
             => !(a.Handling == b.Handling
             && a.Damage == b.Damage
             && a.Accuracy == b.Accuracy

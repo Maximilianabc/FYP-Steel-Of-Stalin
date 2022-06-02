@@ -1,29 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using SteelOfStalin.Assets.Props.Units;
-using SteelOfStalin.Assets.Props.Units.Land;
-using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin;
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Buildings.Units;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Assets.Props.Units.Land;
 using SteelOfStalin.Commands;
-using SteelOfStalin;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class TrainPanel : MonoBehaviour
 {
-    public static TrainPanel instance; 
+    public static TrainPanel instance;
     public int currentPage;
     public Cities currentCity;
     public UnitBuilding selectedUnitBuilding;
     public Sprite buttonRed;
     public Sprite buttonGreen;
     public Sprite transparent;
-    public float animationTime=1.5f;
+    public float animationTime = 1.5f;
     [SerializeField]
     private int maxItemsInPage;
 
@@ -43,7 +41,7 @@ public class TrainPanel : MonoBehaviour
     private List<Unit> trainableUnits;
     private List<Unit> unitsSubList;
 
-    void Awake()
+    private void Awake()
     {
         instance = this;
         citySelection = transform.Find("City").gameObject;
@@ -58,10 +56,12 @@ public class TrainPanel : MonoBehaviour
         pageFlipButton = transform.Find("PageFlipContainer").Find("PageFlip").gameObject;
 
     }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        pageFlipButton.GetComponent<Button>().onClick.AddListener(delegate {
+        pageFlipButton.GetComponent<Button>().onClick.AddListener(delegate
+        {
             if (currentCity == null) return;
             DeployPanel.instance.SetCity(currentCity);
         });
@@ -69,7 +69,7 @@ public class TrainPanel : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }
@@ -103,47 +103,52 @@ public class TrainPanel : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        GameObject navigationButton = Game.GameObjects.Find(g=>g.name=="TrainMenuButtonGreen");
+        GameObject navigationButton = Game.GameObjects.Find(g => g.name == "TrainMenuButtonGreen");
         for (int i = 1; i <= numPage; i++)
         {
             int x = i;
-            GameObject instance = Instantiate(navigationButton,navigationButtons,false);
+            GameObject instance = Instantiate(navigationButton, navigationButtons, false);
             instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = x.ToString();
             instance.GetComponent<Button>().onClick.AddListener(delegate { SetPage(x); });
             instance.name = x.ToString();
         }
-        if (numPage >= 1) { 
+        if (numPage >= 1)
+        {
             SetPage(1);
         }
     }
 
     public void SetPage(int pageNum)
     {
-        foreach (Transform child in unitList.transform.Find("NavigationButtons")) {
+        foreach (Transform child in unitList.transform.Find("NavigationButtons"))
+        {
             if (child.name == pageNum.ToString())
             {
                 child.GetComponent<Image>().sprite = buttonRed;
             }
-            else {
+            else
+            {
                 child.GetComponent<Image>().sprite = buttonGreen;
             }
-            
+
         }
-        
+
         currentPage = pageNum;
-        unitsSubList = trainableUnits.GetRange((pageNum - 1)*maxItemsInPage, System.Math.Min(maxItemsInPage,trainableUnits.Count- (pageNum - 1) * maxItemsInPage));
-        foreach (Transform child in unitList.transform.Find("UnitListItems")) {
+        unitsSubList = trainableUnits.GetRange((pageNum - 1) * maxItemsInPage, System.Math.Min(maxItemsInPage, trainableUnits.Count - (pageNum - 1) * maxItemsInPage));
+        foreach (Transform child in unitList.transform.Find("UnitListItems"))
+        {
             Destroy(child.gameObject);
         }
-        foreach (Unit u in unitsSubList) {
-            GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "UnitListItem"), unitList.transform.Find("UnitListItems"),false);
+        foreach (Unit u in unitsSubList)
+        {
+            GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "UnitListItem"), unitList.transform.Find("UnitListItems"), false);
             instance.transform.Find("Icon").GetComponent<Image>().sprite = Game.Icons.Find(I => I.name == u.Name);
-            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = u.Name.Replace('_',' ');
-            if (u is Personnel) instance.transform.Find("Banner").GetComponent<Image>().color=barracksColor;
-            else if(u is Vehicle || u is Artillery) instance.transform.Find("Banner").GetComponent<Image>().color = arsenalColor;
+            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = u.Name.Replace('_', ' ');
+            if (u is Personnel) instance.transform.Find("Banner").GetComponent<Image>().color = barracksColor;
+            else if (u is Vehicle || u is Artillery) instance.transform.Find("Banner").GetComponent<Image>().color = arsenalColor;
             instance.GetComponent<Button>().onClick.AddListener(delegate { SelectUnit(u); });
         }
-        
+
 
     }
 
@@ -151,22 +156,24 @@ public class TrainPanel : MonoBehaviour
     {
         cities = Battle.Instance.Map.GetCities(Battle.Instance.Self).ToList();
         citySelection.GetComponent<TMPro.TMP_Dropdown>().ClearOptions();
-        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c=>$"{c.Name} {c.CoOrds}"));
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().AddOptions(cities.ConvertAll<string>(c => $"{c.Name} {c.CoOrds}"));
         currentCity = null;
     }
 
-    public void SetCity(Cities city) {
+    public void SetCity(Cities city)
+    {
         if (!UIUtil.instance.isListenToUIEvent) return;
         ResetCity();
         currentCity = city;
         CameraController.instance.FocusOn(city.PropObject.transform);
-        citySelection.GetComponent<TMPro.TMP_Dropdown>().SetValueWithoutNotify(cities.FindIndex(c=>c.MeshName==city.MeshName));
+        citySelection.GetComponent<TMPro.TMP_Dropdown>().SetValueWithoutNotify(cities.FindIndex(c => c.MeshName == city.MeshName));
         RedrawQueues();
         Show();
     }
 
-    public void RedrawQueues() {
-        buildings =Battle.Instance.Map.GetBuildings(currentCity.CoOrds).Where(b => b is UnitBuilding).ToList().ConvertAll<UnitBuilding>(b=>(UnitBuilding)b.Clone());
+    public void RedrawQueues()
+    {
+        buildings = Battle.Instance.Map.GetBuildings(currentCity.CoOrds).Where(b => b is UnitBuilding).ToList().ConvertAll<UnitBuilding>(b => (UnitBuilding)b.Clone());
         transform.Find("barracks").gameObject.SetActive(false);
         transform.Find("arsenal").gameObject.SetActive(false);
         transform.Find("dockyard").gameObject.SetActive(false);
@@ -174,18 +181,23 @@ public class TrainPanel : MonoBehaviour
         selectedUnitBuilding = null;
         Debug.Log($"Commands: {Battle.Instance.Self.Commands.Count}");
         if (Battle.Instance.Self.Commands.Count > 0) Debug.Log(Battle.Instance.Self.Commands[0].Unit.Name);
-        foreach (UnitBuilding b in buildings) {
-            foreach (Command c in Battle.Instance.Self.Commands) {
-                if (c is Train) {
+        foreach (UnitBuilding b in buildings)
+        {
+            foreach (Command c in Battle.Instance.Self.Commands)
+            {
+                if (c is Train)
+                {
                     Train train = c as Train;
-                    if (train.TrainingGround.MeshName == b.MeshName) {
+                    if (train.TrainingGround.MeshName == b.MeshName)
+                    {
                         b.TrainingQueue.Enqueue(train.Unit);
                         Debug.Log($"{train.Unit.Name} enqueued");
                     }
                 }
             }
             Transform t = transform.Find(b.Name);
-            if (t != null) {
+            if (t != null)
+            {
                 t.gameObject.SetActive(true);
                 t.GetComponent<Image>().color = transparentColor;
                 t.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -193,9 +205,11 @@ public class TrainPanel : MonoBehaviour
                 {
                     SelectUnitBuilding(b);
                 });
-                for (int i = 0; i < 8; i++) {
-                    t.Find("Queue").Find($"Item{i}").GetComponent<Image>().sprite =i<b.TrainingQueue.Count?Game.Icons.Find(s => s.name == b.TrainingQueue.ElementAt(i).Name):transparent;
-                    if (i < b.TrainingQueue.Count) {
+                for (int i = 0; i < 8; i++)
+                {
+                    t.Find("Queue").Find($"Item{i}").GetComponent<Image>().sprite = i < b.TrainingQueue.Count ? Game.Icons.Find(s => s.name == b.TrainingQueue.ElementAt(i).Name) : transparent;
+                    if (i < b.TrainingQueue.Count)
+                    {
                         EventTrigger et = t.Find("Queue").Find($"Item{i}").GetComponent<EventTrigger>();
                         et.triggers.Clear();
                         EventTrigger.Entry onEnter = new EventTrigger.Entry
@@ -204,56 +218,64 @@ public class TrainPanel : MonoBehaviour
                             callback = new EventTrigger.TriggerEvent()
                         };
                         int x = i;
-                        onEnter.callback.AddListener(new UnityAction<BaseEventData>(e => {Tooltip.ShowTooltip_Static(b.TrainingQueue.ElementAt(x).Name); }));
+                        onEnter.callback.AddListener(new UnityAction<BaseEventData>(e => { Tooltip.ShowTooltip_Static(b.TrainingQueue.ElementAt(x).Name); }));
                         et.triggers.Add(onEnter);
                         EventTrigger.Entry onExit = new EventTrigger.Entry
                         {
                             eventID = EventTriggerType.PointerExit,
                             callback = new EventTrigger.TriggerEvent()
                         };
-                        onExit.callback.AddListener(new UnityAction<BaseEventData>(e=>Tooltip.HideTooltip_Static()));
+                        onExit.callback.AddListener(new UnityAction<BaseEventData>(e => Tooltip.HideTooltip_Static()));
                         et.triggers.Add(onExit);
                     }
                     //Update progress for first item
-                    if (i == 0) {
+                    if (i == 0)
+                    {
                         if (b.TrainingQueue.Count > 0)
                         {
                             float progress = (float)b.CurrentQueueTime / (float)b.TrainingQueue.ElementAt(0).Cost.Base.Time.Value;
                             Debug.Log($"Progress:{b.CurrentQueueTime}/{b.TrainingQueue.ElementAt(0).Cost.Base.Time.Value}");
                             t.Find("Queue").Find($"Item{i}").Find("Progress").GetComponent<Image>().fillAmount = progress;
                         }
-                        else {
+                        else
+                        {
                             t.Find("Queue").Find($"Item{i}").Find("Progress").GetComponent<Image>().fillAmount = 0;
                         }
-                        
+
                     }
 
                 }
-            }            
+            }
         }
         RedrawUnitsList();
     }
 
-    public void SelectUnit(Unit u) {
-        if (selectedUnitBuilding == null) {
+    public void SelectUnit(Unit u)
+    {
+        if (selectedUnitBuilding == null)
+        {
             Debug.Log("Unit Building Not Selected");
             return;
         }
 
-        if (u == null) {
+        if (u == null)
+        {
             Debug.Log("selectedUnit is null");
             return;
         }
-        if (selectedUnitBuilding.TrainingQueue.Count >= selectedUnitBuilding.QueueCapacity) {
+        if (selectedUnitBuilding.TrainingQueue.Count >= selectedUnitBuilding.QueueCapacity)
+        {
             Debug.Log("Queue is full");
             return;
         }
 
-        if (selectedUnitBuilding is Barracks && !(u is Personnel)) {
+        if (selectedUnitBuilding is Barracks && !(u is Personnel))
+        {
             Debug.Log($"{u.Name} cannot be trained in barracks");
             return;
         }
-        if (selectedUnitBuilding is Arsenal && !(u is Vehicle || u is Artillery)) {
+        if (selectedUnitBuilding is Arsenal && !(u is Vehicle || u is Artillery))
+        {
             Debug.Log($"{u.Name} cannot be trained in arsenal");
             return;
         }
@@ -270,9 +292,11 @@ public class TrainPanel : MonoBehaviour
         RedrawQueues();
     }
 
-    public void SelectUnitBuilding(UnitBuilding ub) {
+    public void SelectUnitBuilding(UnitBuilding ub)
+    {
         if (ub == null) return;
-        if (ub == selectedUnitBuilding) {
+        if (ub == selectedUnitBuilding)
+        {
             UnselectUnitBuilding();
             return;
         }
@@ -282,7 +306,8 @@ public class TrainPanel : MonoBehaviour
         selectedUnitBuilding = ub;
     }
 
-    public void UnselectUnitBuilding() {
+    public void UnselectUnitBuilding()
+    {
         if (selectedUnitBuilding == null) return;
         Transform t = transform.Find(selectedUnitBuilding.Name);
         t.GetComponent<Image>().color = transparentColor;
@@ -290,7 +315,8 @@ public class TrainPanel : MonoBehaviour
 
     }
 
-    public void Show() {
+    public void Show()
+    {
         gameObject.SetActive(true);
         transform.parent.Find("Panel_Left_Deploy").gameObject.SetActive(false);
         LeanTween.moveX(transform.parent.GetComponent<RectTransform>(), 0f, animationTime);
@@ -298,7 +324,8 @@ public class TrainPanel : MonoBehaviour
 
     }
 
-    public void HideAll() {
+    public void HideAll()
+    {
         LeanTween.moveX(transform.parent.GetComponent<RectTransform>(), -transform.parent.GetComponent<RectTransform>().sizeDelta.x, animationTime);
     }
 }

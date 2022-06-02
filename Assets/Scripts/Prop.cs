@@ -1,24 +1,23 @@
-using SteelOfStalin.Attributes;
 using SteelOfStalin.Assets.Customizables;
-using SteelOfStalin.Assets.Customizables.Modules;
-using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Assets.Props.Buildings;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
+using SteelOfStalin.Attributes;
+using SteelOfStalin.CustomTypes;
+using SteelOfStalin.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
 using Resources = SteelOfStalin.Attributes.Resources;
-using SteelOfStalin.Util;
-using System.Text.RegularExpressions;
-using UnityEngine.EventSystems;
 
 namespace SteelOfStalin.Assets.Props
 {
@@ -202,7 +201,7 @@ namespace SteelOfStalin.Assets.Props
             PropConnection rotated = original;
             if (thirds_of_pi < 0)
             {
-                int cycles = (int)Math.Abs(thirds_of_pi);
+                int cycles = Math.Abs(thirds_of_pi);
                 for (int i = 0; i < cycles; i++)
                 {
                     bool needs_cyclic = rotated.HasFlag(PropConnection.POS_1);
@@ -274,16 +273,20 @@ namespace SteelOfStalin.Assets.Props
                 gameObject.AddComponent<PropEventTrigger>();
             }
             //TODO: separate all types of prop and implement the menu navigation
-            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) => {
-                if (!UIUtil.instance.isBlockedByUI()) {
+            Trigger.Subscribe("focus", EventTriggerType.PointerClick, (data) =>
+            {
+                if (!UIUtil.instance.isBlockedByUI())
+                {
                     Prop p = GetClickedProp(data);
                     if (p is Cities c && c.IsOwn(Battle.Instance.Self))
                     {
                         TrainPanel.instance.SetCity(c);
                     }
-                    else if (p is Unit u) {
+                    else if (p is Unit u)
+                    {
                         UnitPanel.instance.SetUnit(u);
-                        if (u.IsOwn(Battle.Instance.Self)) {
+                        if (u.IsOwn(Battle.Instance.Self))
+                        {
                             CommandPanel.instance.SetUnit(u);
                         }
                     }
@@ -295,12 +298,14 @@ namespace SteelOfStalin.Assets.Props
                     }
                 }
             });
-            Trigger.Subscribe("tooltip_show", EventTriggerType.PointerEnter, (data) => {
+            Trigger.Subscribe("tooltip_show", EventTriggerType.PointerEnter, (data) =>
+            {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetEnteredProp(data);
                     StringBuilder sb = new StringBuilder();
-                    if (p is Tiles.Boundary b) {
+                    if (p is Tiles.Boundary b)
+                    {
                         sb.AppendLine(b.Name);
                         sb.AppendLine(b.CoOrds.ToString());
                         sb.Append("Impassable");
@@ -308,7 +313,8 @@ namespace SteelOfStalin.Assets.Props
                     else if (p is Tile t)
                     {
                         sb.AppendLine(t.Name);
-                        if (t is Cities c &&c.Owner!=null) {
+                        if (t is Cities c && c.Owner != null)
+                        {
                             sb.AppendLine($"Owner: {c.OwnerName}");
                             sb.AppendLine($"Morale: {c.Morale.ApplyMod()}");
                         }
@@ -332,7 +338,8 @@ namespace SteelOfStalin.Assets.Props
                 }
             });
             Trigger.Subscribe("tooltip_hide", EventTriggerType.PointerExit, (data) => Tooltip.HideTooltip_Static());
-            Trigger.Subscribe("deploy_tile", EventTriggerType.PointerClick, (data) => {
+            Trigger.Subscribe("deploy_tile", EventTriggerType.PointerClick, (data) =>
+            {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
@@ -341,18 +348,20 @@ namespace SteelOfStalin.Assets.Props
                         DeployPanel.instance.DeployUnit(t);
                     }
                 }
-            },false);
-            Trigger.Subscribe("move_tile", EventTriggerType.PointerClick, (data) => {
+            }, false);
+            Trigger.Subscribe("move_tile", EventTriggerType.PointerClick, (data) =>
+            {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
                     if (p is Tile t)
                     {
-                        CommandPanel.instance.ExecuteCommand("Move",t);
+                        CommandPanel.instance.ExecuteCommand("Move", t);
                     }
                 }
             }, false);
-            Trigger.Subscribe("fire_unit", EventTriggerType.PointerClick, (data) => {
+            Trigger.Subscribe("fire_unit", EventTriggerType.PointerClick, (data) =>
+            {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
@@ -362,7 +371,8 @@ namespace SteelOfStalin.Assets.Props
                     }
                 }
             }, false);
-            Trigger.Subscribe("suppress_unit", EventTriggerType.PointerClick, (data) => {
+            Trigger.Subscribe("suppress_unit", EventTriggerType.PointerClick, (data) =>
+            {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
@@ -372,7 +382,8 @@ namespace SteelOfStalin.Assets.Props
                     }
                 }
             }, false);
-            Trigger.Subscribe("sabotage_building", EventTriggerType.PointerClick, (data) => {
+            Trigger.Subscribe("sabotage_building", EventTriggerType.PointerClick, (data) =>
+            {
                 if (!UIUtil.instance.isBlockedByUI())
                 {
                     Prop p = GetClickedProp(data);
@@ -419,19 +430,22 @@ namespace SteelOfStalin.Assets.Props
             GetComponentsInChildren<SkinnedMeshRenderer>().ToList().ForEach(mr => mr.material.SetColor("_BaseColor", color));
         }
 
-        public void Highlight() {
+        public void Highlight()
+        {
             Color highlightColor = Color.green;
-            RendererMaterials = GetComponentsInChildren<MeshRenderer>().ToList().ConvertAll<Material>(mr =>new Material(mr.material));
-            SkinRendererMaterials= GetComponentsInChildren<SkinnedMeshRenderer>().ToList().ConvertAll<Material>(mr => new Material(mr.material));
+            RendererMaterials = GetComponentsInChildren<MeshRenderer>().ToList().ConvertAll<Material>(mr => new Material(mr.material));
+            SkinRendererMaterials = GetComponentsInChildren<SkinnedMeshRenderer>().ToList().ConvertAll<Material>(mr => new Material(mr.material));
             SetColorForAllChildren(highlightColor);
         }
 
-        public void RestoreHighlight() {
+        public void RestoreHighlight()
+        {
             List<MeshRenderer> renderers = GetComponentsInChildren<MeshRenderer>().ToList();
             if (RendererMaterials == null) return;
             if (RendererMaterials.Count != renderers.Count) return;
-            for (int i = 0; i < renderers.Count; i++) {
-                renderers[i].material=RendererMaterials[i]; 
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                renderers[i].material = RendererMaterials[i];
             }
             List<SkinnedMeshRenderer> skinRenderers = GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
             if (SkinRendererMaterials == null) return;
@@ -590,9 +604,9 @@ namespace SteelOfStalin.Assets.Props.Units
         public Scouting Scouting { get; set; } = new Scouting();
         public Attribute Morale { get; set; } = new Attribute(100);
 
-        public List<Unit> UnitsInSight { get; set; } = new List<Unit>();
-        public List<Unit> UnitsUnknown { get; set; } = new List<Unit>();
-        public List<Building> BuildingsInSight { get; set; } = new List<Building>();
+        [JsonIgnore] public List<Unit> UnitsInSight { get; set; } = new List<Unit>();
+        [JsonIgnore] public List<Unit> UnitsUnknown { get; set; } = new List<Unit>();
+        [JsonIgnore] public List<Building> BuildingsInSight { get; set; } = new List<Building>();
 
         public CommandAssigned CommandAssigned { get; set; } = CommandAssigned.NONE;
         public AvailableMovementCommands AvailableMovementCommands { get; set; } = AvailableMovementCommands.HOLD;
@@ -626,8 +640,8 @@ namespace SteelOfStalin.Assets.Props.Units
         // Parameterless constructors are used for (de)serialization
         public Unit() : base() { }
         public Unit(Unit another) : base(another)
-            => (Owner, OwnerName, Status, Cost, Maneuverability, Defense, Consumption, Carrying, Capacity, Scouting, Morale, UnitsInSight, UnitsUnknown, BuildingsInSight, 
-                CommandAssigned, AvailableMovementCommands, AvailableFiringCommands, AvailableLogisticsCommands, AvailableConstructionCommands, AvailableMiscCommands, AutoCommands, 
+            => (Owner, OwnerName, Status, Cost, Maneuverability, Defense, Consumption, Carrying, Capacity, Scouting, Morale, UnitsInSight, UnitsUnknown, BuildingsInSight,
+                CommandAssigned, AvailableMovementCommands, AvailableFiringCommands, AvailableLogisticsCommands, AvailableConstructionCommands, AvailableMiscCommands, AutoCommands,
                 AutoNavigationPath, CurrentSuppressionLevel, ConsecutiveSuppressedRound, TrainingTimeRemaining)
             = (another.Owner,
                another.OwnerName,
@@ -973,16 +987,16 @@ namespace SteelOfStalin.Assets.Props.Buildings
         public Building() : base() { }
         public Building(Building another) : base(another)
             => (Owner, OwnerName, Status, Level, MaxLevel, Size, Cost, Durability, Scouting, DestroyTerrainOnBuilt, ConstructionTimeRemaining)
-            = (another.Owner, 
-               another.OwnerName, 
-               another.Status, 
-               another.Level, 
-               another.MaxLevel, 
-               another.Size, 
-               (Cost)another.Cost.Clone(), 
-               (Attribute)another.Durability.Clone(), 
-               (Scouting)another.Scouting.Clone(), 
-               another.DestroyTerrainOnBuilt, 
+            = (another.Owner,
+               another.OwnerName,
+               another.Status,
+               another.Level,
+               another.MaxLevel,
+               another.Size,
+               (Cost)another.Cost.Clone(),
+               (Attribute)another.Durability.Clone(),
+               (Scouting)another.Scouting.Clone(),
+               another.DestroyTerrainOnBuilt,
                another.ConstructionTimeRemaining);
 
         public bool IsOwn(Player p) => Owner == p;
@@ -1080,13 +1094,13 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public Cities() : base() { }
         public Cities(Cities another) : base(another)
             => (Owner, OwnerName, Population, ConstructionRange, Communication, Production, Durability, Morale)
-            = (another.Owner, 
-               another.OwnerName, 
-               another.Population, 
-               (Attribute)another.ConstructionRange.Clone(), 
-               (Attribute)another.Communication,
-               (Resources)another.Production.Clone(), 
-               (Attribute)another.Durability.Clone(), 
+            = (another.Owner,
+               another.OwnerName,
+               another.Population,
+               (Attribute)another.ConstructionRange.Clone(),
+               another.Communication,
+               (Resources)another.Production.Clone(),
+               (Attribute)another.Durability.Clone(),
                (Attribute)another.Morale.Clone());
 
         public bool IsOwn(Player p) => Owner == p;
@@ -1158,12 +1172,12 @@ namespace SteelOfStalin.Assets.Props.Tiles
         public Tile() : base() { }
         public Tile(Tile another) : base(another)
             => (Type, Accessibility, TerrainMod, Obstruction, AllowConstruction, Height, Symbol)
-            = (another.Type, 
-               another.Accessibility, 
+            = (another.Type,
+               another.Accessibility,
                (TerrainModifier)another.TerrainMod.Clone(),
-               another.Obstruction, 
-               another.AllowConstruction, 
-               another.Height, 
+               another.Obstruction,
+               another.AllowConstruction,
+               another.Height,
                another.Symbol);
 
         public WeightedTile ConvertToWeightedTile(Resources consumption, PathfindingOptimization opt, Tile end, bool IsAerial, WeightedTile parent = null) => new WeightedTile()

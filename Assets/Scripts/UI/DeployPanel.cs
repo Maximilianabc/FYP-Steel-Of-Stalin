@@ -1,21 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
+using SteelOfStalin;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
-using SteelOfStalin.Assets.Props.Tiles;
-using SteelOfStalin.Assets.Props.Buildings;
-using SteelOfStalin.Assets.Props.Buildings.Units;
-using SteelOfStalin.Assets.Customizables;
-using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Commands;
-using SteelOfStalin;
+using SteelOfStalin.CustomTypes;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DeployPanel : MonoBehaviour
 {
@@ -26,7 +23,7 @@ public class DeployPanel : MonoBehaviour
     public Sprite buttonGreen;
     public Sprite transparent;
     public float animationTime = 1.5f;
-    public int maxItemsInPage=6;
+    public int maxItemsInPage = 6;
 
     public List<Cities> cities;
     public List<UnitBuilding> buildings;
@@ -50,7 +47,8 @@ public class DeployPanel : MonoBehaviour
     private Unit selectedUnit;
     private IOffensiveCustomizable selectedWeapon;
     private bool isWaitingInput = false;
-    void Awake()
+
+    private void Awake()
     {
         instance = this;
         citySelection = transform.Find("City").gameObject;
@@ -59,26 +57,29 @@ public class DeployPanel : MonoBehaviour
         customizableOptions = transform.Find("CustomizablePanel").Find("CustomizableOptions").Find("Items").Find("Viewport").Find("Content").gameObject;
         deployButton = transform.Find("Buttons").Find("Deploy").gameObject;
         deployButton.GetComponent<TMPro.TMP_Text>().text = "Deploy";
-        deployButton.GetComponent<Button>().onClick.AddListener(delegate {
+        deployButton.GetComponent<Button>().onClick.AddListener(delegate
+        {
             ButtonDeployOnclickHandler();
         });
         pageFlipButton = transform.Find("Buttons").Find("PageFlip").gameObject;
-        pageFlipButton.GetComponent<Button>().onClick.AddListener(delegate {
+        pageFlipButton.GetComponent<Button>().onClick.AddListener(delegate
+        {
             if (currentCity == null) return;
             TrainPanel.instance.SetCity(currentCity);
         });
 
     }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
     public void ResetCity()
@@ -116,7 +117,7 @@ public class DeployPanel : MonoBehaviour
                     if (deploy.TrainingGround.MeshName == b.MeshName)
                     {
                         //remove units from deployable units
-                        b.ReadyToDeploy.Remove(deploy.Unit);                      
+                        b.ReadyToDeploy.Remove(deploy.Unit);
                     }
                 }
             }
@@ -142,7 +143,7 @@ public class DeployPanel : MonoBehaviour
         for (int i = 1; i <= numPage; i++)
         {
             int x = i;
-            GameObject instance = Instantiate(navigationButton,navigationButtons,false);
+            GameObject instance = Instantiate(navigationButton, navigationButtons, false);
             instance.transform.Find("Text").GetComponent<TMPro.TMP_Text>().text = x.ToString();
             instance.GetComponent<Button>().onClick.AddListener(delegate { SetPage(x); });
             instance.name = x.ToString();
@@ -193,20 +194,23 @@ public class DeployPanel : MonoBehaviour
 
     }
 
-    public void RedrawCustomizablePart() {
-        foreach(Transform child in customizableParts.transform)
+    public void RedrawCustomizablePart()
+    {
+        foreach (Transform child in customizableParts.transform)
         {
             Destroy(child.gameObject);
         }
         //only clean up if no unitselected
-        if (selectedUnit != null) {
+        if (selectedUnit != null)
+        {
             //update weapons only if a new unit is selected
-            if(weapons==null)weapons = selectedUnit.GetWeapons().ToList();
+            if (weapons == null) weapons = selectedUnit.GetWeapons().ToList();
 
-            for(int i=0;i<weapons.Count;i++)
+            for (int i = 0; i < weapons.Count; i++)
             {
                 //initialize default weapons
-                if (weapons[i] == null) {
+                if (weapons[i] == null)
+                {
                     if (selectedUnit is Personnel p)
                     {
                         if (i == 0)
@@ -218,7 +222,8 @@ public class DeployPanel : MonoBehaviour
                     {
                         weapons[i] = (IOffensiveCustomizable)Game.CustomizableData.GetNewModule(v.DefaultMainArmament);
                     }
-                    else if (selectedUnit is Artillery a) {
+                    else if (selectedUnit is Artillery a)
+                    {
                         weapons[i] = (IOffensiveCustomizable)Game.CustomizableData.GetNewModule(a.DefaultGun);
                     }
                 }
@@ -238,12 +243,13 @@ public class DeployPanel : MonoBehaviour
                         instance.transform.Find("Icon").GetComponent<Image>().sprite = transparent;
                     }
                 }
-                else {
+                else
+                {
                     instance.name = "Empty";
                     instance.transform.Find("Icon").GetComponent<Image>().sprite = transparent;
                 }
-                
-                     
+
+
                 if (instance.GetComponent<EventTrigger>() == null)
                 {
                     instance.AddComponent<EventTrigger>();
@@ -255,7 +261,8 @@ public class DeployPanel : MonoBehaviour
                     eventID = EventTriggerType.PointerEnter,
                     callback = new EventTrigger.TriggerEvent()
                 };
-                onEnter.callback.AddListener(new UnityAction<BaseEventData>(e => {
+                onEnter.callback.AddListener(new UnityAction<BaseEventData>(e =>
+                {
                     StringBuilder sb = new StringBuilder();
                     if (weapon != null)
                     {
@@ -287,7 +294,7 @@ public class DeployPanel : MonoBehaviour
                     callback = new EventTrigger.TriggerEvent()
                 };
                 int x = i;
-                onClick.callback.AddListener(new UnityAction<BaseEventData>(e => SelectWeapon(weapon,x)));
+                onClick.callback.AddListener(new UnityAction<BaseEventData>(e => SelectWeapon(weapon, x)));
                 et.triggers.Add(onClick);
                 //Reset selected visual indicator 
                 foreach (Transform child in customizableParts.transform)
@@ -302,11 +309,13 @@ public class DeployPanel : MonoBehaviour
         }
     }
 
-    public void SelectWeapon(IOffensiveCustomizable weapon,int index) {
+    public void SelectWeapon(IOffensiveCustomizable weapon, int index)
+    {
         if (selectedUnit == null) return;
         selectedWeapon = weapon;
         //reset selected visual indicator
-        foreach (Transform child in customizableParts.transform) {
+        foreach (Transform child in customizableParts.transform)
+        {
             child.Find("Selected").gameObject.SetActive(false);
         }
         customizableParts.transform.GetChild(index).Find("Selected").gameObject.SetActive(true);
@@ -315,28 +324,31 @@ public class DeployPanel : MonoBehaviour
         RedrawWeaponOptions(index);
 
 
-        
+
     }
 
-    public void RedrawWeaponOptions(int index) {
+    public void RedrawWeaponOptions(int index)
+    {
         foreach (Transform child in customizableOptions.transform)
         {
             Destroy(child.gameObject);
         }
-        if (selectedUnit != null) {
+        if (selectedUnit != null)
+        {
             weaponOptions = null;
             if (selectedUnit is Personnel p)
             {
                 if (index == 0)
                 {
-                    weaponOptions = p.AvailablePrimaryFirearms.ConvertAll<IOffensiveCustomizable>(s => (IOffensiveCustomizable)Game.CustomizableData.GetNewFirearm(s));
+                    weaponOptions = p.AvailablePrimaryFirearms.ConvertAll<IOffensiveCustomizable>(s => Game.CustomizableData.GetNewFirearm(s));
                 }
                 else if (index == 1)
                 {
-                    weaponOptions = p.AvailableSecondaryFirearms.ConvertAll<IOffensiveCustomizable>(s => (IOffensiveCustomizable)Game.CustomizableData.GetNewFirearm(s));
+                    weaponOptions = p.AvailableSecondaryFirearms.ConvertAll<IOffensiveCustomizable>(s => Game.CustomizableData.GetNewFirearm(s));
                     weaponOptions.Insert(0, null);
                 }
-                else {
+                else
+                {
                     Debug.LogError("undefined weapons");
                 }
             }
@@ -353,7 +365,8 @@ public class DeployPanel : MonoBehaviour
                     GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "DeployPanelWeaponOptions"), customizableOptions.transform, false);
                     //TODO: avoid using null as part of the logic for IOffensiveCustomizable, possible solution: create wrapper class for IOffensiveCustomizable
                     instance.name = weaponOption != null ? weaponOption.Name : "Empty";
-                    if (weaponOption != null) {
+                    if (weaponOption != null)
+                    {
                         Sprite icon = Game.Icons.Find(s => s.name == weaponOption.Name);
                         if (icon != null)
                         {
@@ -379,7 +392,8 @@ public class DeployPanel : MonoBehaviour
                         eventID = EventTriggerType.PointerEnter,
                         callback = new EventTrigger.TriggerEvent()
                     };
-                    onEnter.callback.AddListener(new UnityAction<BaseEventData>(e => {
+                    onEnter.callback.AddListener(new UnityAction<BaseEventData>(e =>
+                    {
                         StringBuilder sb = new StringBuilder();
                         if (weaponOption != null)
                         {
@@ -408,7 +422,8 @@ public class DeployPanel : MonoBehaviour
                         eventID = EventTriggerType.PointerClick,
                         callback = new EventTrigger.TriggerEvent()
                     };
-                    onClick.callback.AddListener(new UnityAction<BaseEventData>(e => {
+                    onClick.callback.AddListener(new UnityAction<BaseEventData>(e =>
+                    {
                         //handle weaponOption being chosen
                         if (selectedUnit == null) return;
                         weapons[index] = weaponOption;
@@ -421,7 +436,8 @@ public class DeployPanel : MonoBehaviour
 
         }
 
-        if (transform.Find("CustomizablePanel").Find("CustomizableOptions").gameObject.activeInHierarchy) {
+        if (transform.Find("CustomizablePanel").Find("CustomizableOptions").gameObject.activeInHierarchy)
+        {
             transform.Find("CustomizablePanel").Find("CustomizableOptions").GetComponent<Resize>().DelayResize(1);
         }
 
@@ -433,47 +449,57 @@ public class DeployPanel : MonoBehaviour
     }
 
 
-    public void PrepareDeployableTiles() {
-        if (isWaitingInput) {
+    public void PrepareDeployableTiles()
+    {
+        if (isWaitingInput)
+        {
             Debug.Log("already deploying");
             return;
         }
-        if (selectedUnit == null) {
-            Debug.Log("Unit not set");
-            return;
-        }
-        if (weapons == null) {
-            Debug.Log("weapons not set");
-            return;
-        }
-        UnitBuilding unitBuilding = buildings.Find(u => u.ReadyToDeploy.Contains(selectedUnit));
-        destinationTiles =unitBuilding.GetDeployableDestinations(selectedUnit).ToList();
-        foreach (Command c in Battle.Instance.Self.Commands) {
-            if (c is Deploy d) {
-                destinationTiles.RemoveAll(t=>t.CoOrds==d.Destination);
-            }
-        }
-        if (destinationTiles == null||destinationTiles.Count<1) {
-            Debug.Log("No possible deploy destination");
-            return;
-        }
-        foreach (Tile t in destinationTiles) {
-            t.PropObjectComponent.Highlight();
-            PropEventTrigger trigger=t.PropObjectComponent.Trigger;
-            trigger.SetActive("deploy_tile", true);
-            trigger.SetActive("focus", false);           
-        }
-        isWaitingInput = true;
-        deployButton.GetComponent<TMPro.TMP_Text>().text = "Cancel";
-    }
-
-    public void DeployUnit(Tile t) {
         if (selectedUnit == null)
         {
             Debug.Log("Unit not set");
             return;
         }
-        if (weapons == null) {
+        if (weapons == null)
+        {
+            Debug.Log("weapons not set");
+            return;
+        }
+        UnitBuilding unitBuilding = buildings.Find(u => u.ReadyToDeploy.Contains(selectedUnit));
+        destinationTiles = unitBuilding.GetDeployableDestinations(selectedUnit).ToList();
+        foreach (Command c in Battle.Instance.Self.Commands)
+        {
+            if (c is Deploy d)
+            {
+                destinationTiles.RemoveAll(t => t.CoOrds == d.Destination);
+            }
+        }
+        if (destinationTiles == null || destinationTiles.Count < 1)
+        {
+            Debug.Log("No possible deploy destination");
+            return;
+        }
+        foreach (Tile t in destinationTiles)
+        {
+            t.PropObjectComponent.Highlight();
+            PropEventTrigger trigger = t.PropObjectComponent.Trigger;
+            trigger.SetActive("deploy_tile", true);
+            trigger.SetActive("focus", false);
+        }
+        isWaitingInput = true;
+        deployButton.GetComponent<TMPro.TMP_Text>().text = "Cancel";
+    }
+
+    public void DeployUnit(Tile t)
+    {
+        if (selectedUnit == null)
+        {
+            Debug.Log("Unit not set");
+            return;
+        }
+        if (weapons == null)
+        {
             Debug.Log("Weapons not set");
         }
         weapons.RemoveAll(w => w == null);
@@ -487,7 +513,8 @@ public class DeployPanel : MonoBehaviour
     }
 
 
-    public void CleanUpTrigger() {
+    public void CleanUpTrigger()
+    {
         if (!isWaitingInput) return;
         if (destinationTiles == null || destinationTiles.Count < 1) return;
         foreach (Tile t in destinationTiles)
@@ -502,30 +529,34 @@ public class DeployPanel : MonoBehaviour
         deployButton.GetComponent<TMPro.TMP_Text>().text = "Deploy";
     }
 
-    private void ButtonDeployOnclickHandler() {
+    private void ButtonDeployOnclickHandler()
+    {
         //normal state
         if (!isWaitingInput)
         {
             PrepareDeployableTiles();
         }
         //waiting for tile being clicked
-        else {
+        else
+        {
             CleanUpTrigger();
         }
     }
 
-    public void Show() {
+    public void Show()
+    {
         gameObject.SetActive(true);
         transform.parent.Find("Panel_Left_Train").gameObject.SetActive(false);
         LeanTween.moveX(transform.parent.GetComponent<RectTransform>(), 0f, animationTime);
     }
 
-    public void HideAll() {
+    public void HideAll()
+    {
         CleanUpTrigger();
         LeanTween.moveX(transform.parent.GetComponent<RectTransform>(), -transform.parent.GetComponent<RectTransform>().sizeDelta.x, animationTime);
 
     }
 
-    
+
 
 }

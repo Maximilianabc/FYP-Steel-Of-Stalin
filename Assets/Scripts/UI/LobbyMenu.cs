@@ -1,9 +1,8 @@
-using System.Collections;
+using SteelOfStalin;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using SteelOfStalin;
+using UnityEngine.UI;
 
 public class LobbyMenu : MonoBehaviour
 {
@@ -13,25 +12,29 @@ public class LobbyMenu : MonoBehaviour
     private GameObject menuItem;
     private GameObject buttonBack;
 
-    void Awake() {
+    private void Awake()
+    {
         menu = transform.Find("Players").gameObject;
-        menuItem = Game.GameObjects.Find(g=>g.name=="MultiplayerMenuPlayer");
+        menuItem = Game.GameObjects.Find(g => g.name == "MultiplayerMenuPlayer");
         transform.Find("Ready").GetComponent<Button>().enabled = false;
         buttonBack = transform.Find("BackButton").gameObject;
     }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        transform.Find("Ready").GetComponent<Button>().onClick.AddListener(delegate {
+        transform.Find("Ready").GetComponent<Button>().onClick.AddListener(delegate
+        {
             transform.Find("Ready").GetComponent<TMPro.TMP_Text>().text = Battle.Instance.Self.IsReady ? "Ready" : "Cancel Ready";
             transform.Find("Ready").GetComponent<RectTransform>().sizeDelta = new Vector2(
                 transform.Find("Ready").GetComponent<TMPro.TMP_Text>().preferredWidth,
                 transform.Find("Ready").GetComponent<TMPro.TMP_Text>().preferredHeight);
             GameObject.Find(Game.Profile.Name).GetComponent<PlayerObject>().ChangeReadyStatus(!Battle.Instance.Self.IsReady);
-            
+
         });
         transform.Find("Ready").GetComponent<Button>().enabled = true;
-        buttonBack.GetComponent<Button>().onClick.AddListener(delegate {
+        buttonBack.GetComponent<Button>().onClick.AddListener(delegate
+        {
             Game.ShutDown();
             SceneManager.LoadScene("Menu");
         });
@@ -39,27 +42,31 @@ public class LobbyMenu : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         Redraw();
     }
 
-    public void Redraw() {
-        if (Battle.Instance == null) return; 
+    public void Redraw()
+    {
+        if (Battle.Instance == null) return;
         listPlayers = Battle.Instance.Players;
-        foreach (Transform child in menu.transform) {
+        foreach (Transform child in menu.transform)
+        {
             if (child.gameObject.name != "PlayersCount") { Destroy(child.gameObject); }
-            else {
+            else
+            {
                 child.gameObject.GetComponent<TMPro.TMP_Text>().text = $"{listPlayers.Count}/{Battle.Instance.MaxNumPlayers}";
             }
-        }      
-        foreach (Player player in listPlayers) {
-            GameObject instance=Instantiate(menuItem,menu.transform,false);
-            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = player.Name;
-            instance.transform.Find("Status").GetComponent<TMPro.TMP_Text>().text = player.IsReady?"Ready":"...";
         }
-        
-        
+        foreach (Player player in listPlayers)
+        {
+            GameObject instance = Instantiate(menuItem, menu.transform, false);
+            instance.transform.Find("Name").GetComponent<TMPro.TMP_Text>().text = player.Name;
+            instance.transform.Find("Status").GetComponent<TMPro.TMP_Text>().text = player.IsReady ? "Ready" : "...";
+        }
+
+
     }
 
 }

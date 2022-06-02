@@ -6,6 +6,7 @@
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
+/[Bb]uild**/
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
@@ -69,7 +70,7 @@ crashlytics-build.properties
 !/[Aa]ssets/[Ss]treaming[Aa]ssets/Saves/test.meta
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump/
 /[Aa]ssets/[Ss]treaming[Aa]ssets/Multiplayer_Dump.meta
-/[Aa]ssets/[Tt]ext[Mm]esh\ [Pp]ro/
-/[Aa]ssets/[Tt]ext[Mm]esh\ [Pp]ro.meta
+/[Aa]ssets/TextMesh\ Pro/**
+/[Aa]ssets/TextMesh\ Pro.meta
 /**_DoNotShip/
 /[Pp]ackages/

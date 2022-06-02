@@ -1,19 +1,18 @@
-using System.Collections;
+using SteelOfStalin;
+using SteelOfStalin.Assets.Customizables;
+using SteelOfStalin.Assets.Props;
+using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Assets.Props.Units;
+using SteelOfStalin.Commands;
+using SteelOfStalin.CustomTypes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using SteelOfStalin.Assets.Props.Units;
-using SteelOfStalin;
-using SteelOfStalin.Commands;
-using SteelOfStalin.Assets.Props;
-using SteelOfStalin.Assets.Props.Tiles;
-using SteelOfStalin.CustomTypes;
-using SteelOfStalin.Assets.Customizables;
-using SteelOfStalin.Assets.Props.Buildings;
+using UnityEngine.UI;
 
 public class CommandPanel : MonoBehaviour
 {
@@ -29,12 +28,13 @@ public class CommandPanel : MonoBehaviour
     private List<Prop> triggerProps;
     private IOffensiveCustomizable currentWeapon;
 
-    void Awake()
+    private void Awake()
     {
         instance = this;
     }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         foreach (Transform child in transform)
         {
@@ -43,34 +43,40 @@ public class CommandPanel : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
-    public void Show() { 
-    
+    public void Show()
+    {
+
     }
 
-    public void Hide() {
+    public void Hide()
+    {
         CleanUpTrigger();
-        foreach (Transform child in transform) {
+        foreach (Transform child in transform)
+        {
             Destroy(child.gameObject);
         }
     }
 
 
-    public void SetUnit(Unit u) {
+    public void SetUnit(Unit u)
+    {
         if (!UIUtil.instance.isListenToUIEvent) return;
         if (u == null) return;
         if (!u.IsOwn(Battle.Instance.Self)) return;
         currentUnit = u;
         availableCommands = new List<string>();
-        if (u.CommandAssigned != CommandAssigned.NONE) {
+        if (u.CommandAssigned != CommandAssigned.NONE)
+        {
             Debug.Log("Command Already Assigned");
             return;
         }
-        if ((u.AvailableMovementCommands & AvailableMovementCommands.HOLD) > 0) {
+        if ((u.AvailableMovementCommands & AvailableMovementCommands.HOLD) > 0)
+        {
             availableCommands.Add("Hold");
         }
         //if ((u.AvailableMovementCommands & AvailableMovementCommands.LAND) > 0)
@@ -170,7 +176,8 @@ public class CommandPanel : MonoBehaviour
         //    availableCommands.Add("Scavenge");
         //}
         numPages = Mathf.CeilToInt((float)availableCommands.Count / maxIconsInPage);
-        if (numPages == 0) {
+        if (numPages == 0)
+        {
             Debug.Log("No available Commands");
             return;
         }
@@ -178,22 +185,26 @@ public class CommandPanel : MonoBehaviour
         SetPage(1);
     }
 
-    public void SetPage(int pageNum) {
-        foreach (Transform child in transform) {
+    public void SetPage(int pageNum)
+    {
+        foreach (Transform child in transform)
+        {
             Destroy(child.gameObject);
         }
 
         if (pageNum > numPages) return;
-        List<string> subList=new List<string>();
+        List<string> subList = new List<string>();
         if (availableCommands.Count <= maxIconsInPage) subList = availableCommands;
         else if (pageNum == 1) subList = availableCommands.GetRange(0, maxIconsInPage);
         else if (pageNum == 2) subList = availableCommands.GetRange(availableCommands.Count - maxIconsInPage, maxIconsInPage);
         else { Debug.LogError("case not defined"); return; }
-        foreach (string commandString in subList) {
+        foreach (string commandString in subList)
+        {
             GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "CommandPanelButton"), transform, false);
             instance.name = commandString;
             Sprite icon = Game.Icons.Find(s => s.name == commandString);
-            if (icon != null) {
+            if (icon != null)
+            {
                 instance.GetComponent<Image>().sprite = icon;
             }
             string s = commandString;
@@ -216,12 +227,14 @@ public class CommandPanel : MonoBehaviour
             et.triggers.Add(onExit);
         }
         if (availableCommands.Count <= maxIconsInPage) { }
-        else if (pageNum == 1) { 
+        else if (pageNum == 1)
+        {
             GameObject navigateRightButton = Instantiate(Game.GameObjects.Find(g => g.name == "CommandPanelRightButton"), transform, false);
             navigateRightButton.transform.SetAsLastSibling();
             navigateRightButton.GetComponent<Button>().onClick.AddListener(delegate { SetPage(2); });
         }
-        else if (pageNum == 2) {
+        else if (pageNum == 2)
+        {
             GameObject navigateLeftButton = Instantiate(Game.GameObjects.Find(g => g.name == "CommandPanelLeftButton"), transform, false);
             navigateLeftButton.transform.SetAsFirstSibling();
             navigateLeftButton.GetComponent<Button>().onClick.AddListener(delegate { SetPage(1); });
@@ -230,11 +243,13 @@ public class CommandPanel : MonoBehaviour
 
     }
 
-    public void PrepareCommand(string commandString) {
+    public void PrepareCommand(string commandString)
+    {
         if (currentUnit == null) return;
         if (availableCommands == null) return;
         if (!availableCommands.Contains(commandString)) return;
-        if (isWaitingInput) {
+        if (isWaitingInput)
+        {
             CleanUpTrigger();
         }
         foreach (Transform child in transform)
@@ -253,8 +268,10 @@ public class CommandPanel : MonoBehaviour
             //simple implementation for now
             //can only control the destination
             List<Tile> reachableTiles = currentUnit.GetMoveRange().ToList();
-            foreach (Command c in Battle.Instance.Self.Commands) {
-                if (c is Deploy || c is Move) {
+            foreach (Command c in Battle.Instance.Self.Commands)
+            {
+                if (c is Deploy || c is Move)
+                {
                     reachableTiles.RemoveAll(t => t.CoOrds == c.Destination);
                 }
             }
@@ -277,9 +294,9 @@ public class CommandPanel : MonoBehaviour
         else if (commandString == "Fire" || commandString == "Suppress" || commandString == "Sabotage")
         {
             //Fire(Unit u,Unit Target,IOffensiveCustomizable weapon)
-            IEnumerable<IOffensiveCustomizable> weapons = currentUnit.GetWeapons().Where(w=>w!=null);
+            IEnumerable<IOffensiveCustomizable> weapons = currentUnit.GetWeapons().Where(w => w != null);
             if (weapons.Count() == 0) return;
-            
+
             foreach (IOffensiveCustomizable weapon in weapons)
             {
                 GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "CommandPanelWeapon"), transform, false);
@@ -352,7 +369,8 @@ public class CommandPanel : MonoBehaviour
             //Repair(Unit u,Unit target,Module module)
 
         }
-        else if (commandString == "Resupply") {
+        else if (commandString == "Resupply")
+        {
             //Resupply resupply = new Resupply();
         }
         else if (commandString == "Construct")
@@ -389,14 +407,17 @@ public class CommandPanel : MonoBehaviour
 
     }
 
-    public void ExecuteCommand(string commandString, Prop p) {
-        if (currentUnit == null) {
+    public void ExecuteCommand(string commandString, Prop p)
+    {
+        if (currentUnit == null)
+        {
             Debug.LogWarning("command execution failed");
-            return; 
+            return;
         }
-        if (!isWaitingInput) {
+        if (!isWaitingInput)
+        {
             Debug.LogWarning("command execution failed");
-            return; 
+            return;
         }
         CleanUpTrigger();
         if (commandString == "Move")
@@ -408,8 +429,10 @@ public class CommandPanel : MonoBehaviour
                 currentUnit.CommandAssigned = CommandAssigned.MOVE;
             }
         }
-        else if (commandString == "Fire") {
-            if (p is Unit u) {
+        else if (commandString == "Fire")
+        {
+            if (p is Unit u)
+            {
                 Fire fire = new Fire(currentUnit, u, currentWeapon);
                 Battle.Instance.Self.Commands.Add(fire);
                 currentUnit.CommandAssigned = CommandAssigned.FIRE;
@@ -435,7 +458,8 @@ public class CommandPanel : MonoBehaviour
         }
     }
 
-    public void SetWeapon(IOffensiveCustomizable weapon) {
+    public void SetWeapon(IOffensiveCustomizable weapon)
+    {
 
         if (currentUnit == null) return;
         CleanUpTrigger();
@@ -445,23 +469,27 @@ public class CommandPanel : MonoBehaviour
         {
             triggerProps = currentUnit.GetHostileUnitsInFiringRange(weapon).ToList().ConvertAll<Prop>(b => b);
         }
-        else if (currentCommand == "Sabotage") {
-            triggerProps = currentUnit.GetHostileBuildingsInFiringRange(weapon).ToList().ConvertAll<Prop>(b=>b);
+        else if (currentCommand == "Sabotage")
+        {
+            triggerProps = currentUnit.GetHostileBuildingsInFiringRange(weapon).ToList().ConvertAll<Prop>(b => b);
         }
         isWaitingInput = true;
-        foreach (Prop p in triggerProps) {
+        foreach (Prop p in triggerProps)
+        {
             p.PropObjectComponent.Highlight();
             PropEventTrigger trigger = p.PropObjectComponent.Trigger;
-            if(currentCommand=="Fire") trigger.SetActive("fire_unit", true);
-            else if(currentCommand=="Suppress") trigger.SetActive("suppress_unit", true);
+            if (currentCommand == "Fire") trigger.SetActive("fire_unit", true);
+            else if (currentCommand == "Suppress") trigger.SetActive("suppress_unit", true);
             else if (currentCommand == "Sabotage") trigger.SetActive("sabotage_building", true);
             trigger.SetActive("focus", false);
         }
     }
 
-    public void CleanUpTrigger() {
+    public void CleanUpTrigger()
+    {
         if (!isWaitingInput) return;
-        foreach (Prop p in triggerProps) {
+        foreach (Prop p in triggerProps)
+        {
 
             p.PropObjectComponent.RestoreHighlight();
             PropEventTrigger trigger = p.PropObjectComponent.Trigger;

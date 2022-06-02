@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,22 +14,25 @@ public class ProgressBar : MonoBehaviour
     }
     private void Update()
     {
-        
+
     }
     private void UpdateCurrentFill()
     {
         //avoid divide zero error
-        float fillAmount = maximum==0?1f:(float)current / (float)maximum;
+        float fillAmount = maximum == 0 ? 1f : current / (float)maximum;
         fill.fillAmount = fillAmount;
     }
 
-    private void UpdateText() {
-        text.text = $"{current}/{maximum}";    
+    private void UpdateText()
+    {
+        text.text = $"{current}/{maximum}";
     }
 
-    public void SetProgressBarValue(int maximum,int current) {
+    public void SetProgressBarValue(int maximum, int current)
+    {
         //drop invalid calls
-        if (maximum < current || maximum < 0 || current < 0) {
+        if (maximum < current || maximum < 0 || current < 0)
+        {
             return;
         }
         this.maximum = maximum;

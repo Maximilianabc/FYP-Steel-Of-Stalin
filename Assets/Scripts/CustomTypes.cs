@@ -1,8 +1,4 @@
 ﻿using SteelOfStalin.Assets;
-using SteelOfStalin.Assets.Props;
-using SteelOfStalin.Assets.Props.Buildings;
-using SteelOfStalin.Assets.Props.Tiles;
-using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Util;
 using System;
 using System.Collections;
@@ -38,7 +34,7 @@ namespace SteelOfStalin.CustomTypes
 
         public static int GetDistance(Coordinates c1, Coordinates c2)
             => CubeCoordinates.GetDistance((CubeCoordinates)c1, (CubeCoordinates)c2);
-        public IEnumerable<Coordinates> GetNeighbours(int distance = 1, bool include_self = false) 
+        public IEnumerable<Coordinates> GetNeighbours(int distance = 1, bool include_self = false)
             => ((CubeCoordinates)this).GetNeighbours(distance, include_self).Select(c => (Coordinates)c);
         public static IEnumerable<Coordinates> FromString(string coords_string)
         {

@@ -1,15 +1,20 @@
-﻿using SteelOfStalin.Attributes;
-using SteelOfStalin.Assets;
+﻿using SteelOfStalin.Assets;
 using SteelOfStalin.Assets.Customizables;
-using SteelOfStalin.Assets.Customizables.Modules.Guns;
 using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Modules.Guns;
 using SteelOfStalin.Assets.Customizables.Shells;
-using SteelOfStalin.Flow;
 using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
+using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
 using SteelOfStalin.Assets.Props.Units;
 using SteelOfStalin.Assets.Props.Units.Land;
+using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
+using SteelOfStalin.Assets.Props.Units.Land.Personnels;
+using SteelOfStalin.Assets.Props.Units.Land.Vehicles;
 using SteelOfStalin.Assets.Props.Units.Sea;
+using SteelOfStalin.Attributes;
+using SteelOfStalin.Flow;
 using SteelOfStalin.Util;
 using System;
 using System.Collections;
@@ -18,22 +23,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using UnityEngine;
-using static SteelOfStalin.Util.Utilities;
-using static SteelOfStalin.DataIO.DataUtilities;
-using Attribute = SteelOfStalin.Attributes.Attribute;
-using Plane = SteelOfStalin.Assets.Props.Units.Air.Plane;
-using Module = SteelOfStalin.Assets.Customizables.Module;
-using SteelOfStalin.Assets.Props.Units.Land.Personnels;
-using SteelOfStalin.Assets.Props.Units.Land.Artilleries;
-using SteelOfStalin.Assets.Props.Units.Land.Vehicles;
-using SteelOfStalin.Assets.Props.Buildings.Units;
-using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using Unity.Netcode;
-using System.Text;
+using UnityEngine;
+using static SteelOfStalin.DataIO.DataUtilities;
+using static SteelOfStalin.Util.Utilities;
 using static Unity.Netcode.CustomMessagingManager;
+using Attribute = SteelOfStalin.Attributes.Attribute;
+using Module = SteelOfStalin.Assets.Customizables.Module;
+using Plane = SteelOfStalin.Assets.Props.Units.Air.Plane;
 
 namespace SteelOfStalin.Util
 {
@@ -44,7 +44,7 @@ namespace SteelOfStalin.Util
             private static System.Random m_random = new System.Random();
 
             public static int Next() => m_random.Next();
-            public static int Next(int max) => m_random.Next(max); 
+            public static int Next(int max) => m_random.Next(max);
             public static int Next(int min, int max) => m_random.Next(min, max);
             public static double NextDouble() => m_random.NextDouble();
             public static decimal NextInRangeSymmetric(decimal range) => range * (decimal)(NextDouble() * 2 - 1);
@@ -182,8 +182,8 @@ namespace SteelOfStalin.Util
             decimal r = 1 + 0.6M / Mathm.Pow(input.weapon.Offense.MaxRange.ApplyMod(), 2);
             return 1.4M / Mathm.PI * (Mathm.Acos(d * r * input.distance - 1) - d * r * Mathm.Sqrt(-input.distance * (input.distance - 2 / (d * r))));
         };
-        public static Func<(IOffensiveCustomizable weapon, decimal distance), decimal> PenetrationDropoff => (input) 
-            => input.weapon is Gun g 
+        public static Func<(IOffensiveCustomizable weapon, decimal distance), decimal> PenetrationDropoff => (input)
+            => input.weapon is Gun g
                 ? 1 - 0.25M * g.CurrentShell.DropoffModifier.Value * input.distance
                 : 0;
         public static Func<(Shell shell, decimal ep, decimal r), decimal> DamageDropoffWithResistance => (input) =>
@@ -344,7 +344,7 @@ namespace SteelOfStalin.Util
             {
                 return false;
             }
-            decimal detection_at_range = (decimal)(input.observer_detect / Mathm.Log(2 * input.observer_recon - 1) * Mathm.Log(determinant));
+            decimal detection_at_range = input.observer_detect / Mathm.Log(2 * input.observer_recon - 1) * Mathm.Log(determinant);
             return detection_at_range > input.observee_conceal;
         };
         public static Func<(Unit observer, Unit observee, decimal distance), bool> AcousticRanging => (input) =>
@@ -518,8 +518,8 @@ namespace SteelOfStalin.DataIO
             GetNew<Bridge>(),
         };
 
-        public override Building GetNew<U>(string name) => typeof(U) switch 
-        { 
+        public override Building GetNew<U>(string name) => typeof(U) switch
+        {
             _ when typeof(U) == typeof(UnitBuilding) || typeof(U).IsSubclassOf(typeof(UnitBuilding)) => Units.CloneNew(name),
             _ when typeof(U) == typeof(ProductionBuilding) || typeof(U).IsSubclassOf(typeof(ProductionBuilding)) => Productions.CloneNew(name),
             _ when typeof(U) == typeof(Infrastructure) || typeof(U).IsSubclassOf(typeof(Infrastructure)) => Infrastructures.CloneNew(name),
@@ -1099,7 +1099,7 @@ namespace SteelOfStalin.DataIO
             [NetworkMessageType.CHAT] = "chat",
         };
 
-        public static ClientRpcParams GetClientRpcSendParams(params ulong[] ids) 
+        public static ClientRpcParams GetClientRpcSendParams(params ulong[] ids)
             => Game.Network.IsServer && ids.Length != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
         public static ClientRpcParams GetClientRpcSendParams(IEnumerable<ulong> ids)
             => Game.Network.IsServer && ids.Count() != 0 ? new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new List<ulong>(ids) } } : default;
@@ -1108,7 +1108,7 @@ namespace SteelOfStalin.DataIO
 
         public static Dictionary<string, string> GetRelativePathsWithPattern(List<string> local_relative_paths, Func<string, string> replacer)
             => local_relative_paths.Zip(local_relative_paths.Select(p => replacer(p)), (local, dest) => new { local, dest }).ToDictionary(ps => ps.local, ps => ps.dest);
-        public static Dictionary<string, string> GetDumpPaths(List<string> local_relative_paths) 
+        public static Dictionary<string, string> GetDumpPaths(List<string> local_relative_paths)
             => GetRelativePathsWithPattern(local_relative_paths, AddDumpPath);
 
         private void Start()
@@ -1148,7 +1148,7 @@ namespace SteelOfStalin.DataIO
             else
             {
                 m_rpcMessages.Add(type, new RpcMessageObject()
-                { 
+                {
                     Chunks = new List<RpcMessageChunk>() { chunk },
                     IsReady = isAppend
                 });
@@ -1309,7 +1309,7 @@ namespace SteelOfStalin.DataIO
         {
             if (m_files.ContainsKey(file_name))
             {
-                if (m_files[file_name].Chunks.Count < num_to_receive )
+                if (m_files[file_name].Chunks.Count < num_to_receive)
                 {
                     m_files[file_name].Chunks.Add(chunk);
                 }
@@ -1445,11 +1445,11 @@ namespace SteelOfStalin.DataIO
         }*/
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void ReceiveMapInfoClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+        private void ReceiveMapInfoClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
             => CacheRpcMessageChunk(chunk, num_to_receive, typeof(Map).FullName);
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void ReceiveMapTilesClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+        private void ReceiveMapTilesClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
             => CacheRpcMessageChunk(chunk, num_to_receive, typeof(Tile[][]).FullName);
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
@@ -1457,15 +1457,15 @@ namespace SteelOfStalin.DataIO
             => CacheRpcMessageChunk(chunk, num_to_receive, typeof(IEnumerable<Unit>).FullName);
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void ReceiveMapBuildingsClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+        private void ReceiveMapBuildingsClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
             => CacheRpcMessageChunk(chunk, num_to_receive, typeof(IEnumerable<Building>).FullName);
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void ReceiveBattlePlayersClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+        private void ReceiveBattlePlayersClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
             => CacheRpcMessageChunk(chunk, num_to_receive, typeof(List<Player>).FullName);
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void ReceiveBattleRulesClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default) 
+        private void ReceiveBattleRulesClientRpc(RpcMessageChunk chunk, ushort num_to_receive, ClientRpcParams @params = default)
             => CacheRpcMessageChunk(chunk, num_to_receive, typeof(BattleRules).FullName);
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]

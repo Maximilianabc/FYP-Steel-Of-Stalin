@@ -1,16 +1,14 @@
-using SteelOfStalin.Attributes;
 using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.Assets.Customizables.Modules;
-using SteelOfStalin.CustomTypes;
 using SteelOfStalin.Assets.Props.Buildings;
+using SteelOfStalin.Assets.Props.Buildings.Units;
 using SteelOfStalin.Assets.Props.Tiles;
+using SteelOfStalin.Attributes;
+using SteelOfStalin.CustomTypes;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using static SteelOfStalin.Util.Utilities;
 using Attribute = SteelOfStalin.Attributes.Attribute;
-using System;
-using SteelOfStalin.Assets.Props.Buildings.Units;
 
 namespace SteelOfStalin.Assets.Props.Units
 {
@@ -89,7 +87,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
 
         public override void SetWeapons(IEnumerable<IOffensiveCustomizable> weapons)
         {
-            if (!weapons.Any() || weapons.Count() > 2 )
+            if (!weapons.Any() || weapons.Count() > 2)
             {
                 this.LogError($"Weapons length mismatch. Expected: [1,2]. Actual: {weapons.Count()}");
                 return;
@@ -130,7 +128,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
         }
         public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Barracks;
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { PrimaryFirearm, SecondaryFirearm }.Where(w => w != null);
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { PrimaryFirearm, SecondaryFirearm };
         public override IEnumerable<Module> GetModules() => Enumerable.Empty<Module>();
         public override IEnumerable<Module> GetRepairableModules() => Enumerable.Empty<Module>();
         public override void SetModules(params Module[] modules) { }
@@ -230,7 +228,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
             Radio = Game.CustomizableData.GetNew<Radio>();
         }
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun }.Where(w => w != null);
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => new List<IOffensiveCustomizable>() { Gun };
         public override IEnumerable<Module> GetModules() => new List<Module>() { Gun, Radio };
         public override void SetModules(params Module[] modules)
         {
@@ -348,7 +346,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land
                 ? Map.Instance.GetStraightLineNeighbours(CubeCoOrds, Periscope.ReconBonus.ApplyTo(Scouting.Reconnaissance.ApplyMod()))
                 : base.GetReconRange();
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns).Where(w => w != null);
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
         public override IEnumerable<Module> GetModules()
         {
             List<Module> modules = new List<Module>()
@@ -522,7 +520,7 @@ namespace SteelOfStalin.Assets.Props.Units.Land.Artilleries
         public Railroad(Railroad another) : base(another) { }
 
         public override bool CanAssemble() => false;
-        public override bool CanDisassemble() => false; 
+        public override bool CanDisassemble() => false;
         public override object Clone() => new Railroad(this);
     }
     public class CoastalGun : Artillery
@@ -743,7 +741,7 @@ namespace SteelOfStalin.Assets.Props.Units.Sea
 
         public override Modifier GetConcealmentPenaltyMove() => Engine.ConcealmentPenaltyMove;
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns).Where(w => w != null);
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
         public override IEnumerable<Module> GetModules()
         {
             List<Module> modules = new List<Module>()
@@ -861,8 +859,8 @@ namespace SteelOfStalin.Assets.Props.Units.Air
         public decimal Altitude { get; set; }
 
         public Plane() : base() { }
-        public Plane(Plane another) : base(another) 
-            => (Guns, HeavyMachineGuns, Engine, Radio, FuelTank, AmmoRack, Propeller, Rudder, Wings, LandingGear, Radar) 
+        public Plane(Plane another) : base(another)
+            => (Guns, HeavyMachineGuns, Engine, Radio, FuelTank, AmmoRack, Propeller, Rudder, Wings, LandingGear, Radar)
             = (new List<Gun>(another.Guns),
                new List<HeavyMachineGun>(another.HeavyMachineGuns),
                (Engine)another.Engine?.Clone(),
@@ -890,7 +888,7 @@ namespace SteelOfStalin.Assets.Props.Units.Air
         }
         public override bool CanBeTrainedIn(UnitBuilding ub) => ub is Airfield;
 
-        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns).Where(w => w != null);
+        public override IEnumerable<IOffensiveCustomizable> GetWeapons() => Guns.Concat<IOffensiveCustomizable>(HeavyMachineGuns);
         public override IEnumerable<Module> GetModules()
         {
             List<Module> modules = new List<Module>()

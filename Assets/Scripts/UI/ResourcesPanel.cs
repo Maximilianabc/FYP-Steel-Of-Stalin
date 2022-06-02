@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using SteelOfStalin;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Resources = SteelOfStalin.Attributes.Resources;
 
 
@@ -30,10 +28,12 @@ public class ResourcesPanel : MonoBehaviour
         instance = this;
         resources = null;
     }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        readyButton.GetComponent<Button>().onClick.AddListener(delegate {
+        readyButton.GetComponent<Button>().onClick.AddListener(delegate
+        {
             Battle.Instance.Self.PlayerObjectComponent.ChangeReadyStatus(true);
             UIUtil.instance.RoundEndUIUpdate();
         });
@@ -41,12 +41,14 @@ public class ResourcesPanel : MonoBehaviour
         {
             canvasMenu.SetActive(true);
         });
-        canvasMenu.transform.Find("OptionMenu").Find("SaveQuit").GetComponent<Button>().onClick.AddListener(delegate {
+        canvasMenu.transform.Find("OptionMenu").Find("SaveQuit").GetComponent<Button>().onClick.AddListener(delegate
+        {
             Battle.Instance.Save();
             Game.ShutDown();
             SceneManager.LoadScene("Menu");
         });
-        canvasMenu.transform.Find("OptionMenu").Find("QuitWithoutSaving").GetComponent<Button>().onClick.AddListener(delegate {
+        canvasMenu.transform.Find("OptionMenu").Find("QuitWithoutSaving").GetComponent<Button>().onClick.AddListener(delegate
+        {
             Game.ShutDown();
             SceneManager.LoadScene("Menu");
         });
@@ -54,11 +56,12 @@ public class ResourcesPanel : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        timeDisplay.text = $"{Battle.Instance.TimeRemaining/60}:{Battle.Instance.TimeRemaining%60:D2}";
+        timeDisplay.text = $"{Battle.Instance.TimeRemaining / 60}:{Battle.Instance.TimeRemaining % 60:D2}";
         roundDisplay.text = $"Round{Battle.Instance.RoundNumber}";
-        if (resources != null) {
+        if (resources != null)
+        {
             money.transform.Find("Text").GetComponent<Text>().text = resources.Money.ApplyMod().ToString("F0");
             steel.transform.Find("Text").GetComponent<Text>().text = resources.Steel.ApplyMod().ToString("F0");
             cartridges.transform.Find("Text").GetComponent<Text>().text = resources.Cartridges.ApplyMod().ToString("F0");
@@ -69,11 +72,13 @@ public class ResourcesPanel : MonoBehaviour
         }
     }
 
-    public void SetResources(Resources r) {
+    public void SetResources(Resources r)
+    {
         resources = (Resources)r.Clone();
     }
 
-    public bool Consume(Resources cost) {
+    public bool Consume(Resources cost)
+    {
         if (resources.HasEnoughResources(cost))
         {
             resources.Consume(cost);
@@ -82,7 +87,8 @@ public class ResourcesPanel : MonoBehaviour
         else return false;
     }
 
-    public void Refund(Resources cost) {
+    public void Refund(Resources cost)
+    {
         resources.Money.PlusEquals(cost.Money);
         resources.Steel.PlusEquals(cost.Steel);
         resources.Supplies.PlusEquals(cost.Supplies);

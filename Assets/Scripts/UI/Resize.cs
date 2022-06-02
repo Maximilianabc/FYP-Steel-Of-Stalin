@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,25 +10,28 @@ public class Resize : MonoBehaviour
     public float paddingRight = 10f;
     public float paddingUp = 10f;
     public float paddingDown = 10f;
-    public bool  resizeWidth=false;
-    public bool  resizeHeight=false;
-    
+    public bool resizeWidth = false;
+    public bool resizeHeight = false;
+
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
     }
-    public void DoResize() {
-        if (objectToBeResized == null || parentOfContent == null||!objectToBeResized.activeSelf) {
+    public void DoResize()
+    {
+        if (objectToBeResized == null || parentOfContent == null || !objectToBeResized.activeSelf)
+        {
             return;
         }
-        if (!resizeWidth && !resizeHeight) {
+        if (!resizeWidth && !resizeHeight)
+        {
             return;
         }
         RectTransform children = parentOfContent.transform.GetComponentInChildren<RectTransform>();
@@ -59,18 +61,21 @@ public class Resize : MonoBehaviour
                 max_y = temp_max_y;
         }
         Vector2 resultVector = objectToBeResized.GetComponent<RectTransform>().sizeDelta;
-        if (resizeWidth) {
-            resultVector.x = Mathf.Max(max_x - min_x + paddingLeft + paddingRight,0f);
+        if (resizeWidth)
+        {
+            resultVector.x = Mathf.Max(max_x - min_x + paddingLeft + paddingRight, 0f);
         }
-        if (resizeHeight) {
-            resultVector.y = Mathf.Max(max_y - min_y + paddingUp + paddingDown,0f);
+        if (resizeHeight)
+        {
+            resultVector.y = Mathf.Max(max_y - min_y + paddingUp + paddingDown, 0f);
         }
 
         objectToBeResized.GetComponent<RectTransform>().sizeDelta = resultVector;
         LayoutRebuilder.MarkLayoutForRebuild(objectToBeResized.GetComponent<RectTransform>());
     }
 
-    public void DelayResize(int step) {
+    public void DelayResize(int step)
+    {
         StartCoroutine(DelayResizeCoroutine(step));
     }
 

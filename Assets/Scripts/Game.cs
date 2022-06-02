@@ -1,4 +1,3 @@
-using SteelOfStalin.Attributes;
 using SteelOfStalin.Commands;
 using SteelOfStalin.Assets.Customizables;
 using SteelOfStalin.CustomTypes;
@@ -19,7 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -33,12 +31,10 @@ using SteelOfStalin.Assets.Props.Buildings.Units;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using static Unity.Netcode.Transports.UTP.UnityTransport;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using Resources = SteelOfStalin.Attributes.Resources;
 using System.Threading.Tasks;
-using SteelOfStalin.Assets.Props.Buildings.Infrastructures;
 using System.Threading;
 #if UNITY_EDITOR
 using ParrelSync;
@@ -59,7 +55,7 @@ namespace SteelOfStalin
 
         public static PlayerProfile Profile { get; set; } = new PlayerProfile();
 
-        public static List<BattleInfo> BattleInfos { get; set; } = new List<BattleInfo>(); 
+        public static List<BattleInfo> BattleInfos { get; set; } = new List<BattleInfo>();
         public static BattleInfo ActiveBattle { get; set; }
         public static NetworkManager Network => NetworkManager.Singleton;
 
@@ -302,9 +298,10 @@ namespace SteelOfStalin
         private List<Color> m_availableColors { get; set; } = new List<Color>(CommonColors);
 
         private Dictionary<ulong, string> _playerIDs = new Dictionary<ulong, string>();
-        [JsonIgnore] public Dictionary<ulong, string> ConnectedPlayerIDs 
+        [JsonIgnore]
+        public Dictionary<ulong, string> ConnectedPlayerIDs
         {
-            get => _playerIDs; 
+            get => _playerIDs;
             set
             {
                 if (Game.Network.IsServer)
@@ -347,7 +344,7 @@ namespace SteelOfStalin
                 {
                     Debug.Log("No time limit. Wait for all players ready to continue");
                 }
-                
+
                 // TODO FUT. Impl. add bots for multi
                 // TODO FUT. Impl. bot flows should be running in parallel with players' decisions to ensure fairness
                 if (Game.ActiveBattle.IsSinglePlayer)
@@ -472,13 +469,13 @@ namespace SteelOfStalin
                 RoundNumber++;
             }
             Debug.Log($"Winner is {m_winner}!");
-            GameObject instance=Instantiate(Game.GameObjects.Find(g => g.name == "Canvas_EndGame"));
+            GameObject instance = Instantiate(Game.GameObjects.Find(g => g.name == "Canvas_EndGame"));
             instance.transform.Find("Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
             {
                 Game.ShutDown();
                 SceneManager.LoadScene("Menu");
             });
-            
+
             yield return null;
         }
         private IEnumerator Initialize()
@@ -562,8 +559,8 @@ namespace SteelOfStalin
             SceneManager.LoadScene("Game");
             yield return new WaitWhile(() => SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Game"));
             AddPropsToScene();
-            CameraController.instance.maxX = Battle.Instance.Map.Width * Prop.HEX_APOTHEM *2*(Mathf.Sqrt(3)/2);
-            CameraController.instance.maxZ = Battle.Instance.Map.Height * Prop.HEX_APOTHEM *2;
+            CameraController.instance.maxX = Battle.Instance.Map.Width * Prop.HEX_APOTHEM * 2 * (Mathf.Sqrt(3) / 2);
+            CameraController.instance.maxZ = Battle.Instance.Map.Height * Prop.HEX_APOTHEM * 2;
             _ = StartCoroutine(GameLoop());
         }
         private IEnumerator WaitForAllDataSet(Func<bool> wait_condition)
@@ -690,7 +687,7 @@ namespace SteelOfStalin
                 Rounds.SerializeJson(AppendPath(m_folder, "rounds"));
             }
             Rounds = DeserializeJson<List<Round>>(AppendPath(m_folder, "rounds"));
-            RoundNumber = Rounds.Count + 1;
+            RoundNumber = Rounds.LastOrDefault()?.Number + 1 ?? 1;
 
             if (Players.Count == 0)
             {
@@ -795,27 +792,27 @@ namespace SteelOfStalin
                 map_basic_info_loaded = true;
             }));
 
-            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result => 
-            { 
-                Map.SetTiles(result); 
+            _ = StartCoroutine(NetworkUtilities.TryGetRpcMessage<Tile[][]>(result =>
+            {
+                Map.SetTiles(result);
                 tiles_set = true;
             }));
 
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result => 
-            { 
-                Map.SetUnits(result); 
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Unit>>(m => m.MessageType == NetworkMessageType.DATA, result =>
+            {
+                Map.SetUnits(result);
                 units_set = true;
             }));
 
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result => 
-            { 
-                Map.SetBuildings(result); 
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<IEnumerable<Building>>(m => m.MessageType == NetworkMessageType.DATA, result =>
+            {
+                Map.SetBuildings(result);
                 buildings_set = true;
             }));
 
-            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result => 
-            { 
-                Rules = result; 
+            _ = StartCoroutine(NetworkUtilities.TryGetNamedMessage<BattleRules>(m => m.MessageType == NetworkMessageType.DATA, result =>
+            {
+                Rules = result;
                 rules_set = true;
             }));
 
@@ -934,13 +931,13 @@ namespace SteelOfStalin
     public class Map : ICloneable, INamedAsset
     {
         private static Map _instance;
-        public static Map Instance 
+        public static Map Instance
         {
             get => _instance;
             private set
             {
                 //TODO: Future Implementation
-                if (_instance == null||value==null)
+                if (_instance == null || value == null)
                 {
                     _instance = value;
                 }
@@ -1184,7 +1181,7 @@ namespace SteelOfStalin
         public void ReadStatistics()
         {
             string[] lines = ReadTxt(AppendPath(Folder, "stats"));
-            Name = Regex.Match(lines[0], @"^Name: (\w+)$").Groups[1].Value; 
+            Name = Regex.Match(lines[0], @"^Name: (\w+)$").Groups[1].Value;
             Width = int.Parse(Regex.Match(lines[1], @"(\d+)$").Groups[1].Value);
             Height = int.Parse(Regex.Match(lines[2], @"(\d+)$").Groups[1].Value);
         }
@@ -1262,7 +1259,7 @@ namespace SteelOfStalin
             Units.Add(u);
             return true;
         }
-        
+
         /// <summary>
         /// Adds a building but does not initialize it
         /// </summary>
@@ -1323,7 +1320,7 @@ namespace SteelOfStalin
             return Buildings.Remove(b);
         }
 
-        
+
         /// <summary>
         /// Prints unit list
         /// </summary>
@@ -1339,7 +1336,7 @@ namespace SteelOfStalin
             }
             Debug.Log(sb.ToString());
         }
-        
+
         /// <summary>
         /// Prints building list
         /// </summary>
@@ -1356,14 +1353,14 @@ namespace SteelOfStalin
             Debug.Log(sb.ToString());
         }
 
-        
+
         /// <summary>
         /// Gets Prop from a GameObject
         /// </summary>
         /// <param name="gameObject">GameObject to get Prop from</param>
         /// <returns>Prop that shares MeshName with gameObject name</returns>
         public Prop GetProp(GameObject gameObject) => AllProps.Find(p => p.MeshName == gameObject.name);
-        
+
         public Prop GetProp(string to_string_name) => AllProps.Find(p => p.ToString() == to_string_name);
 
         /// <summary>
@@ -1372,35 +1369,35 @@ namespace SteelOfStalin
         /// <param name="c">A Coordinate</param>
         /// <returns>Props at given Coordinate</returns>
         public IEnumerable<Prop> GetProps(Coordinates c) => AllProps.Where(p => p.CoOrds == c);
-        
+
         /// <summary>
         /// Gets all Props from a CubeCoordinate
         /// </summary>
         /// <param name="c">A CubeCoordinate</param>
         /// <returns>Props at a given CubeCoordinate</returns>
         public IEnumerable<Prop> GetProps(CubeCoordinates c) => AllProps.Where(p => p.CubeCoOrds == c);
-        
+
         /// <summary>
         /// Wildcard function that gets all Props via predicate
         /// </summary>
         /// <param name="predicate">A Predicate</param>
         /// <returns>Props that match predicate</returns>
         public IEnumerable<Prop> GetProps(Predicate<Prop> predicate) => AllProps.Where(p => predicate(p));
-        
+
         /// <summary>
         /// Gets all Props of a specific type
         /// </summary>
         /// <param></param>
         /// <returns>Props of a specific type</returns>
         public IEnumerable<T> GetProps<T>() where T : Prop => AllProps.OfType<T>();
-        
+
         /// <summary>
         /// Gets all Props of a specific type from a CubeCoordinate
         /// </summary>
         /// <param name="c">A CubeCoordinate</param>
         /// <returns>Props of a specific type at given CubeCoordinate</returns>
         public IEnumerable<T> GetProps<T>(CubeCoordinates c) where T : Prop => GetProps(c).OfType<T>();
-        
+
         /// <summary>
         /// Wildcard function that gets all Props of a specific type via predicate
         /// </summary>
@@ -1415,7 +1412,7 @@ namespace SteelOfStalin
         /// <param name="y">y position</param>
         /// <returns>Tile at position x, y</returns>
         public Tile GetTile(int x, int y) => Tiles[x][y];
-        
+
         /// <summary>
         /// Gets a Tile from position x, y
         /// </summary>
@@ -1423,35 +1420,35 @@ namespace SteelOfStalin
         /// <param name="y">y position</param>
         /// <returns>Tile at position x, y</returns>
         public Tile GetTile(Coordinates p) => Tiles[p.X][p.Y];
-        
+
         /// <summary>
         /// Gets a Tile at a CubeCoordinate
         /// </summary>
         /// <param name="c">A CubeCoordinate</param>
         /// <returns>Tile at a given CubeCoordinate</returns>
         public Tile GetTile(CubeCoordinates c) => Tiles[((Coordinates)c).X][((Coordinates)c).Y];
-        
+
         /// <summary>
         /// Gets all Tiles
         /// </summary>
         /// <param></param>
         /// <returns>All Tiles</returns>
         public IEnumerable<Tile> GetTiles() => Tiles.Flatten();
-        
+
         /// <summary>
         /// Gets all Tiles of a given TileType
         /// </summary>
         /// <param name="type">A TileType</param>
         /// <returns>Tiles of a given TileType</returns>
         public IEnumerable<Tile> GetTiles(TileType type) => Tiles.Flatten().Where(t => t.Type == type);
-        
+
         /// <summary>
         /// Wildcard function that gets all Tiles that match a given predicate
         /// </summary>
         /// <param name="predicate">A Predicate</param>
         /// <returns>Tiles that match predicate</returns>
         public IEnumerable<Tile> GetTiles(Predicate<Tile> predicate) => Tiles.Flatten().Where(t => predicate(t));
-        
+
         /// <summary>
         /// Gets all Tiles of specific type
         /// </summary>
@@ -1473,14 +1470,14 @@ namespace SteelOfStalin
         /// <param name="player">A player</param>
         /// <returns>Cities controlled by a given player</returns>
         public IEnumerable<Cities> GetCities(Player player) => GetCities().Where(c => c.Owner == player);
-        
+
         /// <summary>
         /// Wildcard function that gets all Cities that match a given predicate
         /// </summary>
         /// <param name="predicate">A Predicate</param>
         /// <returns>Cities that match predicate</returns>
         public IEnumerable<Cities> GetCities(Predicate<Cities> predicate) => GetCities().Where(c => predicate(c));
-        
+
         /// <summary>
         /// Gets all Cities of specific type
         /// </summary>
@@ -1498,7 +1495,7 @@ namespace SteelOfStalin
             Coordinates p = (Coordinates)c;
             return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
         }).Select(c => GetTile(c));
-        
+
         /// <summary>
         /// Gets straight line neighbouring Tiles of a Tile at a given CubeCoordinate
         /// </summary>
@@ -1507,7 +1504,7 @@ namespace SteelOfStalin
         public IEnumerable<Tile> GetStraightLineNeighbours(CubeCoordinates c, decimal distance = 1) => distance < 1
                 ? throw new ArgumentException("Distance must be >= 1.")
                 : GetNeighbours(c, (int)Math.Ceiling(distance)).Where(t => CubeCoordinates.GetStraightLineDistance(c, t.CubeCoOrds) <= distance);
-        
+
         public Tile GetRandomNeighbour(CubeCoordinates c, int distance = 1)
             => GetTile(Utilities.Random.NextItem(c.GetNeighbours(distance)));
 
@@ -1517,7 +1514,7 @@ namespace SteelOfStalin
         /// <param name="c">A CubeCoordinate specifying location of main tile</param>
         /// <returns>If there are unoccupied neighbouring Tiles, returns true, else false </returns>
         public bool HasUnoccupiedNeighbours(CubeCoordinates c, int distance = 1) => GetNeighbours(c, distance).Any(t => !t.IsOccupied);
-        
+
         public IEnumerable<Unit> GetUnits() => Units;
         public IEnumerable<T> GetUnits<T>() where T : Unit => Units.OfType<T>();
         public IEnumerable<T> GetUnits<T>(Predicate<Unit> predicate) where T : Unit => GetUnits<T>().Where(u => predicate(u));
@@ -2145,7 +2142,7 @@ namespace SteelOfStalin
         public virtual void Execute() { }
         public virtual string ToStringBeforeExecution() => $"{Unit} {Symbol} ";
         public virtual string ToStringAfterExecution() => Recorder.ToString();
-        public virtual void SetParamsFromString(string initiator, string @params) 
+        public virtual void SetParamsFromString(string initiator, string @params)
         {
             Debug.Log($"init: {initiator}");
             Prop prop = Map.Instance.GetProp(initiator);
@@ -2272,7 +2269,7 @@ namespace SteelOfStalin.Flow
         }
 
         // Remove fired and moved flags from all units
-        public void InitializeRoundStart() => Map.Instance.GetUnits(UnitStatus.ACTIVE).ToList().ForEach(u => 
+        public void InitializeRoundStart() => Map.Instance.GetUnits(UnitStatus.ACTIVE).ToList().ForEach(u =>
         {
             u.CommandAssigned = CommandAssigned.NONE;
             u.Status &= ~(UnitStatus.MOVED | UnitStatus.FIRED);
@@ -2576,6 +2573,7 @@ namespace SteelOfStalin.Flow
              * it will be very likely to throw at m.Path.Take(...) in this case
              */
             // move commands with the same destination
+            /*
             IEnumerable<IGrouping<Tile, Move>> conflicts = CommandsForThisPhase.OfType<Move>().GroupBy(m => m.Path.Last()).Where(m => m.Count() > 1);
             Debug.Log($"Conflicts: {conflicts.Count()}");
 
@@ -2628,7 +2626,7 @@ namespace SteelOfStalin.Flow
                     }
                 }
             }
-
+            */
             base.Execute();
         }
     }
@@ -2857,7 +2855,7 @@ namespace SteelOfStalin.Flow
                     break;
                 }
             });
-            
+
         }
     }
     public sealed class Misc : Phase

@@ -1,19 +1,15 @@
+using NUnit.Framework;
+using SteelOfStalin.Assets;
+using SteelOfStalin.Assets.Customizables.Modules;
+using SteelOfStalin.Assets.Customizables.Shells;
+using SteelOfStalin.DataIO;
+using SteelOfStalin.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using NUnit.Framework;
-using SteelOfStalin.Assets;
-using SteelOfStalin.Assets.Customizables.Modules;
-using SteelOfStalin.Assets.Customizables.Shells;
-using SteelOfStalin.Assets.Props.Buildings;
-using SteelOfStalin.Assets.Props.Tiles;
-using SteelOfStalin.Assets.Props.Units;
-using SteelOfStalin.DataIO;
-using SteelOfStalin.Util;
-using UnityEngine;
 using UnityEngine.TestTools;
 using Module = SteelOfStalin.Assets.Customizables.Module;
 
@@ -76,7 +72,7 @@ namespace SteelOfStalin.Tests
         // has public setter and is not ignored in serialization
         private static Func<PropertyInfo, bool> m_can_set_and_not_ignored => prop => prop.CanWrite && (bool)prop.GetSetMethod()?.IsPublic && prop.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null;
 
-        public static void LoadingTest<T>(IEnumerable<T> data, params Func<PropertyInfo, bool>[] null_conditions) where T : INamedAsset 
+        public static void LoadingTest<T>(IEnumerable<T> data, params Func<PropertyInfo, bool>[] null_conditions) where T : INamedAsset
         {
             foreach (T t in data)
             {

@@ -1,6 +1,5 @@
-﻿using SteelOfStalin.Attributes;
-using SteelOfStalin.Assets.Customizables.Modules;
-using SteelOfStalin.Assets.Customizables.Shells;
+﻿using SteelOfStalin.Assets.Customizables.Shells;
+using SteelOfStalin.Attributes;
 using SteelOfStalin.CustomTypes;
 using System;
 using System.Collections.Generic;
@@ -261,12 +260,12 @@ namespace SteelOfStalin.Assets.Customizables.Modules
         public Gun() : base() { }
         public Gun(Gun another) : base(another)
             => (Offense, Noise, ConcealmentPenaltyFire, ConsumptionNormal, ConsumptionSuppress, CompatibleShells, CurrentShell, CannonBreech)
-            = ((Offense)another.Offense.Clone(), 
-               (Attribute)another.Noise.Clone(), 
-               (Modifier)another.ConcealmentPenaltyFire.Clone(), 
-               (Resources)another.ConsumptionNormal.Clone(), 
-               (Resources)another.ConsumptionSuppress.Clone(), 
-                new List<string>(another.CompatibleShells), 
+            = ((Offense)another.Offense.Clone(),
+               (Attribute)another.Noise.Clone(),
+               (Modifier)another.ConcealmentPenaltyFire.Clone(),
+               (Resources)another.ConsumptionNormal.Clone(),
+               (Resources)another.ConsumptionSuppress.Clone(),
+                new List<string>(another.CompatibleShells),
                (Shell)another.CurrentShell?.Clone(),
                (CannonBreech)another.CannonBreech?.Clone());
 
@@ -286,12 +285,12 @@ namespace SteelOfStalin.Assets.Customizables.Modules
         public HeavyMachineGun() : base() { }
         public HeavyMachineGun(HeavyMachineGun another) : base(another)
             => (Offense, Noise, ConcealmentPenaltyMove, ConcealmentPenaltyFire, AmmoWeight, ConsumptionNormal, ConsumptionSuppress)
-            = ((Offense)another.Offense.Clone(), 
-               (Attribute)another.Noise.Clone(), 
+            = ((Offense)another.Offense.Clone(),
+               (Attribute)another.Noise.Clone(),
                (Modifier)another.ConcealmentPenaltyMove.Clone(),
-               (Modifier)another.ConcealmentPenaltyFire.Clone(), 
-               another.AmmoWeight, 
-               (Resources)another.ConsumptionNormal.Clone(), 
+               (Modifier)another.ConcealmentPenaltyFire.Clone(),
+               another.AmmoWeight,
+               (Resources)another.ConsumptionNormal.Clone(),
                (Resources)another.ConsumptionSuppress.Clone());
         public override object Clone() => new HeavyMachineGun(this);
     }
