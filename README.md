@@ -59,6 +59,27 @@ Units and tech are carried over to next battle | No | Yes
 
 - - - -
 
+## Gallery
+![picture](md_img/1.png)
+*Two militia next to the metropolis of the same player*
+
+![picture](md_img/2.png)
+*A close-up view of a militia*
+
+![picture](md_img/3.png)
+*The training panel (left) and different kinds on units*
+
+![picture](md_img/4.png)
+*An zoom-out view of a part of a random map*
+
+![picture](md_img/5.png)
+*Another militia moving towards a neutral city (lower left-hand corner) to capture it*
+
+![picture](md_img/6.png)
+*A zoom-out view of a metropolis*
+
+- - - -
+
 ## Future Works
 - **Game**
     - Mechanisms
@@ -102,9 +123,9 @@ Units and tech are carried over to next battle | No | Yes
 
 ## Contributors
 Special thanks to the following contributors of the project:\
-[Marcus](https://github.com/saintsword001)\
-[Nathan](https://github.com/Katabatix)\
-[Hubert](https://github.com/hubertwirawan)
+[Marcus](https://github.com/saintsword001) for UI design\
+[Nathan](https://github.com/Katabatix) for multiplayer mode development & testing\
+[Hubert](https://github.com/hubertwirawan) for bot algorithm design
 
 - - - -
 
